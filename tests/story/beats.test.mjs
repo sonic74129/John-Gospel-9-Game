@@ -84,7 +84,12 @@ test("beats preserve observer restrictions and snapshot linkage", () => {
       beat.actions
         .filter(({ contentLevel }) => contentLevel === "S2")
         .every(({ type }) =>
-          ["actor-follow-path", "camera-follow-path", "focus-camera"].includes(type),
+          [
+            "actor-follow-path",
+            "camera-follow-path",
+            "focus-camera",
+            "set-actor-visible",
+          ].includes(type),
         ),
     );
     if (beat.trigger.event?.startsWith("arrival:")) {

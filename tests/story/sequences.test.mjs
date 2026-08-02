@@ -17,6 +17,7 @@ const CANONICAL_WORLD_ANCHORS = [
   "roadside.disciples",
   "roadside.clay-action",
   "roadside.pool-exit",
+  "pool.roadside-entry",
   "pool.wash-edge",
   "pool.return",
   "neighbors.pool-entry",
@@ -34,6 +35,7 @@ const CANONICAL_WORLD_ANCHORS = [
   "outside.expelled",
   "outside.jesus-entry",
   "outside.belief",
+  "outside.east-exit",
   "ending.camera",
 ];
 
@@ -49,12 +51,18 @@ const CANONICAL_WORLD_PATHS = [
   "ending",
 ];
 
-const ACTOR_IDS_BY_PATH_SUBJECT = Object.freeze({
-  "man-born-blind": ["man-born-blind"],
-  "man-and-neighbor-group": ["man-born-blind", "neighbors"],
-  parents: ["parents"],
-  jesus: ["jesus"],
-  "camera-focus": [],
+const ACTORS_BY_PATH_SUBJECT = Object.freeze({
+  "man-born-blind": {
+    primaryActorId: "man-born-blind",
+    participantActorIds: [],
+  },
+  "man-and-neighbor-group": {
+    primaryActorId: "man-born-blind",
+    participantActorIds: ["neighbors"],
+  },
+  parents: { primaryActorId: "parents", participantActorIds: [] },
+  jesus: { primaryActorId: "jesus", participantActorIds: [] },
+  "camera-focus": { primaryActorId: null, participantActorIds: [] },
 });
 
 const readWorldContract = (fileName) => {
@@ -110,6 +118,12 @@ test("path subjects and endpoints chain from prior snapshots into final snapshot
         actor.anchorId,
       ]),
     );
+    const currentActorVisibility = Object.fromEntries(
+      Object.entries(priorSnapshot.actors).map(([actorId, actor]) => [
+        actorId,
+        actor.visible,
+      ]),
+    );
     let currentCameraAnchor = priorSnapshot.camera.anchorId;
     const movedActorIds = new Set();
     let cameraMoved = false;
@@ -119,9 +133,15 @@ test("path subjects and endpoints chain from prior snapshots into final snapshot
       assert.ok(path, `${sequence.beatId}:${step.payload.pathId}`);
       assert.equal(path.sourceLevel, "approved-bridge");
       assert.equal(step.payload.subjectId, path.subject);
-      assert.deepEqual(step.payload.actorIds, ACTOR_IDS_BY_PATH_SUBJECT[path.subject]);
+      assert.deepEqual(
+        {
+          primaryActorId: step.payload.primaryActorId,
+          participantActorIds: step.payload.participantActorIds,
+        },
+        ACTORS_BY_PATH_SUBJECT[path.subject],
+      );
 
-      if (step.payload.actorIds.length === 0) {
+      if (step.payload.primaryActorId === null) {
         assert.equal(path.subject, "camera-focus");
         assert.equal(currentCameraAnchor, path.startAnchorId);
         currentCameraAnchor = path.endAnchorId;
@@ -129,15 +149,27 @@ test("path subjects and endpoints chain from prior snapshots into final snapshot
         continue;
       }
 
-      for (const actorId of step.payload.actorIds) {
-        assert.ok(currentActorAnchors[actorId], `${sequence.beatId}:${actorId}`);
-        assert.equal(
-          currentActorAnchors[actorId],
+      const actorId = step.payload.primaryActorId;
+      assert.ok(currentActorAnchors[actorId], `${sequence.beatId}:${actorId}`);
+      assert.equal(
+        currentActorAnchors[actorId],
+        path.startAnchorId,
+        `${sequence.beatId}:${path.id}:${actorId}:start`,
+      );
+      currentActorAnchors[actorId] = path.endAnchorId;
+      movedActorIds.add(actorId);
+
+      for (const participantActorId of step.payload.participantActorIds) {
+        assert.equal(currentActorVisibility[participantActorId], true);
+        assert.notEqual(
+          priorSnapshot.actors[participantActorId].anchorId,
           path.startAnchorId,
-          `${sequence.beatId}:${path.id}:${actorId}:start`,
         );
-        currentActorAnchors[actorId] = path.endAnchorId;
-        movedActorIds.add(actorId);
+        assert.equal(sequence.finalState.actors[participantActorId].visible, true);
+        assert.notEqual(
+          sequence.finalState.actors[participantActorId].anchorId,
+          path.endAnchorId,
+        );
       }
     }
 
@@ -152,6 +184,49 @@ test("path subjects and endpoints chain from prior snapshots into final snapshot
       assert.equal(sequence.finalState.camera.anchorId, currentCameraAnchor);
     }
   }
+});
+
+test("hidden entrance actors are revealed before movement and dialogue", () => {
+  const revealedEntranceActors = [];
+  for (let index = 1; index < SEQUENCES.length; index += 1) {
+    const sequence = SEQUENCES[index];
+    const priorSnapshot = SEQUENCES[index - 1].finalState;
+
+    for (const [pathIndex, step] of sequence.steps.entries()) {
+      if (!step.payload.pathId || step.payload.primaryActorId === null) {
+        continue;
+      }
+      const actorId = step.payload.primaryActorId;
+      if (priorSnapshot.actors[actorId].visible) {
+        continue;
+      }
+
+      const revealIndex = sequence.steps.findIndex(
+        ({ command, payload }) =>
+          command === "set-actor-visible" &&
+          payload.actorId === actorId &&
+          payload.visible === true,
+      );
+      const dialogueIndex = sequence.steps.findIndex(
+        ({ command }) => command === "present-scripture-segments",
+      );
+      const hideBeforeDialogue = sequence.steps.findIndex(
+        ({ command, payload }, stepIndex) =>
+          stepIndex > revealIndex &&
+          stepIndex < dialogueIndex &&
+          command === "set-actor-visible" &&
+          payload.actorId === actorId &&
+          payload.visible === false,
+      );
+      assert.ok(revealIndex >= 0, `${sequence.beatId}:${actorId}:reveal`);
+      assert.ok(revealIndex < pathIndex, `${sequence.beatId}:${actorId}:before-path`);
+      assert.ok(dialogueIndex > pathIndex, `${sequence.beatId}:${actorId}:before-dialogue`);
+      assert.equal(hideBeforeDialogue, -1);
+      assert.equal(sequence.finalState.actors[actorId].visible, true);
+      revealedEntranceActors.push(`${sequence.beatId}:${actorId}`);
+    }
+  }
+  assert.deepEqual(revealedEntranceActors, ["b11:parents", "b18:jesus"]);
 });
 
 test("sequence contracts use plan vocabulary without embedding coordinates", () => {

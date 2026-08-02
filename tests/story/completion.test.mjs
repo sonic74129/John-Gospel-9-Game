@@ -23,6 +23,7 @@ test("every beat has a complete deterministic final snapshot", () => {
     assert.ok(Array.isArray(snapshot.testimony.activeIds));
     assert.ok(Array.isArray(snapshot.triggers.completedBeatIds));
     assert.equal(typeof snapshot.music.playing, "boolean");
+    const occupiedAnchors = new Map();
     for (const actor of Object.values(snapshot.actors)) {
       assert.deepEqual(Object.keys(actor).sort(), [
         "anchorId",
@@ -38,6 +39,14 @@ test("every beat has a complete deterministic final snapshot", () => {
       assert.equal(actor.stagingLevel, "S2");
       if (!actor.visible) {
         assert.equal(actor.collisionEnabled, false);
+      }
+      if (actor.visible && actor.collisionEnabled) {
+        assert.equal(
+          occupiedAnchors.has(actor.anchorId),
+          false,
+          `${beatId}:${actor.anchorId} is shared by visible collidable actors`,
+        );
+        occupiedAnchors.set(actor.anchorId, actor.label);
       }
     }
     assert.ok(canonicalAnchors.has(snapshot.props.clay.anchorId));

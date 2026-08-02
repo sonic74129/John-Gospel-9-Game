@@ -7,6 +7,7 @@ export const NARRATIVE_ANCHORS = Object.freeze([
   "roadside.disciples",
   "roadside.clay-action",
   "roadside.pool-exit",
+  "pool.roadside-entry",
   "pool.wash-edge",
   "pool.return",
   "neighbors.pool-entry",
@@ -24,6 +25,7 @@ export const NARRATIVE_ANCHORS = Object.freeze([
   "outside.expelled",
   "outside.jesus-entry",
   "outside.belief",
+  "outside.east-exit",
   "ending.camera",
 ]);
 
@@ -49,18 +51,25 @@ const command = (commandName, payload, sourceLevel = "S2") =>
 
 const dialogueStep = (beatId) => command("present-scripture-segments", { beatId }, "S0");
 
-const actorPathStep = (pathId, subjectId, actorIds) =>
+const actorPathStep = (
+  pathId,
+  subjectId,
+  primaryActorId,
+  participantActorIds = Object.freeze([]),
+) =>
   command("actor-follow-path", {
     pathId,
     subjectId,
-    actorIds: Object.freeze(actorIds),
+    primaryActorId,
+    participantActorIds: Object.freeze(participantActorIds),
   });
 
 const cameraPathStep = (pathId, subjectId) =>
   command("camera-follow-path", {
     pathId,
     subjectId,
-    actorIds: Object.freeze([]),
+    primaryActorId: null,
+    participantActorIds: Object.freeze([]),
   });
 
 const STEPS_BY_BEAT = Object.freeze({
@@ -72,31 +81,34 @@ const STEPS_BY_BEAT = Object.freeze({
     dialogueStep("b04"),
   ],
   b05: [
-    actorPathStep("man-to-pool", "man-born-blind", ["man-born-blind"]),
+    actorPathStep("man-to-pool", "man-born-blind", "man-born-blind"),
     command("focus-camera", { anchorId: "pool.wash-edge" }),
-    actorPathStep("pool-wash-to-return", "man-born-blind", ["man-born-blind"]),
+    actorPathStep("pool-wash-to-return", "man-born-blind", "man-born-blind"),
   ],
   b06: [
-    actorPathStep("pool-to-neighbors", "man-born-blind", ["man-born-blind"]),
+    actorPathStep("pool-to-neighbors", "man-born-blind", "man-born-blind"),
     dialogueStep("b06"),
   ],
   b07: [dialogueStep("b07")],
   b08: [
-    actorPathStep("group-to-inquiry", "man-and-neighbor-group", [
+    actorPathStep(
+      "group-to-inquiry",
+      "man-and-neighbor-group",
       "man-born-blind",
-      "neighbors",
-    ]),
+      ["neighbors"],
+    ),
     command("focus-camera", { anchorId: "inquiry.man-center" }),
   ],
   b09: [dialogueStep("b09")],
   b10: [dialogueStep("b10")],
   b11: [
-    actorPathStep("parents-entry", "parents", ["parents"]),
+    command("set-actor-visible", { actorId: "parents", visible: true }),
+    actorPathStep("parents-entry", "parents", "parents"),
     dialogueStep("b11"),
   ],
   b12: [
     dialogueStep("b12"),
-    actorPathStep("parents-exit", "parents", ["parents"]),
+    actorPathStep("parents-exit", "parents", "parents"),
   ],
   b13: [dialogueStep("b13")],
   b14: [dialogueStep("b14")],
@@ -104,10 +116,11 @@ const STEPS_BY_BEAT = Object.freeze({
   b16: [dialogueStep("b16")],
   b17: [
     dialogueStep("b17"),
-    actorPathStep("expulsion", "man-born-blind", ["man-born-blind"]),
+    actorPathStep("expulsion", "man-born-blind", "man-born-blind"),
   ],
   b18: [
-    actorPathStep("jesus-entry", "jesus", ["jesus"]),
+    command("set-actor-visible", { actorId: "jesus", visible: true }),
+    actorPathStep("jesus-entry", "jesus", "jesus"),
     dialogueStep("b18"),
   ],
   b19: [dialogueStep("b19"), cameraPathStep("ending", "camera-focus")],
