@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "world-navigation",
+  "grid": {
+    "origin": { "x": 0, "y": 0 },
+    "cellSize": 32,
+    "columns": 100,
+    "rows": 56,
+    "diagonalMovement": false,
+    "preventCornerCutting": true,
+    "defaultWalkCost": 1
+  },
+  "agent": {
+    "radius": 18,
+    "height": 72,
+    "minimumGroupLaneWidth": 112,
+    "repathDistance": 24
+  },
+  "generation": {
+    "walkableSource": "layout.regions[].walkablePolygon",
+    "blockedSource": "collisions.collisionPolygons[]",
+    "portalSource": "layout.portals[]",
+    "debugOverlay": true
+  },
+  "regionCosts": [
+    { "regionId": "roadside", "walkCost": 1 },
+    { "regionId": "siloam-pool", "walkCost": 1.1 },
+    { "regionId": "neighbor-gathering", "walkCost": 1 },
+    { "regionId": "inquiry-courtyard", "walkCost": 1 },
+    { "regionId": "outer-road", "walkCost": 1 }
+  ]
+}

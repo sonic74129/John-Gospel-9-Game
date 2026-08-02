@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "actor-spawns",
+  "actorSpawns": [
+    {
+      "id": "spawn.player-observer",
+      "actorId": "player-observer",
+      "anchorId": "roadside.player-start",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "position": { "x": 220, "y": 980 },
+      "collisionRadius": 18,
+      "initiallyVisible": true
+    },
+    {
+      "id": "spawn.man-born-blind",
+      "actorId": "man-born-blind",
+      "anchorId": "roadside.blind-man-seat",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "position": { "x": 520, "y": 930 },
+      "collisionRadius": 18,
+      "initiallyVisible": true
+    },
+    {
+      "id": "spawn.jesus",
+      "actorId": "jesus",
+      "anchorId": "roadside.jesus",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "position": { "x": 660, "y": 850 },
+      "collisionRadius": 18,
+      "initiallyVisible": true
+    },
+    {
+      "id": "spawn.disciple-left",
+      "actorId": "disciple-left",
+      "anchorId": "roadside.disciples",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "position": { "x": 670, "y": 990 },
+      "collisionRadius": 18,
+      "initiallyVisible": true
+    },
+    {
+      "id": "spawn.disciple-right",
+      "actorId": "disciple-right",
+      "anchorId": "roadside.disciples",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "position": { "x": 730, "y": 1010 },
+      "collisionRadius": 18,
+      "initiallyVisible": true
+    },
+    {
+      "id": "spawn.neighbor-left",
+      "actorId": "neighbor-left",
+      "anchorId": "neighbors.group-left",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "scripture",
+      "position": { "x": 1700, "y": 900 },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.neighbor-right",
+      "actorId": "neighbor-right",
+      "anchorId": "neighbors.group-right",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "scripture",
+      "position": { "x": 1980, "y": 900 },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.pharisee-left",
+      "actorId": "pharisee-left",
+      "anchorId": "inquiry.pharisees-left",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "position": { "x": 2320, "y": 730 },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.pharisee-right",
+      "actorId": "pharisee-right",
+      "anchorId": "inquiry.pharisees-right",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "position": { "x": 2580, "y": 730 },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.parent-left",
+      "actorId": "parent-left",
+      "anchorId": "inquiry.parents",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "position": { "x": 2470, "y": 950 },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.parent-right",
+      "actorId": "parent-right",
+      "anchorId": "inquiry.parents",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "position": { "x": 2530, "y": 950 },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    }
+  ]
+}
