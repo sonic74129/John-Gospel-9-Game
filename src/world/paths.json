@@ -143,16 +143,15 @@
       "sourceLevel": "approved-bridge",
       "subject": "jesus",
       "startAnchorId": "outside.jesus-entry",
-      "endAnchorId": "outside.expelled",
+      "endAnchorId": "outside.belief",
       "expectedDurationSeconds": 12,
-      "movementSpeed": 20,
+      "movementSpeed": 15,
       "actorRadius": 18,
       "points": [
         { "x": 3090, "y": 760 },
         { "x": 3070, "y": 820 },
         { "x": 3030, "y": 870 },
-        { "x": 2980, "y": 900 },
-        { "x": 2940, "y": 940 }
+        { "x": 2990, "y": 900 }
       ]
     },
     {
