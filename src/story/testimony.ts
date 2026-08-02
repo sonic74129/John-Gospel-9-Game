@@ -1,0 +1,142 @@
+const testimony = (id, beatId, speakerId, category, verseKeys, segmentIds) =>
+  Object.freeze({
+    id,
+    beatId,
+    speakerId,
+    category,
+    verseKeys: Object.freeze(verseKeys),
+    segmentIds: Object.freeze(segmentIds),
+    sourceLevel: "S1",
+    sourceLabel: "經文明示",
+  });
+
+export const TESTIMONY_CATEGORIES = Object.freeze([
+  "scripture-fact",
+  "speaker-answer",
+  "speaker-does-not-know",
+  "people-disagree",
+]);
+
+export const TESTIMONY = Object.freeze([
+  testimony(
+    "testimony-neighbors-identity-disagreement",
+    "b06",
+    "neighbors",
+    "people-disagree",
+    ["john9:8", "john9:9"],
+    ["john9:8:neighbors-question", "john9:9:people-disagree-a", "john9:9:people-disagree-b"],
+  ),
+  testimony(
+    "testimony-man-identifies-self",
+    "b06",
+    "man-born-blind",
+    "speaker-answer",
+    ["john9:9"],
+    ["john9:9:man-identifies"],
+  ),
+  testimony(
+    "testimony-man-first-account",
+    "b07",
+    "man-born-blind",
+    "speaker-answer",
+    ["john9:11"],
+    ["john9:11:man-answers"],
+  ),
+  testimony(
+    "testimony-man-whereabouts-unknown",
+    "b07",
+    "man-born-blind",
+    "speaker-does-not-know",
+    ["john9:12"],
+    ["john9:12:man-does-not-know"],
+  ),
+  testimony(
+    "testimony-man-pharisee-account",
+    "b09",
+    "man-born-blind",
+    "speaker-answer",
+    ["john9:15"],
+    ["john9:15:man-answers"],
+  ),
+  testimony(
+    "testimony-pharisees-disagree",
+    "b09",
+    "pharisees",
+    "people-disagree",
+    ["john9:16"],
+    ["john9:16:pharisees-disagree-a", "john9:16:pharisees-disagree-b"],
+  ),
+  testimony(
+    "testimony-man-opinion",
+    "b10",
+    "man-born-blind",
+    "speaker-answer",
+    ["john9:17"],
+    ["john9:17:man-answers"],
+  ),
+  testimony(
+    "testimony-parents-known-facts",
+    "b12",
+    "parents",
+    "scripture-fact",
+    ["john9:20"],
+    ["john9:20:parents-identify"],
+  ),
+  testimony(
+    "testimony-parents-unknown-details",
+    "b12",
+    "parents",
+    "speaker-does-not-know",
+    ["john9:21"],
+    ["john9:21:parents-do-not-know"],
+  ),
+  testimony(
+    "testimony-man-known-fact",
+    "b14",
+    "man-born-blind",
+    "scripture-fact",
+    ["john9:25"],
+    ["john9:25:man-known-fact"],
+  ),
+  testimony(
+    "testimony-man-limited-knowledge",
+    "b14",
+    "man-born-blind",
+    "speaker-does-not-know",
+    ["john9:25"],
+    ["john9:25:man-does-not-know"],
+  ),
+  testimony(
+    "testimony-man-repeated-answer",
+    "b15",
+    "man-born-blind",
+    "speaker-answer",
+    ["john9:27"],
+    ["john9:27:man-answers-again"],
+  ),
+  testimony(
+    "testimony-pharisees-claim",
+    "b16",
+    "pharisees",
+    "speaker-answer",
+    ["john9:28", "john9:29"],
+    ["john9:28:pharisees-revile", "john9:29:pharisees-claim"],
+  ),
+  testimony(
+    "testimony-man-final-answer",
+    "b17",
+    "man-born-blind",
+    "speaker-answer",
+    ["john9:30", "john9:31", "john9:32", "john9:33"],
+    [
+      "john9:30:man-answer-a",
+      "john9:31:man-answer-b",
+      "john9:32:man-answer-c",
+      "john9:33:man-answer-d",
+    ],
+  ),
+]);
+
+export const TESTIMONY_BY_ID = Object.freeze(
+  Object.fromEntries(TESTIMONY.map((entry) => [entry.id, entry])),
+);
