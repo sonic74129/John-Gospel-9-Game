@@ -26,6 +26,23 @@
       ]
     },
     {
+      "id": "pool-to-neighbors",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "pool.return",
+      "endAnchorId": "neighbors.center",
+      "expectedDurationSeconds": 14,
+      "movementSpeed": 33,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1380, "y": 900 },
+        { "x": 1510, "y": 900 },
+        { "x": 1570, "y": 900 },
+        { "x": 1700, "y": 860 },
+        { "x": 1830, "y": 820 }
+      ]
+    },
+    {
       "id": "group-to-inquiry",
       "sourceLevel": "approved-bridge",
       "subject": "man-and-neighbor-group",
