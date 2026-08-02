@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "repository": "sonic74129/bible-game-foundation",
   "commit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
-  "allowCandidateAssets": false,
+  "allowCandidateAssets": true,
   "guidance": [
     {
       "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
@@ -33,5 +33,20 @@
       "target": ".foundation/assets/catalog.json"
     }
   ],
-  "assetPacks": []
+  "assetPacks": [
+    {
+      "id": "identity-jesus-storybook",
+      "version": "0.1.0",
+      "status": "candidate",
+      "metadata": "assets/candidates/identity-jesus-storybook/0.1.0/pack.json",
+      "manifest": "assets/candidates/identity-jesus-storybook/0.1.0/manifest.json"
+    },
+    {
+      "id": "nt-judea-first-century",
+      "version": "0.1.0",
+      "status": "candidate",
+      "metadata": "assets/candidates/nt-judea-first-century/0.1.0/pack.json",
+      "manifest": "assets/candidates/nt-judea-first-century/0.1.0/manifest.json"
+    }
+  ]
 }

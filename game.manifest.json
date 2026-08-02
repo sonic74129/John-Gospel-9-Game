@@ -15,7 +15,10 @@
   "engineApiVersion": 1,
   "sdkVersion": null,
   "stylePack": "storybook-realism-v1@0.1.0",
-  "assetPacks": {},
+  "assetPacks": {
+    "identity-jesus-storybook": "0.1.0",
+    "nt-judea-first-century": "0.1.0"
+  },
   "entry": "/games/john-9-man-born-blind/",
   "languages": [
     "zh-Hant"

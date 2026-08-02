@@ -12,7 +12,9 @@
     "foundation:use-pack": "node scripts/manage-pack.mjs add",
     "foundation:remove-pack": "node scripts/manage-pack.mjs remove",
     "validate:story": "node scripts/validate-story.mjs",
-    "test": "npm run foundation:check && npm run validate:story"
+    "validate:release": "node src/story/validate-scripture-release.mjs",
+    "test:contracts": "node --test src/story/scripture.test.mjs tests/assets.test.mjs tests/story/*.test.mjs tests/world-contract.test.mjs",
+    "test": "npm run foundation:check && npm run validate:story && npm run test:contracts"
   },
   "engines": {
     "node": ">=20"
