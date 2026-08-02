@@ -1,0 +1,20 @@
+{
+  "name": "@sonic74129/bible-story-john-9-man-born-blind",
+  "version": "0.1.0",
+  "private": true,
+  "description": "生來瞎眼的人：以約翰福音 9:1–41 為範圍的獨立聖經故事探索遊戲。",
+  "type": "module",
+  "scripts": {
+    "story:init": "node scripts/init-story.mjs",
+    "foundation:sync": "node scripts/sync-foundation.mjs",
+    "foundation:check": "node scripts/check-foundation.mjs",
+    "foundation:list-packs": "node scripts/manage-pack.mjs list",
+    "foundation:use-pack": "node scripts/manage-pack.mjs add",
+    "foundation:remove-pack": "node scripts/manage-pack.mjs remove",
+    "validate:story": "node scripts/validate-story.mjs",
+    "test": "npm run foundation:check && npm run validate:story"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

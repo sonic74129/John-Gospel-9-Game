@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "sonic74129/bible-game-foundation",
+  "commit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "allowCandidateAssets": false,
+  "guidance": [
+    {
+      "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
+      "target": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md"
+    },
+    {
+      "source": "docs/standards/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
+      "target": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md"
+    },
+    {
+      "source": "docs/standards/MULTI_REPO_ARCHITECTURE.zh-CN.md",
+      "target": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md"
+    },
+    {
+      "source": "docs/ASSET_GOVERNANCE.zh-CN.md",
+      "target": ".foundation/docs/ASSET_GOVERNANCE.zh-CN.md"
+    },
+    {
+      "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
+      "target": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
+    },
+    {
+      "source": "art-direction/storybook-realism-v1/style.json",
+      "target": ".foundation/art-direction/storybook-realism-v1/style.json"
+    },
+    {
+      "source": "assets/catalog.json",
+      "target": ".foundation/assets/catalog.json"
+    }
+  ],
+  "assetPacks": []
+}

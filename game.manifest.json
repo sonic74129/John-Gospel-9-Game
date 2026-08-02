@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "template": false,
+  "id": "john-9-man-born-blind",
+  "version": "0.1.0",
+  "templateVersion": "0.1.0",
+  "title": "生來瞎眼的人",
+  "passage": {
+    "book": "John",
+    "chapter": 9,
+    "verses": "1-41",
+    "translation": "CUV-Traditional"
+  },
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "engineApiVersion": 1,
+  "sdkVersion": null,
+  "stylePack": "storybook-realism-v1@0.1.0",
+  "assetPacks": {},
+  "entry": "/games/john-9-man-born-blind/",
+  "languages": [
+    "zh-Hant"
+  ],
+  "capabilities": {
+    "keyboard": true,
+    "pointer": true,
+    "touch": true,
+    "voice": false,
+    "offlineAfterLoad": true
+  }
+}
