@@ -4,6 +4,7 @@ import test from "node:test";
 
 import { MapSequence } from "@sonic74129/sequence-runtime";
 
+import { applyCanonicalCameraFinalState } from "../../src/adapters/canonical-camera.ts";
 import { createB14StressSequence } from "../../src/adapters/dev-b14-fixture.ts";
 import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
 import {
@@ -24,6 +25,13 @@ import {
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 const readText = (path) => readFile(path, "utf8");
 const sliceBeats = STORY_BEATS.slice(0, 7);
+const [anchorContract, cameraContract, layoutContract, spawnContract] =
+  await Promise.all([
+    readJson("src/world/anchors.json"),
+    readJson("src/world/camera.json"),
+    readJson("src/world/layout.json"),
+    readJson("src/world/spawns.json"),
+  ]);
 
 const progressionEvents = [
   { type: "event", name: "story:start" },
@@ -105,7 +113,7 @@ test("each B01-B07 normal and skip run applies the same canonical final state", 
   );
 });
 
-test("real sequence adapter exposes deep-equal normal and skip snapshots", async () => {
+test("real sequence adapter exposes deep-equal canonical and actual camera state", async () => {
   const definitions = [
     ...sliceBeats.map(({ sequence }) => sequence),
     createB14StressSequence(),
@@ -123,6 +131,72 @@ test("real sequence adapter exposes deep-equal normal and skip snapshots", async
     assert.deepEqual(completed.scene, definition.finalState, definition.id);
     assert.deepEqual(completed.ui, definition.finalState, definition.id);
     assert.deepEqual(completed.logical, definition.finalState, definition.id);
+    assert.deepEqual(completed.camera, skipped.camera, definition.id);
+    assert.deepEqual(
+      completed.camera.applied.canonical,
+      definition.finalState.camera,
+      definition.id,
+    );
+    assert.equal(
+      completed.camera.applied.actual.mode,
+      definition.finalState.camera.mode,
+      definition.id,
+    );
+    assert.equal(
+      completed.camera.applied.actual.followTargetActorId,
+      definition.finalState.controls.playerActorId,
+      definition.id,
+    );
+    const expectedCameraAnchor = anchorContract.anchors.find(
+      ({ id }) => id === definition.finalState.camera.anchorId,
+    );
+    const expectedZone = cameraContract.cameraZones.find(
+      ({ regionId }) => regionId === expectedCameraAnchor.regionId,
+    );
+    assert.deepEqual(
+      completed.camera.applied.actual.focusPosition,
+      expectedCameraAnchor.position,
+      definition.id,
+    );
+    assert.equal(
+      completed.camera.applied.actual.zoom,
+      expectedZone.desktopZoom,
+      definition.id,
+    );
+    assert.deepEqual(
+      completed.camera.applied.actual.deadZone,
+      expectedZone.deadZone,
+      definition.id,
+    );
+    assert.equal(completed.camera.port.mode, "follow-observer", definition.id);
+    assert.deepEqual(
+      completed.camera.port.position,
+      completed.camera.applied.actual.position,
+      definition.id,
+    );
+    assert.deepEqual(
+      completed.camera.port.followOffset,
+      completed.camera.applied.actual.followOffset,
+      definition.id,
+    );
+    assert.equal(
+      completed.camera.port.zoom,
+      expectedZone.desktopZoom,
+      definition.id,
+    );
+    assert.deepEqual(
+      completed.camera.port.deadZone,
+      expectedZone.deadZone,
+      definition.id,
+    );
+    assert.ok(completed.camera.port.followTarget, definition.id);
+    if (definition.finalState.beatId === "b01") {
+      assert.notDeepEqual(
+        completed.camera.applied.actual.position,
+        completed.camera.applied.actual.focusPosition,
+        "B01 exposes bounded viewport position separately from canonical focus",
+      );
+    }
     assert.equal(completed.inputLocks, 0, definition.id);
     assert.equal(skipped.inputLocks, 0, definition.id);
   }
@@ -345,8 +419,9 @@ test("B14 stress fixture is DEV-only, lazy, and absent from production paths", a
 });
 
 test("scene applies and exposes every canonical final-state surface", async () => {
-  const [scene, platform] = await Promise.all([
+  const [scene, camera, platform] = await Promise.all([
     readText("src/adapters/graybox-scene.ts"),
+    readText("src/adapters/canonical-camera.ts"),
     readText("src/adapters/sdk-platform.ts"),
   ]);
   for (const field of [
@@ -354,20 +429,24 @@ test("scene applies and exposes every canonical final-state surface", async () =
     "state.props.clay.anchorId",
     "state.props.clay.state",
     "state.props.clay.collisionEnabled",
-    "state.camera.anchorId",
-    "state.camera.mode",
     "state.controls.playerActorId",
   ]) {
     assert.match(scene, new RegExp(field.replaceAll(".", "\\.")), field);
   }
-  assert.match(scene, /camera\.centerOn\(/);
-  assert.match(scene, /#cameraFollowPending = state\.camera\.mode/);
-  assert.match(scene, /#canonicalControls = structuredClone\(state\.controls\)/);
-  const applyFinalStateBody = scene.slice(
-    scene.indexOf("  async applyFinalState("),
-    scene.indexOf("  snapshotAppliedFinalState("),
+  assert.match(scene, /applyCanonicalCameraFinalState\(/);
+  assert.doesNotMatch(scene, /cameraFollowPending/);
+  assert.match(camera, /canonical\.mode === "follow-observer"/);
+  assert.match(camera, /camera\.startFollow\(/);
+  assert.match(
+    camera,
+    /x:\s*playerTarget\.x - anchorPosition\.x[\s\S]*y:\s*playerTarget\.y - anchorPosition\.y/,
   );
-  assert.doesNotMatch(applyFinalStateBody, /startFollow\(/);
+  assert.match(
+    camera,
+    /focusPosition = \{\s*x:\s*playerTarget\.x - followOffset\.x,\s*y:\s*playerTarget\.y - followOffset\.y/s,
+  );
+  assert.match(camera, /x:\s*camera\.scrollX \+ camera\.width \/ 2/);
+  assert.match(scene, /#canonicalControls = structuredClone\(state\.controls\)/);
   assert.match(platform, /testimony:\s*structuredClone\(finalState\.testimony\)/);
   assert.match(platform, /triggers:\s*structuredClone\(finalState\.triggers\)/);
   assert.match(platform, /status:\s*state\.music\.playing[\s\S]*"silent-unavailable"/);
@@ -460,6 +539,7 @@ async function runRealAdapter(definition, skip) {
   let sceneState = null;
   let uiState = null;
   let logicalState = null;
+  let cameraState = null;
   const adapter = createSliceSequenceAdapter(
     {
       scene: {
@@ -470,7 +550,57 @@ async function runRealAdapter(definition, skip) {
         followActorPath: async () => {},
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
+          const camera = createFaithfulCameraPort();
+          const cameraAnchor = requireById(
+            anchorContract.anchors,
+            state.camera.anchorId,
+          );
+          const zone = cameraContract.cameraZones.find(
+            ({ regionId }) => regionId === cameraAnchor.regionId,
+          );
+          assert.ok(zone);
+          const playerActor = state.actors[state.controls.playerActorId];
+          assert.ok(playerActor);
+          const playerAnchor = requireById(
+            anchorContract.anchors,
+            playerActor.anchorId,
+          );
+          const playerSpawnId =
+            STORY_ACTOR_SPAWN_IDS[state.controls.playerActorId]?.[0];
+          const playerSpawn = spawnContract.actorSpawns.find(
+            ({ actorId }) => actorId === playerSpawnId,
+          );
+          assert.ok(playerSpawn);
+          const initialAnchor = requireById(
+            anchorContract.anchors,
+            playerSpawn.anchorId,
+          );
+          const playerTarget = {
+            x:
+              playerAnchor.position.x +
+              playerSpawn.position.x -
+              initialAnchor.position.x,
+            y:
+              playerAnchor.position.y +
+              playerSpawn.position.y -
+              initialAnchor.position.y,
+          };
+          const applied = applyCanonicalCameraFinalState({
+            camera: camera.port,
+            canonical: state.camera,
+            zone,
+            anchorPosition: cameraAnchor.position,
+            playerActorId: state.controls.playerActorId,
+            playerTarget,
+            worldWidth: layoutContract.worldBounds.width,
+            worldHeight: layoutContract.worldBounds.height,
+            mobile: false,
+          });
           sceneState = structuredClone(state);
+          cameraState = {
+            applied,
+            port: camera.snapshot(),
+          };
         },
       },
       ui: {
@@ -507,6 +637,94 @@ async function runRealAdapter(definition, skip) {
     scene: sceneState,
     ui: uiState,
     logical: logicalState,
+    camera: cameraState,
     inputLocks,
+  };
+}
+
+function requireById(values, id) {
+  const value = values.find((entry) => entry.id === id);
+  assert.ok(value, id);
+  return value;
+}
+
+function createFaithfulCameraPort() {
+  const viewport = { width: 1280, height: 720 };
+  const state = {
+    mode: "fixed",
+    position: { x: 0, y: 0 },
+    zoom: 1,
+    deadZone: { width: 0, height: 0 },
+    followTarget: null,
+    followOffset: { x: 0, y: 0 },
+    bounds: { x: 0, y: 0, width: 0, height: 0 },
+    scrollX: 0,
+    scrollY: 0,
+  };
+  const clampScroll = (value, axis) => {
+    const size = axis === "x" ? viewport.width : viewport.height;
+    const zoomedSize = size / state.zoom;
+    const start =
+      state.bounds[axis] + (zoomedSize - size) / 2;
+    const length = axis === "x" ? state.bounds.width : state.bounds.height;
+    const end = Math.max(start, start + length - zoomedSize);
+    return Math.min(Math.max(value, start), end);
+  };
+  const updatePosition = () => {
+    state.position = {
+      x: state.scrollX + viewport.width / 2,
+      y: state.scrollY + viewport.height / 2,
+    };
+  };
+  return {
+    port: {
+      get width() {
+        return viewport.width;
+      },
+      get height() {
+        return viewport.height;
+      },
+      get scrollX() {
+        return state.scrollX;
+      },
+      get scrollY() {
+        return state.scrollY;
+      },
+      resetFX: () => {},
+      setBounds: (x, y, width, height) => {
+        state.bounds = { x, y, width, height };
+      },
+      setZoom: (zoom) => {
+        state.zoom = zoom;
+      },
+      setDeadzone: (width, height) => {
+        state.deadZone = { width, height };
+      },
+      startFollow: (target, _round, _lerpX, _lerpY, offsetX, offsetY) => {
+        state.mode = "follow-observer";
+        state.followTarget = structuredClone(target);
+        state.followOffset = { x: offsetX, y: offsetY };
+        state.scrollX = clampScroll(
+          target.x - offsetX - viewport.width / 2,
+          "x",
+        );
+        state.scrollY = clampScroll(
+          target.y - offsetY - viewport.height / 2,
+          "y",
+        );
+        updatePosition();
+      },
+      stopFollow: () => {
+        state.mode = "fixed";
+        state.followTarget = null;
+        state.followOffset = { x: 0, y: 0 };
+      },
+      centerOn: (x, y) => {
+        state.scrollX = clampScroll(x - viewport.width / 2, "x");
+        state.scrollY = clampScroll(y - viewport.height / 2, "y");
+        updatePosition();
+      },
+    },
+    snapshot: () => structuredClone(state),
   };
 }

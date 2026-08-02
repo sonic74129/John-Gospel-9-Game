@@ -3,6 +3,10 @@ import Phaser from "phaser";
 import type { Point } from "@sonic74129/content-schema";
 
 import { CANDIDATE_JESUS_SHEET } from "./candidate-asset-adapter.ts";
+import {
+  applyCanonicalCameraFinalState,
+  type AppliedCanonicalCameraState,
+} from "./canonical-camera.ts";
 import type { SliceFinalState } from "./sequence-adapter.ts";
 import type { WorldRuntime } from "./world-adapter.ts";
 
@@ -52,7 +56,7 @@ export interface GrayboxSceneSnapshot {
     scrollY: number;
     zoom: number;
     followingObserver: boolean;
-    followPending: boolean;
+    followOffset: Point;
   }>;
   readonly appliedFinalState: AppliedGrayboxFinalState | null;
 }
@@ -72,14 +76,7 @@ export interface AppliedGrayboxFinalState {
     clay: SliceFinalState["props"]["clay"] &
       Readonly<{ position: Point }>;
   }>;
-  readonly camera: SliceFinalState["camera"] &
-    Readonly<{
-      zoneId: string;
-      position: Point;
-      zoom: number;
-      deadZone: Readonly<{ width: number; height: number }>;
-      followPending: boolean;
-    }>;
+  readonly camera: AppliedCanonicalCameraState;
   readonly controls: SliceFinalState["controls"] &
     Readonly<{
       sequenceInputEnabled: boolean;
@@ -120,7 +117,6 @@ export class GrayboxScene extends Phaser.Scene {
   #clayState = "absent";
   #clayCollisionEnabled = false;
   #cameraFollowingObserver = false;
-  #cameraFollowPending = false;
   #appliedFinalState: AppliedGrayboxFinalState | null = null;
   #tearingDown = false;
   #handlers: SceneInteractionHandlers | undefined;
@@ -263,7 +259,6 @@ export class GrayboxScene extends Phaser.Scene {
       if (!this.#movementAllowed()) {
         return;
       }
-      this.#activatePendingCameraFollow();
       this.#path = this.#world.findPath(this.playerPosition(), target);
     });
     this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
@@ -372,7 +367,10 @@ export class GrayboxScene extends Phaser.Scene {
         scrollY: camera.scrollY,
         zoom: camera.zoom,
         followingObserver: this.#cameraFollowingObserver,
-        followPending: this.#cameraFollowPending,
+        followOffset: {
+          x: camera.followOffset.x,
+          y: camera.followOffset.y,
+        },
       },
       appliedFinalState:
         this.#appliedFinalState === null
@@ -420,10 +418,20 @@ export class GrayboxScene extends Phaser.Scene {
       snapshot.camera.scrollX,
       snapshot.camera.scrollY,
     );
-    this.#cameraFollowPending = snapshot.camera.followPending;
     this.#cameraFollowingObserver = snapshot.camera.followingObserver;
     if (snapshot.camera.followingObserver && this.#player !== undefined) {
-      this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
+      this.cameras.main.startFollow(
+        this.#player.body,
+        true,
+        0.08,
+        0.08,
+        snapshot.camera.followOffset.x,
+        snapshot.camera.followOffset.y,
+      );
+      this.cameras.main.setScroll(
+        snapshot.camera.scrollX,
+        snapshot.camera.scrollY,
+      );
     } else {
       this.cameras.main.stopFollow();
     }
@@ -462,7 +470,6 @@ export class GrayboxScene extends Phaser.Scene {
     const anchor = this.#requireAnchor(anchorId);
     this.cameras.main.stopFollow();
     this.#cameraFollowingObserver = false;
-    this.#cameraFollowPending = false;
     this.cameras.main.pan(anchor.x, anchor.y, 350, "Sine.easeInOut");
   }
 
@@ -522,6 +529,7 @@ export class GrayboxScene extends Phaser.Scene {
       throw new RangeError(`Unknown canonical path ${pathId}.`);
     }
     this.cameras.main.stopFollow();
+    this.#cameraFollowingObserver = false;
     for (const point of path.points) {
       if (signal.aborted) {
         throw abortError();
@@ -606,24 +614,20 @@ export class GrayboxScene extends Phaser.Scene {
     }
     const mobile =
       this.game.canvas.clientWidth <= 640 || window.innerWidth <= 640;
-    const zoom = mobile ? zone.mobileZoom : zone.desktopZoom;
     const camera = this.cameras.main;
-    camera.stopFollow();
-    camera.resetFX();
-    camera.setBounds(
-      0,
-      0,
-      this.#world.definition.width,
-      this.#world.definition.height,
-    );
-    camera.setZoom(zoom);
-    camera.setDeadzone(zone.deadZone.width, zone.deadZone.height);
-    camera.centerOn(
-      cameraAnchorContract.position.x,
-      cameraAnchorContract.position.y,
-    );
-    this.#cameraFollowingObserver = false;
-    this.#cameraFollowPending = state.camera.mode === "follow-observer";
+    const appliedCamera = applyCanonicalCameraFinalState({
+      camera,
+      canonical: state.camera,
+      zone,
+      anchorPosition: cameraAnchorContract.position,
+      playerActorId: state.controls.playerActorId,
+      playerTarget: this.#player!.body,
+      worldWidth: this.#world.definition.width,
+      worldHeight: this.#world.definition.height,
+      mobile,
+    });
+    this.#cameraFollowingObserver =
+      appliedCamera.actual.followTargetActorId === state.controls.playerActorId;
     this.#appliedFinalState = {
       finalState: structuredClone(state),
       actors: Object.fromEntries(
@@ -646,14 +650,7 @@ export class GrayboxScene extends Phaser.Scene {
           },
         },
       },
-      camera: {
-        ...structuredClone(state.camera),
-        zoneId: zone.id,
-        position: structuredClone(cameraAnchorContract.position),
-        zoom,
-        deadZone: structuredClone(zone.deadZone),
-        followPending: this.#cameraFollowPending,
-      },
+      camera: appliedCamera,
       controls: {
         ...structuredClone(state.controls),
         sequenceInputEnabled: this.#sequenceInputEnabled,
@@ -808,7 +805,6 @@ export class GrayboxScene extends Phaser.Scene {
     ) {
       return false;
     }
-    this.#activatePendingCameraFollow();
     this.#player.body.setPosition(target.x, target.y);
     this.#syncLabel(this.#player);
     this.#handlers?.onWorldUpdate();
@@ -873,16 +869,4 @@ export class GrayboxScene extends Phaser.Scene {
     );
   }
 
-  #activatePendingCameraFollow(): void {
-    if (
-      !this.#cameraFollowPending ||
-      this.#player === undefined ||
-      this.#tearingDown
-    ) {
-      return;
-    }
-    this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
-    this.#cameraFollowPending = false;
-    this.#cameraFollowingObserver = true;
-  }
 }
