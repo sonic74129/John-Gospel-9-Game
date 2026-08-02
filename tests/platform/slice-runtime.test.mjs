@@ -7,6 +7,7 @@ import { MapSequence } from "@sonic74129/sequence-runtime";
 import { applyCanonicalCameraFinalState } from "../../src/adapters/canonical-camera.ts";
 import { createB14StressSequence } from "../../src/adapters/dev-b14-fixture.ts";
 import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
+import { navigationHintNeedsUpdate } from "../../src/platform/app-shell.ts";
 import {
   SliceStoryController,
   UnsupportedStoryBeatError,
@@ -456,6 +457,23 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
       /neighbors\.center|man-born-blind|地圖單位|DEV|debug|灰盒/i,
     );
   }
+  const unchangedHint = describeWorldNavigationObjective(arrival, {
+    x: playerPosition.x + 8,
+    y: playerPosition.y,
+  });
+  const closerHint = describeWorldNavigationObjective(arrival, {
+    x: playerPosition.x + 200,
+    y: playerPosition.y,
+  });
+  const redirectedHint = describeWorldNavigationObjective(arrival, {
+    x: arrival.position.x,
+    y: arrival.position.y - 160,
+  });
+  assert.equal(unchangedHint, arrivalHint);
+  assert.equal(navigationHintNeedsUpdate(arrivalHint, unchangedHint), false);
+  assert.equal(navigationHintNeedsUpdate(arrivalHint, closerHint), true);
+  assert.equal(navigationHintNeedsUpdate(closerHint, redirectedHint), true);
+  assert.equal(navigationHintNeedsUpdate(redirectedHint, null), true);
 
   assert.match(
     platform,
@@ -486,6 +504,10 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
     /beginTeardown[\s\S]*setNavigationObjective\(null\)/,
   );
   assert.match(shell, /data-navigation-hint role="status" aria-live="polite"/);
+  assert.match(
+    shell,
+    /if \(!navigationHintNeedsUpdate\(navigationHintMessage, message\)\) \{\s*return;/,
+  );
   assert.match(shell, /setCompleted:[\s\S]*setNavigationHint\(null\)/);
   assert.match(
     styles,
@@ -704,20 +726,76 @@ test("B08 formation path moves both the primary actor and canonical participants
   ]);
 });
 
-test("safe UI exposes only segment metadata and the licensing notice", async () => {
+test("licensed-text fallback keeps QA metadata DEV-only", async () => {
   const [shell, scripture] = await Promise.all([
     readText("src/platform/app-shell.ts"),
     readJson("src/story/scripture.json"),
   ]);
-  assert.match(shell, /經文待授權／審核/);
-  assert.match(shell, /line\.segmentId/);
-  assert.match(shell, /line\.verseKey/);
-  assert.match(shell, /line\.speakerId/);
-  assert.match(shell, /line\.sourceLevel/);
+  assert.match(
+    shell,
+    /if \(import\.meta\.env\.DEV\) \{[\s\S]*dialogue\.dataset\.speakerId = line\.speakerId[\s\S]*line\.segmentId[\s\S]*line\.sourceLevel/,
+  );
+  assert.match(
+    shell,
+    /actorLabelById\.get\(line\.speakerId\) \?\? "故事人物"/,
+  );
+  assert.match(
+    shell,
+    /此段經文內容暫不顯示。請留意人物的行動與回應。/,
+  );
   assert.doesNotMatch(shell, /line\.(?:text|exactText)/);
   for (const verse of scripture.verses) {
     assert.equal(verse.exactText, null);
   }
+});
+
+test("production bundle gate covers Foundation player-version QA residue", async () => {
+  const [checker, scene, shell] = await Promise.all([
+    readText("scripts/check-production-bundle.mjs"),
+    readText("src/adapters/graybox-scene.ts"),
+    readText("src/platform/app-shell.ts"),
+  ]);
+  for (const residue of [
+    "DEV FIXTURE",
+    "developer-fixture",
+    "data-developer-fixture",
+    "QA 灰盒",
+    "私人灰盒",
+    "候選身分灰盒",
+    "經文待授權／審核",
+    "段落識別：",
+    "Speaker",
+    "Verse key",
+    "Segment ID",
+    "S2 · 遊戲提示 · 不計分",
+    "B01–B19 故事運行中",
+    "從 B01 開始",
+    "已套用確定最終狀態",
+    "sdkOverlayVisible",
+    "sdkInteractionBlocked",
+    "lastHandoff",
+  ]) {
+    assert.match(checker, new RegExp(residue));
+  }
+  assert.match(
+    scene,
+    /if \(import\.meta\.env\.DEV\) \{[\s\S]*\.text\(x \+ 24, y \+ 20, id,/,
+  );
+  assert.match(scene, /import\.meta\.env\.DEV && isCandidateJesus/);
+  assert.match(
+    scene,
+    /import\.meta\.env\.DEV[\s\S]*runtimeActor\.state\.label/,
+  );
+  assert.match(
+    shell,
+    /if \(import\.meta\.env\.DEV\) \{[\s\S]*card\.dataset\.testimonyId/,
+  );
+  assert.match(
+    shell,
+    /if \(import\.meta\.env\.DEV\) \{[\s\S]*recall\.dataset\.recallId/,
+  );
+  assert.match(shell, /shell\.setStatus\("故事進行中"\)/);
+  assert.match(shell, /"目標已更新"/);
 });
 
 test("B14 stress fixture is DEV-only, lazy, and absent from production paths", async () => {

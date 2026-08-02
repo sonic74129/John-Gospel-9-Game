@@ -3,6 +3,7 @@ import type {
   SliceFinalState,
   SliceSequenceUi,
 } from "../adapters/sequence-adapter.ts";
+import { ACTORS } from "../adapters/story-contracts.ts";
 import { APPROVED_STUDY_QUESTIONS } from "./ending-study.ts";
 
 export interface AppShellHandlers {
@@ -34,11 +35,30 @@ function abortError(): Error {
   return error;
 }
 
+export function navigationHintNeedsUpdate(
+  currentMessage: string | null,
+  nextMessage: string | null,
+): boolean {
+  return currentMessage !== nextMessage;
+}
+
 export function createAppShell(
   root: HTMLElement,
   handlers: AppShellHandlers,
   options: Readonly<{ hasSave: boolean }> = { hasSave: false },
 ): AppShell {
+  const qaFixtureMarkup = import.meta.env.DEV
+    ? '<p class="runtime-badge" data-developer-fixture hidden></p>'
+    : "";
+  const qaReviewWarningMarkup = import.meta.env.DEV
+    ? '<p class="review-warning">QA 灰盒：只顯示段落識別與內部審核狀態。</p>'
+    : "";
+  const qaLicenseNoticeMarkup = import.meta.env.DEV
+    ? '<span class="license-notice">QA · 經文待授權／審核</span>'
+    : "";
+  const qaRecallSourceMarkup = import.meta.env.DEV
+    ? '<p class="dialogue-source">S2 · 遊戲提示 · 不計分</p>'
+    : "";
   root.innerHTML = `
     <article class="platform-shell" data-platform-shell>
       <header class="platform-header">
@@ -49,21 +69,21 @@ export function createAppShell(
         <div class="status-stack">
           <p class="platform-status" data-status role="status">準備開始</p>
           <p class="persistence-warning" data-persistence-warning role="alert" hidden></p>
-          <p class="developer-fixture" data-developer-fixture hidden></p>
+          ${qaFixtureMarkup}
         </div>
       </header>
       <section class="game-frame" aria-label="遊戲區域">
         <div class="game-container" data-game-container></div>
         <div class="slice-hud" data-slice-hud>
-          <p class="license-notice" data-license-notice>經文待授權／審核</p>
+          <p class="license-notice" data-license-notice>約翰福音 9:1–41</p>
           <p class="stage-goal" data-stage-goal>目標：留心路旁</p>
         </div>
         <p class="navigation-hint" data-navigation-hint role="status" aria-live="polite" hidden></p>
         <div class="start-screen" data-start-screen>
-          <p class="start-kicker">約翰福音第九章 · 完整故事</p>
+          <p class="start-kicker">約翰福音第九章 · 故事探索</p>
           <h2>以觀察者的身分進入故事</h2>
           <p>使用方向鍵、WASD，或點按地面移動；Space 或點按人物互動。</p>
-          <p class="review-warning">本故事不顯示未授權逐字經文，只呈現安全的段落識別與審核狀態。</p>
+          ${qaReviewWarningMarkup}
           <button class="primary-action" type="button" data-continue ${options.hasSave ? "" : "hidden"}>繼續故事</button>
           <button class="primary-action" type="button" data-start ${options.hasSave ? "hidden" : ""}>開始</button>
           <button type="button" data-start-restart ${options.hasSave ? "" : "hidden"}>重新開始</button>
@@ -79,7 +99,7 @@ export function createAppShell(
           <div class="dialogue-placeholder" data-dialogue-placeholder></div>
           <dl class="dialogue-metadata" data-dialogue-metadata></dl>
           <footer>
-            <span class="license-notice">經文待授權／審核</span>
+            ${qaLicenseNoticeMarkup}
             <button type="button" data-dialogue-next>下一段</button>
           </footer>
         </section>
@@ -89,26 +109,26 @@ export function createAppShell(
         </aside>
         <section class="recall-card" data-recall hidden aria-live="polite">
           <div>
-            <p class="dialogue-source">S2 · 遊戲提示 · 不計分</p>
+            ${qaRecallSourceMarkup}
             <h2>回想已揭示的見證</h2>
             <p data-recall-ids></p>
           </div>
           <button type="button" data-recall-dismiss>關閉</button>
         </section>
         <div class="subtitle-panel" data-subtitle aria-live="polite">
-          私人灰盒：只顯示段落識別，不顯示未授權經文文字。
+          請留意人物的行動與見證。
         </div>
         <section class="ending-panel" data-ending hidden aria-modal="true" role="dialog" aria-labelledby="ending-title">
           <p class="dialogue-source">故事完成 · 約翰福音 9:1–41</p>
           <h2 id="ending-title">已完成生來瞎眼的人的故事</h2>
           <p>以下問題是可選查考，不計分、不影響完成狀態，也不提供遊戲編寫的神學答案。</p>
           <div class="study-questions" data-study-questions></div>
-          <p class="license-notice">經文待授權／審核</p>
+          <p class="license-notice">約翰福音 9:1–41</p>
           <button type="button" data-ending-restart>重新開始</button>
         </section>
         <section class="restart-confirmation" data-restart-confirmation hidden aria-modal="true" role="dialog" aria-labelledby="restart-title">
           <h2 id="restart-title">確定重新開始？</h2>
-          <p>這會清除本故事的正式進度與存檔，然後從 B01 開始。</p>
+          <p>這會清除本故事的進度與存檔，然後從故事開頭開始。</p>
           <div>
             <button type="button" data-restart-cancel>保留進度</button>
             <button type="button" data-restart-confirm>清除並重新開始</button>
@@ -165,7 +185,9 @@ export function createAppShell(
     root,
     "[data-navigation-hint]",
   );
-  const fixture = requireElement<HTMLElement>(root, "[data-developer-fixture]");
+  const fixture = import.meta.env.DEV
+    ? requireElement<HTMLElement>(root, "[data-developer-fixture]")
+    : null;
   const dialogue = requireElement<HTMLElement>(root, "[data-dialogue]");
   const dialogueSpeaker = requireElement<HTMLElement>(
     root,
@@ -214,6 +236,9 @@ export function createAppShell(
     root,
     "[data-restart-confirmation]",
   );
+  const actorLabelById = new Map(
+    ACTORS.map(({ id, label }) => [id, label] as const),
+  );
   const restartCancel = requireElement<HTMLButtonElement>(
     root,
     "[data-restart-cancel]",
@@ -228,6 +253,7 @@ export function createAppShell(
   let subtitles = true;
   let appliedState: SliceFinalState | null = null;
   let completed = false;
+  let navigationHintMessage: string | null = null;
   let started = false;
   let resumeAfterRestartCancel = false;
   let restartButtonStates = new Map<HTMLButtonElement, boolean>();
@@ -354,21 +380,29 @@ export function createAppShell(
       if (line === undefined) {
         return;
       }
-      dialogue.dataset.speakerId = line.speakerId;
-      dialogue.dataset.verseKey = line.verseKey;
-      dialogue.dataset.segmentId = line.segmentId;
-      dialogue.dataset.sourceLevel = line.sourceLevel;
-      dialogueSpeaker.textContent = line.speakerId;
-      dialogueSource.textContent = `${line.sourceLevel} · ${line.sourceLabel}`;
+      dialogueSpeaker.textContent =
+        actorLabelById.get(line.speakerId) ?? "故事人物";
       dialogueProgress.textContent = `${index + 1} / ${lines.length}`;
-      dialoguePlaceholder.textContent =
-        `段落識別：${line.segmentId}（逐字內容尚未獲授權／審核）`;
-      dialogueMetadata.replaceChildren(
-        metadataRow("Speaker", line.speakerId),
-        metadataRow("Verse key", line.verseKey),
-        metadataRow("Segment ID", line.segmentId),
-        metadataRow("Source", `${line.sourceLevel} / ${line.sourceLabel}`),
-      );
+      if (import.meta.env.DEV) {
+        dialogue.dataset.speakerId = line.speakerId;
+        dialogue.dataset.verseKey = line.verseKey;
+        dialogue.dataset.segmentId = line.segmentId;
+        dialogue.dataset.sourceLevel = line.sourceLevel;
+        dialogueSource.textContent = `${line.sourceLevel} · ${line.sourceLabel}`;
+        dialoguePlaceholder.textContent =
+          `段落識別：${line.segmentId}（逐字內容尚未獲授權／審核）`;
+        dialogueMetadata.replaceChildren(
+          metadataRow("Speaker", line.speakerId),
+          metadataRow("Verse key", line.verseKey),
+          metadataRow("Segment ID", line.segmentId),
+          metadataRow("Source", `${line.sourceLevel} / ${line.sourceLabel}`),
+        );
+      } else {
+        dialogueSource.textContent = "";
+        dialoguePlaceholder.textContent =
+          "此段經文內容暫不顯示。請留意人物的行動與回應。";
+        dialogueMetadata.replaceChildren();
+      }
       dialogueNext.textContent =
         index === lines.length - 1 ? "繼續" : "下一段";
       dialogueNext.disabled = paused;
@@ -417,7 +451,7 @@ export function createAppShell(
       ]) {
         button.disabled = false;
       }
-      shell.setStatus("B01–B19 故事運行中");
+      shell.setStatus("故事進行中");
     },
     setPaused: (value) => {
       paused = value;
@@ -426,7 +460,7 @@ export function createAppShell(
       dialogueNext.disabled = value;
       skipButton.disabled = value;
       shell.setStatus(
-        value ? "遊戲已暫停" : completed ? "故事已完成" : "B01–B19 故事運行中",
+        value ? "遊戲已暫停" : completed ? "故事已完成" : "故事進行中",
       );
     },
     setMuted: (value) => {
@@ -454,6 +488,10 @@ export function createAppShell(
       shell.setNavigationHint(null);
     },
     setNavigationHint: (message) => {
+      if (!navigationHintNeedsUpdate(navigationHintMessage, message)) {
+        return;
+      }
+      navigationHintMessage = message;
       navigationHint.hidden = message === null;
       navigationHint.textContent = message ?? "";
     },
@@ -467,6 +505,9 @@ export function createAppShell(
         message === null ? "" : `進度同步警告：${message}`;
     },
     setDeveloperFixture: (fixtureId) => {
+      if (!import.meta.env.DEV || fixture === null) {
+        return;
+      }
       fixture.hidden = fixtureId === null;
       fixture.textContent =
         fixtureId === null ? "" : `DEV FIXTURE · ${fixtureId}`;
@@ -474,36 +515,50 @@ export function createAppShell(
     snapshotAppliedState: () =>
       appliedState === null ? null : structuredClone(appliedState),
     setOverlay: (visible, blocking = visible) => {
-      dialogue.dataset.sdkOverlayVisible = String(visible);
-      dialogue.dataset.sdkInteractionBlocked = String(visible && blocking);
+      if (import.meta.env.DEV) {
+        dialogue.dataset.sdkOverlayVisible = String(visible);
+        dialogue.dataset.sdkInteractionBlocked = String(visible && blocking);
+      }
     },
     presentDialogue: (_beatId, lines, signal) => presentLines(lines, signal),
     applyFinalState: (state, stageGoal, testimony, optionalRecall) => {
       appliedState = structuredClone(state);
       goal.textContent = `目標：${stageGoal.description}`;
-      goal.dataset.goalId = stageGoal.id;
+      if (import.meta.env.DEV) {
+        goal.dataset.goalId = stageGoal.id;
+      }
       testimonyList.replaceChildren(
         ...(testimony.length === 0
           ? [paragraph("尚未記錄")]
-          : testimony.map((entry) => {
+          : testimony.map((entry, index) => {
               const card = document.createElement("article");
               card.className = "testimony-card";
-              card.dataset.testimonyId = entry.id;
               const heading = document.createElement("h3");
-              heading.textContent = entry.id;
               const metadata = document.createElement("p");
-              metadata.textContent =
-                `${entry.sourceLevel} · ${entry.category} · ${entry.verseKeys.join(", ")}`;
+              if (import.meta.env.DEV) {
+                card.dataset.testimonyId = entry.id;
+                heading.textContent = entry.id;
+                metadata.textContent =
+                  `${entry.sourceLevel} · ${entry.category} · ${entry.verseKeys.join(", ")}`;
+              } else {
+                heading.textContent = `見證 ${index + 1}`;
+                metadata.textContent = "已記錄故事中的一段見證";
+              }
               card.append(heading, metadata);
               return card;
             })),
       );
       if (optionalRecall !== undefined) {
         recall.hidden = false;
-        recall.dataset.recallId = optionalRecall.id;
-        recall.dataset.blocking = String(optionalRecall.blocking);
-        recall.dataset.score = String(optionalRecall.score);
-        recallIds.textContent = optionalRecall.focusTestimonyIds.join(" · ");
+        if (import.meta.env.DEV) {
+          recall.dataset.recallId = optionalRecall.id;
+          recall.dataset.blocking = String(optionalRecall.blocking);
+          recall.dataset.score = String(optionalRecall.score);
+          recallIds.textContent =
+            optionalRecall.focusTestimonyIds.join(" · ");
+        } else {
+          recallIds.textContent = "回想見證紀錄中的內容。";
+        }
       } else {
         recall.hidden = true;
         delete recall.dataset.recallId;
@@ -512,13 +567,13 @@ export function createAppShell(
         recallIds.textContent = "";
       }
       shell.setStatus(
-        state.beatId === "b19"
-          ? "B19 已套用確定最終狀態"
-          : `${state.beatId.toUpperCase()} 已套用確定最終狀態`,
+        state.beatId === "b19" ? "故事已完成" : "目標已更新",
       );
     },
     setHandoff: (sequenceStatus) => {
-      dialogue.dataset.lastHandoff = sequenceStatus;
+      if (import.meta.env.DEV) {
+        dialogue.dataset.lastHandoff = sequenceStatus;
+      }
     },
   };
 

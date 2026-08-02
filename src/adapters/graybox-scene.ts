@@ -160,14 +160,16 @@ export class GrayboxScene extends Phaser.Scene {
       graphics.lineStyle(4, 0x3c352f, 0.55);
       graphics.fillRoundedRect(x, y, width, height, 28);
       graphics.strokeRoundedRect(x, y, width, height, 28);
-      this.add
-        .text(x + 24, y + 20, id, {
-          color: "#3c352f",
-          fontFamily: "system-ui, sans-serif",
-          fontSize: "24px",
-          fontStyle: "bold",
-        })
-        .setDepth(2);
+      if (import.meta.env.DEV) {
+        this.add
+          .text(x + 24, y + 20, id, {
+            color: "#3c352f",
+            fontFamily: "system-ui, sans-serif",
+            fontSize: "24px",
+            fontStyle: "bold",
+          })
+          .setDepth(2);
+      }
     });
 
     for (const actor of this.#world.actors) {
@@ -197,7 +199,7 @@ export class GrayboxScene extends Phaser.Scene {
       if (body instanceof Phaser.GameObjects.Arc) {
         body.setStrokeStyle(4, 0xe2d2b2);
       }
-      const labelText = isCandidateJesus
+      const labelText = import.meta.env.DEV && isCandidateJesus
         ? `${actor.state.label} · 候選身分灰盒`
         : actor.state.label;
       const label = this.add
@@ -547,9 +549,12 @@ export class GrayboxScene extends Phaser.Scene {
   setActorPose(storyActorId: string, pose: string): void {
     for (const visual of this.#storyActorVisuals(storyActorId)) {
       visual.pose = pose;
-      this.#runtimeActor(visual.actorId).state.pose = pose;
+      const runtimeActor = this.#runtimeActor(visual.actorId);
+      runtimeActor.state.pose = pose;
       visual.label.setText(
-        `${visual.label.text.split(" · ")[0]} · ${pose}`,
+        import.meta.env.DEV
+          ? `${runtimeActor.state.label} · ${pose}`
+          : runtimeActor.state.label,
       );
     }
   }
@@ -653,9 +658,11 @@ export class GrayboxScene extends Phaser.Scene {
         runtimeActor.state.collisionEnabled = actorState.collisionEnabled;
         runtimeActor.state.anchorId = actorState.anchorId;
         visual.label.setText(
-          visual.storyActorId === "jesus"
+          import.meta.env.DEV && visual.storyActorId === "jesus"
             ? `${actorState.label} · 候選身分灰盒`
-            : `${actorState.label} · ${actorState.pose}`,
+            : import.meta.env.DEV
+              ? `${actorState.label} · ${actorState.pose}`
+              : actorState.label,
         );
         this.#setVisualVisible(visual, actorState.visible);
       }

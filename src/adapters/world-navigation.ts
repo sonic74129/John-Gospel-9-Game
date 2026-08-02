@@ -4,6 +4,8 @@ import type { SliceStoryEvent } from "./story-adapter.ts";
 
 export const STORY_DISTANCE_UNIT_PIXELS = 96;
 export const ARRIVAL_RADIUS_PIXELS = 72;
+export const OBJECTIVE_DISTANCE_BUCKET_PIXELS =
+  STORY_DISTANCE_UNIT_PIXELS * 3;
 
 export interface PlayerTraversal {
   readonly previousPosition: Point;
@@ -135,7 +137,7 @@ export function describeWorldNavigationObjective(
   const direction = describeDirection(deltaX, deltaY);
   const routeDistance = Math.max(
     1,
-    Math.ceil(Math.hypot(deltaX, deltaY) / STORY_DISTANCE_UNIT_PIXELS),
+    Math.ceil(Math.hypot(deltaX, deltaY) / OBJECTIVE_DISTANCE_BUCKET_PIXELS),
   );
   const location = `${direction} · 距離約 ${routeDistance} 段路`;
 
