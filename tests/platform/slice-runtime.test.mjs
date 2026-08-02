@@ -426,18 +426,36 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
   assert.equal(proximity.targetId, "man-born-blind");
   assert.equal(interaction.kind, "interaction");
   assert.equal(interaction.targetId, "neighbors");
+  const arrivalHint = describeWorldNavigationObjective(
+    arrival,
+    playerPosition,
+  );
+  const proximityHint = describeWorldNavigationObjective(
+    proximity,
+    playerPosition,
+  );
+  const interactionHint = describeWorldNavigationObjective(
+    interaction,
+    playerPosition,
+  );
   assert.match(
-    describeWorldNavigationObjective(arrival, playerPosition),
+    arrivalHint,
     /前往目標地點.*距離約.*點按標記移動/,
   );
   assert.match(
-    describeWorldNavigationObjective(proximity, playerPosition),
+    proximityHint,
     /接近生來瞎眼的人.*接近後自動繼續/,
   );
   assert.match(
-    describeWorldNavigationObjective(interaction, playerPosition),
+    interactionHint,
     /與鄰舍互動.*Space 或點按人物/,
   );
+  for (const playerHint of [arrivalHint, proximityHint, interactionHint]) {
+    assert.doesNotMatch(
+      playerHint,
+      /neighbors\.center|man-born-blind|地圖單位|DEV|debug|灰盒/i,
+    );
+  }
 
   assert.match(
     platform,

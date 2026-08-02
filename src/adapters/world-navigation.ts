@@ -133,11 +133,11 @@ export function describeWorldNavigationObjective(
   const deltaX = objective.position.x - playerPosition.x;
   const deltaY = objective.position.y - playerPosition.y;
   const direction = describeDirection(deltaX, deltaY);
-  const mapUnits = Math.max(
+  const routeDistance = Math.max(
     1,
     Math.ceil(Math.hypot(deltaX, deltaY) / STORY_DISTANCE_UNIT_PIXELS),
   );
-  const location = `${direction} · 距離約 ${mapUnits} 個地圖單位`;
+  const location = `${direction} · 距離約 ${routeDistance} 段路`;
 
   if (objective.kind === "arrival") {
     return `前往${objective.label} · ${location} · 點按標記移動`;
