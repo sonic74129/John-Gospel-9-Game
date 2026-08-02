@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "family": "environment-outdoor",
+  "assetId": "environment.john9-foreground-props",
+  "promptVersion": "v1",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1152,
+    "height": 768
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: stylized-concept. Asset type: production game-object atlas for a three-quarter top-down RPG. On a perfectly flat, uniform pale cream #F7F0DE background, present exactly six isolated first-century Judean objects in a precise 3 columns by 2 rows grid, one centered object per equal cell, generous empty margin, no overlap, no dividing lines, no labels and no shadows crossing cell boundaries. Row 1 left to right: a sparse olive canopy foreground occluder seen from three-quarter top-down; a short palm-frond foreground occluder; a simple open timber courtyard gate panel. Row 2 left to right: a tiny shallow clay vessel suitable for prepared mud; a low limestone pool-edge marker stone; a simple low wooden waiting stool. All objects share polished warm hand-painted storybook realism, clean silhouettes, believable first-century materials, upper-left natural light, soft compact grounding shadows and the palette warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, sand #C5A16E and deep warm shadow #3C352F. Each object must be complete and fully inside its cell.",
+  "must": [
+    "Exactly six isolated objects in 3x2 order",
+    "Uniform #F7F0DE removable background",
+    "Complete clean silhouettes with generous margins",
+    "Three-quarter top-down perspective",
+    "Consistent upper-left light and first-century materials"
+  ],
+  "avoid": [
+    "People, animals, buildings or narrative scene",
+    "Cell borders, labels, text, UI, watermark",
+    "Object overlap or clipped silhouettes",
+    "Modern hinges, steel hardware or furniture",
+    "Glow, particles, icon outlines, sticker style",
+    "Tomb or John 11 objects"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1152,
+    "exactHeight": 768,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "All six requested cells are present in exact order",
+    "Background is sufficiently uniform for keyed transparency",
+    "Object silhouettes remain legible at 64-220 runtime pixels",
+    "Perspective, palette, material and light match the world base",
+    "No forbidden or story-extraneous content"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "master:master.john9-outdoor@v1",
+    "environment:environment.john9-world-base@v1",
+    "world:src/world/occlusion.json",
+    "world:src/world/props.json"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "startedAt": "2026-08-02T22:19:05.422Z",
+  "status": "complete",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 759171,
+      "sha256": "5d8f662e57cf60a1f144a290d53e76741294d0c4883af8ce4ed4af48c34254c4",
+      "observedDimensions": {
+        "width": 1152,
+        "height": 768
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:19:57.364Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 906422,
+      "sha256": "bb59341c90e54e7650d919b25f661b1ff86f73490ae1f48250f27e357b063fa4",
+      "observedDimensions": {
+        "width": 1152,
+        "height": 768
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:20:51.213Z"
+    }
+  ],
+  "completedAt": "2026-08-02T22:20:51.359Z",
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/environment-outdoor/environment.john9-foreground-props/v1/run-001/contact-sheet.jpg",
+    "bytes": 82839,
+    "sha256": "150861ff922b0e35538ca6f1b3aac322e14706ddf46c414dea915cdbb457db3e",
+    "maximumLongEdge": 1600
+  }
+}

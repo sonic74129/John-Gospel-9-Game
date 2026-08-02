@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "storybook-realism-v1",
+  "version": "0.1.0",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "source": ".foundation/art-direction/storybook-realism-v1/style.json",
+  "camera": "three-quarter top-down RPG",
+  "palette": {
+    "warmLimestone": "#D2B887",
+    "terracotta": "#A85F3E",
+    "dustyOlive": "#66704B",
+    "mutedBlue": "#526C73",
+    "sand": "#C5A16E",
+    "naturalLinen": "#E2D2B2",
+    "deepWarmShadow": "#3C352F"
+  },
+  "must": [
+    "Warm reverent human tone",
+    "Polished hand-painted game art with clean readable forms",
+    "Believable first-century Judean materials and restrained gestures",
+    "Natural motivated upper-left light and soft readable shadows",
+    "Gameplay readability before cinematic spectacle"
+  ],
+  "avoid": [
+    "Modern objects",
+    "Halos, miracle glow, magic beams, fantasy particles",
+    "Horror, decay, blood, body damage",
+    "Hero armor, royal costume, theatrical poses",
+    "Embedded text, UI, icons, borders, signatures, watermarks",
+    "John 11-specific houses, tombs, Bethany, Lazarus, or Martha imagery"
+  ],
+  "rights": {
+    "status": "candidate-private-preview",
+    "releaseEligible": false,
+    "publicRedistributionApproved": false
+  }
+}

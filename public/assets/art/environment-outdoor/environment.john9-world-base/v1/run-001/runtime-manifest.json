@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "environment.john9-world-base",
+  "family": "environment-outdoor",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-world-base/v1/run-001/selected-source.png",
+    "bytes": 1274829,
+    "sha256": "1a10c64656416164855b61686aa9142d6091483e91f6251b41e15515bac85b06"
+  },
+  "selectedCandidate": 2,
+  "selectionReason": "Candidate 2 is text-free and provides the clearest continuous horizontal route, five readable staging zones, unobstructed portals, restrained Siloam basin, courtyard gate, coherent actor scale, warm limestone materials and natural upper-left light; candidate 1 is rejected for an embedded Roadside Clearing sign.",
+  "outputs": [
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-world-base/v1/run-001/world-base.webp",
+      "mediaType": "image/webp",
+      "bytes": 423162,
+      "sha256": "9383d1cfa819e9338561eeb5442186e84bbe93d8c598e81df3cb5ab4deb20ad5",
+      "dimensions": {
+        "width": 3200,
+        "height": 1792
+      },
+      "processing": {
+        "tool": "Pillow",
+        "resizeKernel": "lanczos",
+        "crop": [
+          0,
+          61,
+          1152,
+          706
+        ],
+        "outputSize": [
+          3200,
+          1792
+        ],
+        "format": "webp",
+        "quality": 88
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

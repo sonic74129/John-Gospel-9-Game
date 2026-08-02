@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "character.man-born-blind",
+  "family": "characters-core",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "selectedCandidate": 2,
+  "reason": "Candidate 2 provides the clearest restrained four-state sequence: seated blind gaze, ordinary clay visible over closed eyes without injury or glow, alert standing seeing state, and quiet kneeling belief pose. Identity, terracotta wrap, adult scale, clean silhouettes and lighting remain continuous; candidate 1 is rejected because clasped prayer hands read more theatrically.",
+  "visualAcceptance": [
+    "One identity remains continuous through all four states",
+    "Blind and seeing states differ through gaze and pose, not injury",
+    "Clay is visible but ordinary and restrained",
+    "Belief pose reads clearly without spectacle",
+    "Silhouettes read at 96-112 runtime pixels tall"
+  ],
+  "source": {
+    "path": "production/art-source/characters-core/character.man-born-blind/v1/run-001/selected-source.png",
+    "bytes": 890506,
+    "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:29:00.391Z"
+}

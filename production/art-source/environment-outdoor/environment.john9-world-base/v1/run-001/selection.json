@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "environment.john9-world-base",
+  "family": "environment-outdoor",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "selectedCandidate": 2,
+  "reason": "Candidate 2 is text-free and provides the clearest continuous horizontal route, five readable staging zones, unobstructed portals, restrained Siloam basin, courtyard gate, coherent actor scale, warm limestone materials and natural upper-left light; candidate 1 is rejected for an embedded Roadside Clearing sign.",
+  "visualAcceptance": [
+    "Five zones read left-to-right without becoming separate panels",
+    "Canonical route and all four portals remain unobstructed",
+    "Pool, gate and outer road are immediately legible at gameplay zoom",
+    "Scale accepts 105 px runtime actors and group labels without crowding",
+    "Perspective, palette, materials and lighting are coherent",
+    "Theological restraint and period rules pass"
+  ],
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-world-base/v1/run-001/selected-source.png",
+    "bytes": 1274829,
+    "sha256": "1a10c64656416164855b61686aa9142d6091483e91f6251b41e15515bac85b06"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:19:00.129Z"
+}

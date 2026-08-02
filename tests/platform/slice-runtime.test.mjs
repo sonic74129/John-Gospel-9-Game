@@ -608,27 +608,24 @@ test("scene applies and exposes every canonical final-state surface", async () =
   assert.match(platform, /inputLocked:\s*input\.locked/);
 });
 
-test("candidate Jesus graybox uses the pinned sheet mapping and no candidate props", async () => {
-  const [adapter, scene, pack, manifest] = await Promise.all([
-    readText("src/adapters/candidate-asset-adapter.ts"),
+test("polished private-preview art wires every processed runtime file", async () => {
+  const [adapter, scene, manifest] = await Promise.all([
+    readText("src/adapters/art-asset-adapter.ts"),
     readText("src/adapters/graybox-scene.ts"),
-    readJson(
-      ".foundation/assets/packs/identity-jesus-storybook/0.1.0/pack.json",
-    ),
-    readJson(
-      ".foundation/assets/packs/identity-jesus-storybook/0.1.0/manifest.json",
-    ),
+    readJson("public/assets/art/manifest.json"),
   ]);
-  const sheet = pack.assets.find(({ id }) => id === "character-sheet");
-  const runtime = manifest.files.find(({ path }) => path === sheet.runtime);
-  assert.equal(pack.status, "candidate");
-  assert.equal(pack.releaseEligible, false);
-  assert.equal(runtime.width, sheet.runtimeMapping.sheetWidth);
-  assert.equal(runtime.height, sheet.runtimeMapping.sheetHeight);
-  assert.match(adapter, /characterSheet\.runtimeMapping\.cellWidth/);
-  assert.match(adapter, /characterSheet\.runtimeMapping\.cellHeight/);
-  assert.match(scene, /候選身分灰盒/);
-  assert.doesNotMatch(scene, /household-props-atlas|world-ground-atlas/);
+  const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
+  assert.equal(manifest.reviewStatus, "polished-private-preview");
+  assert.equal(manifest.releaseEligible, false);
+  assert.equal(manifest.publicRedistributionApproved, false);
+  assert.match(adapter, /STORY_ART_ASSET_LIST\.length !== outputs\.length/);
+  assert.match(scene, /STORY_ART\.worldBase\.key/);
+  assert.match(scene, /#syncNarrativeTextures\(\)/);
+  assert.match(scene, /#syncOccluderAlpha\(\)/);
+  for (const output of outputs) {
+    assert.match(adapter, new RegExp(output.path.split("/").at(-1).replace(".", "\\.")));
+  }
+  assert.doesNotMatch(scene, /add\.circle|候選身分灰盒/);
 });
 
 test("out-of-order restored progress fails explicitly outside the canonical contract", () => {

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "environment.john9-foreground-props",
+  "family": "environment-outdoor",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "selectedCandidate": 1,
+  "reason": "Candidate 1 preserves the exact six-cell order, clean isolated silhouettes, ordinary visible clay, more readable openable gate construction, believable marker and stool scale, uniform keyable background, and coherent warm upper-left lighting; candidate 2 gate reads as a closed wall panel and the clay state is absent.",
+  "visualAcceptance": [
+    "All six requested cells are present in exact order",
+    "Background is sufficiently uniform for keyed transparency",
+    "Object silhouettes remain legible at 64-220 runtime pixels",
+    "Perspective, palette, material and light match the world base",
+    "No forbidden or story-extraneous content"
+  ],
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-foreground-props/v1/run-001/selected-source.png",
+    "bytes": 759171,
+    "sha256": "5d8f662e57cf60a1f144a290d53e76741294d0c4883af8ce4ed4af48c34254c4"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:21:07.010Z"
+}

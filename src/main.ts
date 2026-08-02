@@ -131,7 +131,7 @@ const shell = createAppShell(root, {
         parent: shell.gameContainer,
         width: 1280,
         height: 720,
-        backgroundColor: "#83715d",
+        backgroundColor: "#ead9b7",
         scene,
         render: {
           antialias: true,

@@ -10,22 +10,38 @@ const FORBIDDEN = [
   "dev-b14-fixture",
 ];
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".map"]);
+const FORBIDDEN_PATH_PARTS = [
+  "production/art-pipeline",
+  "production/art-source",
+  "/candidates/",
+  "contact-sheet",
+  "selected-source",
+];
 
-async function textFiles(directory) {
+async function bundleFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(
     entries.map(async (entry) => {
       const path = join(directory, entry.name);
       if (entry.isDirectory()) {
-        return textFiles(path);
+        return bundleFiles(path);
       }
-      return TEXT_EXTENSIONS.has(extname(entry.name)) ? [path] : [];
+      return [path];
     }),
   );
   return nested.flat();
 }
 
-for (const file of await textFiles(DIST)) {
+for (const file of await bundleFiles(DIST)) {
+  const bundlePath = relative(DIST, file).replaceAll("\\", "/");
+  for (const token of FORBIDDEN_PATH_PARTS) {
+    if (`/${bundlePath}`.includes(token)) {
+      throw new Error(`Production bundle contains raw art path ${bundlePath}.`);
+    }
+  }
+  if (!TEXT_EXTENSIONS.has(extname(file))) {
+    continue;
+  }
   const content = await readFile(file, "utf8");
   for (const token of FORBIDDEN) {
     if (content.includes(token)) {

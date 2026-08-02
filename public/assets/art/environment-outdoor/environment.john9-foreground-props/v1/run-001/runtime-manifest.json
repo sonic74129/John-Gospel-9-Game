@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "environment.john9-foreground-props",
+  "family": "environment-outdoor",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-foreground-props/v1/run-001/selected-source.png",
+    "bytes": 759171,
+    "sha256": "5d8f662e57cf60a1f144a290d53e76741294d0c4883af8ce4ed4af48c34254c4"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Candidate 1 preserves the exact six-cell order, clean isolated silhouettes, ordinary visible clay, more readable openable gate construction, believable marker and stool scale, uniform keyable background, and coherent warm upper-left lighting; candidate 2 gate reads as a closed wall panel and the clay state is absent.",
+  "outputs": [
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-foreground-props/v1/run-001/olive-canopy.png",
+      "mediaType": "image/png",
+      "bytes": 101562,
+      "sha256": "9291c8de11af071d81b363ef05d52f6e2c44bdef5f19f1003921ea7e48b85f75",
+      "dimensions": {
+        "width": 260,
+        "height": 260
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=384:384:0:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:260:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-foreground-props/v1/run-001/palm-frond.png",
+      "mediaType": "image/png",
+      "bytes": 57355,
+      "sha256": "ddc5cc7abb55f8a36afad489f2b915ae40c890431b04a4d5cf437438e9d5f85d",
+      "dimensions": {
+        "width": 220,
+        "height": 220
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=384:384:384:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:220:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-foreground-props/v1/run-001/courtyard-gate.png",
+      "mediaType": "image/png",
+      "bytes": 44014,
+      "sha256": "ddc05b9566fc082332b8b11e886582ac31943a86ffaa8955a01e5448596511a6",
+      "dimensions": {
+        "width": 190,
+        "height": 190
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=384:384:768:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:190:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-foreground-props/v1/run-001/clay-vessel.png",
+      "mediaType": "image/png",
+      "bytes": 5842,
+      "sha256": "b64f5733f89ee11a3675ba23d95c710a9973512e30514e0fd7a9a70f41b0bb21",
+      "dimensions": {
+        "width": 72,
+        "height": 72
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=384:384:0:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:72:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-foreground-props/v1/run-001/pool-marker.png",
+      "mediaType": "image/png",
+      "bytes": 10807,
+      "sha256": "093531ef4b31cc9aeea58827ffc73a516d73e5518a2347403193ca30da1ed41b",
+      "dimensions": {
+        "width": 96,
+        "height": 96
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=384:384:384:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:96:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-foreground-props/v1/run-001/waiting-stool.png",
+      "mediaType": "image/png",
+      "bytes": 12621,
+      "sha256": "4f2788a668367419baa581d35c0f3b8741f3507b606c3ac53baebdeffb26425a",
+      "dimensions": {
+        "width": 96,
+        "height": 96
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=384:384:768:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:96:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

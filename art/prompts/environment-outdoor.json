@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "family": "environment-outdoor",
+  "entries": [
+    {
+      "assetId": "environment.john9-world-base",
+      "runtimeUse": "Primary continuous 3200x1792 world base behind actors and props",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v1",
+      "dimensions": { "width": 1152, "height": 768 },
+      "candidateCount": 2,
+      "prompt": "Use case: historical-scene. Asset type: primary continuous game-world base for a three-quarter top-down RPG, composed as one very wide horizontal strip inside a 1152x768 image with all important content between y=70 and y=700 so it can be cropped to 16:9. Create five seamlessly connected outdoor gameplay zones from left to right with no scene cuts: (1) a modest roadside clearing with a shaded limestone edge and seated-person staging space, (2) the Pool of Siloam represented as a restrained stepped stone water basin with a clear dry approach and accessible washing edge, (3) a neutral open gathering place with woven shade, (4) a neutral inquiry courtyard with an open timber gate, limestone walls and broad central standing space, and (5) a narrow outer road with a quiet olive-tree edge. Preserve a continuous east-west walkable route through all five zones, at least 105 image pixels wide, with four visibly clear portals. The final runtime world is 3200x1792 and actors are about 105 runtime pixels tall; maintain credible adult, doorway, gate, wall, stool and basin scale. Keep the pool water and all fixed masses away from the central route. Fixed three-quarter top-down RPG camera, consistent verticals and roof planes, polished warm hand-painted storybook realism, clean forms, subtle paper-and-gouache texture, upper-left natural afternoon light and soft shadows. Palette: warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, muted blue #526C73, sand #C5A16E, natural linen #E2D2B2, deep warm shadow #3C352F. Empty environment only: no people and no story event.",
+      "must": [
+        "One continuous five-zone horizontal outdoor world",
+        "Clear 105 px minimum generation-scale route through four portals",
+        "Siloam basin, neutral gathering place, neutral inquiry courtyard, outer road",
+        "Three-quarter top-down projection and believable scale",
+        "Empty environment with upper-left natural light"
+      ],
+      "avoid": [
+        "People or baked characters",
+        "Disconnected panels, collage seams, inset frames",
+        "Eye-level or side-on camera",
+        "Decorative maze, blocked route, deep water crossing",
+        "Temple identification or unsupported named venue",
+        "Halos, glow, fantasy effects, modern objects",
+        "Embedded text, labels, UI, watermark",
+        "Tomb, Bethany, Lazarus, Martha, John 11 imagery"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1152,
+        "exactHeight": 768,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "Five zones read left-to-right without becoming separate panels",
+        "Canonical route and all four portals remain unobstructed",
+        "Pool, gate and outer road are immediately legible at gameplay zoom",
+        "Scale accepts 105 px runtime actors and group labels without crowding",
+        "Perspective, palette, materials and lighting are coherent",
+        "Theological restraint and period rules pass"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "master:master.john9-outdoor@v1",
+        "world:src/world/layout.json",
+        "world:src/world/collisions.json",
+        "world:src/world/anchors.json"
+      ]
+    },
+    {
+      "assetId": "environment.john9-foreground-props",
+      "runtimeUse": "Separable foreground occluders, gate, clay vessel, pool marker and stool",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v1",
+      "dimensions": { "width": 1152, "height": 768 },
+      "candidateCount": 2,
+      "prompt": "Use case: stylized-concept. Asset type: production game-object atlas for a three-quarter top-down RPG. On a perfectly flat, uniform pale cream #F7F0DE background, present exactly six isolated first-century Judean objects in a precise 3 columns by 2 rows grid, one centered object per equal cell, generous empty margin, no overlap, no dividing lines, no labels and no shadows crossing cell boundaries. Row 1 left to right: a sparse olive canopy foreground occluder seen from three-quarter top-down; a short palm-frond foreground occluder; a simple open timber courtyard gate panel. Row 2 left to right: a tiny shallow clay vessel suitable for prepared mud; a low limestone pool-edge marker stone; a simple low wooden waiting stool. All objects share polished warm hand-painted storybook realism, clean silhouettes, believable first-century materials, upper-left natural light, soft compact grounding shadows and the palette warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, sand #C5A16E and deep warm shadow #3C352F. Each object must be complete and fully inside its cell.",
+      "must": [
+        "Exactly six isolated objects in 3x2 order",
+        "Uniform #F7F0DE removable background",
+        "Complete clean silhouettes with generous margins",
+        "Three-quarter top-down perspective",
+        "Consistent upper-left light and first-century materials"
+      ],
+      "avoid": [
+        "People, animals, buildings or narrative scene",
+        "Cell borders, labels, text, UI, watermark",
+        "Object overlap or clipped silhouettes",
+        "Modern hinges, steel hardware or furniture",
+        "Glow, particles, icon outlines, sticker style",
+        "Tomb or John 11 objects"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1152,
+        "exactHeight": 768,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "All six requested cells are present in exact order",
+        "Background is sufficiently uniform for keyed transparency",
+        "Object silhouettes remain legible at 64-220 runtime pixels",
+        "Perspective, palette, material and light match the world base",
+        "No forbidden or story-extraneous content"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "master:master.john9-outdoor@v1",
+        "environment:environment.john9-world-base@v1",
+        "world:src/world/occlusion.json",
+        "world:src/world/props.json"
+      ]
+    }
+  ]
+}
