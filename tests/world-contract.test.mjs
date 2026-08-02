@@ -143,11 +143,177 @@ function distanceToPolygon(point, polygon) {
     return 0;
   }
 
+  return distanceToPolygonBoundary(point, polygon);
+}
+
+function distanceToPolygonBoundary(point, polygon) {
   return Math.min(
     ...polygon.map((start, index) =>
       distanceToSegment(point, start, polygon[(index + 1) % polygon.length])
     )
   );
+}
+
+function crossProduct(a, b) {
+  return a.x * b.y - a.y * b.x;
+}
+
+function subtractPoints(a, b) {
+  return { x: a.x - b.x, y: a.y - b.y };
+}
+
+function segmentEdgeIntersectionParameters(start, end, edgeStart, edgeEnd) {
+  const epsilon = 1e-9;
+  const segmentVector = subtractPoints(end, start);
+  const edgeVector = subtractPoints(edgeEnd, edgeStart);
+  const offset = subtractPoints(edgeStart, start);
+  const denominator = crossProduct(segmentVector, edgeVector);
+
+  if (Math.abs(denominator) > epsilon) {
+    const segmentParameter = crossProduct(offset, edgeVector) / denominator;
+    const edgeParameter = crossProduct(offset, segmentVector) / denominator;
+    if (
+      segmentParameter >= -epsilon &&
+      segmentParameter <= 1 + epsilon &&
+      edgeParameter >= -epsilon &&
+      edgeParameter <= 1 + epsilon
+    ) {
+      return [Math.max(0, Math.min(1, segmentParameter))];
+    }
+    return [];
+  }
+
+  if (Math.abs(crossProduct(offset, segmentVector)) > epsilon) {
+    return [];
+  }
+
+  const squaredLength =
+    segmentVector.x * segmentVector.x + segmentVector.y * segmentVector.y;
+  if (squaredLength === 0) {
+    return pointOnSegment(start, edgeStart, edgeEnd) ? [0] : [];
+  }
+
+  return [edgeStart, edgeEnd]
+    .map(
+      (point) =>
+        ((point.x - start.x) * segmentVector.x +
+          (point.y - start.y) * segmentVector.y) /
+        squaredLength
+    )
+    .filter((parameter) => parameter >= -epsilon && parameter <= 1 + epsilon)
+    .map((parameter) => Math.max(0, Math.min(1, parameter)));
+}
+
+function pointAtSegmentParameter(start, end, parameter) {
+  return {
+    x: start.x + (end.x - start.x) * parameter,
+    y: start.y + (end.y - start.y) * parameter
+  };
+}
+
+function segmentCoveredByPolygonUnion(start, end, polygons) {
+  const parameters = [0, 1];
+  for (const polygon of polygons) {
+    for (let index = 0; index < polygon.length; index += 1) {
+      parameters.push(
+        ...segmentEdgeIntersectionParameters(
+          start,
+          end,
+          polygon[index],
+          polygon[(index + 1) % polygon.length]
+        )
+      );
+    }
+  }
+
+  const cuts = [...new Set(parameters.map((value) => value.toFixed(10)))]
+    .map(Number)
+    .sort((a, b) => a - b);
+  const testParameters = [
+    ...cuts,
+    ...cuts.slice(1).map((value, index) => (cuts[index] + value) / 2)
+  ];
+  return testParameters.every((parameter) => {
+    const point = pointAtSegmentParameter(start, end, parameter);
+    return polygons.some((polygon) => pointInPolygon(point, polygon));
+  });
+}
+
+function distanceBetweenSegments(aStart, aEnd, bStart, bEnd) {
+  if (
+    segmentEdgeIntersectionParameters(aStart, aEnd, bStart, bEnd).length > 0
+  ) {
+    return 0;
+  }
+  return Math.min(
+    distanceToSegment(aStart, bStart, bEnd),
+    distanceToSegment(aEnd, bStart, bEnd),
+    distanceToSegment(bStart, aStart, aEnd),
+    distanceToSegment(bEnd, aStart, aEnd)
+  );
+}
+
+function distanceFromSegmentToPolygon(start, end, polygon) {
+  if (pointInPolygon(start, polygon) || pointInPolygon(end, polygon)) {
+    return 0;
+  }
+  return Math.min(
+    ...polygon.map((edgeStart, index) =>
+      distanceBetweenSegments(
+        start,
+        end,
+        edgeStart,
+        polygon[(index + 1) % polygon.length]
+      )
+    )
+  );
+}
+
+function rectanglesOverlap(a, b) {
+  return (
+    a.x < b.x + b.width &&
+    a.x + a.width > b.x &&
+    a.y < b.y + b.height &&
+    a.y + a.height > b.y
+  );
+}
+
+function projectSequenceAnchor(anchor, frame, zone, profile) {
+  const zoom =
+    profile.viewport.width === 1280 ? zone.desktopZoom : zone.mobileZoom;
+  const cameraCenter = anchorById.get(zone.focusAnchorId).position;
+  const visibleWorldSpan = {
+    width: profile.viewport.width / zoom,
+    height: profile.viewport.height / zoom
+  };
+  const projectedCenter = {
+    x:
+      profile.viewport.width / 2 +
+      (anchor.position.x - cameraCenter.x) * zoom,
+    y:
+      profile.viewport.height / 2 +
+      (anchor.position.y - cameraCenter.y) * zoom
+  };
+  const worldExtent = {
+    x: anchor.clearanceRadius + frame.horizontalPadding,
+    y: anchor.clearanceRadius + frame.verticalPadding
+  };
+
+  return {
+    visibleWorldSpan,
+    visibleWorldRect: {
+      x: cameraCenter.x - visibleWorldSpan.width / 2,
+      y: cameraCenter.y - visibleWorldSpan.height / 2,
+      width: visibleWorldSpan.width,
+      height: visibleWorldSpan.height
+    },
+    projectedBounds: {
+      x: projectedCenter.x - worldExtent.x * zoom,
+      y: projectedCenter.y - worldExtent.y * zoom,
+      width: worldExtent.x * zoom * 2,
+      height: worldExtent.y * zoom * 2
+    }
+  };
 }
 
 function pathLength(points) {
@@ -338,6 +504,11 @@ test("collision polygons are valid and actor spawns have collision-safe clearanc
     assert.equal(anchor.regionId, spawn.regionId, `${spawn.id} anchor region`);
     assert.ok(pointInPolygon(spawn.position, region.walkablePolygon), spawn.id);
     assert.ok(spawn.collisionRadius >= navigation.agent.radius, spawn.id);
+    assert.ok(
+      distanceToPolygonBoundary(spawn.position, region.walkablePolygon) >=
+        spawn.collisionRadius,
+      `${spawn.id} circle crosses the ${region.id} walkable boundary`
+    );
     for (const collision of collisions.collisionPolygons) {
       assert.ok(
         distanceToPolygon(spawn.position, collision.polygon) >
@@ -375,7 +546,7 @@ test("navigation grid covers the world and references every region exactly once"
   );
 });
 
-test("required sequence paths use walkable points, safe endpoints, and 10-20 second travel", () => {
+test("required sequence paths keep every radius-aware segment walkable and collision-free", () => {
   const requiredPathIds = [
     "man-to-pool",
     "group-to-inquiry",
@@ -412,18 +583,34 @@ test("required sequence paths use walkable points, safe endpoints, and 10-20 sec
       Math.abs(calculatedDuration - sequencePath.expectedDurationSeconds) <= 2,
       `${sequencePath.id} duration does not match path length and speed`
     );
-
-    for (const point of sequencePath.points) {
+    assert.ok(sequencePath.actorRadius >= 0, `${sequencePath.id} actor radius`);
+    if (sequencePath.subject !== "camera-focus") {
       assert.ok(
-        layout.regions.some((region) =>
-          pointInPolygon(point, region.walkablePolygon)
+        sequencePath.actorRadius >= navigation.agent.radius,
+        `${sequencePath.id} actor radius must cover the navigation agent`
+      );
+    }
+
+    for (
+      let index = 0;
+      index < sequencePath.points.length - 1;
+      index += 1
+    ) {
+      const start = sequencePath.points[index];
+      const end = sequencePath.points[index + 1];
+      assert.ok(
+        segmentCoveredByPolygonUnion(
+          start,
+          end,
+          layout.regions.map((region) => region.walkablePolygon)
         ),
-        `${sequencePath.id} has non-walkable point ${JSON.stringify(point)}`
+        `${sequencePath.id} segment ${index} leaves the walkable union`
       );
       for (const collision of collisions.collisionPolygons) {
         assert.ok(
-          !pointInPolygon(point, collision.polygon),
-          `${sequencePath.id} point intersects ${collision.id}`
+          distanceFromSegmentToPolygon(start, end, collision.polygon) >
+            sequencePath.actorRadius,
+          `${sequencePath.id} segment ${index} enters the radius-expanded ${collision.id}`
         );
       }
     }
@@ -457,18 +644,6 @@ test("camera zones and safe-frame profiles support desktop and mobile targets", 
     });
     assert.ok(cameraZoomRange.minimum > 0, profile.id);
     assert.ok(cameraZoomRange.maximum >= cameraZoomRange.minimum, profile.id);
-    assert.ok(
-      framing.sequenceFrames.every(
-        (frame) => frame.horizontalPadding * 2 < gameplaySafeRect.width
-      ),
-      `${profile.id} horizontal frame padding`
-    );
-    assert.ok(
-      framing.sequenceFrames.every(
-        (frame) => frame.verticalPadding * 2 < gameplaySafeRect.height
-      ),
-      `${profile.id} vertical frame padding`
-    );
   }
 
   const desktop = framing.profiles.find(({ viewport }) => viewport.width === 1280);
@@ -487,10 +662,59 @@ test("camera zones and safe-frame profiles support desktop and mobile targets", 
   }
 
   for (const frame of framing.sequenceFrames) {
-    assert.ok(cameraZoneById.has(frame.cameraZoneId), frame.id);
+    const zone = cameraZoneById.get(frame.cameraZoneId);
+    assert.ok(zone, frame.id);
     assert.ok(frame.focusAnchorIds.length > 0, frame.id);
     for (const anchorId of frame.focusAnchorIds) {
-      assert.ok(anchorById.has(anchorId), `${frame.id} focus ${anchorId}`);
+      const anchor = anchorById.get(anchorId);
+      assert.ok(anchor, `${frame.id} focus ${anchorId}`);
+      for (const profile of framing.profiles) {
+        const { visibleWorldSpan, visibleWorldRect, projectedBounds } =
+          projectSequenceAnchor(anchor, frame, zone, profile);
+        assert.ok(
+          visibleWorldSpan.width >= profile.minimumVisibleWorldSpan.width &&
+            visibleWorldSpan.height >= profile.minimumVisibleWorldSpan.height,
+          `${frame.id}/${profile.id} visible world span`
+        );
+        assert.ok(
+          pointInBounds(anchor.position, visibleWorldRect),
+          `${frame.id}/${profile.id}/${anchorId} outside camera viewport`
+        );
+        assert.ok(
+          boundsInBounds(projectedBounds, profile.gameplaySafeRect),
+          `${frame.id}/${profile.id}/${anchorId} enters reserved UI`
+        );
+
+        const { viewport, safeInsets } = profile;
+        const reservedUi = [
+          { x: 0, y: 0, width: viewport.width, height: safeInsets.top },
+          {
+            x: 0,
+            y: viewport.height - safeInsets.bottom,
+            width: viewport.width,
+            height: safeInsets.bottom
+          },
+          {
+            x: 0,
+            y: safeInsets.top,
+            width: safeInsets.left,
+            height: profile.gameplaySafeRect.height
+          },
+          {
+            x: viewport.width - safeInsets.right,
+            y: safeInsets.top,
+            width: safeInsets.right,
+            height: profile.gameplaySafeRect.height
+          }
+        ];
+        assert.ok(
+          reservedUi.every(
+            (reservedBounds) =>
+              !rectanglesOverlap(projectedBounds, reservedBounds)
+          ),
+          `${frame.id}/${profile.id}/${anchorId} overlaps reserved UI`
+        );
+      }
     }
   }
 });

@@ -103,6 +103,15 @@
       "clearanceRadius": 44
     },
     {
+      "id": "pool.camera",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "camera-focus",
+      "position": { "x": 1300, "y": 900 },
+      "facing": "south",
+      "clearanceRadius": 0
+    },
+    {
       "id": "pool.neighbor-exit",
       "regionId": "siloam-pool",
       "sourceLevel": "approved-bridge",

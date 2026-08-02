@@ -39,7 +39,7 @@
       "id": "frame.neighbor-group",
       "cameraZoneId": "camera.neighbors",
       "focusAnchorIds": ["neighbors.group-left", "neighbors.center", "neighbors.group-right"],
-      "horizontalPadding": 72,
+      "horizontalPadding": 64,
       "verticalPadding": 64
     },
     {
