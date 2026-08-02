@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0.0-draft",
+  "translationId": "CUV-Traditional",
+  "language": "zh-Hant",
+  "provider": {
+    "status": "unknown",
+    "name": null
+  },
+  "artifact": {
+    "status": "unavailable",
+    "id": null,
+    "locator": null,
+    "sha256": null
+  },
+  "edition": {
+    "status": "unresolved",
+    "id": "CUV-Traditional",
+    "canonicalName": null
+  },
+  "divineNameVariant": {
+    "status": "unresolved",
+    "value": null,
+    "allowedValues": ["神", "上帝"]
+  },
+  "territories": {
+    "status": "unknown",
+    "values": []
+  },
+  "permissions": {
+    "redistribution": {
+      "status": "unknown",
+      "evidenceLocator": null,
+      "evidenceId": null,
+      "evidenceSha256": null
+    },
+    "offline": {
+      "status": "unknown",
+      "evidenceLocator": null,
+      "evidenceId": null,
+      "evidenceSha256": null
+    },
+    "tts": {
+      "status": "unknown",
+      "evidenceLocator": null,
+      "evidenceId": null,
+      "evidenceSha256": null
+    }
+  },
+  "attribution": {
+    "status": "unknown",
+    "text": null
+  },
+  "reviewerTrust": {
+    "locator": "scripture-trusted-reviewers.json"
+  },
+  "reviews": {
+    "text": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    "edition": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewedAt": null
+    },
+    "rights": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewedAt": null
+    }
+  },
+  "release": {
+    "blocked": true,
+    "blockers": [
+      "Licensed exact-text artifact is not supplied.",
+      "CUV-Traditional provider and canonical edition are unresolved.",
+      "The 神/上帝 edition variant is unresolved.",
+      "Territories and redistribution, offline, and TTS permissions are unknown.",
+      "Required text, edition, and rights reviews are pending."
+    ]
+  }
+}
