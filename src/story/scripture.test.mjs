@@ -11,6 +11,7 @@ import {
   validateDevelopmentScripture,
   validateReleaseReadyScripture,
 } from "./scripture.mjs";
+import { runScriptureReleaseCli } from "./validate-scripture-release.mjs";
 
 const draft = await loadScriptureContract();
 assert.equal(draft.ok, true);
@@ -548,6 +549,50 @@ test("malformed JSON produces structured loader errors", async (t) => {
   assert.equal(loaded.scripture, null);
   assert.ok(loaded.errors.every((error) => "field" in error && "message" in error));
   assert.match(errorText(loaded), /contains malformed JSON/);
+});
+
+test("release CLI never logs loaded scripture when another input fails", async (t) => {
+  const root = await mkdtemp(path.join(tmpdir(), "john9-cli-redaction-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const secretMarker = "LICENSED_SECRET_MARKER_DO_NOT_LOG";
+  const scripture = structuredClone(draft.scripture);
+  scripture.verses[0].exactText = secretMarker;
+  const scripturePath = path.join(root, "scripture.json");
+  const reviewersPath = path.join(root, "reviewers.json");
+  const missingRightsPath = path.join(root, "missing-rights.json");
+  await Promise.all([
+    writeFile(scripturePath, JSON.stringify(scripture)),
+    writeFile(reviewersPath, JSON.stringify(draft.trustedReviewers)),
+  ]);
+
+  let stdout = "";
+  let stderr = "";
+  const exitCode = await runScriptureReleaseCli({
+    loadOptions: {
+      scripture: scripturePath,
+      rights: missingRightsPath,
+      trustedReviewers: reviewersPath,
+    },
+    env: {},
+    stdout: { write: (chunk) => (stdout += chunk) },
+    stderr: { write: (chunk) => (stderr += chunk) },
+  });
+
+  assert.equal(exitCode, 1);
+  assert.equal(stdout, "");
+  assert.doesNotMatch(stderr, new RegExp(secretMarker));
+  assert.doesNotMatch(stderr, /exactText/);
+  assert.equal(stderr.includes(root), false);
+  assert.deepEqual(JSON.parse(stderr), {
+    ok: false,
+    errors: [
+      {
+        field: "rights",
+        code: "ENOENT",
+        message: "could not read JSON input",
+      },
+    ],
+  });
 });
 
 test("checked-in draft remains explicitly release-blocked", async () => {

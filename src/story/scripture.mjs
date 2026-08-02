@@ -770,7 +770,11 @@ async function readPinnedFile(rootUrl, locator, field, errors) {
     }
     return await readFile(resolvedCandidate);
   } catch (error) {
-    addError(errors, field, `could not read pinned file: ${error.code ?? error.message}`);
+    addError(
+      errors,
+      field,
+      `could not read pinned file (${error.code ?? "READ_FAILED"})`,
+    );
     return null;
   }
 }
@@ -1154,13 +1158,21 @@ async function readJsonInput(name, location, errors) {
   try {
     bytes = await readFile(location);
   } catch (error) {
-    addError(errors, name, `could not read JSON: ${error.code ?? error.message}`);
+    errors.push({
+      field: name,
+      code: error.code ?? "READ_FAILED",
+      message: "could not read JSON input",
+    });
     return null;
   }
   try {
     return JSON.parse(bytes.toString("utf8"));
   } catch {
-    addError(errors, name, "contains malformed JSON");
+    errors.push({
+      field: name,
+      code: "INVALID_JSON",
+      message: "contains malformed JSON",
+    });
     return null;
   }
 }
