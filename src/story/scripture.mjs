@@ -1,15 +1,30 @@
-import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile, realpath } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+const storyRootUrl = new URL("./", import.meta.url);
 const scriptureUrl = new URL("./scripture.json", import.meta.url);
 const rightsUrl = new URL("./scripture-rights.json", import.meta.url);
-const permissionNames = ["redistribution", "offline", "tts"];
-const reviewNames = ["text", "edition", "rights"];
-const expectedPassage = {
+const reviewersUrl = new URL("./scripture-trusted-reviewers.json", import.meta.url);
+
+const supportedVersions = Object.freeze({
+  scripture: "1.0.0-draft",
+  rights: "1.0.0-draft",
+  artifact: "1.0.0",
+  reviewers: "1.0.0",
+});
+const permissionNames = Object.freeze(["redistribution", "offline", "tts"]);
+const reviewNames = Object.freeze(["text", "edition", "rights"]);
+const expectedPassage = Object.freeze({
   book: "John",
   chapter: 9,
   verseStart: 1,
   verseEnd: 41,
-};
+});
+const sha256Pattern = /^[a-f0-9]{64}$/;
+const artifactLocatorPattern =
+  /^licensed-artifacts\/[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?\.json$/;
 
 export const JOHN_9_VERSE_KEYS = Object.freeze(
   Array.from({ length: 41 }, (_, index) => `john9:${index + 1}`),
@@ -32,18 +47,44 @@ function isReviewDate(value) {
   return !Number.isNaN(date.valueOf()) && date.toISOString().startsWith(value);
 }
 
-function addError(errors, path, message) {
-  errors.push(`${path}: ${message}`);
+function sha256(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
 }
 
-function validateReview(review, path, errors) {
-  if (!isRecord(review)) {
-    addError(errors, path, "must be an object");
+function addError(errors, field, message) {
+  errors.push({ field, message });
+}
+
+function result(errors) {
+  return { ok: errors.length === 0, errors };
+}
+
+function validateVersion(value, expected, field, errors) {
+  if (value !== expected) {
+    addError(errors, field, `must equal supported version ${expected}`);
+  }
+}
+
+function validatePassage(passage, field, errors) {
+  if (!isRecord(passage)) {
+    addError(errors, field, "must be an object");
     return;
   }
 
+  for (const [name, expected] of Object.entries(expectedPassage)) {
+    if (passage[name] !== expected) {
+      addError(errors, `${field}.${name}`, `must equal ${expected}`);
+    }
+  }
+}
+
+function validateReview(review, field, errors) {
+  if (!isRecord(review)) {
+    addError(errors, field, "must be an object");
+    return;
+  }
   if (!["pending", "approved"].includes(review.status)) {
-    addError(errors, `${path}.status`, "must be pending or approved");
+    addError(errors, `${field}.status`, "must be pending or approved");
     return;
   }
 
@@ -51,7 +92,7 @@ function validateReview(review, path, errors) {
     if (review.reviewer !== null || review.reviewedAt !== null) {
       addError(
         errors,
-        path,
+        field,
         "pending reviews must have null reviewer and reviewedAt",
       );
     }
@@ -59,54 +100,40 @@ function validateReview(review, path, errors) {
   }
 
   if (!isNonEmptyString(review.reviewer)) {
-    addError(errors, `${path}.reviewer`, "is required for an approved review");
+    addError(errors, `${field}.reviewer`, "must be a reviewer ID");
   }
   if (!isReviewDate(review.reviewedAt)) {
     addError(
       errors,
-      `${path}.reviewedAt`,
-      "must be a valid YYYY-MM-DD date for an approved review",
+      `${field}.reviewedAt`,
+      "must be a valid YYYY-MM-DD date",
     );
   }
 }
 
-function validatePassage(contract, errors) {
-  if (!isRecord(contract.passage)) {
-    addError(errors, "passage", "must be an object");
+function validateDisplay(verse, field, errors) {
+  if (!isRecord(verse.display)) {
+    addError(errors, `${field}.display`, "must be an object");
     return;
   }
-
-  for (const [field, expected] of Object.entries(expectedPassage)) {
-    if (contract.passage[field] !== expected) {
-      addError(errors, `passage.${field}`, `must equal ${expected}`);
-    }
-  }
-}
-
-function validateDisplay(verse, path, errors) {
-  if (!isRecord(verse.display)) {
-    addError(errors, `${path}.display`, "must be an object");
+  if (!Array.isArray(verse.display.segments)) {
+    addError(errors, `${field}.display.segments`, "must be an array");
     return;
   }
 
   const segments = verse.display.segments;
-  if (!Array.isArray(segments)) {
-    addError(errors, `${path}.display.segments`, "must be an array");
-    return;
-  }
-
   if (verse.exactText === null) {
     if (verse.textAvailability !== "unavailable-rights-pending") {
       addError(
         errors,
-        `${path}.textAvailability`,
+        `${field}.textAvailability`,
         "must explicitly identify rights-pending unavailability",
       );
     }
     if (verse.display.mode !== "unavailable" || segments.length !== 0) {
       addError(
         errors,
-        `${path}.display`,
+        `${field}.display`,
         "unavailable text must use unavailable mode with no segments",
       );
     }
@@ -114,59 +141,123 @@ function validateDisplay(verse, path, errors) {
   }
 
   if (!isNonEmptyString(verse.exactText)) {
-    addError(errors, `${path}.exactText`, "must be null or a non-empty string");
+    addError(errors, `${field}.exactText`, "must be null or non-empty text");
     return;
   }
   if (verse.textAvailability !== "licensed") {
     addError(
       errors,
-      `${path}.textAvailability`,
+      `${field}.textAvailability`,
       "must be licensed when exactText is present",
     );
   }
   if (!["full", "segmented"].includes(verse.display.mode)) {
     addError(
       errors,
-      `${path}.display.mode`,
+      `${field}.display.mode`,
       "must be full or segmented when exactText is present",
     );
   }
   if (segments.length === 0) {
     addError(
       errors,
-      `${path}.display.segments`,
-      "must contain display segments when exactText is present",
+      `${field}.display.segments`,
+      "must not be empty when exactText is present",
     );
     return;
   }
 
-  const segmentIds = new Set();
+  const ids = new Set();
   let concatenated = "";
   for (const [index, segment] of segments.entries()) {
-    const segmentPath = `${path}.display.segments[${index}]`;
+    const segmentField = `${field}.display.segments[${index}]`;
     if (!isRecord(segment)) {
-      addError(errors, segmentPath, "must be an object");
+      addError(errors, segmentField, "must be an object");
       continue;
     }
     if (!isNonEmptyString(segment.id)) {
-      addError(errors, `${segmentPath}.id`, "must be a non-empty string");
-    } else if (segmentIds.has(segment.id)) {
-      addError(errors, `${segmentPath}.id`, "must be unique within the verse");
+      addError(errors, `${segmentField}.id`, "must be non-empty");
+    } else if (ids.has(segment.id)) {
+      addError(errors, `${segmentField}.id`, "must be unique within the verse");
     } else {
-      segmentIds.add(segment.id);
+      ids.add(segment.id);
     }
     if (typeof segment.text !== "string") {
-      addError(errors, `${segmentPath}.text`, "must be a string");
+      addError(errors, `${segmentField}.text`, "must be a string");
     } else {
       concatenated += segment.text;
     }
   }
-
   if (concatenated !== verse.exactText) {
     addError(
       errors,
-      `${path}.display.segments`,
+      `${field}.display.segments`,
       "must concatenate exactly to exactText",
+    );
+  }
+}
+
+function validateIdentifiers(contract, rights, verses, errors) {
+  const translationId = contract.translation?.id;
+  const editionId = contract.translation?.editionId;
+
+  if (!isNonEmptyString(translationId)) {
+    addError(errors, "translation.id", "must be a non-empty string");
+  }
+  if (!isNonEmptyString(editionId)) {
+    addError(errors, "translation.editionId", "must be a non-empty string");
+  }
+  if (!isNonEmptyString(rights.translationId)) {
+    addError(errors, "rights.translationId", "must be a non-empty string");
+  }
+  if (!isNonEmptyString(rights.edition?.id)) {
+    addError(errors, "rights.edition.id", "must be a non-empty string");
+  }
+
+  for (const [index, verse] of verses.entries()) {
+    if (!isRecord(verse)) {
+      continue;
+    }
+    if (!isNonEmptyString(verse.translationId)) {
+      addError(
+        errors,
+        `verses[${index}].translationId`,
+        "must be a non-empty string",
+      );
+    } else if (verse.translationId !== translationId) {
+      addError(
+        errors,
+        `verses[${index}].translationId`,
+        "must exactly equal translation.id",
+      );
+    }
+    if (!isNonEmptyString(verse.editionId)) {
+      addError(
+        errors,
+        `verses[${index}].editionId`,
+        "must be a non-empty string",
+      );
+    } else if (verse.editionId !== editionId) {
+      addError(
+        errors,
+        `verses[${index}].editionId`,
+        "must exactly equal translation.editionId",
+      );
+    }
+  }
+
+  if (isNonEmptyString(translationId) && rights.translationId !== translationId) {
+    addError(
+      errors,
+      "rights.translationId",
+      "must exactly equal translation.id",
+    );
+  }
+  if (isNonEmptyString(editionId) && rights.edition?.id !== editionId) {
+    addError(
+      errors,
+      "rights.edition.id",
+      "must exactly equal translation.editionId",
     );
   }
 }
@@ -178,7 +269,7 @@ function validateVerses(contract, rights, errors) {
   }
 
   const verses = contract.verses;
-  const keys = verses.map((verse) => verse?.key);
+  const keys = verses.map((verse) => (isRecord(verse) ? verse.key : undefined));
   const keyCounts = new Map();
   for (const key of keys) {
     keyCounts.set(key, (keyCounts.get(key) ?? 0) + 1);
@@ -192,11 +283,12 @@ function validateVerses(contract, rights, errors) {
       addError(errors, "verses", `is missing ${key}`);
     }
   }
-  for (const [key, count] of keyCounts) {
-    if (count > 1) {
-      addError(errors, "verses", `contains duplicate key ${String(key)}`);
+  for (const [key, count] of keyCounts.entries()) {
+    if (key !== undefined && count > 1) {
+      addError(errors, "verses", `contains duplicate key ${key}`);
     }
   }
+
   for (const [index, expectedKey] of JOHN_9_VERSE_KEYS.entries()) {
     if (keys[index] !== undefined && keys[index] !== expectedKey) {
       addError(
@@ -207,15 +299,18 @@ function validateVerses(contract, rights, errors) {
     }
   }
 
-  const translationIds = new Set();
   for (const [index, verse] of verses.entries()) {
-    const path = `verses[${index}]`;
+    const field = `verses[${index}]`;
     if (!isRecord(verse)) {
-      addError(errors, path, "must be an object");
+      addError(errors, field, "must be an object");
       continue;
     }
-
-    translationIds.add(verse.translationId);
+    validateVersion(
+      verse.schemaVersion,
+      supportedVersions.scripture,
+      `${field}.schemaVersion`,
+      errors,
+    );
     const expectedVerse = index + 1;
     if (
       !isRecord(verse.reference) ||
@@ -225,99 +320,81 @@ function validateVerses(contract, rights, errors) {
     ) {
       addError(
         errors,
-        `${path}.reference`,
+        `${field}.reference`,
         `must identify John 9:${expectedVerse}`,
       );
     }
     if (verse.language !== "zh-Hant") {
-      addError(errors, `${path}.language`, "must be zh-Hant");
+      addError(errors, `${field}.language`, "must be zh-Hant");
     }
     if (!["unresolved", "confirmed"].includes(verse.editionStatus)) {
       addError(
         errors,
-        `${path}.editionStatus`,
+        `${field}.editionStatus`,
         "must be unresolved or confirmed",
       );
     }
     if (verse.sourceLevel !== "scripture") {
-      addError(errors, `${path}.sourceLevel`, "must be scripture");
+      addError(errors, `${field}.sourceLevel`, "must be scripture");
     }
-
-    validateDisplay(verse, path, errors);
-    validateReview(verse.review, `${path}.review`, errors);
+    validateDisplay(verse, field, errors);
+    validateReview(verse.review, `${field}.review`, errors);
   }
 
-  if (translationIds.size > 1) {
-    addError(errors, "verses", "must not mix translation IDs");
-  }
-
-  const declaredTranslationId = contract.translation?.id;
-  const verseTranslationId = [...translationIds][0];
-  if (
-    verseTranslationId !== undefined &&
-    verseTranslationId !== declaredTranslationId
-  ) {
-    addError(
-      errors,
-      "translation.id",
-      "must match every verse translationId",
-    );
-  }
-  if (
-    rights.translationId !== declaredTranslationId ||
-    rights.edition?.id !== declaredTranslationId
-  ) {
-    addError(
-      errors,
-      "rights.translationId",
-      "must match the scripture translation and edition IDs",
-    );
-  }
-
+  validateIdentifiers(contract, rights, verses, errors);
   return verses;
 }
 
-function validatePermission(permission, path, rightsReview, errors) {
+function validatePermission(permission, field, errors) {
   if (!isRecord(permission)) {
-    addError(errors, path, "must be an object");
+    addError(errors, field, "must be an object");
     return;
   }
   if (!["unknown", "allowed", "denied"].includes(permission.status)) {
-    addError(errors, `${path}.status`, "must be unknown, allowed, or denied");
+    addError(errors, `${field}.status`, "must be unknown, allowed, or denied");
     return;
   }
 
   if (permission.status === "unknown") {
-    if (permission.basis !== null || permission.evidence !== null) {
+    if (
+      permission.evidenceId !== null ||
+      permission.evidenceSha256 !== null
+    ) {
       addError(
         errors,
-        path,
-        "unknown permissions must have null basis and evidence",
+        field,
+        "unknown permissions must have null immutable evidence fields",
       );
     }
     return;
   }
 
+  if (!sha256Pattern.test(permission.evidenceSha256 ?? "")) {
+    addError(
+      errors,
+      `${field}.evidenceSha256`,
+      "must be a lowercase SHA-256",
+    );
+  }
   if (
-    !isNonEmptyString(permission.basis) ||
-    !isNonEmptyString(permission.evidence)
+    permission.evidenceId !==
+    `urn:sha256:${permission.evidenceSha256 ?? ""}`
   ) {
     addError(
       errors,
-      path,
-      "claimed permissions require non-empty basis and evidence",
-    );
-  }
-  if (rightsReview?.status !== "approved") {
-    addError(
-      errors,
-      path,
-      "claimed permissions require an approved rights review",
+      `${field}.evidenceId`,
+      "must be the immutable urn:sha256 ID for evidenceSha256",
     );
   }
 }
 
 function validateRights(rights, errors) {
+  validateVersion(
+    rights.schemaVersion,
+    supportedVersions.rights,
+    "rights.schemaVersion",
+    errors,
+  );
   if (rights.language !== "zh-Hant") {
     addError(errors, "rights.language", "must be zh-Hant");
   }
@@ -343,22 +420,33 @@ function validateRights(rights, errors) {
       "must be unavailable or available",
     );
   } else if (rights.artifact.status === "unavailable") {
-    if (rights.artifact.id !== null || rights.artifact.sha256 !== null) {
+    if (
+      rights.artifact.id !== null ||
+      rights.artifact.locator !== null ||
+      rights.artifact.sha256 !== null
+    ) {
       addError(
         errors,
         "rights.artifact",
-        "unavailable artifacts must have null id and sha256",
+        "unavailable artifacts must have null id, locator, and sha256",
       );
     }
   } else {
     if (!isNonEmptyString(rights.artifact.id)) {
       addError(errors, "rights.artifact.id", "is required when available");
     }
-    if (!/^[a-f0-9]{64}$/.test(rights.artifact.sha256 ?? "")) {
+    if (!artifactLocatorPattern.test(rights.artifact.locator ?? "")) {
+      addError(
+        errors,
+        "rights.artifact.locator",
+        "must be a safe licensed-artifacts/*.json relative locator",
+      );
+    }
+    if (!sha256Pattern.test(rights.artifact.sha256 ?? "")) {
       addError(
         errors,
         "rights.artifact.sha256",
-        "must be a lowercase SHA-256 when available",
+        "must be a lowercase SHA-256",
       );
     }
   }
@@ -391,6 +479,9 @@ function validateRights(rights, errors) {
     addError(errors, "rights.divineNameVariant", "must be an object");
   } else {
     const variant = rights.divineNameVariant;
+    const allowedValues = Array.isArray(variant.allowedValues)
+      ? variant.allowedValues
+      : null;
     if (!["unresolved", "confirmed"].includes(variant.status)) {
       addError(
         errors,
@@ -399,9 +490,9 @@ function validateRights(rights, errors) {
       );
     }
     if (
-      !Array.isArray(variant.allowedValues) ||
-      !variant.allowedValues.includes("神") ||
-      !variant.allowedValues.includes("上帝")
+      allowedValues === null ||
+      !allowedValues.includes("神") ||
+      !allowedValues.includes("上帝")
     ) {
       addError(
         errors,
@@ -417,7 +508,7 @@ function validateRights(rights, errors) {
       );
     } else if (
       variant.status === "confirmed" &&
-      !variant.allowedValues?.includes(variant.value)
+      (allowedValues === null || !allowedValues.includes(variant.value))
     ) {
       addError(
         errors,
@@ -435,10 +526,11 @@ function validateRights(rights, errors) {
       "rights.territories.status",
       "must be unknown or confirmed",
     );
+  } else if (!Array.isArray(rights.territories.values)) {
+    addError(errors, "rights.territories.values", "must be an array");
   } else if (
     rights.territories.status === "unknown" &&
-    (!Array.isArray(rights.territories.values) ||
-      rights.territories.values.length !== 0)
+    rights.territories.values.length !== 0
   ) {
     addError(
       errors,
@@ -447,27 +539,14 @@ function validateRights(rights, errors) {
     );
   } else if (
     rights.territories.status === "confirmed" &&
-    (!Array.isArray(rights.territories.values) ||
-      rights.territories.values.length === 0 ||
+    (rights.territories.values.length === 0 ||
       rights.territories.values.some((value) => !isNonEmptyString(value)))
   ) {
     addError(
       errors,
       "rights.territories.values",
-      "must list at least one territory when confirmed",
+      "must list non-empty territories when confirmed",
     );
-  }
-
-  if (!isRecord(rights.reviews)) {
-    addError(errors, "rights.reviews", "must be an object");
-  } else {
-    for (const name of reviewNames) {
-      validateReview(
-        rights.reviews[name],
-        `rights.reviews.${name}`,
-        errors,
-      );
-    }
   }
 
   if (!isRecord(rights.permissions)) {
@@ -477,7 +556,6 @@ function validateRights(rights, errors) {
       validatePermission(
         rights.permissions[name],
         `rights.permissions.${name}`,
-        rights.reviews?.rights,
         errors,
       );
     }
@@ -507,6 +585,33 @@ function validateRights(rights, errors) {
     );
   }
 
+  if (!isRecord(rights.reviewerTrust)) {
+    addError(errors, "rights.reviewerTrust", "must be an object");
+  } else {
+    if (rights.reviewerTrust.locator !== "scripture-trusted-reviewers.json") {
+      addError(
+        errors,
+        "rights.reviewerTrust.locator",
+        "must use the pinned story reviewer configuration",
+      );
+    }
+    if (!sha256Pattern.test(rights.reviewerTrust.sha256 ?? "")) {
+      addError(
+        errors,
+        "rights.reviewerTrust.sha256",
+        "must be a lowercase SHA-256",
+      );
+    }
+  }
+
+  if (!isRecord(rights.reviews)) {
+    addError(errors, "rights.reviews", "must be an object");
+  } else {
+    for (const name of reviewNames) {
+      validateReview(rights.reviews[name], `rights.reviews.${name}`, errors);
+    }
+  }
+
   if (!isRecord(rights.release)) {
     addError(errors, "rights.release", "must be an object");
   } else if (
@@ -516,7 +621,7 @@ function validateRights(rights, errors) {
     addError(
       errors,
       "rights.release",
-      "must contain boolean blocked and an array of blockers",
+      "must contain boolean blocked and a blockers array",
     );
   }
 }
@@ -525,7 +630,6 @@ function validateLicensedTextSource(verses, rights, errors) {
   if (!verses.some((verse) => isNonEmptyString(verse?.exactText))) {
     return;
   }
-
   if (rights.provider?.status !== "confirmed") {
     addError(
       errors,
@@ -551,20 +655,22 @@ function validateLicensedTextSource(verses, rights, errors) {
   }
 }
 
-function result(errors) {
-  return { ok: errors.length === 0, errors };
-}
-
 export function validateDevelopmentScripture(contract, rights) {
   const errors = [];
   if (!isRecord(contract)) {
-    return result(["scripture: must be an object"]);
+    return result([{ field: "scripture", message: "must be an object" }]);
   }
   if (!isRecord(rights)) {
-    return result(["rights: must be an object"]);
+    return result([{ field: "rights", message: "must be an object" }]);
   }
 
-  validatePassage(contract, errors);
+  validateVersion(
+    contract.schemaVersion,
+    supportedVersions.scripture,
+    "schemaVersion",
+    errors,
+  );
+  validatePassage(contract.passage, "passage", errors);
   if (!isRecord(contract.translation)) {
     addError(errors, "translation", "must be an object");
   } else {
@@ -613,12 +719,13 @@ export function validateDevelopmentScripture(contract, rights) {
     }
     if (
       rights.release?.blocked !== true ||
-      rights.release?.blockers?.length === 0
+      !Array.isArray(rights.release?.blockers) ||
+      rights.release.blockers.length === 0
     ) {
       addError(
         errors,
         "rights.release",
-        "must explicitly block release and list blockers while requirements are unresolved",
+        "must explicitly block release and list blockers",
       );
     }
   }
@@ -626,7 +733,291 @@ export function validateDevelopmentScripture(contract, rights) {
   return result(errors);
 }
 
-export function validateReleaseReadyScripture(contract, rights) {
+async function readPinnedFile(rootUrl, locator, field, errors) {
+  if (!(rootUrl instanceof URL) || rootUrl.protocol !== "file:") {
+    addError(errors, field, "root must be a local file URL");
+    return null;
+  }
+
+  const rootPath = path.resolve(fileURLToPath(rootUrl));
+  const candidatePath = path.resolve(rootPath, locator);
+  if (
+    candidatePath === rootPath ||
+    !candidatePath.startsWith(`${rootPath}${path.sep}`)
+  ) {
+    addError(errors, field, "must remain inside the configured local root");
+    return null;
+  }
+
+  try {
+    const [resolvedRoot, resolvedCandidate] = await Promise.all([
+      realpath(rootPath),
+      realpath(candidatePath),
+    ]);
+    if (!resolvedCandidate.startsWith(`${resolvedRoot}${path.sep}`)) {
+      addError(errors, field, "must not escape the local root through a link");
+      return null;
+    }
+    return await readFile(resolvedCandidate);
+  } catch (error) {
+    addError(errors, field, `could not read pinned file: ${error.code ?? error.message}`);
+    return null;
+  }
+}
+
+function validateTrustedReviewers(config, rights, verses, errors) {
+  const trusted = new Map();
+  if (!isRecord(config)) {
+    addError(errors, "trustedReviewers", "must be a JSON object");
+    return trusted;
+  }
+  validateVersion(
+    config.schemaVersion,
+    supportedVersions.reviewers,
+    "trustedReviewers.schemaVersion",
+    errors,
+  );
+  if (!Array.isArray(config.reviewers)) {
+    addError(errors, "trustedReviewers.reviewers", "must be an array");
+    return trusted;
+  }
+
+  for (const [index, reviewer] of config.reviewers.entries()) {
+    const field = `trustedReviewers.reviewers[${index}]`;
+    if (!isRecord(reviewer)) {
+      addError(errors, field, "must be an object");
+      continue;
+    }
+    if (!isNonEmptyString(reviewer.id)) {
+      addError(errors, `${field}.id`, "must be a non-empty reviewer ID");
+      continue;
+    }
+    if (trusted.has(reviewer.id)) {
+      addError(errors, `${field}.id`, "must be unique");
+      continue;
+    }
+    if (
+      !Array.isArray(reviewer.roles) ||
+      reviewer.roles.length === 0 ||
+      reviewer.roles.some((role) => !reviewNames.includes(role))
+    ) {
+      addError(
+        errors,
+        `${field}.roles`,
+        "must contain supported text, edition, or rights roles",
+      );
+      continue;
+    }
+    trusted.set(reviewer.id, new Set(reviewer.roles));
+  }
+
+  const checks = [];
+  if (isRecord(rights.reviews)) {
+    for (const role of reviewNames) {
+      checks.push([rights.reviews[role], role, `rights.reviews.${role}`]);
+    }
+  }
+  if (Array.isArray(verses)) {
+    for (const [index, verse] of verses.entries()) {
+      checks.push([verse?.review, "text", `verses[${index}].review`]);
+    }
+  }
+  for (const [review, role, field] of checks) {
+    if (review?.status !== "approved") {
+      continue;
+    }
+    if (!trusted.get(review.reviewer)?.has(role)) {
+      addError(
+        errors,
+        `${field}.reviewer`,
+        `must be a trusted reviewer ID with the ${role} role`,
+      );
+    }
+  }
+  return trusted;
+}
+
+function findOpposingDivineName(text, variant) {
+  if (variant === "神") {
+    return text.includes("上帝") ? "上帝" : null;
+  }
+  if (variant === "上帝") {
+    return text.replaceAll("上帝", "").includes("神") ? "神" : null;
+  }
+  return null;
+}
+
+function validateArtifactJson(artifact, contract, rights, errors) {
+  if (!isRecord(artifact)) {
+    addError(errors, "rights.artifact", "must contain a JSON object");
+    return;
+  }
+  validateVersion(
+    artifact.schemaVersion,
+    supportedVersions.artifact,
+    "rights.artifact.schemaVersion",
+    errors,
+  );
+  if (artifact.id !== rights.artifact.id) {
+    addError(errors, "rights.artifact.id", "must equal the imported artifact ID");
+  }
+  validatePassage(artifact.passage, "rights.artifact.passage", errors);
+
+  if (!isRecord(artifact.translation)) {
+    addError(errors, "rights.artifact.translation", "must be an object");
+  } else {
+    const comparisons = [
+      ["id", contract.translation?.id],
+      ["editionId", contract.translation?.editionId],
+      ["canonicalName", rights.edition?.canonicalName],
+      ["language", "zh-Hant"],
+      ["divineNameVariant", rights.divineNameVariant?.value],
+    ];
+    for (const [name, expected] of comparisons) {
+      if (!isNonEmptyString(artifact.translation[name])) {
+        addError(
+          errors,
+          `rights.artifact.translation.${name}`,
+          "must be a non-empty string",
+        );
+      } else if (artifact.translation[name] !== expected) {
+        addError(
+          errors,
+          `rights.artifact.translation.${name}`,
+          "must exactly equal the verified contract and rights metadata",
+        );
+      }
+    }
+  }
+
+  if (!Array.isArray(artifact.verses)) {
+    addError(errors, "rights.artifact.verses", "must be an array");
+    return;
+  }
+  if (artifact.verses.length !== JOHN_9_VERSE_KEYS.length) {
+    addError(
+      errors,
+      "rights.artifact.verses",
+      "must contain exactly 41 entries",
+    );
+  }
+
+  for (const [index, expectedKey] of JOHN_9_VERSE_KEYS.entries()) {
+    const imported = artifact.verses[index];
+    const verse = Array.isArray(contract.verses)
+      ? contract.verses[index]
+      : undefined;
+    const field = `rights.artifact.verses[${index}]`;
+    if (!isRecord(imported)) {
+      addError(errors, field, "must be an object");
+      continue;
+    }
+    if (imported.key !== expectedKey) {
+      addError(errors, `${field}.key`, `must be ${expectedKey}`);
+    }
+    if (!isNonEmptyString(imported.exactText)) {
+      addError(errors, `${field}.exactText`, "must be non-empty");
+      continue;
+    }
+    if (imported.exactText !== verse?.exactText) {
+      addError(
+        errors,
+        `${field}.exactText`,
+        "must exactly equal the imported contract verse text",
+      );
+    }
+
+    const opposing = findOpposingDivineName(
+      imported.exactText,
+      artifact.translation?.divineNameVariant,
+    );
+    if (opposing !== null) {
+      addError(
+        errors,
+        `${field}.exactText`,
+        `contains ${opposing}, conflicting with the artifact divine-name variant`,
+      );
+    }
+  }
+}
+
+async function verifyReviewerTrust(contract, rights, rootUrl, errors) {
+  const locator = rights.reviewerTrust?.locator;
+  if (locator !== "scripture-trusted-reviewers.json") {
+    return;
+  }
+  const bytes = await readPinnedFile(
+    rootUrl,
+    locator,
+    "rights.reviewerTrust.locator",
+    errors,
+  );
+  if (bytes === null) {
+    return;
+  }
+  if (sha256(bytes) !== rights.reviewerTrust.sha256) {
+    addError(
+      errors,
+      "rights.reviewerTrust.sha256",
+      "does not match the actual trusted reviewer configuration bytes",
+    );
+    return;
+  }
+
+  let config;
+  try {
+    config = JSON.parse(bytes.toString("utf8"));
+  } catch {
+    addError(
+      errors,
+      "trustedReviewers",
+      "contains malformed JSON",
+    );
+    return;
+  }
+  validateTrustedReviewers(config, rights, contract.verses, errors);
+}
+
+async function verifyArtifact(contract, rights, rootUrl, errors) {
+  if (
+    rights.artifact?.status !== "available" ||
+    !artifactLocatorPattern.test(rights.artifact.locator ?? "")
+  ) {
+    return;
+  }
+  const bytes = await readPinnedFile(
+    rootUrl,
+    rights.artifact.locator,
+    "rights.artifact.locator",
+    errors,
+  );
+  if (bytes === null) {
+    return;
+  }
+  if (sha256(bytes) !== rights.artifact.sha256) {
+    addError(
+      errors,
+      "rights.artifact.sha256",
+      "does not match the actual artifact bytes",
+    );
+    return;
+  }
+
+  let artifact;
+  try {
+    artifact = JSON.parse(bytes.toString("utf8"));
+  } catch {
+    addError(errors, "rights.artifact", "contains malformed JSON");
+    return;
+  }
+  validateArtifactJson(artifact, contract, rights, errors);
+}
+
+export async function validateReleaseReadyScripture(
+  contract,
+  rights,
+  { artifactRoot = storyRootUrl, reviewerRoot = storyRootUrl } = {},
+) {
   const errors = [...validateDevelopmentScripture(contract, rights).errors];
   if (!isRecord(contract) || !isRecord(rights)) {
     return result(errors);
@@ -639,30 +1030,29 @@ export function validateReleaseReadyScripture(contract, rights) {
     addError(errors, "translation.editionStatus", "must be confirmed");
   }
 
-  for (const [index, verse] of (contract.verses ?? []).entries()) {
-    const path = `verses[${index}]`;
+  const verses = Array.isArray(contract.verses) ? contract.verses : [];
+  for (const [index, verse] of verses.entries()) {
     if (!isNonEmptyString(verse?.exactText)) {
-      addError(errors, `${path}.exactText`, "is required for release");
+      addError(errors, `verses[${index}].exactText`, "is required for release");
     }
     if (verse?.editionStatus !== "confirmed") {
-      addError(errors, `${path}.editionStatus`, "must be confirmed");
+      addError(errors, `verses[${index}].editionStatus`, "must be confirmed");
     }
     if (verse?.review?.status !== "approved") {
-      addError(errors, `${path}.review`, "must be approved");
+      addError(errors, `verses[${index}].review`, "must be approved");
     }
   }
 
-  for (const [path, status] of [
-    ["rights.provider", rights.provider?.status],
-    ["rights.artifact", rights.artifact?.status],
-    ["rights.edition", rights.edition?.status],
-    ["rights.divineNameVariant", rights.divineNameVariant?.status],
-    ["rights.territories", rights.territories?.status],
-    ["rights.attribution", rights.attribution?.status],
+  for (const [field, status, expected] of [
+    ["rights.provider", rights.provider?.status, "confirmed"],
+    ["rights.artifact", rights.artifact?.status, "available"],
+    ["rights.edition", rights.edition?.status, "confirmed"],
+    ["rights.divineNameVariant", rights.divineNameVariant?.status, "confirmed"],
+    ["rights.territories", rights.territories?.status, "confirmed"],
+    ["rights.attribution", rights.attribution?.status, "confirmed"],
   ]) {
-    const expected = path === "rights.artifact" ? "available" : "confirmed";
     if (status !== expected) {
-      addError(errors, path, `must be ${expected}`);
+      addError(errors, field, `must be ${expected}`);
     }
   }
   for (const name of permissionNames) {
@@ -685,7 +1075,8 @@ export function validateReleaseReadyScripture(contract, rights) {
   }
   if (
     rights.release?.blocked !== false ||
-    rights.release?.blockers?.length !== 0
+    !Array.isArray(rights.release?.blockers) ||
+    rights.release.blockers.length !== 0
   ) {
     addError(
       errors,
@@ -694,20 +1085,47 @@ export function validateReleaseReadyScripture(contract, rights) {
     );
   }
 
+  await Promise.all([
+    verifyArtifact(contract, rights, artifactRoot, errors),
+    verifyReviewerTrust(contract, rights, reviewerRoot, errors),
+  ]);
   return result(errors);
+}
+
+async function readJsonInput(name, location, errors) {
+  let bytes;
+  try {
+    bytes = await readFile(location);
+  } catch (error) {
+    addError(errors, name, `could not read JSON: ${error.code ?? error.message}`);
+    return null;
+  }
+  try {
+    return JSON.parse(bytes.toString("utf8"));
+  } catch {
+    addError(errors, name, "contains malformed JSON");
+    return null;
+  }
 }
 
 export async function loadScriptureContract({
   scripture = scriptureUrl,
   rights = rightsUrl,
+  trustedReviewers = reviewersUrl,
 } = {}) {
-  const [scriptureJson, rightsJson] = await Promise.all([
-    readFile(scripture, "utf8"),
-    readFile(rights, "utf8"),
-  ]);
-
+  const errors = [];
+  const [scriptureValue, rightsValue, trustedReviewersValue] = await Promise.all(
+    [
+      readJsonInput("scripture", scripture, errors),
+      readJsonInput("rights", rights, errors),
+      readJsonInput("trustedReviewers", trustedReviewers, errors),
+    ],
+  );
   return {
-    scripture: JSON.parse(scriptureJson),
-    rights: JSON.parse(rightsJson),
+    ok: errors.length === 0,
+    errors,
+    scripture: scriptureValue,
+    rights: rightsValue,
+    trustedReviewers: trustedReviewersValue,
   };
 }

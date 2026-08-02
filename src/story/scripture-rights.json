@@ -9,6 +9,7 @@
   "artifact": {
     "status": "unavailable",
     "id": null,
+    "locator": null,
     "sha256": null
   },
   "edition": {
@@ -28,23 +29,27 @@
   "permissions": {
     "redistribution": {
       "status": "unknown",
-      "basis": null,
-      "evidence": null
+      "evidenceId": null,
+      "evidenceSha256": null
     },
     "offline": {
       "status": "unknown",
-      "basis": null,
-      "evidence": null
+      "evidenceId": null,
+      "evidenceSha256": null
     },
     "tts": {
       "status": "unknown",
-      "basis": null,
-      "evidence": null
+      "evidenceId": null,
+      "evidenceSha256": null
     }
   },
   "attribution": {
     "status": "unknown",
     "text": null
+  },
+  "reviewerTrust": {
+    "locator": "scripture-trusted-reviewers.json",
+    "sha256": "9011c1d152744081c46cb36ec87fad64709e19e06ea1b02c766804d17a175a4e"
   },
   "reviews": {
     "text": {
