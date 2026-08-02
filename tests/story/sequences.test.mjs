@@ -28,6 +28,7 @@ const CANONICAL_WORLD_ANCHORS = [
   "inquiry.pharisees-right",
   "inquiry.parents",
   "inquiry.waiting",
+  "inquiry.parents-entry",
   "inquiry.parents-exit",
   "outside.inquiry-entry",
   "outside.expelled",
@@ -38,13 +39,23 @@ const CANONICAL_WORLD_ANCHORS = [
 
 const CANONICAL_WORLD_PATHS = [
   "man-to-pool",
+  "pool-wash-to-return",
   "pool-to-neighbors",
   "group-to-inquiry",
-  "parents-entry-exit",
+  "parents-entry",
+  "parents-exit",
   "expulsion",
   "jesus-entry",
   "ending",
 ];
+
+const ACTOR_IDS_BY_PATH_SUBJECT = Object.freeze({
+  "man-born-blind": ["man-born-blind"],
+  "man-and-neighbor-group": ["man-born-blind", "neighbors"],
+  parents: ["parents"],
+  jesus: ["jesus"],
+  "camera-focus": [],
+});
 
 const readWorldContract = (fileName) => {
   const localUrl = new URL(`../../src/world/${fileName}`, import.meta.url);
@@ -78,6 +89,69 @@ test("exports the exact canonical world vocabulary required by the narrative", (
   assert.deepEqual(NARRATIVE_PATHS, CANONICAL_WORLD_PATHS);
   assert.ok(NARRATIVE_ANCHORS.every((id) => worldAnchors.has(id)));
   assert.ok(NARRATIVE_PATHS.every((id) => worldPaths.has(id)));
+});
+
+test("path subjects and endpoints chain from prior snapshots into final snapshots", () => {
+  const pathById = new Map(
+    readWorldContract("paths.json").sequencePaths.map((path) => [path.id, path]),
+  );
+
+  for (let index = 1; index < SEQUENCES.length; index += 1) {
+    const sequence = SEQUENCES[index];
+    const pathSteps = sequence.steps.filter(({ payload }) => payload.pathId);
+    if (pathSteps.length === 0) {
+      continue;
+    }
+
+    const priorSnapshot = SEQUENCES[index - 1].finalState;
+    const currentActorAnchors = Object.fromEntries(
+      Object.entries(priorSnapshot.actors).map(([actorId, actor]) => [
+        actorId,
+        actor.anchorId,
+      ]),
+    );
+    let currentCameraAnchor = priorSnapshot.camera.anchorId;
+    const movedActorIds = new Set();
+    let cameraMoved = false;
+
+    for (const step of pathSteps) {
+      const path = pathById.get(step.payload.pathId);
+      assert.ok(path, `${sequence.beatId}:${step.payload.pathId}`);
+      assert.equal(path.sourceLevel, "approved-bridge");
+      assert.equal(step.payload.subjectId, path.subject);
+      assert.deepEqual(step.payload.actorIds, ACTOR_IDS_BY_PATH_SUBJECT[path.subject]);
+
+      if (step.payload.actorIds.length === 0) {
+        assert.equal(path.subject, "camera-focus");
+        assert.equal(currentCameraAnchor, path.startAnchorId);
+        currentCameraAnchor = path.endAnchorId;
+        cameraMoved = true;
+        continue;
+      }
+
+      for (const actorId of step.payload.actorIds) {
+        assert.ok(currentActorAnchors[actorId], `${sequence.beatId}:${actorId}`);
+        assert.equal(
+          currentActorAnchors[actorId],
+          path.startAnchorId,
+          `${sequence.beatId}:${path.id}:${actorId}:start`,
+        );
+        currentActorAnchors[actorId] = path.endAnchorId;
+        movedActorIds.add(actorId);
+      }
+    }
+
+    for (const actorId of movedActorIds) {
+      assert.equal(
+        sequence.finalState.actors[actorId].anchorId,
+        currentActorAnchors[actorId],
+        `${sequence.beatId}:${actorId}:final`,
+      );
+    }
+    if (cameraMoved) {
+      assert.equal(sequence.finalState.camera.anchorId, currentCameraAnchor);
+    }
+  }
 });
 
 test("sequence contracts use plan vocabulary without embedding coordinates", () => {

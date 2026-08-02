@@ -17,15 +17,15 @@ const PHASE_BY_BEAT = Object.freeze({
   b05: "siloam",
   b06: "neighborhood",
   b07: "neighborhood",
-  b08: "hearing",
-  b09: "hearing",
-  b10: "hearing",
+  b08: "inquiry-arrival",
+  b09: "inquiry",
+  b10: "inquiry",
   b11: "parents",
-  b12: "parents",
-  b13: "hearing",
-  b14: "hearing",
-  b15: "hearing",
-  b16: "hearing",
+  b12: "parents-departed",
+  b13: "inquiry-after-parents",
+  b14: "inquiry-after-parents",
+  b15: "inquiry-after-parents",
+  b16: "inquiry-after-parents",
   b17: "outside",
   b18: "reencounter",
   b19: "ending",
@@ -34,10 +34,13 @@ const PHASE_BY_BEAT = Object.freeze({
 const CAMERA_ANCHOR_BY_PHASE = Object.freeze({
   roadside: "roadside.clay-action",
   clay: "roadside.clay-action",
-  siloam: "pool.wash-edge",
+  siloam: "pool.return",
   neighborhood: "neighbors.center",
-  hearing: "inquiry.man-center",
+  "inquiry-arrival": "inquiry.man-center",
+  inquiry: "inquiry.man-center",
   parents: "inquiry.man-center",
+  "parents-departed": "inquiry.man-center",
+  "inquiry-after-parents": "inquiry.man-center",
   outside: "outside.expelled",
   reencounter: "outside.belief",
   ending: "ending.camera",
@@ -84,7 +87,7 @@ const phaseOverrides = (phase) => {
         observer: ["pool.return", "idle", "觀察者", true, true],
         jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
         disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
-        "man-born-blind": ["pool.wash-edge", "standing-seeing", "那人", true, true],
+        "man-born-blind": ["pool.return", "standing-seeing", "那人", true, true],
       };
     case "neighborhood":
       return {
@@ -92,22 +95,34 @@ const phaseOverrides = (phase) => {
         jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
         disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
         "man-born-blind": ["neighbors.center", "standing-seeing", "那人", true, true],
-        neighbors: ["neighbors.group-left", "questioning", "鄰舍與見過他的人", true, true],
+        neighbors: ["neighbors.center", "questioning", "鄰舍與見過他的人", true, true],
       };
-    case "hearing":
+    case "inquiry":
       return {
         observer: ["inquiry.gate", "idle", "觀察者", true, true],
         jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
         disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
         "man-born-blind": ["inquiry.man-center", "standing-seeing", "那人", true, true],
-        neighbors: ["neighbors.group-left", "idle", "鄰舍與見過他的人", false, false],
+        neighbors: ["inquiry.man-center", "idle", "鄰舍與見過他的人", false, false],
         pharisees: ["inquiry.pharisees-left", "questioning", "法利賽人", true, true],
+        parents: ["inquiry.parents-entry", "idle", "他的父母", false, false],
         "judean-authorities": ["inquiry.pharisees-right", "questioning", "猶太人", true, true],
+      };
+    case "inquiry-arrival":
+      return {
+        ...phaseOverrides("inquiry"),
+        neighbors: ["inquiry.man-center", "standing", "鄰舍與見過他的人", true, true],
       };
     case "parents":
       return {
-        ...phaseOverrides("hearing"),
+        ...phaseOverrides("inquiry"),
         parents: ["inquiry.parents", "standing", "他的父母", true, true],
+      };
+    case "parents-departed":
+    case "inquiry-after-parents":
+      return {
+        ...phaseOverrides("inquiry"),
+        parents: ["inquiry.parents-exit", "departed", "他的父母", false, false],
       };
     case "outside":
       return {
@@ -115,7 +130,7 @@ const phaseOverrides = (phase) => {
         jesus: ["outside.jesus-entry", "walking", "耶穌", false, false],
         disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
         "man-born-blind": ["outside.expelled", "standing-seeing", "那人", true, true],
-        neighbors: ["neighbors.group-left", "idle", "鄰舍與見過他的人", false, false],
+        neighbors: ["inquiry.man-center", "idle", "鄰舍與見過他的人", false, false],
         pharisees: ["inquiry.pharisees-left", "idle", "法利賽人", false, false],
         parents: ["inquiry.parents-exit", "idle", "他的父母", false, false],
         "judean-authorities": ["inquiry.pharisees-right", "idle", "猶太人", false, false],
@@ -124,8 +139,8 @@ const phaseOverrides = (phase) => {
     case "ending":
       return {
         ...phaseOverrides("outside"),
-        jesus: ["outside.jesus-entry", "standing", "耶穌", true, true],
-        "man-born-blind": ["outside.belief", "worship", "那人", true, true],
+        jesus: ["outside.expelled", "standing", "耶穌", true, true],
+        "man-born-blind": ["outside.expelled", "worship", "那人", true, true],
         pharisees: ["outside.inquiry-entry", "listening", "法利賽人", true, true],
       };
     default:
