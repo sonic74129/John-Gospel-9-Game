@@ -58,6 +58,7 @@ test("manifest and Vite retain the stable story route", async () => {
 
 test("story and world data enter the platform only through adapters", async () => {
   const storyAdapter = await readText("src/adapters/story-adapter.ts");
+  const storyContracts = await readText("src/adapters/story-contracts.ts");
   const sequenceAdapter = await readText("src/adapters/sequence-adapter.ts");
   const sdkPlatform = await readText("src/adapters/sdk-platform.ts");
   const worldAdapter = await readText("src/adapters/world-adapter.ts");
@@ -66,14 +67,17 @@ test("story and world data enter the platform only through adapters", async () =
     assert.match(worldAdapter, new RegExp(`world\\/${contract}\\.json`));
   }
   assert.match(worldAdapter, /blocked:\s*blockedCells/);
-  assert.match(storyAdapter, /mode:\s*"story"/);
-  assert.match(storyAdapter, /failUnwiredOperation\("story\.advance"\)/);
-  assert.match(sequenceAdapter, /failUnwiredOperation\("sequence\.final-state"\)/);
-  assert.doesNotMatch(storyAdapter, /new StoryEngine/);
+  assert.match(storyContracts, /import\(`\.\.\/story\/\$\{name\}\.ts`\)/);
+  assert.match(storyAdapter, /new StoryEngine/);
+  assert.match(storyAdapter, /STORY_BEAT_OUTSIDE_APPROVED_SLICE/);
+  assert.match(sequenceAdapter, /applyFinalState:\s*async/);
+  assert.doesNotMatch(storyAdapter, /failUnwiredOperation\("story\.advance"\)/);
+  assert.doesNotMatch(sequenceAdapter, /sequence\.final-state/);
   assert.doesNotMatch(sdkPlatform, /executeCommand:\s*async\s*\(\)\s*=>\s*\{\}/);
   assert.doesNotMatch(sdkPlatform, /applyFinalState:\s*\(\)\s*=>\s*\{\}/);
   assert.doesNotMatch(storyAdapter, /position:\s*\{\s*x:\s*\d/);
   assert.doesNotMatch(worldAdapter, /position:\s*\{\s*x:\s*\d/);
+  assert.doesNotMatch(sequenceAdapter, /position:\s*\{\s*x:\s*\d/);
 
   const storyFiles = (await readdir("src/story"))
     .filter((file) => file.endsWith(".ts"))

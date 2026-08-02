@@ -14,9 +14,11 @@ import {
   type Point,
 } from "@sonic74129/map-runtime";
 
+import anchors from "../world/anchors.json";
 import collisions from "../world/collisions.json";
 import layout from "../world/layout.json";
 import navigation from "../world/navigation.json";
+import paths from "../world/paths.json";
 import spawns from "../world/spawns.json";
 import {
   buildBlockedCells,
@@ -24,10 +26,17 @@ import {
   isWalkablePoint,
   isWalkableSegment as segmentIsWalkable,
 } from "./navigation-geometry.js";
+import { STORY_ACTOR_SPAWN_IDS } from "./story-actor-mapping.ts";
+import { ACTORS } from "./story-contracts.ts";
 
 export interface GrayboxActorState {
   readonly role: "player" | "actor";
-  readonly visible: boolean;
+  readonly storyActorId: string;
+  visible: boolean;
+  pose: string;
+  label: string;
+  collisionEnabled: boolean;
+  readonly anchorOffset: Point;
 }
 
 export interface GrayboxAreaMetadata {
@@ -41,18 +50,52 @@ export interface WorldRuntime {
   readonly agentRadius: number;
   readonly actors: readonly MapActor<GrayboxActorState>[];
   readonly areas: readonly MapArea<GrayboxAreaMetadata>[];
+  readonly anchorById: ReadonlyMap<string, (typeof anchors.anchors)[number]>;
+  readonly pathById: ReadonlyMap<
+    string,
+    (typeof paths.sequencePaths)[number]
+  >;
+  readonly storyActorSpawnIds: Readonly<
+    Record<string, readonly string[]>
+  >;
   isWalkable(point: Point): boolean;
   isWalkableSegment(start: Point, end: Point): boolean;
   findPath(start: Point, target: Point): readonly Point[];
 }
 
+const STORY_ACTOR_BY_ID = new Map(ACTORS.map((actor) => [actor.id, actor]));
+const STORY_ACTOR_ID_BY_SPAWN_ID = new Map(
+  Object.entries(STORY_ACTOR_SPAWN_IDS).flatMap(([storyActorId, spawnIds]) =>
+    spawnIds.map((spawnId) => [spawnId, storyActorId] as const),
+  ),
+);
+
+function getAnchor(anchorId: string): (typeof anchors.anchors)[number] {
+  const anchor = anchors.anchors.find(({ id }) => id === anchorId);
+  if (anchor === undefined) {
+    throw new Error(`World spawn references unknown anchor ${anchorId}.`);
+  }
+  return anchor;
+}
+
 function createActorDefinitions(): readonly ActorDefinition[] {
   return spawns.actorSpawns.map((spawn) => {
+    const storyActorId = STORY_ACTOR_ID_BY_SPAWN_ID.get(spawn.actorId);
+    const storyActor =
+      storyActorId === undefined
+        ? undefined
+        : STORY_ACTOR_BY_ID.get(storyActorId);
+    if (storyActor === undefined) {
+      throw new Error(
+        `World actor ${spawn.actorId} has no canonical story actor mapping.`,
+      );
+    }
     const actor: ActorDefinition = {
       id: spawn.actorId,
-      label: spawn.actorId,
+      label: storyActor.label,
       position: spawn.position,
       metadata: {
+        storyActorId,
         anchorId: spawn.anchorId,
         regionId: spawn.regionId,
         sourceLevel: spawn.sourceLevel,
@@ -81,6 +124,10 @@ export function createWorldRuntime(): WorldRuntime {
 
   const actorDefinitions = createActorDefinitions();
   const areaDefinitions = createAreaDefinitions();
+  const anchorById = new Map(anchors.anchors.map((anchor) => [anchor.id, anchor]));
+  const pathById = new Map(
+    paths.sequencePaths.map((path) => [path.id, path]),
+  );
   const definition: WorldDefinition = {
     id: layout.worldId,
     width: layout.worldBounds.width,
@@ -127,21 +174,40 @@ export function createWorldRuntime(): WorldRuntime {
     navigation: navigationRuntime,
     blockedCells,
     agentRadius,
-    actors: actorDefinitions.map(
-      (actor) =>
-        new MapActor(actor, {
-          role: actor.id === "player-observer" ? "player" : "actor",
-          visible:
-            spawns.actorSpawns.find(({ actorId }) => actorId === actor.id)
-              ?.initiallyVisible ?? false,
-        }),
-    ),
+    actors: actorDefinitions.map((actor) => {
+      const spawn = spawns.actorSpawns.find(
+        ({ actorId }) => actorId === actor.id,
+      );
+      if (spawn === undefined) {
+        throw new Error(`Actor definition ${actor.id} has no world spawn.`);
+      }
+      const storyActorId = STORY_ACTOR_ID_BY_SPAWN_ID.get(actor.id);
+      if (storyActorId === undefined) {
+        throw new Error(`Actor ${actor.id} has no story mapping.`);
+      }
+      const anchor = getAnchor(spawn.anchorId);
+      return new MapActor(actor, {
+        role: actor.id === "player-observer" ? "player" : "actor",
+        storyActorId,
+        visible: spawn.initiallyVisible,
+        pose: "idle",
+        label: actor.label,
+        collisionEnabled: spawn.initiallyVisible,
+        anchorOffset: {
+          x: spawn.position.x - anchor.position.x,
+          y: spawn.position.y - anchor.position.y,
+        },
+      });
+    }),
     areas: layout.regions.map(
       (region, index) =>
         new MapArea(areaDefinitions[index]!, {
           sourceLevel: region.sourceLevel,
         }),
     ),
+    anchorById,
+    pathById,
+    storyActorSpawnIds: STORY_ACTOR_SPAWN_IDS,
     isWalkable,
     isWalkableSegment: (start, end) =>
       segmentIsWalkable(start, end, agentRadius, isWalkable),

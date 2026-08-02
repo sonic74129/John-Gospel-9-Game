@@ -60,7 +60,7 @@ test("story-owned world contracts validate through the published schema", async 
   assertValid(world, validateWorldDefinition);
 });
 
-test("graybox mode never reports story completion or sequence success", async () => {
+test("unsupported platform operations still fail explicitly", async () => {
   assert.deepEqual(GRAYBOX_STORY_STATUS, {
     mode: "graybox-shell",
     wired: false,

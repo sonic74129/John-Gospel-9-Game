@@ -3,8 +3,10 @@ import Phaser from "phaser";
 import { GrayboxScene } from "./adapters/graybox-scene.ts";
 import {
   createPlatformRuntime,
+  type DeveloperFixtureMode,
   type PlatformRuntime,
 } from "./adapters/sdk-platform.ts";
+import { UnsupportedSliceBeatError } from "./adapters/story-adapter.ts";
 import { createWorldRuntime } from "./adapters/world-adapter.ts";
 import { createAppShell } from "./platform/app-shell.ts";
 import { createPageLifecycleController } from "./platform/page-lifecycle.js";
@@ -17,10 +19,20 @@ if (root === null) {
 
 let game: Phaser.Game | undefined;
 let runtime: PlatformRuntime | undefined;
+const requestedFixture = new URLSearchParams(window.location.search).get(
+  "fixture",
+);
+const fixtureMode: DeveloperFixtureMode =
+  requestedFixture === "b14-stress" ? "b14-stress" : null;
 
 const reportError = (error: unknown): void => {
   console.error(error);
-  shell.setStatus("平台啟動失敗，請重新載入。", true);
+  shell.setStatus(
+    error instanceof UnsupportedSliceBeatError
+      ? "B08–B19 尚未接線；B01–B07 切片已安全停止。"
+      : "平台運行失敗，請重新載入。",
+    true,
+  );
 };
 
 const shell = createAppShell(root, {
@@ -28,11 +40,20 @@ const shell = createAppShell(root, {
     try {
       const world = createWorldRuntime();
       const scene = new GrayboxScene(world, (readyScene) => {
-        runtime = createPlatformRuntime(readyScene, reportError);
+        runtime = createPlatformRuntime(
+          readyScene,
+          shell,
+          fixtureMode,
+          reportError,
+        );
         runtime
           .start()
           .then(() => runtime?.unlockAudio())
-          .then(() => shell.setStarted())
+          .then(() => {
+            shell.setStarted();
+            shell.setDeveloperFixture(fixtureMode);
+            runtime?.begin();
+          })
           .catch(reportError);
       });
       game = new Phaser.Game({
@@ -70,6 +91,7 @@ const shell = createAppShell(root, {
     shell.setMuted(muted);
   },
   onSubtitleChange: () => {},
+  onSkip: () => runtime?.skipCurrent(),
 });
 
 const pageLifecycle = createPageLifecycleController({

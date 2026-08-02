@@ -89,6 +89,22 @@ button:disabled {
   background: #f4d8cf;
 }
 
+.status-stack {
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+}
+
+.developer-fixture {
+  margin: 0;
+  color: #fffaf1;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.35rem;
+  background: #7a2f23;
+  font: 800 0.72rem/1 system-ui, sans-serif;
+  letter-spacing: 0.08em;
+}
+
 .game-frame {
   position: relative;
   overflow: hidden;
@@ -115,6 +131,33 @@ button:disabled {
   touch-action: none;
 }
 
+.slice-hud {
+  position: absolute;
+  z-index: 7;
+  inset: 0.75rem 0.75rem auto;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.license-notice,
+.stage-goal {
+  margin: 0;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.55rem;
+  color: #fffaf1;
+  background: rgb(60 53 47 / 90%);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.license-notice {
+  color: #3c352f;
+  background: #f0dfbd;
+}
+
 .start-screen {
   position: absolute;
   inset: 0;
@@ -128,6 +171,14 @@ button:disabled {
     linear-gradient(rgb(60 53 47 / 38%), rgb(60 53 47 / 68%)),
     linear-gradient(135deg, #d2b887, #66704b);
   color: #fffaf1;
+}
+
+.review-warning {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgb(240 223 189 / 58%);
+  border-radius: 0.6rem;
+  background: rgb(60 53 47 / 32%);
+  font-weight: 700;
 }
 
 .start-screen[hidden] {
@@ -156,6 +207,171 @@ button:disabled {
   color: #fffaf1;
   background: #5a3d4b;
   border-color: #e2d2b2;
+}
+
+.dialogue-panel {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  overflow: auto;
+  width: min(92%, 54rem);
+  max-height: min(78%, 39rem);
+  padding: clamp(0.9rem, 2vw, 1.4rem);
+  border: 2px solid #e2d2b2;
+  border-radius: 1rem;
+  color: #fffaf1;
+  background: rgb(60 53 47 / 96%);
+  box-shadow: 0 1rem 2.5rem rgb(20 16 13 / 38%);
+}
+
+.dialogue-panel[hidden],
+.recall-card[hidden],
+.developer-fixture[hidden] {
+  display: none;
+}
+
+.dialogue-panel > header,
+.dialogue-panel > footer {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dialogue-panel h2,
+.dialogue-panel h3,
+.dialogue-panel h4,
+.dialogue-panel p {
+  margin-top: 0;
+}
+
+.dialogue-panel h2 {
+  margin-bottom: 0;
+  font: 700 clamp(1.25rem, 3vw, 2rem)/1.2 Georgia, serif;
+}
+
+.dialogue-source,
+.dialogue-progress {
+  margin-bottom: 0.3rem;
+  color: #f0dfbd;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dialogue-placeholder {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-left: 4px solid #c5a16e;
+  border-radius: 0.35rem;
+  background: rgb(255 250 241 / 10%);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.65;
+}
+
+.dialogue-metadata {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.35rem 0.8rem;
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.dialogue-metadata dt {
+  color: #e2d2b2;
+  font-weight: 800;
+}
+
+.dialogue-metadata dd {
+  margin: 0;
+}
+
+.stress-metadata {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px dashed #c5a16e;
+  border-radius: 0.7rem;
+  line-height: 1.55;
+}
+
+.stress-testimony-card,
+.testimony-card {
+  padding: 0.55rem;
+  border-radius: 0.5rem;
+  background: rgb(255 250 241 / 12%);
+  overflow-wrap: anywhere;
+}
+
+.stress-testimony-card + .stress-testimony-card,
+.testimony-card + .testimony-card {
+  margin-top: 0.45rem;
+}
+
+.stress-testimony-card h4,
+.testimony-card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.82rem;
+}
+
+.stress-testimony-card p,
+.testimony-card p {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.testimony-journal {
+  position: absolute;
+  z-index: 6;
+  top: 4rem;
+  right: 0.75rem;
+  overflow: auto;
+  width: min(18rem, 28%);
+  max-height: 38%;
+  padding: 0.65rem;
+  border-radius: 0.65rem;
+  color: #fffaf1;
+  background: rgb(60 53 47 / 80%);
+  pointer-events: none;
+}
+
+.testimony-journal h2 {
+  margin: 0 0 0.45rem;
+  font: 700 0.9rem/1.2 Georgia, serif;
+}
+
+.testimony-journal p {
+  margin: 0;
+  font-size: 0.72rem;
+}
+
+.recall-card {
+  position: absolute;
+  z-index: 12;
+  left: 0.75rem;
+  bottom: 3.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: min(34rem, calc(100% - 1.5rem));
+  padding: 0.75rem;
+  border: 2px solid #d2b887;
+  border-radius: 0.75rem;
+  color: #fffaf1;
+  background: rgb(82 108 115 / 94%);
+}
+
+.recall-card h2,
+.recall-card p {
+  margin: 0;
+}
+
+.recall-card h2 {
+  font-size: 1rem;
 }
 
 .subtitle-panel {
@@ -195,13 +411,71 @@ button:disabled {
     flex-direction: column;
   }
 
+  .status-stack {
+    justify-items: start;
+  }
+
   .game-frame {
     aspect-ratio: 9 / 14;
     border-radius: 1rem;
   }
 
+  .slice-hud {
+    inset: 0.5rem 0.5rem auto;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .license-notice,
+  .stage-goal {
+    width: fit-content;
+    font-size: 0.68rem;
+  }
+
   .start-screen {
     padding: 1.25rem;
+  }
+
+  .dialogue-panel {
+    bottom: 0.5rem;
+    width: calc(100% - 1rem);
+    max-height: calc(100% - 5.5rem);
+    padding: 0.8rem;
+  }
+
+  .dialogue-panel > header,
+  .dialogue-panel > footer {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dialogue-panel > footer button {
+    width: 100%;
+  }
+
+  .dialogue-metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .dialogue-metadata dd {
+    margin-bottom: 0.35rem;
+  }
+
+  .testimony-journal {
+    top: auto;
+    right: 0.5rem;
+    bottom: 3.7rem;
+    width: 45%;
+    max-height: 24%;
+  }
+
+  .recall-card {
+    left: 0.5rem;
+    bottom: 3.7rem;
+    width: calc(100% - 1rem);
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .subtitle-panel {
@@ -211,7 +485,7 @@ button:disabled {
 
   .game-controls {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }
 
