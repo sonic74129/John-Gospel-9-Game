@@ -7,6 +7,7 @@ import {
 } from "./adapters/sdk-platform.ts";
 import { createWorldRuntime } from "./adapters/world-adapter.ts";
 import { createAppShell } from "./platform/app-shell.ts";
+import { createPageLifecycleController } from "./platform/page-lifecycle.js";
 import "./platform/styles.css";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -27,7 +28,7 @@ const shell = createAppShell(root, {
     try {
       const world = createWorldRuntime();
       const scene = new GrayboxScene(world, (readyScene) => {
-        runtime = createPlatformRuntime(readyScene, world, reportError);
+        runtime = createPlatformRuntime(readyScene, reportError);
         runtime
           .start()
           .then(() => runtime?.unlockAudio())
@@ -71,11 +72,21 @@ const shell = createAppShell(root, {
   onSubtitleChange: () => {},
 });
 
-window.addEventListener(
-  "pagehide",
-  () => {
-    runtime?.dispose().catch(reportError);
+const pageLifecycle = createPageLifecycleController({
+  suspend: () => runtime?.suspend("bfcache"),
+  resume: () => runtime?.resume("bfcache"),
+  dispose: async () => {
+    const activeRuntime = runtime;
+    runtime = undefined;
     game?.destroy(true);
+    game = undefined;
+    await activeRuntime?.dispose();
   },
-  { once: true },
-);
+});
+
+window.addEventListener("pagehide", (event) => {
+  pageLifecycle.handlePageHide(event.persisted).catch(reportError);
+});
+window.addEventListener("pageshow", (event) => {
+  pageLifecycle.handlePageShow(event.persisted).catch(reportError);
+});

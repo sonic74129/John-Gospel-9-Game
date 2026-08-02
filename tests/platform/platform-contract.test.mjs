@@ -58,11 +58,20 @@ test("manifest and Vite retain the stable story route", async () => {
 
 test("story and world data enter the platform only through adapters", async () => {
   const storyAdapter = await readText("src/adapters/story-adapter.ts");
+  const sequenceAdapter = await readText("src/adapters/sequence-adapter.ts");
+  const sdkPlatform = await readText("src/adapters/sdk-platform.ts");
   const worldAdapter = await readText("src/adapters/world-adapter.ts");
   assert.match(storyAdapter, /from "\.\.\/story\/story\.config\.json"/);
-  for (const contract of ["layout", "navigation", "spawns"]) {
+  for (const contract of ["collisions", "layout", "navigation", "spawns"]) {
     assert.match(worldAdapter, new RegExp(`world\\/${contract}\\.json`));
   }
+  assert.match(worldAdapter, /blocked:\s*blockedCells/);
+  assert.match(storyAdapter, /mode:\s*"story"/);
+  assert.match(storyAdapter, /failUnwiredOperation\("story\.advance"\)/);
+  assert.match(sequenceAdapter, /failUnwiredOperation\("sequence\.final-state"\)/);
+  assert.doesNotMatch(storyAdapter, /new StoryEngine/);
+  assert.doesNotMatch(sdkPlatform, /executeCommand:\s*async\s*\(\)\s*=>\s*\{\}/);
+  assert.doesNotMatch(sdkPlatform, /applyFinalState:\s*\(\)\s*=>\s*\{\}/);
   assert.doesNotMatch(storyAdapter, /position:\s*\{\s*x:\s*\d/);
   assert.doesNotMatch(worldAdapter, /position:\s*\{\s*x:\s*\d/);
 
@@ -78,6 +87,8 @@ test("story and world data enter the platform only through adapters", async () =
 test("shell exposes responsive canvas and accessible control structure", async () => {
   const shell = await readText("src/platform/app-shell.ts");
   const styles = await readText("src/platform/styles.css");
+  const scene = await readText("src/adapters/graybox-scene.ts");
+  const main = await readText("src/main.ts");
   for (const marker of [
     "data-platform-shell",
     "data-game-container",
@@ -92,5 +103,16 @@ test("shell exposes responsive canvas and accessible control structure", async (
   assert.match(styles, /aspect-ratio:\s*16\s*\/\s*9/);
   assert.match(styles, /@media\s*\(max-width:\s*640px\)/);
   assert.match(styles, /\.game-container canvas/);
+  assert.match(styles, /\.game-container\s*\{[^}]*align-items:\s*center/s);
+  assert.match(styles, /\.game-container\s*\{[^}]*justify-content:\s*center/s);
   assert.match(styles, /touch-action:\s*none/);
+  assert.doesNotMatch(styles, /!important/);
+  assert.doesNotMatch(
+    styles,
+    /\.game-container canvas\s*\{[^}]*\b(?:width|height):\s*100%/s,
+  );
+  assert.match(scene, /this\.#world\.findPath/);
+  assert.doesNotMatch(scene, /\.findPath\([\s\S]{0,180}\)\s*\.slice\(1\)/);
+  assert.match(main, /handlePageHide\(event\.persisted\)/);
+  assert.match(main, /handlePageShow\(event\.persisted\)/);
 });

@@ -85,12 +85,10 @@ export class GrayboxScene extends Phaser.Scene {
       if (this.#player === undefined) {
         return;
       }
-      this.#path = this.#world.navigation
-        .findPath(
-          { x: this.#player.x, y: this.#player.y },
-          { x: pointer.worldX, y: pointer.worldY },
-        )
-        .slice(1);
+      this.#path = this.#world.findPath(
+        { x: this.#player.x, y: this.#player.y },
+        { x: pointer.worldX, y: pointer.worldY },
+      );
     });
     this.cameras.main.startFollow(this.#player, true, 0.08, 0.08);
     this.#onReady(this);
@@ -111,7 +109,11 @@ export class GrayboxScene extends Phaser.Scene {
     if (direction.lengthSq() > 0) {
       this.#path = [];
       direction.normalize().scale(distance);
-      this.#movePlayer(direction.x, direction.y);
+      if (!this.#movePlayer(direction.x, direction.y)) {
+        if (!this.#movePlayer(direction.x, 0)) {
+          this.#movePlayer(0, direction.y);
+        }
+      }
       return;
     }
 
@@ -124,27 +126,29 @@ export class GrayboxScene extends Phaser.Scene {
       next.y - this.#player.y,
     );
     if (toNext.length() <= distance) {
-      this.#movePlayer(toNext.x, toNext.y);
-      this.#path = this.#path.slice(1);
+      if (this.#movePlayer(toNext.x, toNext.y)) {
+        this.#path = this.#path.slice(1);
+      } else {
+        this.#path = [];
+      }
       return;
     }
     toNext.normalize().scale(distance);
-    this.#movePlayer(toNext.x, toNext.y);
+    if (!this.#movePlayer(toNext.x, toNext.y)) {
+      this.#path = [];
+    }
   }
 
-  #movePlayer(deltaX: number, deltaY: number): void {
+  #movePlayer(deltaX: number, deltaY: number): boolean {
     if (this.#player === undefined) {
-      return;
+      return false;
     }
-    this.#player.x = Phaser.Math.Clamp(
-      this.#player.x + deltaX,
-      0,
-      this.#world.definition.width,
-    );
-    this.#player.y = Phaser.Math.Clamp(
-      this.#player.y + deltaY,
-      0,
-      this.#world.definition.height,
-    );
+    const start = { x: this.#player.x, y: this.#player.y };
+    const target = { x: start.x + deltaX, y: start.y + deltaY };
+    if (!this.#world.isWalkableSegment(start, target)) {
+      return false;
+    }
+    this.#player.setPosition(target.x, target.y);
+    return true;
   }
 }

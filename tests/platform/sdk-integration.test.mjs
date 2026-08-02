@@ -14,7 +14,10 @@ import {
   PHASER_PEER_VERSION,
 } from "@sonic74129/engine";
 import { NavigationGrid } from "@sonic74129/map-runtime";
-import { MapSequence } from "@sonic74129/sequence-runtime";
+import {
+  MapSequence,
+  PhaserSequenceAdapter,
+} from "@sonic74129/sequence-runtime";
 import { StoryEngine } from "@sonic74129/story-runtime";
 import {
   FakeAudioFactory,
@@ -22,6 +25,12 @@ import {
   assertGraphReachability,
 } from "@sonic74129/test-kit";
 import { GameUIShell } from "@sonic74129/ui";
+
+import {
+  GRAYBOX_STORY_STATUS,
+  UnwiredPlatformOperationError,
+  failUnwiredOperation,
+} from "../../src/adapters/runtime-mode.js";
 
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 
@@ -49,6 +58,48 @@ test("story-owned world contracts validate through the published schema", async 
     areas: layout.regions.map(({ id, bounds }) => ({ id, ...bounds })),
   };
   assertValid(world, validateWorldDefinition);
+});
+
+test("graybox mode never reports story completion or sequence success", async () => {
+  assert.deepEqual(GRAYBOX_STORY_STATUS, {
+    mode: "graybox-shell",
+    wired: false,
+    completed: false,
+  });
+  assert.throws(
+    () => failUnwiredOperation("story.advance"),
+    (error) =>
+      error instanceof UnwiredPlatformOperationError &&
+      error.code === "PLATFORM_OPERATION_UNWIRED" &&
+      error.operation === "story.advance",
+  );
+
+  const adapter = new PhaserSequenceAdapter({
+    context: undefined,
+    executeCommand: (command) =>
+      failUnwiredOperation(`sequence.command:${command}`),
+    applyFinalState: () => failUnwiredOperation("sequence.final-state"),
+  });
+  await assert.rejects(
+    new MapSequence(adapter).run({
+      id: "unwired-command",
+      steps: [{ kind: "command", command: "dialogue" }],
+      finalState: { ready: true },
+    }),
+    (error) =>
+      error instanceof UnwiredPlatformOperationError &&
+      error.operation === "sequence.command:dialogue",
+  );
+  await assert.rejects(
+    new MapSequence(adapter).run({
+      id: "unwired-final-state",
+      steps: [],
+      finalState: { ready: true },
+    }),
+    (error) =>
+      error instanceof UnwiredPlatformOperationError &&
+      error.operation === "sequence.final-state",
+  );
 });
 
 test("published SDK services compose without local compatibility copies", async () => {

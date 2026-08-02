@@ -12,6 +12,8 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
@@ -20,7 +22,9 @@
   "include": [
     "src/main.ts",
     "src/adapters/**/*.ts",
+    "src/adapters/**/*.js",
     "src/platform/**/*.ts",
+    "src/platform/**/*.js",
     "vite.config.ts"
   ]
 }

@@ -100,14 +100,18 @@ button:disabled {
   box-shadow: 0 1.4rem 3.5rem rgb(60 53 47 / 24%);
 }
 
-.game-container,
-.game-container canvas {
-  width: 100% !important;
-  height: 100% !important;
+.game-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .game-container canvas {
   display: block;
+  flex: none;
   touch-action: none;
 }
 
