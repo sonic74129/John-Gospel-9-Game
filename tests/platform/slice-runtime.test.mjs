@@ -2,10 +2,17 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+import { NavigationGrid } from "@sonic74129/map-runtime";
 import { MapSequence } from "@sonic74129/sequence-runtime";
 
 import { applyCanonicalCameraFinalState } from "../../src/adapters/canonical-camera.ts";
 import { createB14StressSequence } from "../../src/adapters/dev-b14-fixture.ts";
+import {
+  buildBlockedCells,
+  findWalkablePath,
+  isWalkablePoint,
+  isWalkableSegment,
+} from "../../src/adapters/navigation-geometry.js";
 import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
 import {
   SliceStoryController,
@@ -31,6 +38,8 @@ const [
   layoutContract,
   spawnContract,
   framingContract,
+  collisionContract,
+  navigationContract,
 ] =
   await Promise.all([
     readJson("src/world/anchors.json"),
@@ -38,10 +47,42 @@ const [
     readJson("src/world/layout.json"),
     readJson("src/world/spawns.json"),
     readJson("src/world/framing.json"),
+    readJson("src/world/collisions.json"),
+    readJson("src/world/navigation.json"),
   ]);
 const desktopFrameProfile = framingContract.profiles.find(
   ({ viewport }) => viewport.width === 1280,
 );
+const walkablePolygons = layoutContract.regions.map(
+  ({ walkablePolygon }) => walkablePolygon,
+);
+const collisionPolygons = collisionContract.collisionPolygons.map(
+  ({ polygon }) => polygon,
+);
+const playerRadius = navigationContract.agent.radius;
+const isWorldWalkable = (point) =>
+  isWalkablePoint(
+    point,
+    playerRadius,
+    layoutContract.worldBounds,
+    walkablePolygons,
+    collisionPolygons,
+  );
+const blockedCells = buildBlockedCells({
+  width: layoutContract.worldBounds.width,
+  height: layoutContract.worldBounds.height,
+  cellSize: navigationContract.grid.cellSize,
+  radius: playerRadius,
+  bounds: layoutContract.worldBounds,
+  walkablePolygons,
+  collisionPolygons,
+});
+const navigationGrid = new NavigationGrid({
+  width: layoutContract.worldBounds.width,
+  height: layoutContract.worldBounds.height,
+  cellSize: navigationContract.grid.cellSize,
+  blocked: blockedCells,
+});
 
 const progressionEvents = storyBeats.map(({ trigger }) =>
   trigger.type === "proximity"
@@ -244,30 +285,131 @@ test("actual final-state camera framing keeps every visible collider safe on des
             storyActorId === beat.finalState.controls.playerActorId,
         );
         assert.ok(player, `${beat.id}/${profile.id} player`);
-        const movedPlayer = {
-          ...player,
-          position: {
-            x: player.position.x + 24,
-            y: player.position.y + 16,
-          },
-        };
-        const followOffset = result.camera.applied.actual.followOffset;
-        const movedCameraPosition = clampCameraCenter(
-          {
-            x: movedPlayer.position.x - followOffset.x,
-            y: movedPlayer.position.y - followOffset.y,
-          },
-          profile.viewport,
-          zoom,
-          layoutContract.worldBounds,
-        );
-        assertActorInsideSafeFrame({
-          actor: movedPlayer,
-          cameraPosition: movedCameraPosition,
-          profile,
-          zoom,
-          label: `${beat.id}/${skip ? "skip" : "normal"}/${profile.id}/moved-player`,
-        });
+      }
+    }
+  }
+});
+
+test("Phaser follow delay keeps valid keyboard and pointer movement inside every safe frame", async () => {
+  const frameRates = [
+    { id: "60fps", deltaMs: 1000 / 60, frames: 60 },
+    { id: "30fps", deltaMs: 1000 / 30, frames: 30 },
+  ];
+  const directions = [
+    { id: "left", x: -1, y: 0 },
+    { id: "right", x: 1, y: 0 },
+    { id: "up", x: 0, y: -1 },
+    { id: "down", x: 0, y: 1 },
+  ];
+
+  for (const profile of framingContract.profiles) {
+    for (const beat of storyBeats) {
+      for (const skip of [false, true]) {
+        const mode = skip ? "skip" : "normal";
+        const result = await runRealAdapter(beat.sequence, skip, profile);
+        assert.equal(result.status, skip ? "skipped" : "completed");
+        const finalState = result.scene;
+        for (const frameRate of frameRates) {
+          for (const direction of directions) {
+            const simulation = createFinalStateCameraSimulation(
+              finalState,
+              profile,
+            );
+            let validFrames = 0;
+            for (let frame = 0; frame < frameRate.frames; frame += 1) {
+              const distance = (240 * frameRate.deltaMs) / 1000;
+              const nextPosition = {
+                x: simulation.player.position.x + direction.x * distance,
+                y: simulation.player.position.y + direction.y * distance,
+              };
+              if (
+                !isValidPlayerMove(
+                  simulation.player.position,
+                  nextPosition,
+                  simulation.blockingActors,
+                )
+              ) {
+                break;
+              }
+              simulation.player.position = nextPosition;
+              simulation.camera.advanceFollow(nextPosition);
+              assertPlayerInsideSimulationSafeFrame(
+                simulation,
+                `${beat.id}/${mode}/${profile.id}/${frameRate.id}/${direction.id}/frame-${frame}`,
+              );
+              validFrames += 1;
+            }
+            assert.ok(
+              validFrames > 0,
+              `${beat.id}/${mode}/${profile.id}/${frameRate.id}/${direction.id} has valid movement`,
+            );
+          }
+
+          const simulation = createFinalStateCameraSimulation(
+            finalState,
+            profile,
+          );
+          const pointerPath = findWalkablePath(
+            navigationGrid,
+            simulation.player.position,
+            simulation.focusPosition,
+            isWorldWalkable,
+          );
+          assert.ok(
+            pointerPath.length > 1,
+            `${beat.id}/${mode}/${profile.id}/${frameRate.id} pointer route`,
+          );
+          let pointerFrames = 0;
+          let pointerBlocked = false;
+          for (const waypoint of pointerPath.slice(1)) {
+            while (
+              distanceBetween(simulation.player.position, waypoint) > 0.001
+            ) {
+              const remaining = distanceBetween(
+                simulation.player.position,
+                waypoint,
+              );
+              const distance = Math.min(
+                (240 * frameRate.deltaMs) / 1000,
+                remaining,
+              );
+              const nextPosition = {
+                x:
+                  simulation.player.position.x +
+                  ((waypoint.x - simulation.player.position.x) / remaining) *
+                    distance,
+                y:
+                  simulation.player.position.y +
+                  ((waypoint.y - simulation.player.position.y) / remaining) *
+                    distance,
+              };
+              if (
+                !isValidPlayerMove(
+                  simulation.player.position,
+                  nextPosition,
+                  simulation.blockingActors,
+                )
+              ) {
+                pointerBlocked = true;
+                break;
+              }
+              simulation.player.position = nextPosition;
+              simulation.camera.advanceFollow(nextPosition);
+              assertPlayerInsideSimulationSafeFrame(
+                simulation,
+                `${beat.id}/${mode}/${profile.id}/${frameRate.id}/pointer/frame-${pointerFrames}`,
+              );
+              pointerFrames += 1;
+            }
+            if (pointerBlocked) {
+              break;
+            }
+          }
+          assert.ok(
+            pointerFrames > 0,
+            `${beat.id}/${mode}/${profile.id}/${frameRate.id} has valid pointer movement`,
+          );
+        }
       }
     }
   }
@@ -925,21 +1067,72 @@ function resolveVisibleActorColliders(finalState) {
   return resolved;
 }
 
-function clampCameraCenter(center, viewport, zoom, bounds) {
-  const halfVisible = {
-    x: viewport.width / zoom / 2,
-    y: viewport.height / zoom / 2,
-  };
+function createFinalStateCameraSimulation(finalState, profile) {
+  const visibleActors = resolveVisibleActorColliders(finalState);
+  const player = visibleActors.find(
+    ({ storyActorId }) => storyActorId === finalState.controls.playerActorId,
+  );
+  assert.ok(player, `${finalState.beatId}/${profile.id} player`);
+  const cameraAnchor = requireById(
+    anchorContract.anchors,
+    finalState.camera.anchorId,
+  );
+  const zone = cameraContract.cameraZones.find(
+    ({ regionId }) => regionId === cameraAnchor.regionId,
+  );
+  assert.ok(zone, `${finalState.beatId}/${profile.id} camera zone`);
+  const camera = createFaithfulCameraPort(profile.viewport);
+  applyCanonicalCameraFinalState({
+    camera: camera.port,
+    canonical: finalState.camera,
+    zone,
+    anchorPosition: cameraAnchor.position,
+    playerActorId: finalState.controls.playerActorId,
+    playerTarget: player.position,
+    worldWidth: layoutContract.worldBounds.width,
+    worldHeight: layoutContract.worldBounds.height,
+    mobile: profile.viewport.width <= 640,
+  });
   return {
-    x: Math.min(
-      Math.max(center.x, bounds.x + halfVisible.x),
-      bounds.x + bounds.width - halfVisible.x,
+    camera,
+    focusPosition: cameraAnchor.position,
+    player: structuredClone(player),
+    blockingActors: visibleActors.filter(
+      ({ storyActorId }) => storyActorId !== finalState.controls.playerActorId,
     ),
-    y: Math.min(
-      Math.max(center.y, bounds.y + halfVisible.y),
-      bounds.y + bounds.height - halfVisible.y,
-    ),
+    profile,
   };
+}
+
+function isValidPlayerMove(start, target, blockingActors) {
+  return (
+    isWalkableSegment(
+      start,
+      target,
+      playerRadius,
+      isWorldWalkable,
+    ) &&
+    blockingActors.every(
+      (actor) =>
+        distanceBetween(target, actor.position) >=
+        playerRadius + actor.collisionRadius,
+    )
+  );
+}
+
+function assertPlayerInsideSimulationSafeFrame(simulation, label) {
+  const cameraState = simulation.camera.snapshot();
+  assertActorInsideSafeFrame({
+    actor: simulation.player,
+    cameraPosition: cameraState.position,
+    profile: simulation.profile,
+    zoom: cameraState.zoom,
+    label,
+  });
+}
+
+function distanceBetween(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
 function assertActorInsideSafeFrame({
@@ -979,6 +1172,7 @@ function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
     deadZone: { width: 0, height: 0 },
     followTarget: null,
     followOffset: { x: 0, y: 0 },
+    lerp: { x: 1, y: 1 },
     bounds: { x: 0, y: 0, width: 0, height: 0 },
     scrollX: 0,
     scrollY: 0,
@@ -1022,10 +1216,11 @@ function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
       setDeadzone: (width, height) => {
         state.deadZone = { width, height };
       },
-      startFollow: (target, _round, _lerpX, _lerpY, offsetX, offsetY) => {
+      startFollow: (target, _round, lerpX, lerpY, offsetX, offsetY) => {
         state.mode = "follow-observer";
         state.followTarget = structuredClone(target);
         state.followOffset = { x: offsetX, y: offsetY };
+        state.lerp = { x: lerpX, y: lerpY };
         state.scrollX = clampScroll(
           target.x - offsetX - viewport.width / 2,
           "x",
@@ -1046,6 +1241,51 @@ function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
         state.scrollY = clampScroll(y - viewport.height / 2, "y");
         updatePosition();
       },
+    },
+    advanceFollow: (target) => {
+      assert.equal(state.mode, "follow-observer");
+      state.followTarget = structuredClone(target);
+      const adjustedTarget = {
+        x: target.x - state.followOffset.x,
+        y: target.y - state.followOffset.y,
+      };
+      const deadZone = {
+        left:
+          state.scrollX + viewport.width / 2 - state.deadZone.width / 2,
+        right:
+          state.scrollX + viewport.width / 2 + state.deadZone.width / 2,
+        top:
+          state.scrollY + viewport.height / 2 - state.deadZone.height / 2,
+        bottom:
+          state.scrollY + viewport.height / 2 + state.deadZone.height / 2,
+      };
+      let targetScrollX = state.scrollX;
+      let targetScrollY = state.scrollY;
+      if (adjustedTarget.x < deadZone.left) {
+        targetScrollX = adjustedTarget.x - deadZone.left + state.scrollX;
+      } else if (adjustedTarget.x > deadZone.right) {
+        targetScrollX = adjustedTarget.x - deadZone.right + state.scrollX;
+      }
+      if (adjustedTarget.y < deadZone.top) {
+        targetScrollY = adjustedTarget.y - deadZone.top + state.scrollY;
+      } else if (adjustedTarget.y > deadZone.bottom) {
+        targetScrollY = adjustedTarget.y - deadZone.bottom + state.scrollY;
+      }
+      state.scrollX = clampScroll(
+        Math.floor(
+          state.scrollX +
+            (targetScrollX - state.scrollX) * state.lerp.x,
+        ),
+        "x",
+      );
+      state.scrollY = clampScroll(
+        Math.floor(
+          state.scrollY +
+            (targetScrollY - state.scrollY) * state.lerp.y,
+        ),
+        "y",
+      );
+      updatePosition();
     },
     snapshot: () => structuredClone(state),
   };

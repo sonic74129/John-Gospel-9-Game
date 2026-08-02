@@ -27,7 +27,7 @@
       "id": "prop.inquiry-gate-panel",
       "regionId": "inquiry-courtyard",
       "sourceLevel": "approved-bridge",
-      "position": { "x": 1880, "y": 720 },
+      "position": { "x": 1970, "y": 720 },
       "interactionAnchorId": "inquiry.gate",
       "isBakedIntoMap": false,
       "initialState": "open",

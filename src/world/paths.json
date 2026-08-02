@@ -156,11 +156,11 @@
       "startAnchorId": "outside.jesus-entry",
       "endAnchorId": "outside.belief",
       "expectedDurationSeconds": 12,
-      "movementSpeed": 19,
+      "movementSpeed": 16,
       "actorRadius": 18,
       "points": [
-        { "x": 2460, "y": 1400 },
-        { "x": 2400, "y": 1360 },
+        { "x": 2420, "y": 1400 },
+        { "x": 2380, "y": 1360 },
         { "x": 2320, "y": 1340 },
         { "x": 2260, "y": 1320 }
       ]

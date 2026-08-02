@@ -10,7 +10,7 @@
       "focusAnchorId": "roadside.clay-action",
       "desktopZoom": 1,
       "mobileZoom": 0.82,
-      "deadZone": { "width": 220, "height": 150 },
+      "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 0.8
     },
     {
@@ -20,7 +20,7 @@
       "focusAnchorId": "pool.camera",
       "desktopZoom": 0.95,
       "mobileZoom": 0.76,
-      "deadZone": { "width": 200, "height": 150 },
+      "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 0.8
     },
     {
@@ -30,7 +30,7 @@
       "focusAnchorId": "neighbors.center",
       "desktopZoom": 1,
       "mobileZoom": 0.76,
-      "deadZone": { "width": 190, "height": 150 },
+      "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 0.8
     },
     {
@@ -40,7 +40,7 @@
       "focusAnchorId": "inquiry.man-center",
       "desktopZoom": 0.95,
       "mobileZoom": 0.72,
-      "deadZone": { "width": 180, "height": 150 },
+      "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 0.9
     },
     {
@@ -50,7 +50,7 @@
       "focusAnchorId": "ending.camera",
       "desktopZoom": 1.05,
       "mobileZoom": 0.82,
-      "deadZone": { "width": 160, "height": 140 },
+      "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 1
     }
   ]

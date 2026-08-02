@@ -9,7 +9,7 @@
       "anchorId": "roadside.player-start",
       "regionId": "roadside",
       "sourceLevel": "approved-bridge",
-      "position": { "x": 420, "y": 1000 },
+      "position": { "x": 500, "y": 940 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
