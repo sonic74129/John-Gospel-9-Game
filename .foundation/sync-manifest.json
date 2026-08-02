@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "foundation": {
     "repository": "sonic74129/bible-game-foundation",
-    "commit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6"
+    "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653"
   },
   "assetPacks": [
     {
@@ -62,20 +62,26 @@
     {
       "source": "docs/standards/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
       "target": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
-      "bytes": 38144,
-      "sha256": "d6047c3e1682f949ec6347bc871e251724ee31477d2e1f5ad90c4b8cdc7439ce"
+      "bytes": 40881,
+      "sha256": "f363b37ac1f6bab765af91deef2174803c6f3c102324e1c1c5b4d77026b34b03"
+    },
+    {
+      "source": "docs/END_TO_END_DELIVERY.zh-CN.md",
+      "target": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md",
+      "bytes": 5613,
+      "sha256": "8a67e66354ddba3d005fac842e163dc69cd051f31bef9ffc7441ca38d447222d"
     },
     {
       "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
       "target": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md",
-      "bytes": 3844,
-      "sha256": "779e0780f7696c6ea88b77d438abf34947544373ab2df6fb9ed438c28431c838"
+      "bytes": 5319,
+      "sha256": "9a8990230d4d662044d1a09bddb07cea0ff28b84ff67dce393d38a78f9ef1faa"
     },
     {
       "source": "docs/standards/MULTI_REPO_ARCHITECTURE.zh-CN.md",
       "target": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md",
-      "bytes": 22173,
-      "sha256": "e541afa769255460fd5db014d3cf65806a2e4fee304fb0d548cb70f88dd47b7e"
+      "bytes": 22418,
+      "sha256": "86f400f99c5106465c4091ada543b24c93fbbaf61578b9411b5c8110ff7f56ca"
     },
     {
       "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",

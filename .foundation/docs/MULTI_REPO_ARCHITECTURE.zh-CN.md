@@ -608,6 +608,13 @@ Manifest 示例：
   "id": "john-11-bethany",
   "version": "1.0.0",
   "templateVersion": "1.0.0",
+  "productionStage": "released",
+  "deliveryPolicy": {
+    "mode": "end-to-end",
+    "graybox": "internal-only",
+    "stopAfterGraybox": false,
+    "allowPlaceholderFinal": false
+  },
   "title": "伯大尼见证者",
   "passage": {
     "book": "John",
@@ -636,7 +643,7 @@ Manifest 示例：
 }
 ```
 
-Hub 只依赖这份 contract。
+Hub 只依赖这份 contract，并拒绝 `productionStage` 不是 `released` 的 artifact。
 
 ## 9. 统一部署但保持 repo 独立
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "repository": "sonic74129/bible-game-foundation",
-  "commit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
   "allowCandidateAssets": true,
   "guidance": [
     {
@@ -23,6 +23,10 @@
     {
       "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
       "target": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
+    },
+    {
+      "source": "docs/END_TO_END_DELIVERY.zh-CN.md",
+      "target": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md"
     },
     {
       "source": "art-direction/storybook-realism-v1/style.json",

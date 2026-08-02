@@ -39,6 +39,7 @@
 - 普通流程和跳过演出必须收敛到完全相同的故事最终状态。
 - 每个故事有自己的代码入口、内容、地图、测试、构建产物和版本。
 - 共用素材必须有稳定 ID、版本、来源、用途、授权和兼容范围。
+- 用户要求制作游戏时默认端到端完成；灰盒只是内部校验，不得作为停止点或最终交付。
 
 ### 1.2 已否决，不得恢复
 
@@ -249,9 +250,9 @@ mobile/desktop safe framing
 路线点与视觉锚点必须分开。例如“前往墓园的路线终点”不等于“洞口中心”。
 所有关键动作都以实际图片像素校准的 anchor 为准，并保留 debug overlay。
 
-### 4.4 先灰盒、后正式图
+### 4.4 内部校验后必须继续正式图
 
-正式生成地图前必须：
+正式生成地图前必须短暂完成以下内部校验：
 
 1. 画出区域、路线、清场、门口、互动点和镜头范围。
 2. 放入真实批准角色测试 2–3 个尺寸。
@@ -259,6 +260,18 @@ mobile/desktop safe framing
 4. 验证建筑、门、床、井、桌、树、墓穴与人物比例可信。
 5. 验证正常路线、跳过路线和重进场景都不会卡住。
 6. 锁定地图尺寸、光向、人物高度和地标坐标后，才写最终 MAI prompt。
+
+第 6 项完成即代表 MAI 生产的开始条件已经满足，不代表故事完成。除非用户明确要求
+`graybox-only`，不得停在此处、提交玩家版灰盒或使用“完整故事”描述。应立即继续
+第 7 节的 prompt registry、候选生成、视觉审查、runtime 处理与接入，不等待用户再次
+确认“可以生图”。
+
+灰盒 layout、contract tests 和 debug overlay 必须保留为正式图回归基线。正式图造成
+路线、比例、镜头、碰撞或遮挡回归时，只把受影响部分切回灰盒定位并修正，重跑该区域
+QA，再重新生成或处理受影响资产；通过后自动继续，不推翻其他已批准素材。
+
+经文授权或人工审核待定时，继续所有不需要展示未授权逐字文本的地图、美术、人物、
+动作、引擎和 QA 工作，并把最终状态标记为 `release-blocked`，不能误判为生产停止。
 
 ### 4.5 地图演出连续性
 
@@ -885,6 +898,13 @@ npm run build
   "id": "john-11-bethany",
   "version": "1.0.0",
   "templateVersion": "1.0.0",
+  "productionStage": "released",
+  "deliveryPolicy": {
+    "mode": "end-to-end",
+    "graybox": "internal-only",
+    "stopAfterGraybox": false,
+    "allowPlaceholderFinal": false
+  },
   "title": "伯大尼见证者",
   "passage": {
     "book": "John",
@@ -914,7 +934,7 @@ npm run build
 ```
 
 Hub、部署工具和目录页只能依赖这个 manifest，不能 import 游戏内部 Beat、Scene 或
-存档类型。
+存档类型。Hub 只接收 `productionStage: "released"`；其他阶段不得进入公开 catalog。
 
 ## 12. 未来统一界面
 
@@ -963,6 +983,11 @@ bible-games:save:john-11-bethany:v1
 
 ## 13. 新故事标准生产流程
 
+以下 Phase 是连续流水线，不是九个可任意停止的交付点。用户要求制作完整游戏时，
+执行者必须主动从 Phase 0 推进到 Phase 8；Phase 2 灰盒通过后自动进入 Phase 3–4。
+只有用户明确要求阶段性交付，或出现
+[端到端完成政策](../END_TO_END_DELIVERY.zh-CN.md)定义的硬阻塞，才可暂停。
+
 ### Phase 0：立项
 
 - 锁定经文范围、译本、语言、对象、时长和学习目标。
@@ -979,8 +1004,10 @@ bible-games:save:john-11-bethany:v1
 ### Phase 2：Beat 与世界灰盒
 
 - 建立全部 Beat、前置、触发、final state 和 stage goal。
-- 先用灰盒地图走完整流程。
+- 用不面向玩家交付的内部灰盒走完整流程。
 - 验证正常、skip、restart 和重进状态。
+- 保留灰盒 contract、测试与 development-only overlay 作为正式图回归基线。
+- 通过后立即进入 Phase 3–4；不得把灰盒标成完整或生产完成。
 
 ### Phase 3：共用资产盘点
 
@@ -991,9 +1018,12 @@ bible-games:save:john-11-bethany:v1
 ### Phase 4：美术母版与地图
 
 - 先锁定 style/identity/scale。
+- 核对 MAI Azure/Entra 环境并建立故事 prompt registry。
 - 生成并比较 2–3 个母版或地图候选。
 - 用真实角色叠加验证。
 - 批准后才拆环境、人物、姿态和肖像。
+- 处理为 runtime assets 后替换所有灰盒；用实际像素重新校准世界契约。
+- 若校准失败，只回滚受影响区域到 Phase 2 修正，再自动返回 Phase 4；不等待用户指示。
 
 ### Phase 5：垂直切片
 
@@ -1027,6 +1057,9 @@ bible-games:save:john-11-bethany:v1
 - 更新 `catalog/games.json`。
 - Hub 只增加一条 manifest，不改游戏内部代码。
 
+经文、音乐或公开分发审批尚未完成时，可停在 `release-blocked`，但此前仍应完成所有
+不受限制的 MAI、美术、runtime 集成和 QA。`release-blocked` 不能称为“已发布”。
+
 ## 14. 每个游戏的完成定义
 
 ### 经文
@@ -1056,6 +1089,8 @@ bible-games:save:john-11-bethany:v1
 - 地图与肖像是同一人物。
 - 无文字、水印、现代物件、奇幻光效和恐怖内容。
 - 所有资产有 source、manifest、版本与 runtime mapping。
+- 玩家版使用批准的正式资产，不含灰盒色块、placeholder、debug overlay、region ID、
+  Beat/segment ID、候选说明或内部 final-state 状态。
 
 ### 音频
 
@@ -1077,6 +1112,8 @@ bible-games:save:john-11-bethany:v1
 - 发布包不依赖 MAI、Speech 或其他运行时云端调用。
 - 无 token、key、个人帐号、未授权素材或生产候选进入发布包。
 - Console、page error、unhandled rejection 与关键资源 404 为 0。
+- manifest 阶段为 `released`；`internal-graybox`、`art-production`、`integration`、
+  `release-candidate` 与 `release-blocked` 都不得宣称完成。
 
 ## 15. 建议实施顺序
 
