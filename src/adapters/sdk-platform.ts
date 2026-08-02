@@ -62,6 +62,7 @@ export interface PlatformRuntime {
   resume(reason: string): Promise<void>;
   skipCurrent(): void;
   cancelCurrent(): void;
+  cancelAndSettleCurrent(): Promise<void>;
   runSequence(
     definition: SequenceDefinition<SliceFinalState>,
   ): Promise<SequenceResult>;
@@ -247,9 +248,12 @@ export function createPlatformRuntime(
     },
     onBeatSettled: async (beat) => {
       const completedBeatIds = beat.finalState.triggers.completedBeatIds;
-      await options.onProgress?.(completedBeatIds);
-      if (beat.id === STORY_BEAT_IDS.at(-1)) {
-        shell.setCompleted();
+      try {
+        await options.onProgress?.(completedBeatIds);
+      } finally {
+        if (beat.id === STORY_BEAT_IDS.at(-1)) {
+          shell.setCompleted();
+        }
       }
     },
   });
@@ -431,6 +435,20 @@ export function createPlatformRuntime(
     },
     cancelCurrent: () => {
       sequence.cancel();
+    },
+    cancelAndSettleCurrent: async () => {
+      sequence.cancel();
+      const sequenceResults = await Promise.allSettled([
+        ...activeSequenceRuns,
+      ]);
+      const sequenceFailure = sequenceResults.find(
+        (result): result is PromiseRejectedResult =>
+          result.status === "rejected",
+      )?.reason;
+      await story.waitForIdle();
+      if (sequenceFailure !== undefined) {
+        throw sequenceFailure;
+      }
     },
     runSequence,
     snapshotAppliedFinalState: () =>

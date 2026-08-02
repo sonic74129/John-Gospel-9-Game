@@ -224,6 +224,10 @@ export class SliceStoryController {
     await this.#active;
   }
 
+  async waitForIdle(): Promise<void> {
+    await this.#active;
+  }
+
   async #dispatch(event: SliceStoryEvent): Promise<SliceDispatchResult> {
     const currentBeat = this.engine.currentBeat;
     if (

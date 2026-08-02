@@ -285,6 +285,11 @@ test("browser cancellation restores scene state and pause gates DOM progression"
     /restoreRuntimeState\(snapshot: GrayboxSceneSnapshot\)[\s\S]*if \(this\.#tearingDown\)/,
   );
   assert.match(scene, /this\.cameras\.main\.resetFX\(\)/);
+  assert.match(scene, /this\.time\.delayedCall\(250/);
+  assert.doesNotMatch(
+    scene,
+    /followCameraPath[\s\S]*window\.setTimeout/,
+  );
   assert.match(
     platform,
     /scene\.beginTeardown\(\);\s*sequence\.cancel\(\);[\s\S]*await story\.dispose\(\);[\s\S]*Promise\.allSettled\(activeSequenceRuns\)/,

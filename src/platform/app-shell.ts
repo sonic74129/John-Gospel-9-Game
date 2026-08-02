@@ -7,8 +7,8 @@ import { APPROVED_STUDY_QUESTIONS } from "./ending-study.ts";
 
 export interface AppShellHandlers {
   readonly onStart: (mode: "new" | "continue") => void;
-  readonly onRestart: () => void;
-  readonly onPauseChange: (paused: boolean) => void;
+  readonly onRestart: () => Promise<void>;
+  readonly onPauseChange: (paused: boolean) => Promise<void>;
   readonly onMuteChange: (muted: boolean) => void;
   readonly onSubtitleChange: (visible: boolean) => void;
   readonly onSkip: () => void;
@@ -125,6 +125,10 @@ export function createAppShell(
     root,
     "[data-game-container]",
   );
+  const gameControls = requireElement<HTMLElement>(
+    root,
+    "[data-game-controls]",
+  );
   const startScreen = requireElement<HTMLElement>(root, "[data-start-screen]");
   const startButton = requireElement<HTMLButtonElement>(root, "[data-start]");
   const continueButton = requireElement<HTMLButtonElement>(
@@ -212,6 +216,9 @@ export function createAppShell(
   let subtitles = true;
   let appliedState: SliceFinalState | null = null;
   let completed = false;
+  let started = false;
+  let resumeAfterRestartCancel = false;
+  let restartButtonStates = new Map<HTMLButtonElement, boolean>();
 
   studyQuestions.replaceChildren(
     ...APPROVED_STUDY_QUESTIONS.map((question) => {
@@ -236,9 +243,87 @@ export function createAppShell(
     }),
   );
 
-  const showRestartConfirmation = (): void => {
+  const restartOutsideRegions = [
+    gameContainer,
+    startScreen,
+    dialogue,
+    recall,
+    ending,
+    gameControls,
+  ];
+  const restartOutsideButtons = [
+    startButton,
+    continueButton,
+    startRestartButton,
+    pauseButton,
+    muteButton,
+    subtitleButton,
+    skipButton,
+    restartButton,
+    dialogueNext,
+    recallDismiss,
+    endingRestart,
+  ];
+
+  const setRestartModalBlocking = (blocking: boolean): void => {
+    root.dataset.restartModalOpen = String(blocking);
+    for (const region of restartOutsideRegions) {
+      region.inert = blocking;
+    }
+    if (blocking) {
+      restartButtonStates = new Map(
+        restartOutsideButtons.map((button) => [button, button.disabled]),
+      );
+      for (const button of restartOutsideButtons) {
+        button.disabled = true;
+      }
+      return;
+    }
+    for (const [button, disabled] of restartButtonStates) {
+      button.disabled = disabled;
+    }
+    restartButtonStates.clear();
+  };
+
+  const showRestartConfirmation = async (): Promise<void> => {
+    if (!restartConfirmation.hidden) {
+      return;
+    }
+    resumeAfterRestartCancel = started && !paused && !completed;
+    setRestartModalBlocking(true);
     restartConfirmation.hidden = false;
     restartConfirm.focus();
+    if (!resumeAfterRestartCancel) {
+      return;
+    }
+    restartConfirm.disabled = true;
+    restartCancel.disabled = true;
+    try {
+      await handlers.onPauseChange(true);
+    } catch {
+      restartConfirmation.hidden = true;
+      setRestartModalBlocking(false);
+      resumeAfterRestartCancel = false;
+    } finally {
+      restartConfirm.disabled = false;
+      restartCancel.disabled = false;
+    }
+  };
+
+  const closeRestartConfirmation = async (): Promise<void> => {
+    restartConfirm.disabled = true;
+    restartCancel.disabled = true;
+    try {
+      if (resumeAfterRestartCancel) {
+        await handlers.onPauseChange(false);
+      }
+      restartConfirmation.hidden = true;
+      setRestartModalBlocking(false);
+      resumeAfterRestartCancel = false;
+    } catch {
+      restartConfirm.disabled = false;
+      restartCancel.disabled = false;
+    }
   };
 
   const presentLines = (
@@ -309,6 +394,7 @@ export function createAppShell(
   const shell: AppShell = {
     gameContainer,
     setStarted: () => {
+      started = true;
       startScreen.hidden = true;
       for (const button of [
         pauseButton,
@@ -352,7 +438,7 @@ export function createAppShell(
       pauseButton.disabled = true;
       skipButton.disabled = true;
       restartButton.disabled = false;
-      shell.setStatus("故事已完成；公開進度已標記完成");
+      shell.setStatus("故事已完成");
     },
     setStatus: (message, isError = false) => {
       status.textContent = message;
@@ -422,9 +508,20 @@ export function createAppShell(
     () => handlers.onStart("continue"),
     { once: true },
   );
-  startRestartButton.addEventListener("click", showRestartConfirmation);
-  pauseButton.addEventListener("click", () => {
-    handlers.onPauseChange(!paused);
+  startRestartButton.addEventListener("click", () => {
+    void showRestartConfirmation();
+  });
+  pauseButton.addEventListener("click", async () => {
+    pauseButton.disabled = true;
+    try {
+      await handlers.onPauseChange(!paused);
+    } catch {
+      // The handler reports lifecycle failures in the visible status region.
+    } finally {
+      if (!completed && restartConfirmation.hidden) {
+        pauseButton.disabled = false;
+      }
+    }
   });
   muteButton.addEventListener("click", () => {
     handlers.onMuteChange(!muted);
@@ -435,14 +532,24 @@ export function createAppShell(
     handlers.onSubtitleChange(next);
   });
   skipButton.addEventListener("click", handlers.onSkip);
-  restartButton.addEventListener("click", showRestartConfirmation);
-  endingRestart.addEventListener("click", showRestartConfirmation);
-  restartCancel.addEventListener("click", () => {
-    restartConfirmation.hidden = true;
+  restartButton.addEventListener("click", () => {
+    void showRestartConfirmation();
   });
-  restartConfirm.addEventListener("click", () => {
-    restartConfirmation.hidden = true;
-    handlers.onRestart();
+  endingRestart.addEventListener("click", () => {
+    void showRestartConfirmation();
+  });
+  restartCancel.addEventListener("click", () => {
+    void closeRestartConfirmation();
+  });
+  restartConfirm.addEventListener("click", async () => {
+    restartConfirm.disabled = true;
+    restartCancel.disabled = true;
+    try {
+      await handlers.onRestart();
+    } catch {
+      restartConfirm.disabled = false;
+      restartCancel.disabled = false;
+    }
   });
   recallDismiss.addEventListener("click", () => {
     recall.hidden = true;

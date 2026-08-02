@@ -5,6 +5,7 @@ import { FINAL_SNAPSHOTS } from "../../src/adapters/story-contracts.ts";
 import {
   STORY_PROGRESS_KEY,
   STORY_SAVE_KEY,
+  createCommittedProgressTracker,
   createStoryPersistence,
 } from "../../src/platform/story-persistence.ts";
 
@@ -18,6 +19,19 @@ test("first load publishes not-started progress", () => {
     JSON.parse(storage.getItem(STORY_PROGRESS_KEY)).status,
     "not-started",
   );
+});
+
+test("preference saves observe only successfully settled progress", () => {
+  const tracker = createCommittedProgressTracker(["b01"]);
+  const optimisticEngineBeatIds = ["b01", "b02"];
+  assert.deepEqual(tracker.snapshot(), ["b01"]);
+  optimisticEngineBeatIds.push("b03");
+  assert.deepEqual(tracker.snapshot(), ["b01"]);
+
+  tracker.settle(["b01", "b02"]);
+  const committed = tracker.snapshot();
+  committed.push("b03");
+  assert.deepEqual(tracker.snapshot(), ["b01", "b02"]);
 });
 
 test("save, reload, and continue retain only stable canonical progress and preferences", () => {
@@ -61,6 +75,48 @@ test("completion writes the public completed progress namespace", () => {
     status: "completed",
     lastPlayedAt: NOW.toISOString(),
   });
+});
+
+test("valid load repairs stale public progress and reports repair failures", () => {
+  const save = {
+    schemaVersion: 1,
+    storyId: "john-9-man-born-blind",
+    storyVersion: "0.1.0",
+    completedBeatIds: FINAL_SNAPSHOTS.b19.triggers.completedBeatIds,
+    preferences: { muted: false, subtitles: true },
+    lastPlayedAt: NOW.toISOString(),
+  };
+  const staleProgress = {
+    schemaVersion: 1,
+    storyId: "john-9-man-born-blind",
+    storyVersion: "0.1.0",
+    status: "in-progress",
+    lastPlayedAt: NOW.toISOString(),
+  };
+  const storage = createStorage([
+    [STORY_SAVE_KEY, JSON.stringify(save)],
+    [STORY_PROGRESS_KEY, JSON.stringify(staleProgress)],
+  ]);
+  storage.failWritesTo(STORY_PROGRESS_KEY);
+
+  const failed = createStoryPersistence(storage, () => NOW).load();
+  assert.equal(failed.status, "progress-error");
+  assert.deepEqual(failed.save, save);
+  assert.match(failed.message, /尚未宣告公開完成狀態/);
+  assert.equal(
+    JSON.parse(storage.getItem(STORY_PROGRESS_KEY)).status,
+    "in-progress",
+  );
+
+  storage.failWritesTo(null);
+  assert.equal(
+    createStoryPersistence(storage, () => NOW).load().status,
+    "ready",
+  );
+  assert.equal(
+    JSON.parse(storage.getItem(STORY_PROGRESS_KEY)).status,
+    "completed",
+  );
 });
 
 test("malformed and version-mismatched saves are visibly rejected and cleared", () => {
@@ -123,9 +179,18 @@ test("restart clears the save and publishes not-started progress", () => {
 
 function createStorage(entries = []) {
   const values = new Map(entries);
+  let failedWriteKey = null;
   return {
     getItem: (key) => values.get(key) ?? null,
-    setItem: (key, value) => values.set(key, value),
+    setItem: (key, value) => {
+      if (key === failedWriteKey) {
+        throw new Error(`write failed for ${key}`);
+      }
+      values.set(key, value);
+    },
     removeItem: (key) => values.delete(key),
+    failWritesTo: (key) => {
+      failedWriteKey = key;
+    },
   };
 }

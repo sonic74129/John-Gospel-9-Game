@@ -122,15 +122,17 @@ test("shell exposes responsive canvas and accessible control structure", async (
   assert.doesNotMatch(scene, /\.findPath\([\s\S]{0,180}\)\s*\.slice\(1\)/);
   assert.match(main, /handlePageHide\(event\.persisted\)/);
   assert.match(main, /handlePageShow\(event\.persisted\)/);
-  assert.match(main, /readyRuntime\.restore\(initialSave\.save\.completedBeatIds\)/);
+  assert.match(main, /readyRuntime\.restore\(loadedSave\.completedBeatIds\)/);
   assert.match(main, /persistence\.reset\(\)/);
 });
 
 test("persistence and ending expose only stable progress and approved study references", async () => {
-  const [persistence, ending, shell] = await Promise.all([
+  const [persistence, ending, shell, main, platform] = await Promise.all([
     readText("src/platform/story-persistence.ts"),
     readText("src/platform/ending-study.ts"),
     readText("src/platform/app-shell.ts"),
+    readText("src/main.ts"),
+    readText("src/adapters/sdk-platform.ts"),
   ]);
   assert.match(
     persistence,
@@ -146,4 +148,24 @@ test("persistence and ending expose only stable progress and approved study refe
   assert.match(ending, /verseKeys/);
   assert.doesNotMatch(ending, /\banswer\b|\bscore\b/i);
   assert.match(shell, /不提供遊戲編寫的神學答案/);
+  assert.match(main, /createCommittedProgressTracker/);
+  assert.match(main, /committedProgress\.settle\(completedBeatIds\)/);
+  assert.match(main, /committedProgress\.snapshot\(\)/);
+  assert.doesNotMatch(
+    main,
+    /runtime\.story\.snapshot\(\)\.state\.completedBeatIds/,
+  );
+  assert.match(
+    persistence,
+    /writeProgress\(progressFor\(status, parsed\.save\.lastPlayedAt\)\)/,
+  );
+  assert.match(persistence, /status: "progress-error"/);
+  assert.match(shell, /region\.inert = blocking/);
+  assert.match(shell, /handlers\.onPauseChange\(true\)/);
+  assert.match(shell, /handlers\.onPauseChange\(false\)/);
+  assert.match(main, /await runtime\.suspend\(UI_PAUSE_REASON\)/);
+  assert.match(main, /await runtime\.resume\(UI_PAUSE_REASON\)/);
+  assert.match(main, /await runtime\?\.cancelAndSettleCurrent\(\)/);
+  assert.match(platform, /await story\.waitForIdle\(\)/);
+  assert.doesNotMatch(shell, /公開進度已標記完成/);
 });

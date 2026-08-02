@@ -36,6 +36,11 @@ export type StorySaveLoadResult =
   | Readonly<{ status: "none" }>
   | Readonly<{ status: "ready"; save: StorySave }>
   | Readonly<{
+      status: "progress-error";
+      save: StorySave;
+      message: string;
+    }>
+  | Readonly<{
       status: "cleared";
       reason: "malformed" | "incompatible";
       message: string;
@@ -54,6 +59,26 @@ export class StoryPersistenceError extends Error {
     super(message, options);
     this.name = "StoryPersistenceError";
   }
+}
+
+export function createCommittedProgressTracker(
+  initialCompletedBeatIds: readonly string[] = [],
+) {
+  if (!hasCanonicalProgression(initialCompletedBeatIds)) {
+    throw new StoryPersistenceError("拒絕追蹤非正式順序的故事進度。");
+  }
+  let committedBeatIds = [...initialCompletedBeatIds];
+  return Object.freeze({
+    settle(completedBeatIds: readonly string[]): void {
+      if (!hasCanonicalProgression(completedBeatIds)) {
+        throw new StoryPersistenceError("拒絕提交非正式順序的故事進度。");
+      }
+      committedBeatIds = [...completedBeatIds];
+    },
+    snapshot(): readonly string[] {
+      return [...committedBeatIds];
+    },
+  });
 }
 
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
@@ -196,7 +221,21 @@ export function createStoryPersistence(
           });
         }
       }
-      return parsed;
+      const status =
+        parsed.save.completedBeatIds.length === STORY_BEAT_IDS.length
+          ? "completed"
+          : "in-progress";
+      try {
+        writeProgress(progressFor(status, parsed.save.lastPlayedAt));
+        return parsed;
+      } catch {
+        return {
+          status: "progress-error",
+          save: parsed.save,
+          message:
+            "本機故事存檔有效，但公開進度同步失敗；尚未宣告公開完成狀態。",
+        };
+      }
     },
 
     save(

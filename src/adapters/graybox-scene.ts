@@ -536,15 +536,22 @@ export class GrayboxScene extends Phaser.Scene {
       }
       this.cameras.main.pan(point.x, point.y, 250, "Sine.easeInOut");
       await new Promise<void>((resolve, reject) => {
-        const timer = window.setTimeout(resolve, 250);
-        signal.addEventListener(
-          "abort",
-          () => {
-            window.clearTimeout(timer);
-            reject(abortError());
-          },
-          { once: true },
-        );
+        let settled = false;
+        let timer: Phaser.Time.TimerEvent;
+        const finish = (operation: () => void): void => {
+          if (settled) {
+            return;
+          }
+          settled = true;
+          signal.removeEventListener("abort", onAbort);
+          operation();
+        };
+        const onAbort = (): void => {
+          timer.remove(false);
+          finish(() => reject(abortError()));
+        };
+        timer = this.time.delayedCall(250, () => finish(resolve));
+        signal.addEventListener("abort", onAbort, { once: true });
       });
     }
   }

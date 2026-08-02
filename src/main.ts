@@ -13,6 +13,7 @@ import {
   disposeRuntimeBeforeGame,
 } from "./platform/page-lifecycle.js";
 import {
+  createCommittedProgressTracker,
   createStoryPersistence,
   StoryPersistenceError,
   type StoryPreferences,
@@ -29,6 +30,7 @@ let game: Phaser.Game | undefined;
 let runtime: PlatformRuntime | undefined;
 let starting = false;
 let formalStoryStarted = false;
+const UI_PAUSE_REASON = "ui-pause";
 
 const persistence = createStoryPersistence(window.localStorage);
 let initialSave: StorySaveLoadResult;
@@ -39,9 +41,16 @@ try {
   initialSave = { status: "none" };
   initialPersistenceError = error;
 }
+const loadedSave =
+  initialSave.status === "ready" || initialSave.status === "progress-error"
+    ? initialSave.save
+    : null;
+const committedProgress = createCommittedProgressTracker(
+  loadedSave?.completedBeatIds,
+);
 let preferences: StoryPreferences =
-  initialSave.status === "ready"
-    ? { ...initialSave.save.preferences }
+  loadedSave !== null
+    ? { ...loadedSave.preferences }
     : { muted: false, subtitles: true };
 
 const loadDeveloperFixture = async () => {
@@ -75,6 +84,7 @@ const shell = createAppShell(root, {
       const scene = new GrayboxScene(world, (readyScene) => {
         runtime = createPlatformRuntime(readyScene, shell, reportError, {
           onProgress: (completedBeatIds) => {
+            committedProgress.settle(completedBeatIds);
             if (!formalStoryStarted) {
               return;
             }
@@ -98,8 +108,8 @@ const shell = createAppShell(root, {
               await fixture.run(readyRuntime, shell);
               return;
             }
-            if (mode === "continue" && initialSave.status === "ready") {
-              await readyRuntime.restore(initialSave.save.completedBeatIds);
+            if (mode === "continue" && loadedSave !== null) {
+              await readyRuntime.restore(loadedSave.completedBeatIds);
             } else {
               try {
                 persistence.save([], preferences);
@@ -133,21 +143,41 @@ const shell = createAppShell(root, {
       reportError(error);
     }
   },
-  onRestart: () => {
+  onRestart: async () => {
     try {
-      runtime?.cancelCurrent();
+      await runtime?.cancelAndSettleCurrent();
       persistence.reset();
       window.location.reload();
     } catch (error) {
       reportError(error);
+      throw error;
     }
   },
-  onPauseChange: (paused) => {
+  onPauseChange: async (paused) => {
     if (runtime === undefined) {
       return;
     }
-    runtime.setPaused(paused);
-    shell.setPaused(paused);
+    if (paused) {
+      runtime.setPaused(true);
+      shell.setPaused(true);
+      try {
+        await runtime.suspend(UI_PAUSE_REASON);
+      } catch (error) {
+        runtime.setPaused(false);
+        shell.setPaused(false);
+        reportError(error);
+        throw error;
+      }
+      return;
+    }
+    try {
+      await runtime.resume(UI_PAUSE_REASON);
+      runtime.setPaused(false);
+      shell.setPaused(false);
+    } catch (error) {
+      reportError(error);
+      throw error;
+    }
   },
   onMuteChange: (muted) => {
     if (runtime === undefined) {
@@ -159,7 +189,7 @@ const shell = createAppShell(root, {
     if (formalStoryStarted) {
       try {
         persistence.save(
-          runtime.story.snapshot().state.completedBeatIds,
+          committedProgress.snapshot(),
           preferences,
         );
       } catch (error) {
@@ -172,7 +202,7 @@ const shell = createAppShell(root, {
     if (runtime !== undefined && formalStoryStarted) {
       try {
         persistence.save(
-          runtime.story.snapshot().state.completedBeatIds,
+          committedProgress.snapshot(),
           preferences,
         );
       } catch (error) {
@@ -182,12 +212,14 @@ const shell = createAppShell(root, {
   },
   onSkip: () => runtime?.skipCurrent(),
 }, {
-  hasSave: initialSave.status === "ready",
+  hasSave: loadedSave !== null,
 });
 
 shell.setMuted(preferences.muted);
 shell.setSubtitles(preferences.subtitles);
 if (initialSave.status === "cleared") {
+  shell.setStatus(initialSave.message, true);
+} else if (initialSave.status === "progress-error") {
   shell.setStatus(initialSave.message, true);
 } else if (initialPersistenceError !== undefined) {
   reportError(initialPersistenceError);
