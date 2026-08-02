@@ -30,8 +30,8 @@ const TRIGGERS = Object.freeze([
   { type: "proximity", actorId: "observer", targetId: "disciples", radius: 1 },
   { type: "event", event: "beat:b02:completed" },
   { type: "event", event: "beat:b03:completed" },
-  { type: "event", event: "arrival:anchor-siloam-pool" },
-  { type: "event", event: "arrival:anchor-neighborhood-center" },
+  { type: "event", event: "arrival:pool.wash-edge" },
+  { type: "event", event: "arrival:neighbors.center" },
   { type: "proximity", actorId: "observer", targetId: "man-born-blind", radius: 1 },
   { type: "event", event: "interact:neighbors" },
   { type: "event", event: "beat:b08:completed" },
@@ -43,7 +43,7 @@ const TRIGGERS = Object.freeze([
   { type: "event", event: "beat:b14:completed" },
   { type: "event", event: "beat:b15:completed" },
   { type: "event", event: "beat:b16:completed" },
-  { type: "event", event: "arrival:anchor-reencounter-man" },
+  { type: "event", event: "arrival:outside.expelled" },
   { type: "event", event: "beat:b18:completed" },
 ]);
 
@@ -63,6 +63,7 @@ export const STORY_BEATS = Object.freeze(
       verseIds: Object.freeze(verseKeys),
       sourceLevel: "scripture",
       contentLevel: "S1",
+      stagingLevel: "S2",
       prerequisite: previousBeatId === null ? "story-start" : { beatCompleted: previousBeatId },
       trigger: Object.freeze(TRIGGERS[index]),
       supportedActions: SUPPORTED_ACTIONS,
@@ -74,7 +75,11 @@ export const STORY_BEATS = Object.freeze(
       actions: Object.freeze(
         sequence.steps
           .filter(({ kind }) => kind === "command")
-          .map(({ command, payload }) => ({ type: command, payload })),
+          .map(({ command, payload, sourceLevel }) => ({
+            type: command,
+            payload,
+            contentLevel: sourceLevel,
+          })),
       ),
     });
   }),

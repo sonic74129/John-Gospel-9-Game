@@ -1,18 +1,18 @@
 const ACTOR_DEFAULTS = Object.freeze({
-  observer: ["anchor-observer-follow", "idle", "觀察者", true, true],
-  jesus: ["anchor-temple-road-jesus", "idle", "耶穌", true, true],
-  disciples: ["anchor-temple-road-disciples", "idle", "門徒", true, true],
-  "man-born-blind": ["anchor-temple-road-man", "seated", "那人", true, true],
-  neighbors: ["anchor-neighborhood-gathering", "idle", "鄰舍與見過他的人", false, true],
-  pharisees: ["anchor-pharisee-hearing", "idle", "法利賽人", false, true],
-  parents: ["anchor-parents-waiting", "idle", "他的父母", false, true],
-  "judean-authorities": ["anchor-pharisee-hearing", "idle", "猶太人", false, true],
+  observer: ["roadside.player-start", "idle", "觀察者", true, true],
+  jesus: ["roadside.jesus", "idle", "耶穌", true, true],
+  disciples: ["roadside.disciples", "idle", "門徒", true, true],
+  "man-born-blind": ["roadside.blind-man-seat", "seated", "那人", true, true],
+  neighbors: ["neighbors.group-left", "idle", "鄰舍與見過他的人", false, false],
+  pharisees: ["inquiry.pharisees-left", "idle", "法利賽人", false, false],
+  parents: ["inquiry.waiting", "idle", "他的父母", false, false],
+  "judean-authorities": ["inquiry.pharisees-right", "idle", "猶太人", false, false],
 });
 
 const PHASE_BY_BEAT = Object.freeze({
-  b01: "temple",
-  b02: "temple",
-  b03: "temple",
+  b01: "roadside",
+  b02: "roadside",
+  b03: "roadside",
   b04: "clay",
   b05: "siloam",
   b06: "neighborhood",
@@ -28,18 +28,19 @@ const PHASE_BY_BEAT = Object.freeze({
   b16: "hearing",
   b17: "outside",
   b18: "reencounter",
-  b19: "reencounter",
+  b19: "ending",
 });
 
 const CAMERA_ANCHOR_BY_PHASE = Object.freeze({
-  temple: "anchor-camera-temple-road",
-  clay: "anchor-camera-temple-road",
-  siloam: "anchor-camera-siloam-pool",
-  neighborhood: "anchor-camera-neighborhood",
-  hearing: "anchor-camera-pharisee-hearing",
-  parents: "anchor-camera-pharisee-hearing",
-  outside: "anchor-camera-hearing-exit",
-  reencounter: "anchor-camera-reencounter",
+  roadside: "roadside.clay-action",
+  clay: "roadside.clay-action",
+  siloam: "pool.wash-edge",
+  neighborhood: "neighbors.center",
+  hearing: "inquiry.man-center",
+  parents: "inquiry.man-center",
+  outside: "outside.expelled",
+  reencounter: "outside.belief",
+  ending: "ending.camera",
 });
 
 const TESTIMONY_UNLOCKS_BY_BEAT = Object.freeze({
@@ -76,51 +77,56 @@ const phaseOverrides = (phase) => {
   switch (phase) {
     case "clay":
       return {
-        "man-born-blind": ["anchor-temple-road-man", "clay-on-eyes", "那人", true, true],
+        "man-born-blind": ["roadside.blind-man-seat", "clay-on-eyes", "那人", true, true],
       };
     case "siloam":
       return {
-        jesus: ["anchor-temple-road-exit", "departed", "耶穌", false, false],
-        disciples: ["anchor-temple-road-exit", "departed", "門徒", false, false],
-        "man-born-blind": ["anchor-siloam-pool", "standing-seeing", "那人", true, true],
+        observer: ["pool.return", "idle", "觀察者", true, true],
+        jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
+        disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
+        "man-born-blind": ["pool.wash-edge", "standing-seeing", "那人", true, true],
       };
     case "neighborhood":
       return {
-        jesus: ["anchor-temple-road-exit", "departed", "耶穌", false, false],
-        disciples: ["anchor-temple-road-exit", "departed", "門徒", false, false],
-        "man-born-blind": ["anchor-neighborhood-center", "standing-seeing", "那人", true, true],
-        neighbors: ["anchor-neighborhood-gathering", "questioning", "鄰舍與見過他的人", true, true],
+        observer: ["neighbors.pool-entry", "idle", "觀察者", true, true],
+        jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
+        disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
+        "man-born-blind": ["neighbors.center", "standing-seeing", "那人", true, true],
+        neighbors: ["neighbors.group-left", "questioning", "鄰舍與見過他的人", true, true],
       };
     case "hearing":
       return {
-        jesus: ["anchor-temple-road-exit", "departed", "耶穌", false, false],
-        disciples: ["anchor-temple-road-exit", "departed", "門徒", false, false],
-        "man-born-blind": ["anchor-pharisee-hearing-center", "standing-seeing", "那人", true, true],
-        neighbors: ["anchor-neighborhood-gathering", "idle", "鄰舍與見過他的人", false, true],
-        pharisees: ["anchor-pharisee-hearing", "questioning", "法利賽人", true, true],
-        "judean-authorities": ["anchor-pharisee-hearing", "questioning", "猶太人", true, true],
+        observer: ["inquiry.gate", "idle", "觀察者", true, true],
+        jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
+        disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
+        "man-born-blind": ["inquiry.man-center", "standing-seeing", "那人", true, true],
+        neighbors: ["neighbors.group-left", "idle", "鄰舍與見過他的人", false, false],
+        pharisees: ["inquiry.pharisees-left", "questioning", "法利賽人", true, true],
+        "judean-authorities": ["inquiry.pharisees-right", "questioning", "猶太人", true, true],
       };
     case "parents":
       return {
         ...phaseOverrides("hearing"),
-        parents: ["anchor-parents-testimony", "standing", "他的父母", true, true],
+        parents: ["inquiry.parents", "standing", "他的父母", true, true],
       };
     case "outside":
       return {
-        jesus: ["anchor-reencounter-approach", "walking", "耶穌", false, true],
-        disciples: ["anchor-temple-road-exit", "departed", "門徒", false, false],
-        "man-born-blind": ["anchor-hearing-exit", "standing-seeing", "那人", true, true],
-        neighbors: ["anchor-neighborhood-gathering", "idle", "鄰舍與見過他的人", false, true],
-        pharisees: ["anchor-pharisee-hearing", "idle", "法利賽人", false, true],
-        parents: ["anchor-parents-waiting", "idle", "他的父母", false, true],
-        "judean-authorities": ["anchor-pharisee-hearing", "idle", "猶太人", false, true],
+        observer: ["outside.inquiry-entry", "idle", "觀察者", true, true],
+        jesus: ["outside.jesus-entry", "walking", "耶穌", false, false],
+        disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
+        "man-born-blind": ["outside.expelled", "standing-seeing", "那人", true, true],
+        neighbors: ["neighbors.group-left", "idle", "鄰舍與見過他的人", false, false],
+        pharisees: ["inquiry.pharisees-left", "idle", "法利賽人", false, false],
+        parents: ["inquiry.parents-exit", "idle", "他的父母", false, false],
+        "judean-authorities": ["inquiry.pharisees-right", "idle", "猶太人", false, false],
       };
     case "reencounter":
+    case "ending":
       return {
         ...phaseOverrides("outside"),
-        jesus: ["anchor-reencounter-jesus", "standing", "耶穌", true, true],
-        "man-born-blind": ["anchor-reencounter-man", "worship", "那人", true, true],
-        pharisees: ["anchor-reencounter-nearby", "listening", "法利賽人", true, true],
+        jesus: ["outside.jesus-entry", "standing", "耶穌", true, true],
+        "man-born-blind": ["outside.belief", "worship", "那人", true, true],
+        pharisees: ["outside.inquiry-entry", "listening", "法利賽人", true, true],
       };
     default:
       return {};
@@ -138,8 +144,9 @@ const actorState = (phase) => {
           anchorId,
           pose,
           label,
-          collisionEnabled,
-          sourceLevel: id === "observer" || pose === "departed" || pose === "walking" ? "S2" : "S1",
+          collisionEnabled: visible ? collisionEnabled : false,
+          contentLevel: id === "observer" ? "S2" : "S1",
+          stagingLevel: "S2",
         }),
       ]),
     ),
@@ -150,10 +157,12 @@ const propState = (phase) =>
   Object.freeze({
     clay: Object.freeze({
       visible: phase === "clay",
-      anchorId: phase === "clay" ? "anchor-man-eyes" : "anchor-temple-road-ground",
-      state: phase === "clay" ? "applied" : phase === "temple" ? "available" : "cleared",
+      anchorId: "roadside.clay-action",
+      state:
+        phase === "clay" ? "applied" : phase === "roadside" ? "available" : "cleared",
       collisionEnabled: false,
-      sourceLevel: "S1",
+      contentLevel: "S1",
+      stagingLevel: "S2",
     }),
   });
 

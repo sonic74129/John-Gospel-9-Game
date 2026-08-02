@@ -1,40 +1,39 @@
 import { FINAL_SNAPSHOTS } from "./completion.ts";
 
 export const NARRATIVE_ANCHORS = Object.freeze([
-  "anchor-temple-road-observer",
-  "anchor-temple-road-jesus",
-  "anchor-temple-road-disciples",
-  "anchor-temple-road-man",
-  "anchor-temple-road-ground",
-  "anchor-temple-road-exit",
-  "anchor-man-eyes",
-  "anchor-siloam-pool",
-  "anchor-neighborhood-center",
-  "anchor-neighborhood-gathering",
-  "anchor-pharisee-hearing",
-  "anchor-pharisee-hearing-center",
-  "anchor-parents-waiting",
-  "anchor-parents-testimony",
-  "anchor-hearing-exit",
-  "anchor-reencounter-approach",
-  "anchor-reencounter-jesus",
-  "anchor-reencounter-man",
-  "anchor-reencounter-nearby",
-  "anchor-observer-follow",
-  "anchor-camera-temple-road",
-  "anchor-camera-siloam-pool",
-  "anchor-camera-neighborhood",
-  "anchor-camera-pharisee-hearing",
-  "anchor-camera-hearing-exit",
-  "anchor-camera-reencounter",
+  "roadside.player-start",
+  "roadside.blind-man-seat",
+  "roadside.jesus",
+  "roadside.disciples",
+  "roadside.clay-action",
+  "roadside.pool-exit",
+  "pool.wash-edge",
+  "pool.return",
+  "neighbors.pool-entry",
+  "neighbors.center",
+  "neighbors.group-left",
+  "inquiry.gate",
+  "inquiry.man-center",
+  "inquiry.pharisees-left",
+  "inquiry.pharisees-right",
+  "inquiry.parents",
+  "inquiry.waiting",
+  "inquiry.parents-exit",
+  "outside.inquiry-entry",
+  "outside.expelled",
+  "outside.jesus-entry",
+  "outside.belief",
+  "ending.camera",
 ]);
 
 export const NARRATIVE_PATHS = Object.freeze([
-  "path-temple-road-to-siloam",
-  "path-siloam-to-neighborhood",
-  "path-neighborhood-to-hearing",
-  "path-hearing-to-exit",
-  "path-reencounter-approach",
+  "man-to-pool",
+  "pool-to-neighbors",
+  "group-to-inquiry",
+  "parents-entry-exit",
+  "expulsion",
+  "jesus-entry",
+  "ending",
 ]);
 
 const command = (commandName, payload, sourceLevel = "S2") =>
@@ -48,7 +47,7 @@ const command = (commandName, payload, sourceLevel = "S2") =>
 const dialogueStep = (beatId) => command("present-scripture-segments", { beatId }, "S0");
 
 const STEPS_BY_BEAT = Object.freeze({
-  b01: [command("focus-camera", { anchorId: "anchor-camera-temple-road" })],
+  b01: [command("focus-camera", { anchorId: "roadside.clay-action" })],
   b02: [dialogueStep("b02")],
   b03: [dialogueStep("b03")],
   b04: [
@@ -58,14 +57,14 @@ const STEPS_BY_BEAT = Object.freeze({
   b05: [
     command("actor-follow-path", {
       actorId: "man-born-blind",
-      pathId: "path-temple-road-to-siloam",
+      pathId: "man-to-pool",
     }),
-    command("focus-camera", { anchorId: "anchor-camera-siloam-pool" }),
+    command("focus-camera", { anchorId: "pool.wash-edge" }),
   ],
   b06: [
     command("actor-follow-path", {
       actorId: "man-born-blind",
-      pathId: "path-siloam-to-neighborhood",
+      pathId: "pool-to-neighbors",
     }),
     dialogueStep("b06"),
   ],
@@ -73,9 +72,9 @@ const STEPS_BY_BEAT = Object.freeze({
   b08: [
     command("actor-follow-path", {
       actorId: "man-born-blind",
-      pathId: "path-neighborhood-to-hearing",
+      pathId: "group-to-inquiry",
     }),
-    command("focus-camera", { anchorId: "anchor-camera-pharisee-hearing" }),
+    command("focus-camera", { anchorId: "inquiry.man-center" }),
   ],
   b09: [dialogueStep("b09")],
   b10: [dialogueStep("b10")],
@@ -83,7 +82,10 @@ const STEPS_BY_BEAT = Object.freeze({
     command("set-actor-visible", { actorId: "parents", visible: true }, "S1"),
     dialogueStep("b11"),
   ],
-  b12: [dialogueStep("b12")],
+  b12: [
+    dialogueStep("b12"),
+    command("actor-follow-path", { actorId: "parents", pathId: "parents-entry-exit" }),
+  ],
   b13: [dialogueStep("b13")],
   b14: [dialogueStep("b14")],
   b15: [dialogueStep("b15")],
@@ -92,17 +94,17 @@ const STEPS_BY_BEAT = Object.freeze({
     dialogueStep("b17"),
     command("actor-follow-path", {
       actorId: "man-born-blind",
-      pathId: "path-hearing-to-exit",
+      pathId: "expulsion",
     }),
   ],
   b18: [
     command("actor-follow-path", {
       actorId: "jesus",
-      pathId: "path-reencounter-approach",
+      pathId: "jesus-entry",
     }),
     dialogueStep("b18"),
   ],
-  b19: [dialogueStep("b19")],
+  b19: [dialogueStep("b19"), command("camera-follow-path", { pathId: "ending" })],
 });
 
 export const SEQUENCES = Object.freeze(

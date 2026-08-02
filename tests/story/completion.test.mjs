@@ -8,8 +8,10 @@ import {
   resolveFinalSnapshot,
   STORY_COMPLETION,
 } from "../../src/story/completion.ts";
+import { NARRATIVE_ANCHORS } from "../../src/story/sequences.ts";
 
 test("every beat has a complete deterministic final snapshot", () => {
+  const canonicalAnchors = new Set(NARRATIVE_ANCHORS);
   assert.equal(Object.keys(FINAL_SNAPSHOTS).length, 19);
   for (const [beatId, snapshot] of Object.entries(FINAL_SNAPSHOTS)) {
     assert.equal(snapshot.id, `john9-${beatId}-final`);
@@ -25,14 +27,23 @@ test("every beat has a complete deterministic final snapshot", () => {
       assert.deepEqual(Object.keys(actor).sort(), [
         "anchorId",
         "collisionEnabled",
+        "contentLevel",
         "label",
         "pose",
-        "sourceLevel",
+        "stagingLevel",
         "visible",
       ]);
-      assert.ok(["S1", "S2"].includes(actor.sourceLevel));
+      assert.ok(canonicalAnchors.has(actor.anchorId));
+      assert.ok(["S1", "S2"].includes(actor.contentLevel));
+      assert.equal(actor.stagingLevel, "S2");
+      if (!actor.visible) {
+        assert.equal(actor.collisionEnabled, false);
+      }
     }
-    assert.equal(snapshot.props.clay.sourceLevel, "S1");
+    assert.ok(canonicalAnchors.has(snapshot.props.clay.anchorId));
+    assert.equal(snapshot.props.clay.contentLevel, "S1");
+    assert.equal(snapshot.props.clay.stagingLevel, "S2");
+    assert.ok(canonicalAnchors.has(snapshot.camera.anchorId));
     assert.equal(snapshot.camera.sourceLevel, "S2");
     assert.equal(snapshot.controls.sourceLevel, "S2");
     assert.equal(snapshot.testimony.sourceLevel, "S1");
