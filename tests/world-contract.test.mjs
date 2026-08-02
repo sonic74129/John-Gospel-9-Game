@@ -659,6 +659,21 @@ test("required sequence paths keep every radius-aware segment walkable and colli
     requiredPathIds
   );
   assert.deepEqual(paths.travelTargetSeconds, { minimum: 10, maximum: 20 });
+  const jesusEntry = paths.sequencePaths.find(
+    (sequencePath) => sequencePath.id === "jesus-entry"
+  );
+  assert.equal(jesusEntry.subject, "jesus");
+  assert.equal(jesusEntry.sourceLevel, "approved-bridge");
+  assert.equal(jesusEntry.endAnchorId, "outside.belief");
+  assert.notEqual(jesusEntry.endAnchorId, "outside.expelled");
+  assert.ok(
+    distanceBetween(
+      anchorById.get(jesusEntry.endAnchorId).position,
+      anchorById.get("outside.expelled").position
+    ) >=
+      jesusEntry.actorRadius * 2,
+    "Jesus and the expelled man need distinct non-overlapping colliders"
+  );
   const walkablePolygons = layout.regions.map(
     (region) => region.walkablePolygon
   );
