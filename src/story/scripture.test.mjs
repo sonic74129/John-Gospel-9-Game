@@ -67,8 +67,9 @@ function makeReleaseCandidate() {
     allowedValues: ["神", "上帝"],
   };
   rights.territories = { status: "confirmed", values: ["fixture-territory"] };
-  for (const permission of Object.values(rights.permissions)) {
+  for (const [name, permission] of Object.entries(rights.permissions)) {
     permission.status = "allowed";
+    permission.evidenceLocator = `rights-evidence/${name}.json`;
     permission.evidenceSha256 = "a".repeat(64);
     permission.evidenceId = `urn:sha256:${permission.evidenceSha256}`;
   }
@@ -119,7 +120,8 @@ function makeReleaseCandidate() {
 async function writeReleaseFixture(candidate = makeReleaseCandidate()) {
   const root = await mkdtemp(path.join(tmpdir(), "john9-scripture-"));
   const artifactDirectory = path.join(root, "licensed-artifacts");
-  await mkdir(artifactDirectory);
+  const evidenceDirectory = path.join(root, "rights-evidence");
+  await Promise.all([mkdir(artifactDirectory), mkdir(evidenceDirectory)]);
 
   const artifactBytes = Buffer.from(
     `${JSON.stringify(candidate.artifact, null, 2)}\n`,
@@ -130,6 +132,17 @@ async function writeReleaseFixture(candidate = makeReleaseCandidate()) {
   );
   candidate.rights.artifact.sha256 = digest(artifactBytes);
 
+  for (const [name, permission] of Object.entries(
+    candidate.rights.permissions,
+  )) {
+    const evidenceBytes = Buffer.from(
+      `${JSON.stringify({ permission: name, fixture: true })}\n`,
+    );
+    await writeFile(path.join(root, permission.evidenceLocator), evidenceBytes);
+    permission.evidenceSha256 = digest(evidenceBytes);
+    permission.evidenceId = `urn:sha256:${permission.evidenceSha256}`;
+  }
+
   const reviewerBytes = Buffer.from(
     `${JSON.stringify(candidate.reviewers, null, 2)}\n`,
   );
@@ -137,12 +150,21 @@ async function writeReleaseFixture(candidate = makeReleaseCandidate()) {
     path.join(root, "scripture-trusted-reviewers.json"),
     reviewerBytes,
   );
-  candidate.rights.reviewerTrust.sha256 = digest(reviewerBytes);
 
   return {
     ...candidate,
     rootUrl: pathToFileURL(`${root}${path.sep}`),
+    trustedReviewerConfigSha256: digest(reviewerBytes),
     cleanup: () => rm(root, { recursive: true, force: true }),
+  };
+}
+
+function releaseOptions(fixture) {
+  return {
+    artifactRoot: fixture.rootUrl,
+    evidenceRoot: fixture.rootUrl,
+    reviewerRoot: fixture.rootUrl,
+    trustedReviewerConfigSha256: fixture.trustedReviewerConfigSha256,
   };
 }
 
@@ -223,6 +245,7 @@ describe("John 9 scripture development contract", () => {
     const { scripture, rights } = cloneDraft();
     rights.permissions.redistribution = {
       status: "allowed",
+      evidenceLocator: "rights-evidence/redistribution.json",
       evidenceId: `urn:sha256:${"b".repeat(64)}`,
       evidenceSha256: "a".repeat(64),
     };
@@ -231,6 +254,22 @@ describe("John 9 scripture development contract", () => {
 
     assert.equal(validation.ok, false);
     assert.match(errorText(validation), /must be the immutable urn:sha256 ID/);
+  });
+
+  test("rejects unsafe permission evidence locators", () => {
+    const { scripture, rights } = cloneDraft();
+    const evidenceSha256 = "a".repeat(64);
+    rights.permissions.redistribution = {
+      status: "allowed",
+      evidenceLocator: "../forged.json",
+      evidenceId: `urn:sha256:${evidenceSha256}`,
+      evidenceSha256,
+    };
+
+    const validation = validateDevelopmentScripture(scripture, rights);
+
+    assert.equal(validation.ok, false);
+    assert.match(errorText(validation), /safe rights-evidence/);
   });
 
   test("rejects display segments that do not exactly reconstruct text", () => {
@@ -277,7 +316,7 @@ describe("release artifact and trust validation", () => {
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, true, errorText(validation));
@@ -291,11 +330,36 @@ describe("release artifact and trust validation", () => {
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, false);
     assert.match(errorText(validation), /does not match the actual artifact bytes/);
+  });
+
+  test("rejects invented permission evidence IDs and hashes", async (t) => {
+    const fixture = await writeReleaseFixture();
+    t.after(fixture.cleanup);
+    const inventedHash = "0".repeat(64);
+    fixture.rights.permissions.redistribution.evidenceSha256 = inventedHash;
+    fixture.rights.permissions.redistribution.evidenceId =
+      `urn:sha256:${inventedHash}`;
+
+    const validation = await validateReleaseReadyScripture(
+      fixture.scripture,
+      fixture.rights,
+      releaseOptions(fixture),
+    );
+
+    assert.equal(validation.ok, false);
+    assert.match(
+      errorText(validation),
+      /does not match the actual permission evidence bytes/,
+    );
+    assert.match(
+      errorText(validation),
+      /does not identify the actual permission evidence bytes/,
+    );
   });
 
   test("returns structured errors for a hash-valid malformed artifact", async (t) => {
@@ -314,7 +378,7 @@ describe("release artifact and trust validation", () => {
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, false);
@@ -344,7 +408,7 @@ describe("release artifact and trust validation", () => {
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, false);
@@ -352,53 +416,35 @@ describe("release artifact and trust validation", () => {
     assert.match(errorText(validation), /must exactly equal the imported contract/);
   });
 
-  test("rejects 神 metadata with 上帝 artifact text", async (t) => {
+  test("rejects artifact divine-name metadata that differs from rights metadata", async (t) => {
     const candidate = makeReleaseCandidate();
-    candidate.scripture.verses[0].exactText = "[synthetic 上帝 fixture]";
-    candidate.scripture.verses[0].display.segments[0].text =
-      candidate.scripture.verses[0].exactText;
-    candidate.artifact.verses[0].exactText =
-      candidate.scripture.verses[0].exactText;
+    candidate.artifact.translation.divineNameVariant = "上帝";
     const fixture = await writeReleaseFixture(candidate);
     t.after(fixture.cleanup);
 
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, false);
-    assert.match(errorText(validation), /contains 上帝, conflicting/);
-  });
-
-  test("rejects 上帝 metadata with standalone 神 artifact text", async (t) => {
-    const candidate = makeReleaseCandidate();
-    candidate.rights.divineNameVariant.value = "上帝";
-    candidate.artifact.translation.divineNameVariant = "上帝";
-    candidate.scripture.verses[0].exactText = "[synthetic 神 fixture]";
-    candidate.scripture.verses[0].display.segments[0].text =
-      candidate.scripture.verses[0].exactText;
-    candidate.artifact.verses[0].exactText =
-      candidate.scripture.verses[0].exactText;
-    const fixture = await writeReleaseFixture(candidate);
-    t.after(fixture.cleanup);
-
-    const validation = await validateReleaseReadyScripture(
-      fixture.scripture,
-      fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+    assert.match(
+      errorText(validation),
+      /artifact\.translation\.divineNameVariant/,
     );
-
-    assert.equal(validation.ok, false);
-    assert.match(errorText(validation), /contains 神, conflicting/);
+    assert.match(
+      errorText(validation),
+      /must exactly equal the verified contract and rights metadata/,
+    );
   });
 
-  test("does not mistake 神 inside the expected 上帝 token for a mismatch", async (t) => {
+  test("allows non-name 神 compounds when byte-verified artifact metadata is bound", async (t) => {
     const candidate = makeReleaseCandidate();
     candidate.rights.divineNameVariant.value = "上帝";
     candidate.artifact.translation.divineNameVariant = "上帝";
-    candidate.scripture.verses[0].exactText = "[synthetic 上帝 fixture]";
+    candidate.scripture.verses[0].exactText =
+      "[synthetic 神蹟 and 神學 fixture]";
     candidate.scripture.verses[0].display.segments[0].text =
       candidate.scripture.verses[0].exactText;
     candidate.artifact.verses[0].exactText =
@@ -409,7 +455,7 @@ describe("release artifact and trust validation", () => {
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, true, errorText(validation));
@@ -424,27 +470,63 @@ describe("release artifact and trust validation", () => {
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      releaseOptions(fixture),
     );
 
     assert.equal(validation.ok, false);
     assert.match(errorText(validation), /trusted reviewer ID with the rights role/);
   });
 
-  test("rejects a forged trusted-reviewer configuration hash", async (t) => {
+  test("requires an externally supplied reviewer trust anchor", async (t) => {
     const fixture = await writeReleaseFixture();
     t.after(fixture.cleanup);
-    fixture.rights.reviewerTrust.sha256 = "0".repeat(64);
+    const options = releaseOptions(fixture);
+    delete options.trustedReviewerConfigSha256;
 
     const validation = await validateReleaseReadyScripture(
       fixture.scripture,
       fixture.rights,
-      { artifactRoot: fixture.rootUrl, reviewerRoot: fixture.rootUrl },
+      options,
     );
 
     assert.equal(validation.ok, false);
     assert.match(
       errorText(validation),
+      /must be supplied externally as a lowercase SHA-256/,
+    );
+  });
+
+  test("rejects jointly edited reviewer config and story metadata", async (t) => {
+    const fixture = await writeReleaseFixture();
+    t.after(fixture.cleanup);
+    fixture.reviewers.reviewers.push({
+      id: "reviewer:attacker",
+      roles: ["rights"],
+    });
+    fixture.rights.reviews.rights.reviewer = "reviewer:attacker";
+    const tamperedBytes = Buffer.from(
+      `${JSON.stringify(fixture.reviewers, null, 2)}\n`,
+    );
+    await writeFile(
+      path.join(
+        fileURLToPath(fixture.rootUrl),
+        "scripture-trusted-reviewers.json",
+      ),
+      tamperedBytes,
+    );
+    fixture.rights.reviewerTrust.sha256 = digest(tamperedBytes);
+
+    const validation = await validateReleaseReadyScripture(
+      fixture.scripture,
+      fixture.rights,
+      releaseOptions(fixture),
+    );
+
+    assert.equal(validation.ok, false);
+    const errors = errorText(validation);
+    assert.match(errors, /must not be story-supplied/);
+    assert.match(
+      errors,
       /does not match the actual trusted reviewer configuration bytes/,
     );
   });

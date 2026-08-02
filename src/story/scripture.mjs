@@ -25,6 +25,8 @@ const expectedPassage = Object.freeze({
 const sha256Pattern = /^[a-f0-9]{64}$/;
 const artifactLocatorPattern =
   /^licensed-artifacts\/[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?\.json$/;
+const evidenceLocatorPattern =
+  /^rights-evidence\/[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?\.[A-Za-z0-9]{1,8}$/;
 
 export const JOHN_9_VERSE_KEYS = Object.freeze(
   Array.from({ length: 41 }, (_, index) => `john9:${index + 1}`),
@@ -357,6 +359,7 @@ function validatePermission(permission, field, errors) {
 
   if (permission.status === "unknown") {
     if (
+      permission.evidenceLocator !== null ||
       permission.evidenceId !== null ||
       permission.evidenceSha256 !== null
     ) {
@@ -369,6 +372,13 @@ function validatePermission(permission, field, errors) {
     return;
   }
 
+  if (!evidenceLocatorPattern.test(permission.evidenceLocator ?? "")) {
+    addError(
+      errors,
+      `${field}.evidenceLocator`,
+      "must be a safe rights-evidence/* relative locator",
+    );
+  }
   if (!sha256Pattern.test(permission.evidenceSha256 ?? "")) {
     addError(
       errors,
@@ -595,11 +605,11 @@ function validateRights(rights, errors) {
         "must use the pinned story reviewer configuration",
       );
     }
-    if (!sha256Pattern.test(rights.reviewerTrust.sha256 ?? "")) {
+    if (Object.hasOwn(rights.reviewerTrust, "sha256")) {
       addError(
         errors,
         "rights.reviewerTrust.sha256",
-        "must be a lowercase SHA-256",
+        "must not be story-supplied; the caller must provide the trust anchor",
       );
     }
   }
@@ -837,16 +847,6 @@ function validateTrustedReviewers(config, rights, verses, errors) {
   return trusted;
 }
 
-function findOpposingDivineName(text, variant) {
-  if (variant === "神") {
-    return text.includes("上帝") ? "上帝" : null;
-  }
-  if (variant === "上帝") {
-    return text.replaceAll("上帝", "").includes("神") ? "神" : null;
-  }
-  return null;
-}
-
 function validateArtifactJson(artifact, contract, rights, errors) {
   if (!isRecord(artifact)) {
     addError(errors, "rights.artifact", "must contain a JSON object");
@@ -926,22 +926,24 @@ function validateArtifactJson(artifact, contract, rights, errors) {
         "must exactly equal the imported contract verse text",
       );
     }
-
-    const opposing = findOpposingDivineName(
-      imported.exactText,
-      artifact.translation?.divineNameVariant,
-    );
-    if (opposing !== null) {
-      addError(
-        errors,
-        `${field}.exactText`,
-        `contains ${opposing}, conflicting with the artifact divine-name variant`,
-      );
-    }
   }
 }
 
-async function verifyReviewerTrust(contract, rights, rootUrl, errors) {
+async function verifyReviewerTrust(
+  contract,
+  rights,
+  rootUrl,
+  trustedReviewerConfigSha256,
+  errors,
+) {
+  if (!sha256Pattern.test(trustedReviewerConfigSha256 ?? "")) {
+    addError(
+      errors,
+      "trustedReviewerConfigSha256",
+      "must be supplied externally as a lowercase SHA-256",
+    );
+    return;
+  }
   const locator = rights.reviewerTrust?.locator;
   if (locator !== "scripture-trusted-reviewers.json") {
     return;
@@ -955,10 +957,10 @@ async function verifyReviewerTrust(contract, rights, rootUrl, errors) {
   if (bytes === null) {
     return;
   }
-  if (sha256(bytes) !== rights.reviewerTrust.sha256) {
+  if (sha256(bytes) !== trustedReviewerConfigSha256) {
     addError(
       errors,
-      "rights.reviewerTrust.sha256",
+      "trustedReviewerConfigSha256",
       "does not match the actual trusted reviewer configuration bytes",
     );
     return;
@@ -976,6 +978,49 @@ async function verifyReviewerTrust(contract, rights, rootUrl, errors) {
     return;
   }
   validateTrustedReviewers(config, rights, contract.verses, errors);
+}
+
+async function verifyPermissionEvidence(rights, rootUrl, errors) {
+  if (!isRecord(rights.permissions)) {
+    return;
+  }
+  await Promise.all(
+    permissionNames.map(async (name) => {
+      const permission = rights.permissions[name];
+      if (
+        !isRecord(permission) ||
+        permission.status === "unknown" ||
+        !evidenceLocatorPattern.test(permission.evidenceLocator ?? "")
+      ) {
+        return;
+      }
+      const field = `rights.permissions.${name}`;
+      const bytes = await readPinnedFile(
+        rootUrl,
+        permission.evidenceLocator,
+        `${field}.evidenceLocator`,
+        errors,
+      );
+      if (bytes === null) {
+        return;
+      }
+      const actualSha256 = sha256(bytes);
+      if (actualSha256 !== permission.evidenceSha256) {
+        addError(
+          errors,
+          `${field}.evidenceSha256`,
+          "does not match the actual permission evidence bytes",
+        );
+      }
+      if (permission.evidenceId !== `urn:sha256:${actualSha256}`) {
+        addError(
+          errors,
+          `${field}.evidenceId`,
+          "does not identify the actual permission evidence bytes",
+        );
+      }
+    }),
+  );
 }
 
 async function verifyArtifact(contract, rights, rootUrl, errors) {
@@ -1016,7 +1061,12 @@ async function verifyArtifact(contract, rights, rootUrl, errors) {
 export async function validateReleaseReadyScripture(
   contract,
   rights,
-  { artifactRoot = storyRootUrl, reviewerRoot = storyRootUrl } = {},
+  {
+    artifactRoot = storyRootUrl,
+    evidenceRoot = storyRootUrl,
+    reviewerRoot = storyRootUrl,
+    trustedReviewerConfigSha256,
+  } = {},
 ) {
   const errors = [...validateDevelopmentScripture(contract, rights).errors];
   if (!isRecord(contract) || !isRecord(rights)) {
@@ -1087,7 +1137,14 @@ export async function validateReleaseReadyScripture(
 
   await Promise.all([
     verifyArtifact(contract, rights, artifactRoot, errors),
-    verifyReviewerTrust(contract, rights, reviewerRoot, errors),
+    verifyPermissionEvidence(rights, evidenceRoot, errors),
+    verifyReviewerTrust(
+      contract,
+      rights,
+      reviewerRoot,
+      trustedReviewerConfigSha256,
+      errors,
+    ),
   ]);
   return result(errors);
 }

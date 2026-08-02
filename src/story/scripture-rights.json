@@ -29,16 +29,19 @@
   "permissions": {
     "redistribution": {
       "status": "unknown",
+      "evidenceLocator": null,
       "evidenceId": null,
       "evidenceSha256": null
     },
     "offline": {
       "status": "unknown",
+      "evidenceLocator": null,
       "evidenceId": null,
       "evidenceSha256": null
     },
     "tts": {
       "status": "unknown",
+      "evidenceLocator": null,
       "evidenceId": null,
       "evidenceSha256": null
     }
@@ -48,8 +51,7 @@
     "text": null
   },
   "reviewerTrust": {
-    "locator": "scripture-trusted-reviewers.json",
-    "sha256": "9011c1d152744081c46cb36ec87fad64709e19e06ea1b02c766804d17a175a4e"
+    "locator": "scripture-trusted-reviewers.json"
   },
   "reviews": {
     "text": {
