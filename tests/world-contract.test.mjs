@@ -644,8 +644,11 @@ test("navigation grid covers the world and references every region exactly once"
 test("required sequence paths keep every radius-aware segment walkable and collision-free", () => {
   const requiredPathIds = [
     "man-to-pool",
+    "pool-wash-to-return",
     "pool-to-neighbors",
     "group-to-inquiry",
+    "parents-entry",
+    "parents-exit",
     "parents-entry-exit",
     "expulsion",
     "jesus-entry",

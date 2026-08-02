@@ -26,6 +26,21 @@
       ]
     },
     {
+      "id": "pool-wash-to-return",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "pool.wash-edge",
+      "endAnchorId": "pool.return",
+      "expectedDurationSeconds": 10,
+      "movementSpeed": 16,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1220, "y": 910 },
+        { "x": 1300, "y": 900 },
+        { "x": 1380, "y": 900 }
+      ]
+    },
+    {
       "id": "pool-to-neighbors",
       "sourceLevel": "approved-bridge",
       "subject": "man-born-blind",
@@ -57,6 +72,36 @@
         { "x": 2120, "y": 850 },
         { "x": 2200, "y": 850 },
         { "x": 2440, "y": 850 }
+      ]
+    },
+    {
+      "id": "parents-entry",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "inquiry.parents-entry",
+      "endAnchorId": "inquiry.parents",
+      "expectedDurationSeconds": 12,
+      "movementSpeed": 40,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2370, "y": 490 },
+        { "x": 2400, "y": 650 },
+        { "x": 2500, "y": 950 }
+      ]
+    },
+    {
+      "id": "parents-exit",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "inquiry.parents",
+      "endAnchorId": "inquiry.parents-exit",
+      "expectedDurationSeconds": 13,
+      "movementSpeed": 41,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2500, "y": 950 },
+        { "x": 2650, "y": 700 },
+        { "x": 2540, "y": 490 }
       ]
     },
     {
