@@ -11,6 +11,35 @@ import type { SliceFinalState } from "./sequence-adapter.ts";
 import type { WorldRuntime } from "./world-adapter.ts";
 
 const AREA_COLORS = [0xd2b887, 0x8ca6a3, 0xc5a16e, 0xa85f3e, 0x66704b];
+const COLLISION_COLOR = 0x3c352f;
+const WATER_COLLISION_COLOR = 0x526c73;
+const PORTAL_COLOR = 0xe2d2b2;
+const LANDMARK_COLOR = 0xffe2a6;
+
+function drawPolygon(
+  graphics: Phaser.GameObjects.Graphics,
+  polygon: readonly Point[],
+): void {
+  const first = polygon[0];
+  if (first === undefined) {
+    throw new Error("Graybox polygons must contain at least one point.");
+  }
+  graphics.beginPath();
+  graphics.moveTo(first.x, first.y);
+  for (const point of polygon.slice(1)) {
+    graphics.lineTo(point.x, point.y);
+  }
+  graphics.closePath();
+  graphics.fillPath();
+  graphics.strokePath();
+}
+
+function polygonCenter(polygon: readonly Point[]): Point {
+  return {
+    x: polygon.reduce((sum, point) => sum + point.x, 0) / polygon.length,
+    y: polygon.reduce((sum, point) => sum + point.y, 0) / polygon.length,
+  };
+}
 
 interface ActorVisual {
   readonly actorId: string;
@@ -147,21 +176,89 @@ export class GrayboxScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, definition.width, definition.height);
 
     const graphics = this.add.graphics();
-    this.#world.areas.forEach((area, index) => {
-      const { x, y, width, height, id } = area.definition;
+    this.#world.regionContracts.forEach((region, index) => {
+      const { x, y, id } = this.#world.areas[index]!.definition;
       graphics.fillStyle(AREA_COLORS[index % AREA_COLORS.length]!, 0.72);
       graphics.lineStyle(4, 0x3c352f, 0.55);
-      graphics.fillRoundedRect(x, y, width, height, 28);
-      graphics.strokeRoundedRect(x, y, width, height, 28);
+      drawPolygon(graphics, region.walkablePolygon);
       this.add
-        .text(x + 24, y + 20, id, {
+        .text(x + 24, y + 20, `${id} · walkable`, {
           color: "#3c352f",
           fontFamily: "system-ui, sans-serif",
-          fontSize: "24px",
+          fontSize: "22px",
           fontStyle: "bold",
         })
         .setDepth(2);
     });
+
+    for (const collision of this.#world.collisionPolygons) {
+      graphics.fillStyle(
+        collision.material === "water-boundary"
+          ? WATER_COLLISION_COLOR
+          : COLLISION_COLOR,
+        0.88,
+      );
+      graphics.lineStyle(3, 0xfffaf1, 0.7);
+      drawPolygon(graphics, collision.polygon);
+      const center = polygonCenter(collision.polygon);
+      this.add
+        .text(center.x, center.y, collision.id.replace("collision.", ""), {
+          color: "#fffaf1",
+          fontFamily: "system-ui, sans-serif",
+          fontSize: "13px",
+          align: "center",
+        })
+        .setOrigin(0.5)
+        .setDepth(2);
+    }
+
+    graphics.lineStyle(10, PORTAL_COLOR, 0.9);
+    for (const portal of this.#world.portals) {
+      const [start, end] = portal.segment;
+      if (start === undefined || end === undefined) {
+        throw new Error(`Portal ${portal.id} must define a segment.`);
+      }
+      graphics.lineBetween(start.x, start.y, end.x, end.y);
+      const center = {
+        x: (start.x + end.x) / 2,
+        y: (start.y + end.y) / 2,
+      };
+      this.add
+        .text(center.x, center.y - 18, "transition", {
+          color: "#3c352f",
+          backgroundColor: "#e2d2b2dd",
+          fontFamily: "system-ui, sans-serif",
+          fontSize: "12px",
+          padding: { x: 4, y: 2 },
+        })
+        .setOrigin(0.5, 1)
+        .setDepth(2);
+    }
+
+    graphics.fillStyle(LANDMARK_COLOR, 1);
+    graphics.lineStyle(3, COLLISION_COLOR, 0.8);
+    for (const anchor of this.#world.anchorById.values()) {
+      if (anchor.kind !== "landmark") {
+        continue;
+      }
+      graphics.fillCircle(anchor.position.x, anchor.position.y, 12);
+      graphics.strokeCircle(anchor.position.x, anchor.position.y, 12);
+      this.add
+        .text(
+          anchor.position.x,
+          anchor.position.y - 18,
+          anchor.id.split(".").at(-1) ?? anchor.id,
+          {
+            color: "#3c352f",
+            backgroundColor: "#fffaf1dd",
+            fontFamily: "system-ui, sans-serif",
+            fontSize: "12px",
+            padding: { x: 4, y: 2 },
+          },
+        )
+        .setOrigin(0.5, 1)
+        .setDepth(2);
+    }
 
     for (const actor of this.#world.actors) {
       const isPlayer = actor.state.role === "player";

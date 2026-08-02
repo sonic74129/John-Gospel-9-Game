@@ -14,15 +14,16 @@
       "startAnchorId": "roadside.blind-man-seat",
       "endAnchorId": "pool.wash-edge",
       "expectedDurationSeconds": 16,
-      "movementSpeed": 46,
+      "movementSpeed": 52,
       "actorRadius": 18,
       "points": [
-        { "x": 520, "y": 930 },
-        { "x": 700, "y": 950 },
-        { "x": 820, "y": 950 },
-        { "x": 870, "y": 950 },
-        { "x": 1040, "y": 960 },
-        { "x": 1220, "y": 910 }
+        { "x": 520, "y": 900 },
+        { "x": 650, "y": 980 },
+        { "x": 780, "y": 1080 },
+        { "x": 870, "y": 1190 },
+        { "x": 900, "y": 1240 },
+        { "x": 980, "y": 1340 },
+        { "x": 1120, "y": 1440 }
       ]
     },
     {
@@ -32,12 +33,13 @@
       "startAnchorId": "pool.wash-edge",
       "endAnchorId": "pool.return",
       "expectedDurationSeconds": 10,
-      "movementSpeed": 16,
+      "movementSpeed": 30,
       "actorRadius": 18,
       "points": [
-        { "x": 1220, "y": 910 },
-        { "x": 1300, "y": 900 },
-        { "x": 1380, "y": 900 }
+        { "x": 1120, "y": 1440 },
+        { "x": 1180, "y": 1360 },
+        { "x": 1240, "y": 1280 },
+        { "x": 1320, "y": 1220 }
       ]
     },
     {
@@ -47,14 +49,14 @@
       "startAnchorId": "pool.return",
       "endAnchorId": "neighbors.center",
       "expectedDurationSeconds": 14,
-      "movementSpeed": 33,
+      "movementSpeed": 35,
       "actorRadius": 18,
       "points": [
-        { "x": 1380, "y": 900 },
-        { "x": 1510, "y": 900 },
-        { "x": 1570, "y": 900 },
-        { "x": 1700, "y": 860 },
-        { "x": 1830, "y": 820 }
+        { "x": 1320, "y": 1220 },
+        { "x": 1420, "y": 1140 },
+        { "x": 1400, "y": 1040 },
+        { "x": 1440, "y": 920 },
+        { "x": 1480, "y": 780 }
       ]
     },
     {
@@ -64,14 +66,15 @@
       "startAnchorId": "neighbors.center",
       "endAnchorId": "inquiry.man-center",
       "expectedDurationSeconds": 14,
-      "movementSpeed": 44,
+      "movementSpeed": 47,
       "actorRadius": 18,
       "points": [
-        { "x": 1830, "y": 820 },
-        { "x": 2020, "y": 850 },
-        { "x": 2120, "y": 850 },
-        { "x": 2200, "y": 850 },
-        { "x": 2440, "y": 850 }
+        { "x": 1480, "y": 780 },
+        { "x": 1600, "y": 780 },
+        { "x": 1740, "y": 700 },
+        { "x": 1800, "y": 680 },
+        { "x": 1920, "y": 620 },
+        { "x": 2100, "y": 620 }
       ]
     },
     {
@@ -81,12 +84,15 @@
       "startAnchorId": "inquiry.parents-entry",
       "endAnchorId": "inquiry.parents",
       "expectedDurationSeconds": 12,
-      "movementSpeed": 40,
+      "movementSpeed": 61,
       "actorRadius": 18,
       "points": [
-        { "x": 2370, "y": 490 },
-        { "x": 2400, "y": 650 },
-        { "x": 2500, "y": 950 }
+        { "x": 2040, "y": 240 },
+        { "x": 1900, "y": 260 },
+        { "x": 1860, "y": 300 },
+        { "x": 1860, "y": 460 },
+        { "x": 1960, "y": 520 },
+        { "x": 2140, "y": 720 }
       ]
     },
     {
@@ -96,12 +102,13 @@
       "startAnchorId": "inquiry.parents",
       "endAnchorId": "inquiry.parents-exit",
       "expectedDurationSeconds": 13,
-      "movementSpeed": 41,
+      "movementSpeed": 44,
       "actorRadius": 18,
       "points": [
-        { "x": 2500, "y": 950 },
-        { "x": 2650, "y": 700 },
-        { "x": 2540, "y": 490 }
+        { "x": 2140, "y": 720 },
+        { "x": 2320, "y": 560 },
+        { "x": 2320, "y": 440 },
+        { "x": 2300, "y": 240 }
       ]
     },
     {
@@ -111,14 +118,18 @@
       "startAnchorId": "inquiry.parents-entry",
       "endAnchorId": "inquiry.parents-exit",
       "expectedDurationSeconds": 18,
-      "movementSpeed": 56,
+      "movementSpeed": 72,
       "actorRadius": 18,
       "points": [
-        { "x": 2370, "y": 490 },
-        { "x": 2400, "y": 650 },
-        { "x": 2500, "y": 950 },
-        { "x": 2650, "y": 700 },
-        { "x": 2540, "y": 490 }
+        { "x": 2040, "y": 240 },
+        { "x": 1900, "y": 260 },
+        { "x": 1860, "y": 300 },
+        { "x": 1860, "y": 460 },
+        { "x": 1960, "y": 520 },
+        { "x": 2140, "y": 720 },
+        { "x": 2320, "y": 560 },
+        { "x": 2320, "y": 440 },
+        { "x": 2300, "y": 240 }
       ]
     },
     {
@@ -128,14 +139,14 @@
       "startAnchorId": "inquiry.man-center",
       "endAnchorId": "outside.expelled",
       "expectedDurationSeconds": 13,
-      "movementSpeed": 42,
+      "movementSpeed": 51,
       "actorRadius": 18,
       "points": [
-        { "x": 2440, "y": 850 },
-        { "x": 2640, "y": 850 },
-        { "x": 2780, "y": 850 },
-        { "x": 2840, "y": 850 },
-        { "x": 2940, "y": 940 }
+        { "x": 2100, "y": 620 },
+        { "x": 2100, "y": 780 },
+        { "x": 2120, "y": 1000 },
+        { "x": 2140, "y": 1060 },
+        { "x": 2160, "y": 1260 }
       ]
     },
     {
@@ -145,13 +156,13 @@
       "startAnchorId": "outside.jesus-entry",
       "endAnchorId": "outside.belief",
       "expectedDurationSeconds": 12,
-      "movementSpeed": 15,
+      "movementSpeed": 19,
       "actorRadius": 18,
       "points": [
-        { "x": 3090, "y": 760 },
-        { "x": 3070, "y": 820 },
-        { "x": 3030, "y": 870 },
-        { "x": 2990, "y": 900 }
+        { "x": 2460, "y": 1400 },
+        { "x": 2400, "y": 1360 },
+        { "x": 2320, "y": 1340 },
+        { "x": 2260, "y": 1320 }
       ]
     },
     {
@@ -161,12 +172,12 @@
       "startAnchorId": "outside.belief",
       "endAnchorId": "ending.camera",
       "expectedDurationSeconds": 12,
-      "movementSpeed": 5.5,
+      "movementSpeed": 4,
       "actorRadius": 0,
       "points": [
-        { "x": 2990, "y": 900 },
-        { "x": 2970, "y": 880 },
-        { "x": 2990, "y": 850 }
+        { "x": 2260, "y": 1320 },
+        { "x": 2240, "y": 1300 },
+        { "x": 2260, "y": 1300 }
       ]
     }
   ]

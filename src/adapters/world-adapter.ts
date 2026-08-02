@@ -53,6 +53,9 @@ export interface WorldRuntime {
   readonly agentRadius: number;
   readonly actors: readonly MapActor<GrayboxActorState>[];
   readonly areas: readonly MapArea<GrayboxAreaMetadata>[];
+  readonly regionContracts: typeof layout.regions;
+  readonly portals: typeof layout.portals;
+  readonly collisionPolygons: typeof collisions.collisionPolygons;
   readonly anchorById: ReadonlyMap<string, (typeof anchors.anchors)[number]>;
   readonly cameraZoneByRegionId: ReadonlyMap<
     string,
@@ -214,6 +217,9 @@ export function createWorldRuntime(): WorldRuntime {
           sourceLevel: region.sourceLevel,
         }),
     ),
+    regionContracts: layout.regions,
+    portals: layout.portals,
+    collisionPolygons: collisions.collisionPolygons,
     anchorById,
     cameraZoneByRegionId: new Map(
       camera.cameraZones.map((zone) => [zone.regionId, zone]),
