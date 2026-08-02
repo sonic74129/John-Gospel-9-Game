@@ -18,6 +18,7 @@ import {
   createResponsiveGameSizeController,
   requireGameViewport,
 } from "../../src/platform/responsive-game-size.ts";
+import { createViewportResizeTransaction } from "../../src/platform/viewport-resize-transaction.ts";
 import {
   SliceStoryController,
   UnsupportedStoryBeatError,
@@ -334,6 +335,70 @@ test("orientation resize reapplies every settled canonical frame without changin
         `${beat.id}/${skip ? "skip" : "normal"}/portrait-restored`,
       );
       assert.deepEqual(result.scene, settledState);
+    }
+  }
+});
+
+test("paused resize coalesces the latest safe camera transaction without story advancement", async () => {
+  const mobileProfile = framingContract.profiles.find(
+    ({ viewport }) => viewport.width === 390,
+  );
+  assert.ok(mobileProfile);
+  const landscapeProfile = {
+    id: "frame.mobile-844x390",
+    viewport: { width: 844, height: 390 },
+    gameplaySafeRect: { x: 20, y: 20, width: 804, height: 350 },
+  };
+
+  for (const beat of storyBeats) {
+    for (const skip of [false, true]) {
+      const result = await runRealAdapter(beat.sequence, skip, mobileProfile);
+      const settledState = structuredClone(result.scene);
+      const simulation = createFinalStateCameraSimulation(
+        result.scene,
+        mobileProfile,
+      );
+      const beforePause = simulation.camera.snapshot();
+      let sceneActive = false;
+      let worldUpdates = 0;
+      const resize = createViewportResizeTransaction({
+        isReady: () => sceneActive,
+        apply: (viewport) => {
+          simulation.resizeTo(viewport);
+          worldUpdates += 1;
+        },
+      });
+
+      resize.queue({ width: 800, height: 420 });
+      resize.queue(landscapeProfile.viewport);
+      assert.deepEqual(simulation.camera.snapshot(), beforePause);
+      assert.deepEqual(resize.pending, landscapeProfile.viewport);
+      assert.equal(worldUpdates, 0);
+
+      sceneActive = true;
+      assert.equal(resize.flush(), true);
+      assert.equal(worldUpdates, 1);
+      const resumedCamera = simulation.camera.snapshot();
+      assert.deepEqual(resumedCamera.viewport, landscapeProfile.viewport);
+      assertActorInsideSafeFrame({
+        actor: simulation.player,
+        cameraPosition: resumedCamera.position,
+        profile: landscapeProfile,
+        zoom: resumedCamera.zoom,
+        label: `${beat.id}/${skip ? "skip" : "normal"}/paused-resume`,
+      });
+      const pointer = worldToViewportPoint(
+        simulation.focusPosition,
+        resumedCamera,
+      );
+      assert.ok(
+        distanceBetween(
+          viewportToWorldPoint(pointer, resumedCamera),
+          simulation.focusPosition,
+        ) < 1e-8,
+      );
+      assert.deepEqual(result.scene, settledState);
+      assert.equal(resize.flush(), false);
     }
   }
 });

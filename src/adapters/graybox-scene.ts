@@ -9,6 +9,10 @@ import {
 } from "./canonical-camera.ts";
 import type { SliceFinalState } from "./sequence-adapter.ts";
 import type { WorldRuntime } from "./world-adapter.ts";
+import {
+  createViewportResizeTransaction,
+  type ViewportResizeTransaction,
+} from "../platform/viewport-resize-transaction.ts";
 
 const AREA_COLORS = [0xd2b887, 0x8ca6a3, 0xc5a16e, 0xa85f3e, 0x66704b];
 const COLLISION_COLOR = 0x3c352f;
@@ -53,7 +57,7 @@ interface ActorVisual {
 }
 
 export interface SceneInteractionHandlers {
-  readonly onWorldUpdate: () => void;
+  readonly onWorldUpdate: (reason: "gameplay" | "viewport") => void;
   readonly onInteract: (storyActorId: string) => void;
 }
 
@@ -123,6 +127,7 @@ function abortError(): Error {
 export class GrayboxScene extends Phaser.Scene {
   readonly #world: WorldRuntime;
   readonly #onReady: (scene: GrayboxScene) => void;
+  readonly #viewportResize: ViewportResizeTransaction;
   readonly #visuals = new Map<string, ActorVisual>();
   #player?: ActorVisual;
   #clay?: Phaser.GameObjects.Arc;
@@ -154,6 +159,10 @@ export class GrayboxScene extends Phaser.Scene {
     super({ key: "john-9-graybox" });
     this.#world = world;
     this.#onReady = onReady;
+    this.#viewportResize = createViewportResizeTransaction({
+      isReady: () => !this.#tearingDown && this.sys.isActive(),
+      apply: (size) => this.#applyViewportResize(size.width, size.height),
+    });
   }
 
   get navigation(): WorldRuntime["navigation"] {
@@ -361,7 +370,7 @@ export class GrayboxScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
     this.#cameraFollowingObserver = true;
     this.#onReady(this);
-    this.#handlers?.onWorldUpdate();
+    this.#handlers?.onWorldUpdate("gameplay");
   }
 
   update(_time: number, delta: number): void {
@@ -435,9 +444,14 @@ export class GrayboxScene extends Phaser.Scene {
   }
 
   resizeViewport(width: number, height: number): void {
-    if (this.#tearingDown || !this.sys.isActive()) {
-      return;
-    }
+    this.#viewportResize.queue({ width, height });
+  }
+
+  flushPendingViewportResize(): boolean {
+    return this.#viewportResize.flush();
+  }
+
+  #applyViewportResize(width: number, height: number): void {
     this.cameras.main.setSize(width, height);
     if (this.#appliedFinalState !== null && this.#sequenceInputEnabled) {
       const camera = this.#applyCanonicalCamera(
@@ -448,7 +462,7 @@ export class GrayboxScene extends Phaser.Scene {
         camera,
       };
     }
-    this.#handlers?.onWorldUpdate();
+    this.#handlers?.onWorldUpdate("viewport");
   }
 
   captureRuntimeState(): GrayboxSceneSnapshot {
@@ -549,7 +563,7 @@ export class GrayboxScene extends Phaser.Scene {
     } else {
       this.cameras.main.stopFollow();
     }
-    this.#handlers?.onWorldUpdate();
+    this.#handlers?.onWorldUpdate("gameplay");
   }
 
   playerPosition(): Point {
@@ -756,7 +770,7 @@ export class GrayboxScene extends Phaser.Scene {
         effectiveInteractionEnabled: this.#interactionAllowed(),
       },
     };
-    this.#handlers?.onWorldUpdate();
+    this.#handlers?.onWorldUpdate("gameplay");
   }
 
   snapshotAppliedFinalState(): AppliedGrayboxFinalState | null {
@@ -776,6 +790,7 @@ export class GrayboxScene extends Phaser.Scene {
 
   beginTeardown(): void {
     this.#tearingDown = true;
+    this.#viewportResize.cancel();
     this.#handlers = undefined;
     this.#path = [];
   }
@@ -937,7 +952,7 @@ export class GrayboxScene extends Phaser.Scene {
     }
     this.#player.body.setPosition(target.x, target.y);
     this.#syncLabel(this.#player);
-    this.#handlers?.onWorldUpdate();
+    this.#handlers?.onWorldUpdate("gameplay");
     return true;
   }
 

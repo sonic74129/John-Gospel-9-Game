@@ -7,6 +7,7 @@ import {
   measureGameViewport,
   requireGameViewport,
 } from "../../src/platform/responsive-game-size.ts";
+import { createViewportResizeTransaction } from "../../src/platform/viewport-resize-transaction.ts";
 
 test("production viewport measurement preserves desktop and portrait dimensions", () => {
   const desktop = createContainer(1280, 720);
@@ -79,12 +80,37 @@ test("intrinsic resize keeps pointer coordinates aligned with the game viewport"
 });
 
 test("bfcache suspension catches up once and teardown disconnects permanently", async () => {
-  const harness = createResizeHarness({ width: 390, height: 844 });
+  let sceneActive = true;
+  const trace = [];
+  let worldUpdates = 0;
+  const cameraResize = createViewportResizeTransaction({
+    isReady: () => sceneActive,
+    apply: (size) => {
+      trace.push(`camera:${size.width}x${size.height}`);
+      worldUpdates += 1;
+    },
+  });
+  const harness = createResizeHarness(
+    { width: 390, height: 844 },
+    (size) => cameraResize.queue(size),
+  );
   harness.controller.start();
   const lifecycle = createPageLifecycleController({
-    suspend: () => harness.controller.suspend(),
-    resume: () => harness.controller.resume(),
-    dispose: () => harness.controller.dispose(),
+    suspend: () => {
+      harness.controller.suspend();
+      sceneActive = false;
+      trace.push("runtime-suspend");
+    },
+    resume: () => {
+      sceneActive = true;
+      trace.push("runtime-resume");
+      harness.controller.resume();
+      cameraResize.flush();
+    },
+    dispose: () => {
+      cameraResize.cancel();
+      harness.controller.dispose();
+    },
   });
 
   await lifecycle.handlePageHide(true);
@@ -95,18 +121,36 @@ test("bfcache suspension catches up once and teardown disconnects permanently", 
 
   await lifecycle.handlePageShow(true);
   assert.deepEqual(harness.resizeCalls, [{ width: 844, height: 390 }]);
+  assert.deepEqual(trace, [
+    "runtime-suspend",
+    "runtime-resume",
+    "camera:844x390",
+  ]);
+  assert.equal(worldUpdates, 1);
 
+  sceneActive = false;
   harness.resizeTo(390, 844);
   harness.notifyResize();
   harness.flushFrames();
-  assert.equal(harness.resizeCalls.length, 2, "UI pause does not disable resize");
+  harness.resizeTo(412, 915);
+  harness.notifyResize();
+  harness.flushFrames();
+  assert.equal(worldUpdates, 1);
+  assert.deepEqual(cameraResize.pending, { width: 412, height: 915 });
+  sceneActive = true;
+  assert.equal(cameraResize.flush(), true);
+  assert.equal(worldUpdates, 2);
+  assert.equal(
+    trace.filter((entry) => entry.startsWith("camera:")).at(-1),
+    "camera:412x915",
+  );
 
   await lifecycle.handlePageHide(false);
   assert.equal(harness.disconnected(), true);
   harness.resizeTo(844, 390);
   harness.notifyResize();
   harness.flushFrames();
-  assert.equal(harness.resizeCalls.length, 2);
+  assert.equal(harness.resizeCalls.length, 3);
 });
 
 function createContainer(width, height) {

@@ -33,6 +33,7 @@ if (root === null) {
 
 let game: Phaser.Game | undefined;
 let runtime: PlatformRuntime | undefined;
+let gameScene: GrayboxScene | undefined;
 let gameSizeController: ResponsiveGameSizeController | undefined;
 let starting = false;
 let formalStoryStarted = false;
@@ -90,6 +91,7 @@ const shell = createAppShell(root, {
     try {
       const world = createWorldRuntime();
       const scene = new GrayboxScene(world, (readyScene) => {
+        readyScene.flushPendingViewportResize();
         runtime = createPlatformRuntime(readyScene, shell, reportError, {
           onProgress: (completedBeatIds) => {
             committedProgress.settle(completedBeatIds);
@@ -132,6 +134,7 @@ const shell = createAppShell(root, {
           })
           .catch(reportError);
       });
+      gameScene = scene;
       const initialViewport = requireGameViewport(shell.gameContainer);
       const activeGame = new Phaser.Game({
         type: Phaser.AUTO,
@@ -163,6 +166,7 @@ const shell = createAppShell(root, {
       gameSizeController = undefined;
       game?.destroy(true);
       game = undefined;
+      gameScene = undefined;
       starting = false;
       reportError(error);
     }
@@ -196,6 +200,7 @@ const shell = createAppShell(root, {
     }
     try {
       await runtime.resume(UI_PAUSE_REASON);
+      gameScene?.flushPendingViewportResize();
       runtime.setPaused(false);
       shell.setPaused(false);
     } catch (error) {
@@ -258,14 +263,16 @@ const pageLifecycle = createPageLifecycleController({
     await runtime?.suspend("bfcache");
   },
   resume: async () => {
-    gameSizeController?.resume();
     await runtime?.resume("bfcache");
+    gameSizeController?.resume();
+    gameScene?.flushPendingViewportResize();
   },
   dispose: async () => {
     const activeRuntime = runtime;
     const activeGame = game;
     gameSizeController?.dispose();
     gameSizeController = undefined;
+    gameScene = undefined;
     runtime = undefined;
     game = undefined;
     await disposeRuntimeBeforeGame(activeRuntime, activeGame);
