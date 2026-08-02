@@ -15,15 +15,13 @@ import {
   type CanonicalStoryBeat,
 } from "./story-contracts.ts";
 
-export const SLICE_BEAT_IDS = Object.freeze([
-  "b01",
-  "b02",
-  "b03",
-  "b04",
-  "b05",
-  "b06",
-  "b07",
-] as const);
+export const STORY_BEAT_IDS = Object.freeze(
+  Array.from(
+    { length: 19 },
+    (_, index) => `b${String(index + 1).padStart(2, "0")}`,
+  ),
+);
+export const SLICE_BEAT_IDS = Object.freeze(STORY_BEAT_IDS.slice(0, 7));
 
 export const STORY_METADATA = Object.freeze({
   id: storyConfig.id,
@@ -53,15 +51,13 @@ export type SliceStoryEvent =
       distance: number;
     }>;
 
-export class UnsupportedSliceBeatError extends Error {
-  readonly code = "STORY_BEAT_OUTSIDE_APPROVED_SLICE";
+export class UnsupportedStoryBeatError extends Error {
+  readonly code = "STORY_BEAT_OUTSIDE_CANONICAL_CONTRACT";
   readonly beatId: string;
 
   constructor(beatId: string) {
-    super(
-      `${beatId} is outside the approved B01-B07 production slice and remains unwired.`,
-    );
-    this.name = "UnsupportedSliceBeatError";
+    super(`${beatId} is outside the canonical B01-B19 story contract.`);
+    this.name = "UnsupportedStoryBeatError";
     this.beatId = beatId;
   }
 }
@@ -85,7 +81,7 @@ export interface SliceDispatchResult {
   readonly status?: SliceBeatRunResult["status"];
 }
 
-const SLICE_BEAT_ID_SET = new Set<string>(SLICE_BEAT_IDS);
+const STORY_BEAT_ID_SET = new Set<string>(STORY_BEAT_IDS);
 
 function describeEvent(event: SliceStoryEvent): string {
   return event.type === "event"
@@ -115,6 +111,15 @@ export function createStoryEngine(): StoryEngine<
   SliceStoryState,
   SliceStoryEvent
 > {
+  if (
+    STORY_BEATS.length !== STORY_BEAT_IDS.length ||
+    STORY_BEATS.some((beat, index) => beat.id !== STORY_BEAT_IDS[index])
+  ) {
+    throw new UnsupportedStoryBeatError(
+      STORY_BEATS.find((beat, index) => beat.id !== STORY_BEAT_IDS[index])?.id ??
+        `story-length:${STORY_BEATS.length}`,
+    );
+  }
   for (const beat of STORY_BEATS) {
     assertValid<StoryBeat>(beat, validateStoryBeat);
   }
@@ -154,12 +159,47 @@ export class SliceStoryController {
     return this.#active !== undefined;
   }
 
+  get storyComplete(): boolean {
+    return this.engine.snapshot().completed;
+  }
+
   get sliceComplete(): boolean {
     return this.engine.snapshot().state.completedBeatIds.includes("b07");
   }
 
   snapshot(): StorySnapshot<SliceStoryState> {
     return this.engine.snapshot();
+  }
+
+  restoreCompletedBeatIds(completedBeatIds: readonly string[]): void {
+    if (this.#disposed) {
+      throw new Error("Cannot restore a disposed story.");
+    }
+    if (this.#active !== undefined) {
+      throw new Error("Cannot restore while a story beat is running.");
+    }
+    if (
+      completedBeatIds.length > STORY_BEAT_IDS.length ||
+      completedBeatIds.some((beatId, index) => beatId !== STORY_BEAT_IDS[index])
+    ) {
+      const unsupportedBeatId =
+        completedBeatIds.find(
+          (beatId, index) => beatId !== STORY_BEAT_IDS[index],
+        ) ?? `story-length:${completedBeatIds.length}`;
+      throw new UnsupportedStoryBeatError(unsupportedBeatId);
+    }
+    this.engine.restore({
+      state: {
+        completedBeatIds: [...completedBeatIds],
+        lastEvent:
+          completedBeatIds.length === 0
+            ? null
+            : `restore:${completedBeatIds.at(-1)}`,
+      },
+      nextBeatIndex: completedBeatIds.length,
+      completed: completedBeatIds.length === STORY_BEAT_IDS.length,
+      revision: completedBeatIds.length,
+    });
   }
 
   dispatch(event: SliceStoryEvent): Promise<SliceDispatchResult> {
@@ -188,10 +228,10 @@ export class SliceStoryController {
     const currentBeat = this.engine.currentBeat;
     if (
       currentBeat !== undefined &&
-      !SLICE_BEAT_ID_SET.has(currentBeat.id) &&
+      !STORY_BEAT_ID_SET.has(currentBeat.id) &&
       matchesStoryTrigger(currentBeat.trigger, event)
     ) {
-      throw new UnsupportedSliceBeatError(currentBeat.id);
+      throw new UnsupportedStoryBeatError(currentBeat.id);
     }
 
     const before = this.engine.snapshot();
@@ -205,9 +245,9 @@ export class SliceStoryController {
       this.engine.restore(before);
       throw new Error(`Canonical beat lookup failed for ${result.beat.id}.`);
     }
-    if (!SLICE_BEAT_ID_SET.has(beat.id)) {
+    if (!STORY_BEAT_ID_SET.has(beat.id)) {
       this.engine.restore(before);
-      throw new UnsupportedSliceBeatError(beat.id);
+      throw new UnsupportedStoryBeatError(beat.id);
     }
 
     let sequenceResult: SliceBeatRunResult;

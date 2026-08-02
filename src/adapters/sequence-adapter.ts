@@ -103,6 +103,21 @@ function requireBoolean(
   return value;
 }
 
+function requireStringArray(
+  command: string,
+  payload: Readonly<Record<string, unknown>>,
+  key: string,
+): readonly string[] {
+  const value = payload[key];
+  if (
+    !Array.isArray(value) ||
+    !value.every((entry) => typeof entry === "string" && entry.length > 0)
+  ) {
+    throw new TypeError(`${command}.${key} must be an array of strings.`);
+  }
+  return value;
+}
+
 export function bindStorySequence<TContext, TFinalState>(
   config: PhaserSequenceAdapterConfig<TContext, TFinalState>,
 ): PhaserSequenceAdapter<TContext, TFinalState> {
@@ -138,10 +153,21 @@ export function createSliceSequenceAdapter(
           );
           return;
         case "actor-follow-path":
-          await target.scene.followActorPath(
-            requireString(command, record, "pathId"),
-            requireString(command, record, "primaryActorId"),
-            signal,
+          await Promise.all(
+            [
+              requireString(command, record, "primaryActorId"),
+              ...requireStringArray(
+                command,
+                record,
+                "participantActorIds",
+              ),
+            ].map((actorId) =>
+              target.scene.followActorPath(
+                requireString(command, record, "pathId"),
+                actorId,
+                signal,
+              ),
+            ),
           );
           return;
         case "camera-follow-path":

@@ -3,9 +3,11 @@ import type {
   SliceFinalState,
   SliceSequenceUi,
 } from "../adapters/sequence-adapter.ts";
+import { APPROVED_STUDY_QUESTIONS } from "./ending-study.ts";
 
 export interface AppShellHandlers {
-  readonly onStart: () => void;
+  readonly onStart: (mode: "new" | "continue") => void;
+  readonly onRestart: () => void;
   readonly onPauseChange: (paused: boolean) => void;
   readonly onMuteChange: (muted: boolean) => void;
   readonly onSubtitleChange: (visible: boolean) => void;
@@ -18,6 +20,7 @@ export interface AppShell extends SliceSequenceUi {
   setPaused(paused: boolean): void;
   setMuted(muted: boolean): void;
   setSubtitles(visible: boolean): void;
+  setCompleted(): void;
   setStatus(message: string, isError?: boolean): void;
   setDeveloperFixture(fixtureId: string | null): void;
   snapshotAppliedState(): SliceFinalState | null;
@@ -32,6 +35,7 @@ function abortError(): Error {
 export function createAppShell(
   root: HTMLElement,
   handlers: AppShellHandlers,
+  options: Readonly<{ hasSave: boolean }> = { hasSave: false },
 ): AppShell {
   root.innerHTML = `
     <article class="platform-shell" data-platform-shell>
@@ -52,11 +56,13 @@ export function createAppShell(
           <p class="stage-goal" data-stage-goal>目標：留心路旁</p>
         </div>
         <div class="start-screen" data-start-screen>
-          <p class="start-kicker">私人開發灰盒 · B01–B07</p>
+          <p class="start-kicker">約翰福音第九章 · 完整故事</p>
           <h2>以觀察者的身分進入故事</h2>
           <p>使用方向鍵、WASD，或點按地面移動；Space 或點按人物互動。</p>
-          <p class="review-warning">本切片不顯示未授權逐字經文，只呈現安全的段落識別與審核狀態。</p>
-          <button class="primary-action" type="button" data-start>開始</button>
+          <p class="review-warning">本故事不顯示未授權逐字經文，只呈現安全的段落識別與審核狀態。</p>
+          <button class="primary-action" type="button" data-continue ${options.hasSave ? "" : "hidden"}>繼續故事</button>
+          <button class="primary-action" type="button" data-start ${options.hasSave ? "hidden" : ""}>開始</button>
+          <button type="button" data-start-restart ${options.hasSave ? "" : "hidden"}>重新開始</button>
         </div>
         <section class="dialogue-panel" data-dialogue hidden aria-modal="true" role="dialog" aria-labelledby="dialogue-speaker">
           <header>
@@ -88,12 +94,29 @@ export function createAppShell(
         <div class="subtitle-panel" data-subtitle aria-live="polite">
           私人灰盒：只顯示段落識別，不顯示未授權經文文字。
         </div>
+        <section class="ending-panel" data-ending hidden aria-modal="true" role="dialog" aria-labelledby="ending-title">
+          <p class="dialogue-source">故事完成 · 約翰福音 9:1–41</p>
+          <h2 id="ending-title">已完成生來瞎眼的人的故事</h2>
+          <p>以下問題是可選查考，不計分、不影響完成狀態，也不提供遊戲編寫的神學答案。</p>
+          <div class="study-questions" data-study-questions></div>
+          <p class="license-notice">經文待授權／審核</p>
+          <button type="button" data-ending-restart>重新開始</button>
+        </section>
+        <section class="restart-confirmation" data-restart-confirmation hidden aria-modal="true" role="dialog" aria-labelledby="restart-title">
+          <h2 id="restart-title">確定重新開始？</h2>
+          <p>這會清除本故事的正式進度與存檔，然後從 B01 開始。</p>
+          <div>
+            <button type="button" data-restart-cancel>保留進度</button>
+            <button type="button" data-restart-confirm>清除並重新開始</button>
+          </div>
+        </section>
       </section>
       <nav class="game-controls" data-game-controls aria-label="遊戲控制">
         <button type="button" data-pause aria-pressed="false" disabled>暫停</button>
         <button type="button" data-mute aria-pressed="false" disabled>靜音</button>
         <button type="button" data-subtitles aria-pressed="true" disabled>字幕：開</button>
         <button type="button" data-skip disabled>跳過目前演出</button>
+        <button type="button" data-restart disabled>重新開始</button>
       </nav>
     </article>
   `;
@@ -104,6 +127,14 @@ export function createAppShell(
   );
   const startScreen = requireElement<HTMLElement>(root, "[data-start-screen]");
   const startButton = requireElement<HTMLButtonElement>(root, "[data-start]");
+  const continueButton = requireElement<HTMLButtonElement>(
+    root,
+    "[data-continue]",
+  );
+  const startRestartButton = requireElement<HTMLButtonElement>(
+    root,
+    "[data-start-restart]",
+  );
   const pauseButton = requireElement<HTMLButtonElement>(root, "[data-pause]");
   const muteButton = requireElement<HTMLButtonElement>(root, "[data-mute]");
   const subtitleButton = requireElement<HTMLButtonElement>(
@@ -111,6 +142,10 @@ export function createAppShell(
     "[data-subtitles]",
   );
   const skipButton = requireElement<HTMLButtonElement>(root, "[data-skip]");
+  const restartButton = requireElement<HTMLButtonElement>(
+    root,
+    "[data-restart]",
+  );
   const subtitlePanel = requireElement<HTMLElement>(root, "[data-subtitle]");
   const status = requireElement<HTMLElement>(root, "[data-status]");
   const goal = requireElement<HTMLElement>(root, "[data-stage-goal]");
@@ -150,11 +185,61 @@ export function createAppShell(
     root,
     "[data-recall-dismiss]",
   );
+  const ending = requireElement<HTMLElement>(root, "[data-ending]");
+  const endingRestart = requireElement<HTMLButtonElement>(
+    root,
+    "[data-ending-restart]",
+  );
+  const studyQuestions = requireElement<HTMLElement>(
+    root,
+    "[data-study-questions]",
+  );
+  const restartConfirmation = requireElement<HTMLElement>(
+    root,
+    "[data-restart-confirmation]",
+  );
+  const restartCancel = requireElement<HTMLButtonElement>(
+    root,
+    "[data-restart-cancel]",
+  );
+  const restartConfirm = requireElement<HTMLButtonElement>(
+    root,
+    "[data-restart-confirm]",
+  );
 
   let paused = false;
   let muted = false;
   let subtitles = true;
   let appliedState: SliceFinalState | null = null;
+  let completed = false;
+
+  studyQuestions.replaceChildren(
+    ...APPROVED_STUDY_QUESTIONS.map((question) => {
+      const article = document.createElement("article");
+      article.dataset.studyQuestionId = question.id;
+      article.dataset.optional = String(question.optional);
+      const prompt = document.createElement("h3");
+      prompt.textContent = question.prompt;
+      const references = document.createElement("p");
+      references.className = "study-verse-keys";
+      references.textContent = question.verseKeys.join(" · ");
+      for (const verseKey of question.verseKeys) {
+        article.dataset.verseKeys = [
+          article.dataset.verseKeys,
+          verseKey,
+        ]
+          .filter(Boolean)
+          .join(" ");
+      }
+      article.append(prompt, references);
+      return article;
+    }),
+  );
+
+  const showRestartConfirmation = (): void => {
+    restartConfirmation.hidden = false;
+    restartConfirm.focus();
+  };
 
   const presentLines = (
     lines: readonly SliceDialogueLine[],
@@ -230,10 +315,11 @@ export function createAppShell(
         muteButton,
         subtitleButton,
         skipButton,
+        restartButton,
       ]) {
         button.disabled = false;
       }
-      shell.setStatus("B01–B07 切片運行中");
+      shell.setStatus("B01–B19 故事運行中");
     },
     setPaused: (value) => {
       paused = value;
@@ -241,7 +327,9 @@ export function createAppShell(
       pauseButton.textContent = value ? "繼續" : "暫停";
       dialogueNext.disabled = value;
       skipButton.disabled = value;
-      shell.setStatus(value ? "遊戲已暫停" : "B01–B07 切片運行中");
+      shell.setStatus(
+        value ? "遊戲已暫停" : completed ? "故事已完成" : "B01–B19 故事運行中",
+      );
     },
     setMuted: (value) => {
       muted = value;
@@ -253,6 +341,18 @@ export function createAppShell(
       subtitleButton.setAttribute("aria-pressed", String(value));
       subtitleButton.textContent = value ? "字幕：開" : "字幕：關";
       subtitlePanel.hidden = !value;
+    },
+    setCompleted: () => {
+      completed = true;
+      paused = false;
+      dialogue.hidden = true;
+      recall.hidden = true;
+      ending.hidden = false;
+      ending.dataset.blocking = "true";
+      pauseButton.disabled = true;
+      skipButton.disabled = true;
+      restartButton.disabled = false;
+      shell.setStatus("故事已完成；公開進度已標記完成");
     },
     setStatus: (message, isError = false) => {
       status.textContent = message;
@@ -304,8 +404,8 @@ export function createAppShell(
         recallIds.textContent = "";
       }
       shell.setStatus(
-        state.beatId === "b07"
-          ? "B01–B07 已完成；B08–B19 尚未接線"
+        state.beatId === "b19"
+          ? "B19 已套用確定最終狀態"
           : `${state.beatId.toUpperCase()} 已套用確定最終狀態`,
       );
     },
@@ -314,7 +414,15 @@ export function createAppShell(
     },
   };
 
-  startButton.addEventListener("click", handlers.onStart, { once: true });
+  startButton.addEventListener("click", () => handlers.onStart("new"), {
+    once: true,
+  });
+  continueButton.addEventListener(
+    "click",
+    () => handlers.onStart("continue"),
+    { once: true },
+  );
+  startRestartButton.addEventListener("click", showRestartConfirmation);
   pauseButton.addEventListener("click", () => {
     handlers.onPauseChange(!paused);
   });
@@ -327,6 +435,15 @@ export function createAppShell(
     handlers.onSubtitleChange(next);
   });
   skipButton.addEventListener("click", handlers.onSkip);
+  restartButton.addEventListener("click", showRestartConfirmation);
+  endingRestart.addEventListener("click", showRestartConfirmation);
+  restartCancel.addEventListener("click", () => {
+    restartConfirmation.hidden = true;
+  });
+  restartConfirm.addEventListener("click", () => {
+    restartConfirmation.hidden = true;
+    handlers.onRestart();
+  });
   recallDismiss.addEventListener("click", () => {
     recall.hidden = true;
   });

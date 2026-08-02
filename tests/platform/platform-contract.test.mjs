@@ -69,7 +69,7 @@ test("story and world data enter the platform only through adapters", async () =
   assert.match(worldAdapter, /blocked:\s*blockedCells/);
   assert.match(storyContracts, /import\(`\.\.\/story\/\$\{name\}\.ts`\)/);
   assert.match(storyAdapter, /new StoryEngine/);
-  assert.match(storyAdapter, /STORY_BEAT_OUTSIDE_APPROVED_SLICE/);
+  assert.match(storyAdapter, /STORY_BEAT_OUTSIDE_CANONICAL_CONTRACT/);
   assert.match(sequenceAdapter, /applyFinalState:\s*async/);
   assert.doesNotMatch(storyAdapter, /failUnwiredOperation\("story\.advance"\)/);
   assert.doesNotMatch(sequenceAdapter, /sequence\.final-state/);
@@ -99,6 +99,9 @@ test("shell exposes responsive canvas and accessible control structure", async (
     "data-game-controls",
     "data-start-screen",
     "data-subtitle",
+    "data-restart",
+    "data-ending",
+    "data-study-questions",
   ]) {
     assert.match(shell, new RegExp(marker));
   }
@@ -119,4 +122,28 @@ test("shell exposes responsive canvas and accessible control structure", async (
   assert.doesNotMatch(scene, /\.findPath\([\s\S]{0,180}\)\s*\.slice\(1\)/);
   assert.match(main, /handlePageHide\(event\.persisted\)/);
   assert.match(main, /handlePageShow\(event\.persisted\)/);
+  assert.match(main, /readyRuntime\.restore\(initialSave\.save\.completedBeatIds\)/);
+  assert.match(main, /persistence\.reset\(\)/);
+});
+
+test("persistence and ending expose only stable progress and approved study references", async () => {
+  const [persistence, ending, shell] = await Promise.all([
+    readText("src/platform/story-persistence.ts"),
+    readText("src/platform/ending-study.ts"),
+    readText("src/platform/app-shell.ts"),
+  ]);
+  assert.match(
+    persistence,
+    /bible-games:save:john-9-man-born-blind:v1/,
+  );
+  assert.match(
+    persistence,
+    /bible-games:progress:john-9-man-born-blind:v1/,
+  );
+  assert.match(persistence, /"not-started" \| "in-progress" \| "completed"/);
+  assert.doesNotMatch(persistence, /Phaser|setTimeout|Timer/);
+  assert.match(ending, /satisfies readonly ApprovedStudyQuestion\[\]/);
+  assert.match(ending, /verseKeys/);
+  assert.doesNotMatch(ending, /\banswer\b|\bscore\b/i);
+  assert.match(shell, /不提供遊戲編寫的神學答案/);
 });

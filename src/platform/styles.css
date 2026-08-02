@@ -228,7 +228,9 @@ button:disabled {
 
 .dialogue-panel[hidden],
 .recall-card[hidden],
-.developer-fixture[hidden] {
+.developer-fixture[hidden],
+.ending-panel[hidden],
+.restart-confirmation[hidden] {
   display: none;
 }
 
@@ -388,6 +390,68 @@ button:disabled {
   background: #526c73;
 }
 
+.ending-panel,
+.restart-confirmation {
+  position: absolute;
+  z-index: 30;
+  inset: clamp(0.75rem, 6vw, 4rem);
+  overflow: auto;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 2px solid #e2d2b2;
+  border-radius: 1rem;
+  color: #fffaf1;
+  background: rgb(60 53 47 / 97%);
+  box-shadow: 0 1rem 2.5rem rgb(20 16 13 / 48%);
+}
+
+.ending-panel h2,
+.restart-confirmation h2 {
+  margin-top: 0;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.study-questions {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.study-questions article {
+  padding: 0.8rem;
+  border: 1px solid rgb(226 210 178 / 42%);
+  border-radius: 0.75rem;
+  background: rgb(255 250 241 / 8%);
+}
+
+.study-questions h3,
+.study-questions p {
+  margin: 0;
+}
+
+.study-questions h3 {
+  font-size: 1rem;
+}
+
+.study-questions .study-verse-keys {
+  margin-top: 0.45rem;
+  color: #f0dfbd;
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.restart-confirmation {
+  z-index: 40;
+  inset: 50% auto auto 50%;
+  width: min(30rem, calc(100% - 2rem));
+  transform: translate(-50%, -50%);
+}
+
+.restart-confirmation > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 @media (max-width: 640px) {
   .platform-shell {
     align-content: start;
@@ -480,5 +544,14 @@ button:disabled {
   .game-controls button {
     padding-inline: 0.4rem;
     font-size: 0.86rem;
+  }
+
+  .ending-panel {
+    inset: 0.5rem;
+  }
+
+  .restart-confirmation > div {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

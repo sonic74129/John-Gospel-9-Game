@@ -9,7 +9,7 @@ import { createB14StressSequence } from "../../src/adapters/dev-b14-fixture.ts";
 import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
 import {
   SliceStoryController,
-  UnsupportedSliceBeatError,
+  UnsupportedStoryBeatError,
 } from "../../src/adapters/story-adapter.ts";
 import { STORY_ACTOR_SPAWN_IDS } from "../../src/adapters/story-actor-mapping.ts";
 import {
@@ -24,7 +24,7 @@ import {
 
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 const readText = (path) => readFile(path, "utf8");
-const sliceBeats = STORY_BEATS.slice(0, 7);
+const storyBeats = STORY_BEATS;
 const [anchorContract, cameraContract, layoutContract, spawnContract] =
   await Promise.all([
     readJson("src/world/anchors.json"),
@@ -33,55 +33,62 @@ const [anchorContract, cameraContract, layoutContract, spawnContract] =
     readJson("src/world/spawns.json"),
   ]);
 
-const progressionEvents = [
-  { type: "event", name: "story:start" },
-  {
-    type: "proximity",
-    actorId: "observer",
-    targetId: "disciples",
-    distance: 1,
-  },
-  { type: "event", name: "beat:b02:completed" },
-  { type: "event", name: "beat:b03:completed" },
-  { type: "event", name: "arrival:pool.wash-edge" },
-  { type: "event", name: "arrival:neighbors.center" },
-  {
-    type: "proximity",
-    actorId: "observer",
-    targetId: "man-born-blind",
-    distance: 1,
-  },
-];
+const progressionEvents = storyBeats.map(({ trigger }) =>
+  trigger.type === "proximity"
+    ? {
+        type: "proximity",
+        actorId: trigger.actorId,
+        targetId: trigger.targetId,
+        distance: trigger.radius,
+      }
+    : { type: "event", name: trigger.event ?? "manual" },
+);
 
-test("StoryEngine advances B01-B07 in canonical trigger order", async () => {
-  const executed = [];
-  const controller = new SliceStoryController({
-    runBeat: async (beat) => {
-      executed.push(beat.id);
-      return { status: "completed" };
-    },
-  });
+test("full B01-B19 normal, all-skip, and mixed playthroughs follow canonical order", async () => {
+  for (const mode of ["normal", "all-skip", "mixed"]) {
+    const executed = [];
+    const statuses = [];
+    const controller = new SliceStoryController({
+      runBeat: async (beat) => {
+        executed.push(beat.id);
+        const status =
+          mode === "all-skip" ||
+          (mode === "mixed" && beat.order % 2 === 0)
+            ? "skipped"
+            : "completed";
+        statuses.push(status);
+        return { status };
+      },
+    });
 
-  for (const event of progressionEvents) {
-    assert.equal((await controller.dispatch(event)).advanced, true);
+    for (const [index, event] of progressionEvents.entries()) {
+      assert.equal((await controller.dispatch(event)).advanced, true, mode);
+      if (index === 6) {
+        assert.equal(controller.sliceComplete, true, mode);
+        assert.equal(controller.storyComplete, false, mode);
+        assert.equal(controller.engine.currentBeat?.id, "b08", mode);
+      }
+    }
+    assert.deepEqual(
+      executed,
+      storyBeats.map(({ id }) => id),
+      mode,
+    );
+    assert.equal(
+      statuses.filter((status) => status === "skipped").length,
+      mode === "normal" ? 0 : mode === "all-skip" ? 19 : 9,
+      mode,
+    );
+    assert.deepEqual(controller.snapshot().state.completedBeatIds, executed);
+    assert.equal(controller.storyComplete, true);
+    assert.equal(controller.sliceComplete, true);
+    assert.equal(controller.snapshot().completed, true);
+    assert.equal(controller.engine.currentBeat, undefined);
   }
-  assert.deepEqual(executed, [
-    "b01",
-    "b02",
-    "b03",
-    "b04",
-    "b05",
-    "b06",
-    "b07",
-  ]);
-  assert.deepEqual(controller.snapshot().state.completedBeatIds, executed);
-  assert.equal(controller.sliceComplete, true);
-  assert.equal(controller.snapshot().completed, false);
-  assert.equal(controller.engine.currentBeat?.id, "b08");
 });
 
-test("each B01-B07 normal and skip run applies the same canonical final state", async () => {
-  for (const beat of sliceBeats) {
+test("each B01-B19 normal and skip run applies the same canonical final state", async () => {
+  for (const beat of storyBeats) {
     const completedHost = createSequenceHost("completed");
     const completedSequence = new MapSequence(completedHost.host);
     const completed = await completedSequence.run(beat.sequence);
@@ -108,14 +115,14 @@ test("each B01-B07 normal and skip run applies the same canonical final state", 
     assert.equal(skippedHost.inputLocks, 0, beat.id);
   }
   assert.deepEqual(
-    FINAL_SNAPSHOTS.b07,
-    sliceBeats.at(-1).finalState,
+    FINAL_SNAPSHOTS.b19,
+    storyBeats.at(-1).finalState,
   );
 });
 
 test("real sequence adapter exposes deep-equal canonical and actual camera state", async () => {
   const definitions = [
-    ...sliceBeats.map(({ sequence }) => sequence),
+    ...storyBeats.map(({ sequence }) => sequence),
     createB14StressSequence(),
   ];
   for (const definition of definitions) {
@@ -290,7 +297,7 @@ test("browser cancellation restores scene state and pause gates DOM progression"
 test("MapSequence cancellation releases input and never finalizes or hands off", async () => {
   const fixture = createSequenceHost("cancelled");
   const sequence = new MapSequence(fixture.host);
-  const running = sequence.run(sliceBeats[0].sequence);
+  const running = sequence.run(storyBeats[0].sequence);
   await Promise.resolve();
   assert.equal(fixture.inputLocks, 1);
   sequence.cancel();
@@ -300,23 +307,32 @@ test("MapSequence cancellation releases input and never finalizes or hands off",
   assert.deepEqual(fixture.handoffs, []);
 });
 
-test("B07 recall is non-blocking, scoreless, and testimony-only", () => {
-  const recall = RECALL_BY_AFTER_BEAT.b07;
-  assert.ok(recall);
-  assert.equal(recall.blocking, false);
-  assert.equal(recall.requiredForProgress, false);
-  assert.equal(recall.score, null);
-  assert.deepEqual(recall.focusTestimonyIds, [
-    "testimony-man-first-account",
-    "testimony-man-whereabouts-unknown",
-  ]);
-  const b07TestimonyIds = TESTIMONY.filter(({ beatId }) => beatId === "b07").map(
-    ({ id }) => id,
+test("all three recalls are non-blocking, scoreless, and testimony-only", () => {
+  for (const beatId of ["b07", "b12", "b14"]) {
+    const recall = RECALL_BY_AFTER_BEAT[beatId];
+    assert.ok(recall, beatId);
+    assert.equal(recall.blocking, false, beatId);
+    assert.equal(recall.requiredForProgress, false, beatId);
+    assert.equal(recall.score, null, beatId);
+    const beatTestimonyIds = TESTIMONY.filter(
+      ({ beatId: testimonyBeatId }) => testimonyBeatId === beatId,
+    ).map(({ id }) => id);
+    assert.deepEqual(recall.focusTestimonyIds, beatTestimonyIds, beatId);
+    assert.equal(
+      FINAL_SNAPSHOTS[beatId].triggers.optionalRecallIds.includes(recall.id),
+      true,
+      beatId,
+    );
+  }
+  assert.deepEqual(
+    new Set(TESTIMONY.map(({ category }) => category)),
+    new Set([
+      "scripture-fact",
+      "speaker-answer",
+      "speaker-does-not-know",
+      "people-disagree",
+    ]),
   );
-  assert.deepEqual(recall.focusTestimonyIds, b07TestimonyIds);
-  assert.deepEqual(FINAL_SNAPSHOTS.b07.triggers.optionalRecallIds, [
-    "recall-after-b07",
-  ]);
 });
 
 test("all adapter IDs resolve to canonical story and world contracts", async () => {
@@ -344,14 +360,25 @@ test("all adapter IDs resolve to canonical story and world contracts", async () 
     spawnIds,
   );
 
-  for (const beat of sliceBeats) {
-    assert.equal(DIALOGUE_BY_BEAT[beat.id] !== undefined || beat.id === "b01" || beat.id === "b05", true);
+  for (const beat of storyBeats) {
+    assert.equal(
+      DIALOGUE_BY_BEAT[beat.id] !== undefined ||
+        ["b01", "b05", "b08"].includes(beat.id),
+      true,
+    );
     for (const step of beat.sequence.steps) {
       if (step.kind !== "command") continue;
       const payload = step.payload ?? {};
       if ("anchorId" in payload) assert.equal(anchorIds.has(payload.anchorId), true);
       if ("actorId" in payload) assert.equal(actorIds.has(payload.actorId), true);
-      if ("primaryActorId" in payload) assert.equal(actorIds.has(payload.primaryActorId), true);
+      if (typeof payload.primaryActorId === "string") {
+        assert.equal(actorIds.has(payload.primaryActorId), true);
+      }
+      if (Array.isArray(payload.participantActorIds)) {
+        for (const actorId of payload.participantActorIds) {
+          assert.equal(actorIds.has(actorId), true);
+        }
+      }
       if ("pathId" in payload) assert.equal(pathIds.has(payload.pathId), true);
       if ("beatId" in payload) assert.equal(payload.beatId, beat.id);
     }
@@ -363,6 +390,119 @@ test("all adapter IDs resolve to canonical story and world contracts", async () 
       assert.equal(propIds.has(propId), true, propId);
     }
   }
+});
+
+test("B08-B19 preserve canonical trigger, path, actor, camera, and testimony behavior", () => {
+  const laterBeats = storyBeats.slice(7);
+  assert.deepEqual(
+    laterBeats.map(({ id, trigger }) => [id, trigger]),
+    [
+      ["b08", { type: "event", event: "interact:neighbors" }],
+      ["b09", { type: "event", event: "beat:b08:completed" }],
+      ["b10", { type: "event", event: "beat:b09:completed" }],
+      ["b11", { type: "event", event: "beat:b10:completed" }],
+      ["b12", { type: "event", event: "beat:b11:completed" }],
+      ["b13", { type: "event", event: "beat:b12:completed" }],
+      ["b14", { type: "event", event: "beat:b13:completed" }],
+      ["b15", { type: "event", event: "beat:b14:completed" }],
+      ["b16", { type: "event", event: "beat:b15:completed" }],
+      ["b17", { type: "event", event: "beat:b16:completed" }],
+      ["b18", { type: "event", event: "arrival:outside.expelled" }],
+      ["b19", { type: "event", event: "beat:b18:completed" }],
+    ],
+  );
+  const commandPayloads = Object.fromEntries(
+    laterBeats.map((beat) => [
+      beat.id,
+      beat.sequence.steps.map(({ command, payload }) => [command, payload]),
+    ]),
+  );
+  assert.deepEqual(commandPayloads.b08[0], [
+    "actor-follow-path",
+    {
+      pathId: "group-to-inquiry",
+      subjectId: "man-and-neighbor-group",
+      primaryActorId: "man-born-blind",
+      participantActorIds: ["neighbors"],
+    },
+  ]);
+  assert.deepEqual(commandPayloads.b11.slice(0, 2), [
+    ["set-actor-visible", { actorId: "parents", visible: true }],
+    [
+      "actor-follow-path",
+      {
+        pathId: "parents-entry",
+        subjectId: "parents",
+        primaryActorId: "parents",
+        participantActorIds: [],
+      },
+    ],
+  ]);
+  assert.equal(commandPayloads.b12[1][1].pathId, "parents-exit");
+  assert.equal(commandPayloads.b17[1][1].pathId, "expulsion");
+  assert.deepEqual(commandPayloads.b18.slice(0, 2), [
+    ["set-actor-visible", { actorId: "jesus", visible: true }],
+    [
+      "actor-follow-path",
+      {
+        pathId: "jesus-entry",
+        subjectId: "jesus",
+        primaryActorId: "jesus",
+        participantActorIds: [],
+      },
+    ],
+  ]);
+  assert.equal(commandPayloads.b19[1][1].pathId, "ending");
+  for (const beat of laterBeats) {
+    assert.deepEqual(beat.finalState.triggers.completedBeatIds, storyBeats
+      .slice(0, beat.order)
+      .map(({ id }) => id), beat.id);
+    assert.equal(
+      beat.finalState.camera.anchorId,
+      FINAL_SNAPSHOTS[beat.id].camera.anchorId,
+      beat.id,
+    );
+    assert.deepEqual(
+      beat.finalState.testimony,
+      FINAL_SNAPSHOTS[beat.id].testimony,
+      beat.id,
+    );
+  }
+});
+
+test("B08 formation path moves both the primary actor and canonical participants", async () => {
+  const followed = [];
+  const adapter = createSliceSequenceAdapter(
+    {
+      scene: {
+        setMovementEnabled: () => {},
+        focusAnchor: () => {},
+        setActorPose: () => {},
+        setActorVisible: () => {},
+        followActorPath: async (pathId, actorId) => {
+          followed.push([pathId, actorId]);
+        },
+        followCameraPath: async () => {},
+        applyFinalState: async () => {},
+      },
+      ui: {
+        setOverlay: () => {},
+        presentDialogue: async () => {},
+        applyFinalState: () => {},
+        setHandoff: () => {},
+      },
+    },
+    {
+      subscribeSkip: () => () => {},
+      acquireInputLock: () => () => {},
+    },
+  );
+  const result = await new MapSequence(adapter).run(STORY_BEATS[7].sequence);
+  assert.equal(result.status, "completed");
+  assert.deepEqual(followed, [
+    ["group-to-inquiry", "man-born-blind"],
+    ["group-to-inquiry", "neighbors"],
+  ]);
 });
 
 test("safe UI exposes only segment metadata and the licensing notice", async () => {
@@ -405,6 +545,16 @@ test("B14 stress fixture is DEV-only, lazy, and absent from production paths", a
   assert.match(fixture, /正式故事進度未變/);
   assert.match(checker, /JOHN9_DEV_ONLY_B14_STRESS/);
   assert.match(checker, /b14-stress/);
+  const productionB14 = STORY_BEATS.find(({ id }) => id === "b14");
+  assert.ok(productionB14);
+  assert.equal(productionB14.sequence.id, "sequence-b14");
+  assert.equal(
+    productionB14.sequence.steps.some(
+      ({ command, payload }) =>
+        command === "present-scripture-segments" && payload.beatId === "b14",
+    ),
+    true,
+  );
   assert.match(
     platform,
     /skipCurrent:[\s\S]*for \(const listener of skipListeners\)/,
@@ -476,22 +626,40 @@ test("candidate Jesus graybox uses the pinned sheet mapping and no candidate pro
   assert.doesNotMatch(scene, /household-props-atlas|world-ground-atlas/);
 });
 
-test("B08 production trigger fails clearly after the slice boundary", async () => {
+test("out-of-order restored progress fails explicitly outside the canonical contract", () => {
   const controller = new SliceStoryController({
     runBeat: async () => ({ status: "completed" }),
   });
-  for (const event of progressionEvents) {
-    await controller.dispatch(event);
-  }
-  await assert.rejects(
-    controller.dispatch({ type: "event", name: "interact:neighbors" }),
+  assert.throws(
+    () => controller.restoreCompletedBeatIds(["b01", "b03"]),
     (error) =>
-      error instanceof UnsupportedSliceBeatError &&
-      error.code === "STORY_BEAT_OUTSIDE_APPROVED_SLICE" &&
-      error.beatId === "b08",
+      error instanceof UnsupportedStoryBeatError &&
+      error.code === "STORY_BEAT_OUTSIDE_CANONICAL_CONTRACT" &&
+      error.beatId === "b03",
   );
   assert.equal(controller.snapshot().completed, false);
-  assert.equal(controller.engine.currentBeat?.id, "b08");
+  assert.equal(controller.engine.currentBeat?.id, "b01");
+});
+
+test("saved progress restores deterministically to canonical next-beat snapshots", () => {
+  const controller = new SliceStoryController({
+    runBeat: async () => ({ status: "completed" }),
+  });
+  controller.restoreCompletedBeatIds(
+    FINAL_SNAPSHOTS.b12.triggers.completedBeatIds,
+  );
+  assert.deepEqual(
+    controller.snapshot().state.completedBeatIds,
+    FINAL_SNAPSHOTS.b12.triggers.completedBeatIds,
+  );
+  assert.equal(controller.engine.currentBeat?.id, "b13");
+  assert.equal(controller.storyComplete, false);
+
+  controller.restoreCompletedBeatIds(
+    FINAL_SNAPSHOTS.b19.triggers.completedBeatIds,
+  );
+  assert.equal(controller.storyComplete, true);
+  assert.equal(controller.engine.currentBeat, undefined);
 });
 
 function createSequenceHost(mode) {

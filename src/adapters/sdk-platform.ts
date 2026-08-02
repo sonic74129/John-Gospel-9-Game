@@ -23,10 +23,12 @@ import {
 } from "./sequence-adapter.ts";
 import {
   SliceStoryController,
+  STORY_BEAT_IDS,
   createStoryEngine,
   type SliceStoryEvent,
   type SliceStoryState,
 } from "./story-adapter.ts";
+import { FINAL_SNAPSHOTS } from "./story-contracts.ts";
 export interface AppliedPlatformFinalState {
   readonly finalState: SliceFinalState;
   readonly scene: AppliedGrayboxFinalState;
@@ -48,10 +50,11 @@ export interface AppliedPlatformFinalState {
 }
 
 export interface PlatformRuntime {
-  readonly mode: "story-slice";
+  readonly mode: "story";
   readonly story: SliceStoryController;
   start(): Promise<void>;
   begin(): void;
+  restore(completedBeatIds: readonly string[]): Promise<void>;
   unlockAudio(): Promise<void>;
   setPaused(paused: boolean): void;
   setMuted(muted: boolean): void;
@@ -64,6 +67,12 @@ export interface PlatformRuntime {
   ): Promise<SequenceResult>;
   snapshotAppliedFinalState(): AppliedPlatformFinalState | null;
   dispose(): Promise<void>;
+}
+
+export interface PlatformRuntimeOptions {
+  readonly onProgress?: (
+    completedBeatIds: readonly string[],
+  ) => void | Promise<void>;
 }
 
 const STORY_DISTANCE_UNIT_PIXELS = 96;
@@ -80,6 +89,7 @@ export function createPlatformRuntime(
   scene: GrayboxScene,
   shell: AppShell,
   onError: (error: unknown) => void,
+  options: PlatformRuntimeOptions = {},
 ): PlatformRuntime {
   const factory = new BrowserAudioFactory();
   const music = new MusicManager({ tracks: [], factory });
@@ -235,6 +245,13 @@ export function createPlatformRuntime(
         throw error;
       }
     },
+    onBeatSettled: async (beat) => {
+      const completedBeatIds = beat.finalState.triggers.completedBeatIds;
+      await options.onProgress?.(completedBeatIds);
+      if (beat.id === STORY_BEAT_IDS.at(-1)) {
+        shell.setCompleted();
+      }
+    },
   });
 
   const sceneSystem: EngineSystem = {
@@ -281,9 +298,6 @@ export function createPlatformRuntime(
     while (event !== undefined && !disposed) {
       const result = await story.dispatch(event);
       if (!result.advanced || result.beatId === undefined) {
-        return;
-      }
-      if (result.beatId === "b07") {
         return;
       }
       const nextBeat = story.engine.currentBeat;
@@ -346,7 +360,7 @@ export function createPlatformRuntime(
   });
 
   return {
-    mode: "story-slice",
+    mode: "story",
     story,
     start: () => composition.lifecycle.start(),
     begin: () => {
@@ -354,7 +368,53 @@ export function createPlatformRuntime(
         return;
       }
       begun = true;
-      dispatch({ type: "event", name: "story:start" });
+      const snapshot = story.snapshot();
+      const completedBeatId = snapshot.state.completedBeatIds.at(-1);
+      if (snapshot.completed) {
+        shell.setCompleted();
+        return;
+      }
+      if (completedBeatId === undefined) {
+        dispatch({ type: "event", name: "story:start" });
+        return;
+      }
+      const expectedEvent = `beat:${completedBeatId}:completed`;
+      const nextBeat = story.engine.currentBeat;
+      if (
+        nextBeat?.trigger?.type === "event" &&
+        nextBeat.trigger.event === expectedEvent
+      ) {
+        dispatch({ type: "event", name: expectedEvent });
+        return;
+      }
+      evaluateWorldTrigger();
+    },
+    restore: async (completedBeatIds) => {
+      if (disposed || begun) {
+        throw new Error("Cannot restore after story progression has begun.");
+      }
+      story.restoreCompletedBeatIds(completedBeatIds);
+      const lastBeatId = completedBeatIds.at(-1);
+      if (lastBeatId === undefined) {
+        return;
+      }
+      const finalState = FINAL_SNAPSHOTS[lastBeatId];
+      if (finalState === undefined) {
+        throw new RangeError(
+          `No canonical final snapshot exists for ${lastBeatId}.`,
+        );
+      }
+      const result = await runSequence({
+        id: `restore-${lastBeatId}`,
+        steps: [],
+        finalState,
+      });
+      if (result.status === "cancelled") {
+        throw new Error("Canonical save restoration was cancelled.");
+      }
+      if (story.storyComplete) {
+        shell.setCompleted();
+      }
     },
     unlockAudio: () => music.unlock(),
     setPaused: (paused) => ui.setPaused(paused),
