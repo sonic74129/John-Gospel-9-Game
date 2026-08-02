@@ -65,7 +65,7 @@ const reportError = (error: unknown): void => {
   console.error(error);
   const message =
     error instanceof UnsupportedStoryBeatError
-      ? "遇到正式 B01–B19 契約以外的故事節點，流程已安全停止。"
+      ? "故事進度發生錯誤，流程已安全停止。"
       : error instanceof StoryPersistenceError
         ? error.message
         : "平台運行失敗，請重新載入。";

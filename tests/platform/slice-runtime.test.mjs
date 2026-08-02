@@ -768,7 +768,8 @@ test("production bundle gate covers Foundation player-version QA residue", async
     "Verse key",
     "Segment ID",
     "S2 · 遊戲提示 · 不計分",
-    "B01–B19 故事運行中",
+    "B01–B19",
+    "契約以外的故事節點",
     "從 B01 開始",
     "已套用確定最終狀態",
     "sdkOverlayVisible",
@@ -796,6 +797,20 @@ test("production bundle gate covers Foundation player-version QA residue", async
   );
   assert.match(shell, /shell\.setStatus\("故事進行中"\)/);
   assert.match(shell, /"目標已更新"/);
+});
+
+test("unsupported story progress errors use generic player-facing copy", async () => {
+  const [main, checker] = await Promise.all([
+    readText("src/main.ts"),
+    readText("scripts/check-production-bundle.mjs"),
+  ]);
+  assert.match(
+    main,
+    /error instanceof UnsupportedStoryBeatError[\s\S]*故事進度發生錯誤，流程已安全停止。/,
+  );
+  assert.doesNotMatch(main, /B01–B19|契約以外的故事節點/);
+  assert.match(checker, /"B01–B19"/);
+  assert.match(checker, /"契約以外的故事節點"/);
 });
 
 test("B14 stress fixture is DEV-only, lazy, and absent from production paths", async () => {
