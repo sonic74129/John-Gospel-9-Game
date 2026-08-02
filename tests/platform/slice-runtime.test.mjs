@@ -2,12 +2,24 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+import { NavigationGrid } from "@sonic74129/map-runtime";
 import { MapSequence } from "@sonic74129/sequence-runtime";
 
 import { applyCanonicalCameraFinalState } from "../../src/adapters/canonical-camera.ts";
 import { createB14StressSequence } from "../../src/adapters/dev-b14-fixture.ts";
+import {
+  buildBlockedCells,
+  findWalkablePath,
+  isWalkablePoint,
+  isWalkableSegment,
+} from "../../src/adapters/navigation-geometry.js";
 import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
 import { navigationHintNeedsUpdate } from "../../src/platform/app-shell.ts";
+import {
+  createResponsiveGameSizeController,
+  requireGameViewport,
+} from "../../src/platform/responsive-game-size.ts";
+import { createViewportResizeTransaction } from "../../src/platform/viewport-resize-transaction.ts";
 import {
   SliceStoryController,
   UnsupportedStoryBeatError,
@@ -33,13 +45,57 @@ import {
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 const readText = (path) => readFile(path, "utf8");
 const storyBeats = STORY_BEATS;
-const [anchorContract, cameraContract, layoutContract, spawnContract] =
+const [
+  anchorContract,
+  cameraContract,
+  layoutContract,
+  spawnContract,
+  framingContract,
+  collisionContract,
+  navigationContract,
+] =
   await Promise.all([
     readJson("src/world/anchors.json"),
     readJson("src/world/camera.json"),
     readJson("src/world/layout.json"),
     readJson("src/world/spawns.json"),
+    readJson("src/world/framing.json"),
+    readJson("src/world/collisions.json"),
+    readJson("src/world/navigation.json"),
   ]);
+const desktopFrameProfile = framingContract.profiles.find(
+  ({ viewport }) => viewport.width === 1280,
+);
+const walkablePolygons = layoutContract.regions.map(
+  ({ walkablePolygon }) => walkablePolygon,
+);
+const collisionPolygons = collisionContract.collisionPolygons.map(
+  ({ polygon }) => polygon,
+);
+const playerRadius = navigationContract.agent.radius;
+const isWorldWalkable = (point) =>
+  isWalkablePoint(
+    point,
+    playerRadius,
+    layoutContract.worldBounds,
+    walkablePolygons,
+    collisionPolygons,
+  );
+const blockedCells = buildBlockedCells({
+  width: layoutContract.worldBounds.width,
+  height: layoutContract.worldBounds.height,
+  cellSize: navigationContract.grid.cellSize,
+  radius: playerRadius,
+  bounds: layoutContract.worldBounds,
+  walkablePolygons,
+  collisionPolygons,
+});
+const navigationGrid = new NavigationGrid({
+  width: layoutContract.worldBounds.width,
+  height: layoutContract.worldBounds.height,
+  cellSize: navigationContract.grid.cellSize,
+  blocked: blockedCells,
+});
 
 const progressionEvents = storyBeats.map(({ trigger }) =>
   trigger.type === "proximity"
@@ -214,6 +270,282 @@ test("real sequence adapter exposes deep-equal canonical and actual camera state
     }
     assert.equal(completed.inputLocks, 0, definition.id);
     assert.equal(skipped.inputLocks, 0, definition.id);
+  }
+});
+
+test("actual final-state camera framing keeps every visible collider safe on desktop and mobile", async () => {
+  for (const profile of framingContract.profiles) {
+    for (const beat of storyBeats) {
+      for (const skip of [false, true]) {
+        const result = await runRealAdapter(beat.sequence, skip, profile);
+        const visibleActors = resolveVisibleActorColliders(
+          beat.finalState,
+        );
+        const cameraPosition = result.camera.applied.actual.position;
+        const zoom = result.camera.applied.actual.zoom;
+        for (const actor of visibleActors) {
+          assertActorInsideSafeFrame({
+            actor,
+            cameraPosition,
+            profile,
+            zoom,
+            label: `${beat.id}/${skip ? "skip" : "normal"}/${profile.id}/${actor.spawnId}`,
+          });
+        }
+
+        const player = visibleActors.find(
+          ({ storyActorId }) =>
+            storyActorId === beat.finalState.controls.playerActorId,
+        );
+        assert.ok(player, `${beat.id}/${profile.id} player`);
+      }
+    }
+  }
+});
+
+test("orientation resize reapplies every settled canonical frame without changing story state", async () => {
+  const mobileProfile = framingContract.profiles.find(
+    ({ viewport }) => viewport.width === 390,
+  );
+  assert.ok(mobileProfile);
+  const landscapeProfile = {
+    id: "frame.mobile-844x390",
+    viewport: { width: 844, height: 390 },
+    gameplaySafeRect: { x: 20, y: 20, width: 804, height: 350 },
+  };
+
+  for (const beat of storyBeats) {
+    for (const skip of [false, true]) {
+      const result = await runRealAdapter(beat.sequence, skip, mobileProfile);
+      const settledState = structuredClone(result.scene);
+      const simulation = createFinalStateCameraSimulation(
+        result.scene,
+        mobileProfile,
+      );
+      simulation.resizeTo(landscapeProfile.viewport);
+      const landscapeCamera = simulation.camera.snapshot();
+      assert.deepEqual(
+        landscapeCamera.viewport,
+        landscapeProfile.viewport,
+        `${beat.id}/${skip ? "skip" : "normal"}/landscape viewport`,
+      );
+      assertActorInsideSafeFrame({
+        actor: simulation.player,
+        cameraPosition: landscapeCamera.position,
+        profile: landscapeProfile,
+        zoom: landscapeCamera.zoom,
+        label: `${beat.id}/${skip ? "skip" : "normal"}/landscape player`,
+      });
+
+      simulation.resizeTo(mobileProfile.viewport);
+      assertPlayerInsideSimulationSafeFrame(
+        simulation,
+        `${beat.id}/${skip ? "skip" : "normal"}/portrait-restored`,
+      );
+      assert.deepEqual(result.scene, settledState);
+    }
+  }
+});
+
+test("paused resize coalesces the latest safe camera transaction without story advancement", async () => {
+  const mobileProfile = framingContract.profiles.find(
+    ({ viewport }) => viewport.width === 390,
+  );
+  assert.ok(mobileProfile);
+  const landscapeProfile = {
+    id: "frame.mobile-844x390",
+    viewport: { width: 844, height: 390 },
+    gameplaySafeRect: { x: 20, y: 20, width: 804, height: 350 },
+  };
+
+  for (const beat of storyBeats) {
+    for (const skip of [false, true]) {
+      const result = await runRealAdapter(beat.sequence, skip, mobileProfile);
+      const settledState = structuredClone(result.scene);
+      const simulation = createFinalStateCameraSimulation(
+        result.scene,
+        mobileProfile,
+      );
+      const beforePause = simulation.camera.snapshot();
+      let sceneActive = false;
+      let worldUpdates = 0;
+      const resize = createViewportResizeTransaction({
+        isReady: () => sceneActive,
+        apply: (viewport) => {
+          simulation.resizeTo(viewport);
+          worldUpdates += 1;
+        },
+      });
+
+      resize.queue({ width: 800, height: 420 });
+      resize.queue(landscapeProfile.viewport);
+      assert.deepEqual(simulation.camera.snapshot(), beforePause);
+      assert.deepEqual(resize.pending, landscapeProfile.viewport);
+      assert.equal(worldUpdates, 0);
+
+      sceneActive = true;
+      assert.equal(resize.flush(), true);
+      assert.equal(worldUpdates, 1);
+      const resumedCamera = simulation.camera.snapshot();
+      assert.deepEqual(resumedCamera.viewport, landscapeProfile.viewport);
+      assertActorInsideSafeFrame({
+        actor: simulation.player,
+        cameraPosition: resumedCamera.position,
+        profile: landscapeProfile,
+        zoom: resumedCamera.zoom,
+        label: `${beat.id}/${skip ? "skip" : "normal"}/paused-resume`,
+      });
+      const pointer = worldToViewportPoint(
+        simulation.focusPosition,
+        resumedCamera,
+      );
+      assert.ok(
+        distanceBetween(
+          viewportToWorldPoint(pointer, resumedCamera),
+          simulation.focusPosition,
+        ) < 1e-8,
+      );
+      assert.deepEqual(result.scene, settledState);
+      assert.equal(resize.flush(), false);
+    }
+  }
+});
+
+test("Phaser follow delay keeps valid keyboard and pointer movement inside every safe frame", async () => {
+  const frameRates = [
+    { id: "60fps", deltaMs: 1000 / 60, frames: 60 },
+    { id: "30fps", deltaMs: 1000 / 30, frames: 30 },
+  ];
+  const directions = [
+    { id: "left", x: -1, y: 0 },
+    { id: "right", x: 1, y: 0 },
+    { id: "up", x: 0, y: -1 },
+    { id: "down", x: 0, y: 1 },
+  ];
+
+  for (const profile of framingContract.profiles) {
+    for (const beat of storyBeats) {
+      for (const skip of [false, true]) {
+        const mode = skip ? "skip" : "normal";
+        const result = await runRealAdapter(beat.sequence, skip, profile);
+        assert.equal(result.status, skip ? "skipped" : "completed");
+        const finalState = result.scene;
+        for (const frameRate of frameRates) {
+          for (const direction of directions) {
+            const simulation = createFinalStateCameraSimulation(
+              finalState,
+              profile,
+            );
+            let validFrames = 0;
+            for (let frame = 0; frame < frameRate.frames; frame += 1) {
+              const distance = (240 * frameRate.deltaMs) / 1000;
+              const nextPosition = {
+                x: simulation.player.position.x + direction.x * distance,
+                y: simulation.player.position.y + direction.y * distance,
+              };
+              if (
+                !isValidPlayerMove(
+                  simulation.player.position,
+                  nextPosition,
+                  simulation.blockingActors,
+                )
+              ) {
+                break;
+              }
+              simulation.player.position = nextPosition;
+              simulation.camera.advanceFollow(nextPosition);
+              assertPlayerInsideSimulationSafeFrame(
+                simulation,
+                `${beat.id}/${mode}/${profile.id}/${frameRate.id}/${direction.id}/frame-${frame}`,
+              );
+              validFrames += 1;
+            }
+            assert.ok(
+              validFrames > 0,
+              `${beat.id}/${mode}/${profile.id}/${frameRate.id}/${direction.id} has valid movement`,
+            );
+          }
+
+          const simulation = createFinalStateCameraSimulation(
+            finalState,
+            profile,
+          );
+          const cameraState = simulation.camera.snapshot();
+          const pointerPosition = worldToViewportPoint(
+            simulation.focusPosition,
+            cameraState,
+          );
+          const pointerTarget = viewportToWorldPoint(
+            pointerPosition,
+            cameraState,
+          );
+          assert.ok(
+            distanceBetween(pointerTarget, simulation.focusPosition) < 1e-8,
+            `${beat.id}/${mode}/${profile.id}/${frameRate.id} pointer alignment`,
+          );
+          const pointerPath = findWalkablePath(
+            navigationGrid,
+            simulation.player.position,
+            pointerTarget,
+            isWorldWalkable,
+          );
+          assert.ok(
+            pointerPath.length > 1,
+            `${beat.id}/${mode}/${profile.id}/${frameRate.id} pointer route`,
+          );
+          let pointerFrames = 0;
+          let pointerBlocked = false;
+          for (const waypoint of pointerPath.slice(1)) {
+            while (
+              distanceBetween(simulation.player.position, waypoint) > 0.001
+            ) {
+              const remaining = distanceBetween(
+                simulation.player.position,
+                waypoint,
+              );
+              const distance = Math.min(
+                (240 * frameRate.deltaMs) / 1000,
+                remaining,
+              );
+              const nextPosition = {
+                x:
+                  simulation.player.position.x +
+                  ((waypoint.x - simulation.player.position.x) / remaining) *
+                    distance,
+                y:
+                  simulation.player.position.y +
+                  ((waypoint.y - simulation.player.position.y) / remaining) *
+                    distance,
+              };
+              if (
+                !isValidPlayerMove(
+                  simulation.player.position,
+                  nextPosition,
+                  simulation.blockingActors,
+                )
+              ) {
+                pointerBlocked = true;
+                break;
+              }
+              simulation.player.position = nextPosition;
+              simulation.camera.advanceFollow(nextPosition);
+              assertPlayerInsideSimulationSafeFrame(
+                simulation,
+                `${beat.id}/${mode}/${profile.id}/${frameRate.id}/pointer/frame-${pointerFrames}`,
+              );
+              pointerFrames += 1;
+            }
+            if (pointerBlocked) {
+              break;
+            }
+          }
+          assert.ok(
+            pointerFrames > 0,
+            `${beat.id}/${mode}/${profile.id}/${frameRate.id} has valid pointer movement`,
+          );
+        }
+      }
+    }
   }
 });
 
@@ -780,7 +1112,7 @@ test("production bundle gate covers Foundation player-version QA residue", async
   }
   assert.match(
     scene,
-    /if \(import\.meta\.env\.DEV\) \{[\s\S]*\.text\(x \+ 24, y \+ 20, id,/,
+    /if \(import\.meta\.env\.DEV\) \{[\s\S]*\.text\(x \+ 24, y \+ 20, `\$\{id\} · walkable`,/,
   );
   assert.match(scene, /import\.meta\.env\.DEV && isCandidateJesus/);
   assert.match(
@@ -994,7 +1326,11 @@ function createSequenceHost(mode) {
   return fixture;
 }
 
-async function runRealAdapter(definition, skip) {
+async function runRealAdapter(
+  definition,
+  skip,
+  profile = desktopFrameProfile,
+) {
   let inputLocks = 0;
   let sceneState = null;
   let uiState = null;
@@ -1010,7 +1346,8 @@ async function runRealAdapter(definition, skip) {
         followActorPath: async () => {},
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
-          const camera = createFaithfulCameraPort();
+          const viewport = resolveInitialProductionViewport(profile.viewport);
+          const camera = createFaithfulCameraPort(viewport);
           const cameraAnchor = requireById(
             anchorContract.anchors,
             state.camera.anchorId,
@@ -1054,7 +1391,7 @@ async function runRealAdapter(definition, skip) {
             playerTarget,
             worldWidth: layoutContract.worldBounds.width,
             worldHeight: layoutContract.worldBounds.height,
-            mobile: false,
+            mobile: Math.min(viewport.width, viewport.height) <= 640,
           });
           sceneState = structuredClone(state);
           cameraState = {
@@ -1108,8 +1445,210 @@ function requireById(values, id) {
   return value;
 }
 
-function createFaithfulCameraPort() {
+function resolveVisibleActorColliders(finalState) {
+  const resolved = [];
+  for (const [storyActorId, actorState] of Object.entries(finalState.actors)) {
+    if (!actorState.visible || !actorState.collisionEnabled) {
+      continue;
+    }
+    const targetAnchor = requireById(
+      anchorContract.anchors,
+      actorState.anchorId,
+    );
+    for (const spawnId of STORY_ACTOR_SPAWN_IDS[storyActorId]) {
+      const spawn = requireById(spawnContract.actorSpawns, `spawn.${spawnId}`);
+      const initialAnchor = requireById(
+        anchorContract.anchors,
+        spawn.anchorId,
+      );
+      resolved.push({
+        storyActorId,
+        spawnId,
+        collisionRadius: spawn.collisionRadius,
+        position: {
+          x:
+            targetAnchor.position.x +
+            spawn.position.x -
+            initialAnchor.position.x,
+          y:
+            targetAnchor.position.y +
+            spawn.position.y -
+            initialAnchor.position.y,
+        },
+      });
+    }
+  }
+  return resolved;
+}
+
+function createFinalStateCameraSimulation(finalState, profile) {
+  const visibleActors = resolveVisibleActorColliders(finalState);
+  const player = visibleActors.find(
+    ({ storyActorId }) => storyActorId === finalState.controls.playerActorId,
+  );
+  assert.ok(player, `${finalState.beatId}/${profile.id} player`);
+  const cameraAnchor = requireById(
+    anchorContract.anchors,
+    finalState.camera.anchorId,
+  );
+  const zone = cameraContract.cameraZones.find(
+    ({ regionId }) => regionId === cameraAnchor.regionId,
+  );
+  assert.ok(zone, `${finalState.beatId}/${profile.id} camera zone`);
   const viewport = { width: 1280, height: 720 };
+  const camera = createFaithfulCameraPort(viewport);
+  const applyCamera = () =>
+    applyCanonicalCameraFinalState({
+      camera: camera.port,
+      canonical: finalState.camera,
+      zone,
+      anchorPosition: cameraAnchor.position,
+      playerActorId: finalState.controls.playerActorId,
+      playerTarget: player.position,
+      worldWidth: layoutContract.worldBounds.width,
+      worldHeight: layoutContract.worldBounds.height,
+      mobile: Math.min(viewport.width, viewport.height) <= 640,
+    });
+  applyCamera();
+  const resizeTo = (nextViewport) =>
+    driveProductionResize(viewport, nextViewport, ({ width, height }) => {
+      camera.resizeViewport(width, height);
+      applyCamera();
+    });
+  resizeTo(profile.viewport);
+  return {
+    camera,
+    focusPosition: cameraAnchor.position,
+    player: structuredClone(player),
+    blockingActors: visibleActors.filter(
+      ({ storyActorId }) => storyActorId !== finalState.controls.playerActorId,
+    ),
+    profile,
+    resizeTo,
+  };
+}
+
+function isValidPlayerMove(start, target, blockingActors) {
+  return (
+    isWalkableSegment(
+      start,
+      target,
+      playerRadius,
+      isWorldWalkable,
+    ) &&
+    blockingActors.every(
+      (actor) =>
+        distanceBetween(target, actor.position) >=
+        playerRadius + actor.collisionRadius,
+    )
+  );
+}
+
+function assertPlayerInsideSimulationSafeFrame(simulation, label) {
+  const cameraState = simulation.camera.snapshot();
+  assertActorInsideSafeFrame({
+    actor: simulation.player,
+    cameraPosition: cameraState.position,
+    profile: simulation.profile,
+    zoom: cameraState.zoom,
+    label,
+  });
+}
+
+function distanceBetween(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function worldToViewportPoint(point, camera) {
+  return {
+    x: camera.viewport.width / 2 + (point.x - camera.position.x) * camera.zoom,
+    y: camera.viewport.height / 2 + (point.y - camera.position.y) * camera.zoom,
+  };
+}
+
+function viewportToWorldPoint(point, camera) {
+  return {
+    x:
+      camera.position.x +
+      (point.x - camera.viewport.width / 2) / camera.zoom,
+    y:
+      camera.position.y +
+      (point.y - camera.viewport.height / 2) / camera.zoom,
+  };
+}
+
+function resolveInitialProductionViewport(viewport) {
+  return requireGameViewport({
+    getBoundingClientRect: () => ({ ...viewport }),
+  });
+}
+
+function driveProductionResize(initialSize, nextSize, onResize) {
+  let bounds = { ...initialSize };
+  let notifyResize = () => {};
+  let queuedFrame = null;
+  const controller = createResponsiveGameSizeController({
+    container: {
+      getBoundingClientRect: () => ({ ...bounds }),
+    },
+    initialSize,
+    resize: onResize,
+    createObserver: (listener) => {
+      notifyResize = listener;
+      return {
+        observe: () => {},
+        disconnect: () => {},
+      };
+    },
+    eventTarget: {
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    },
+    scheduleTask: (callback) => {
+      queuedFrame = callback;
+      return 1;
+    },
+    cancelTask: () => {
+      queuedFrame = null;
+    },
+  });
+  controller.start();
+  bounds = { ...nextSize };
+  notifyResize();
+  queuedFrame?.();
+  controller.dispose();
+}
+
+function assertActorInsideSafeFrame({
+  actor,
+  cameraPosition,
+  profile,
+  zoom,
+  label,
+}) {
+  const screen = {
+    x:
+      profile.viewport.width / 2 +
+      (actor.position.x - cameraPosition.x) * zoom,
+    y:
+      profile.viewport.height / 2 +
+      (actor.position.y - cameraPosition.y) * zoom,
+  };
+  const radius = actor.collisionRadius * zoom;
+  const safe = profile.gameplaySafeRect;
+  assert.ok(screen.x - radius >= safe.x - 1e-8, `${label} left`);
+  assert.ok(
+    screen.x + radius <= safe.x + safe.width + 1e-8,
+    `${label} right`,
+  );
+  assert.ok(screen.y - radius >= safe.y - 1e-8, `${label} top`);
+  assert.ok(
+    screen.y + radius <= safe.y + safe.height + 1e-8,
+    `${label} bottom`,
+  );
+}
+
+function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
   const state = {
     mode: "fixed",
     position: { x: 0, y: 0 },
@@ -1117,7 +1656,9 @@ function createFaithfulCameraPort() {
     deadZone: { width: 0, height: 0 },
     followTarget: null,
     followOffset: { x: 0, y: 0 },
+    lerp: { x: 1, y: 1 },
     bounds: { x: 0, y: 0, width: 0, height: 0 },
+    viewport: { ...viewport },
     scrollX: 0,
     scrollY: 0,
   };
@@ -1160,10 +1701,11 @@ function createFaithfulCameraPort() {
       setDeadzone: (width, height) => {
         state.deadZone = { width, height };
       },
-      startFollow: (target, _round, _lerpX, _lerpY, offsetX, offsetY) => {
+      startFollow: (target, _round, lerpX, lerpY, offsetX, offsetY) => {
         state.mode = "follow-observer";
         state.followTarget = structuredClone(target);
         state.followOffset = { x: offsetX, y: offsetY };
+        state.lerp = { x: lerpX, y: lerpY };
         state.scrollX = clampScroll(
           target.x - offsetX - viewport.width / 2,
           "x",
@@ -1184,6 +1726,57 @@ function createFaithfulCameraPort() {
         state.scrollY = clampScroll(y - viewport.height / 2, "y");
         updatePosition();
       },
+    },
+    resizeViewport: (width, height) => {
+      viewport.width = width;
+      viewport.height = height;
+      state.viewport = { width, height };
+      updatePosition();
+    },
+    advanceFollow: (target) => {
+      assert.equal(state.mode, "follow-observer");
+      state.followTarget = structuredClone(target);
+      const adjustedTarget = {
+        x: target.x - state.followOffset.x,
+        y: target.y - state.followOffset.y,
+      };
+      const deadZone = {
+        left:
+          state.scrollX + viewport.width / 2 - state.deadZone.width / 2,
+        right:
+          state.scrollX + viewport.width / 2 + state.deadZone.width / 2,
+        top:
+          state.scrollY + viewport.height / 2 - state.deadZone.height / 2,
+        bottom:
+          state.scrollY + viewport.height / 2 + state.deadZone.height / 2,
+      };
+      let targetScrollX = state.scrollX;
+      let targetScrollY = state.scrollY;
+      if (adjustedTarget.x < deadZone.left) {
+        targetScrollX = adjustedTarget.x - deadZone.left + state.scrollX;
+      } else if (adjustedTarget.x > deadZone.right) {
+        targetScrollX = adjustedTarget.x - deadZone.right + state.scrollX;
+      }
+      if (adjustedTarget.y < deadZone.top) {
+        targetScrollY = adjustedTarget.y - deadZone.top + state.scrollY;
+      } else if (adjustedTarget.y > deadZone.bottom) {
+        targetScrollY = adjustedTarget.y - deadZone.bottom + state.scrollY;
+      }
+      state.scrollX = clampScroll(
+        Math.floor(
+          state.scrollX +
+            (targetScrollX - state.scrollX) * state.lerp.x,
+        ),
+        "x",
+      );
+      state.scrollY = clampScroll(
+        Math.floor(
+          state.scrollY +
+            (targetScrollY - state.scrollY) * state.lerp.y,
+        ),
+        "y",
+      );
+      updatePosition();
     },
     snapshot: () => structuredClone(state),
   };

@@ -92,6 +92,7 @@ test("shell exposes responsive canvas and accessible control structure", async (
   const shell = await readText("src/platform/app-shell.ts");
   const styles = await readText("src/platform/styles.css");
   const scene = await readText("src/adapters/graybox-scene.ts");
+  const sdkPlatform = await readText("src/adapters/sdk-platform.ts");
   const main = await readText("src/main.ts");
   for (const marker of [
     "data-platform-shell",
@@ -109,6 +110,7 @@ test("shell exposes responsive canvas and accessible control structure", async (
   assert.match(shell, /aria-pressed="true"/);
   assert.match(styles, /aspect-ratio:\s*16\s*\/\s*9/);
   assert.match(styles, /@media\s*\(max-width:\s*640px\)/);
+  assert.match(styles, /height:\s*100dvh/);
   assert.match(styles, /\.game-container canvas/);
   assert.match(styles, /\.game-container\s*\{[^}]*align-items:\s*center/s);
   assert.match(styles, /\.game-container\s*\{[^}]*justify-content:\s*center/s);
@@ -122,6 +124,24 @@ test("shell exposes responsive canvas and accessible control structure", async (
   assert.doesNotMatch(scene, /\.findPath\([\s\S]{0,180}\)\s*\.slice\(1\)/);
   assert.match(main, /handlePageHide\(event\.persisted\)/);
   assert.match(main, /handlePageShow\(event\.persisted\)/);
+  assert.match(main, /createResponsiveGameSizeController/);
+  assert.match(main, /mode:\s*Phaser\.Scale\.NONE/);
+  assert.doesNotMatch(main, /Phaser\.Scale\.FIT/);
+  assert.match(main, /scene\.resizeViewport\(width,\s*height\)/);
+  assert.match(
+    main,
+    /await runtime\.resume\(UI_PAUSE_REASON\);\s*gameScene\?\.flushPendingViewportResize\(\)/,
+  );
+  assert.match(
+    main,
+    /await runtime\?\.resume\("bfcache"\);\s*gameSizeController\?\.resume\(\);\s*gameScene\?\.flushPendingViewportResize\(\)/,
+  );
+  assert.match(scene, /Math\.min\(camera\.width,\s*camera\.height\)\s*<=\s*640/);
+  assert.match(scene, /onWorldUpdate\("viewport"\)/);
+  assert.match(
+    sdkPlatform,
+    /onWorldUpdate:\s*\(reason,\s*traversal\)\s*=>\s*\{\s*if\s*\(reason\s*===\s*"gameplay"\)\s*\{\s*evaluateWorldTrigger\(traversal\)/,
+  );
   assert.match(main, /readyRuntime\.restore\(loadedSave\.completedBeatIds\)/);
   assert.match(main, /persistence\.reset\(\)/);
 });

@@ -385,7 +385,11 @@ export function createPlatformRuntime(
   };
 
   scene.setInteractionHandlers({
-    onWorldUpdate: evaluateWorldTrigger,
+    onWorldUpdate: (reason, traversal) => {
+      if (reason === "gameplay") {
+        evaluateWorldTrigger(traversal);
+      }
+    },
     onInteract: (storyActorId) => {
       dispatch({ type: "event", name: `interact:${storyActorId}` });
     },

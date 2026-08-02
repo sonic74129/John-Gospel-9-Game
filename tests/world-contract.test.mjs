@@ -4,6 +4,9 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
+import { STORY_ACTOR_SPAWN_IDS } from "../src/adapters/story-actor-mapping.ts";
+import { FINAL_SNAPSHOTS } from "../src/story/completion.ts";
+
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const worldDirectory = path.join(repoRoot, "src", "world");
 const expectedFiles = [
@@ -421,6 +424,25 @@ function pathLength(points) {
     );
 }
 
+function polygonsIntersect(a, b) {
+  if (
+    a.some((point) => pointInPolygon(point, b)) ||
+    b.some((point) => pointInPolygon(point, a))
+  ) {
+    return true;
+  }
+  return a.some((start, index) =>
+    b.some((edgeStart, edgeIndex) =>
+      segmentEdgeIntersectionParameters(
+        start,
+        a[(index + 1) % a.length],
+        edgeStart,
+        b[(edgeIndex + 1) % b.length]
+      ).length > 0
+    )
+  );
+}
+
 function assertUniqueIds(items, label) {
   const ids = items.map((item) => item.id);
   assert.equal(
@@ -505,6 +527,11 @@ test("layout defines five bounded, connected regions with only Siloam named", ()
   const adjacency = new Map(
     layout.regions.map((region) => [region.id, new Set()])
   );
+  const walkablePolygons = layout.regions.map(
+    ({ walkablePolygon }) => walkablePolygon
+  );
+  const walkableBoundarySegments =
+    polygonUnionBoundarySegments(walkablePolygons);
   for (const portal of layout.portals) {
     assert.equal(portal.sourceLevel, "approved-bridge", portal.id);
     const from = regionById.get(portal.fromRegionId);
@@ -515,6 +542,33 @@ test("layout defines five bounded, connected regions with only Siloam named", ()
     for (const point of portal.segment) {
       assert.ok(pointInPolygon(point, from.walkablePolygon), `${portal.id} from`);
       assert.ok(pointInPolygon(point, to.walkablePolygon), `${portal.id} to`);
+    }
+    const [portalStart, portalEnd] = portal.segment;
+    assert.ok(
+      distanceBetween(portalStart, portalEnd) >=
+        navigation.agent.minimumGroupLaneWidth,
+      `${portal.id} is narrower than a two-to-three-person lane`
+    );
+    assert.ok(
+      sweptCapsuleContainedByPolygonUnion(
+        portalStart,
+        portalEnd,
+        navigation.agent.minimumGroupLaneWidth / 2,
+        walkablePolygons,
+        walkableBoundarySegments
+      ),
+      `${portal.id} lane leaves walkable space`
+    );
+    for (const collision of collisions.collisionPolygons) {
+      assert.ok(
+        distanceFromSegmentToPolygon(
+          portalStart,
+          portalEnd,
+          collision.polygon
+        ) >
+          navigation.agent.minimumGroupLaneWidth / 2,
+        `${portal.id} lane overlaps ${collision.id}`
+      );
     }
     adjacency.get(from.id).add(to.id);
     adjacency.get(to.id).add(from.id);
@@ -531,6 +585,66 @@ test("layout defines five bounded, connected regions with only Siloam named", ()
     pending.push(...adjacency.get(regionId));
   }
   assert.equal(visited.size, layout.regions.length);
+});
+
+test("topology is a two-dimensional zig-zag with no nonconsecutive spatial bypass", () => {
+  assert.equal(layout.topology.shape, "north-south-zig-zag");
+  assert.deepEqual(
+    layout.topology.canonicalRegionOrder,
+    layout.regions.map(({ id }) => id)
+  );
+
+  const narrativeRoute = [
+    "roadside.blind-man-seat",
+    "pool.wash-edge",
+    "neighbors.center",
+    "inquiry.man-center",
+    "outside.expelled"
+  ].map((id) => anchorById.get(id).position);
+  const yChanges = narrativeRoute
+    .slice(1)
+    .map((point, index) => point.y - narrativeRoute[index].y);
+  const yValues = narrativeRoute.map(({ y }) => y);
+  assert.ok(
+    Math.max(...yValues) - Math.min(...yValues) >=
+      layout.topology.minimumNarrativeVerticalSpan
+  );
+  assert.ok(yChanges.every((change) => Math.abs(change) >= 150));
+  assert.ok(yChanges.filter((change) => Math.abs(change) >= 500).length >= 3);
+  assert.ok(yChanges.some((change) => change > 0));
+  assert.ok(yChanges.some((change) => change < 0));
+
+  for (let left = 0; left < layout.regions.length; left += 1) {
+    for (let right = left + 2; right < layout.regions.length; right += 1) {
+      assert.equal(
+        polygonsIntersect(
+          layout.regions[left].walkablePolygon,
+          layout.regions[right].walkablePolygon
+        ),
+        false,
+        `${layout.regions[left].id} bypasses ${layout.regions[right].id}`
+      );
+    }
+  }
+});
+
+test("landmarks occupy distinct upper, middle, and lower exploration levels", () => {
+  const landmarks = layout.topology.landmarkAnchorIds.map((id) => {
+    const anchor = anchorById.get(id);
+    assert.ok(anchor, id);
+    assert.equal(anchor.kind, "landmark", id);
+    assert.equal(anchor.sourceLevel, "approved-bridge", id);
+    return anchor;
+  });
+  const yValues = landmarks.map(({ position }) => position.y);
+  assert.ok(Math.min(...yValues) <= 320);
+  assert.ok(yValues.some((y) => y >= 500 && y <= 700));
+  assert.ok(Math.max(...yValues) >= 1500);
+  assert.ok(new Set(yValues.map((y) => Math.round(y / 160))).size >= 4);
+  assert.deepEqual(
+    new Set(landmarks.map(({ regionId }) => regionId)),
+    new Set(layout.regions.map(({ id }) => id))
+  );
 });
 
 test("required anchors exist, use valid source levels, and sit inside walkable regions", () => {
@@ -621,6 +735,39 @@ test("collision polygons are valid and actor spawns have collision-safe clearanc
         distanceBetween(a.position, b.position) >=
           a.collisionRadius + b.collisionRadius,
         `${a.id} overlaps ${b.id}`
+      );
+    }
+  }
+
+  for (let left = 0; left < collisions.collisionPolygons.length; left += 1) {
+    for (
+      let right = left + 1;
+      right < collisions.collisionPolygons.length;
+      right += 1
+    ) {
+      assert.equal(
+        polygonsIntersect(
+          collisions.collisionPolygons[left].polygon,
+          collisions.collisionPolygons[right].polygon
+        ),
+        false,
+        `${collisions.collisionPolygons[left].id} overlaps ${collisions.collisionPolygons[right].id}`
+      );
+    }
+  }
+
+  for (const prop of props.movablePropAnchors) {
+    for (const collision of collisions.collisionPolygons) {
+      assert.ok(
+        distanceToPolygon(prop.position, collision.polygon) > 10,
+        `${prop.id} overlaps ${collision.id}`
+      );
+    }
+    for (const spawn of spawns.actorSpawns) {
+      assert.ok(
+        distanceBetween(prop.position, spawn.position) >
+          10 + spawn.collisionRadius,
+        `${prop.id} visibly overlaps ${spawn.id}`
       );
     }
   }
@@ -738,6 +885,197 @@ test("required sequence paths keep every radius-aware segment walkable and colli
   }
 });
 
+test("canonical story paths cross each ordered transition lane", () => {
+  const pathById = new Map(
+    paths.sequencePaths.map((sequencePath) => [sequencePath.id, sequencePath])
+  );
+  const transitionPathIds = {
+    "portal.roadside-pool": "man-to-pool",
+    "portal.pool-neighbors": "pool-to-neighbors",
+    "portal.neighbors-inquiry": "group-to-inquiry",
+    "portal.inquiry-outside": "expulsion"
+  };
+  for (const portal of layout.portals) {
+    const sequencePath = pathById.get(transitionPathIds[portal.id]);
+    assert.ok(sequencePath, portal.id);
+    const [portalStart, portalEnd] = portal.segment;
+    const closest = Math.min(
+      ...sequencePath.points.slice(1).map((point, index) =>
+        distanceBetweenSegments(
+          sequencePath.points[index],
+          point,
+          portalStart,
+          portalEnd
+        )
+      )
+    );
+    assert.equal(closest, 0, `${sequencePath.id} misses ${portal.id}`);
+  }
+});
+
+test("every moved actor body clears sequence paths, including group offsets", () => {
+  const storyActorsBySubject = {
+    "man-born-blind": ["man-born-blind"],
+    "man-and-neighbor-group": ["man-born-blind", "neighbors"],
+    parents: ["parents"],
+    jesus: ["jesus"]
+  };
+  const spawnByActorId = new Map(
+    spawns.actorSpawns.map((spawn) => [spawn.actorId, spawn])
+  );
+  const walkablePolygons = layout.regions.map(
+    ({ walkablePolygon }) => walkablePolygon
+  );
+  const boundarySegments = polygonUnionBoundarySegments(walkablePolygons);
+
+  for (const sequencePath of paths.sequencePaths) {
+    if (sequencePath.subject === "camera-focus") {
+      continue;
+    }
+    for (const storyActorId of storyActorsBySubject[sequencePath.subject]) {
+      for (const spawnId of STORY_ACTOR_SPAWN_IDS[storyActorId]) {
+        const spawn = spawnByActorId.get(spawnId);
+        const initialAnchor = anchorById.get(spawn.anchorId);
+        const offset = {
+          x: spawn.position.x - initialAnchor.position.x,
+          y: spawn.position.y - initialAnchor.position.y
+        };
+        const translated = sequencePath.points.map((point) => ({
+          x: point.x + offset.x,
+          y: point.y + offset.y
+        }));
+        for (let index = 0; index < translated.length - 1; index += 1) {
+          const start = translated[index];
+          const end = translated[index + 1];
+          assert.ok(
+            sweptCapsuleContainedByPolygonUnion(
+              start,
+              end,
+              spawn.collisionRadius,
+              walkablePolygons,
+              boundarySegments
+            ),
+            `${sequencePath.id}/${spawnId}/${index} leaves walkable space`
+          );
+          for (const collision of collisions.collisionPolygons) {
+            assert.ok(
+              distanceFromSegmentToPolygon(start, end, collision.polygon) >
+                spawn.collisionRadius,
+              `${sequencePath.id}/${spawnId}/${index} hits ${collision.id}`
+            );
+          }
+        }
+      }
+    }
+  }
+});
+
+test("local circulation offers two radius-clear approaches around major landmarks", () => {
+  const walkablePolygons = layout.regions.map(
+    ({ walkablePolygon }) => walkablePolygon
+  );
+  const boundarySegments = polygonUnionBoundarySegments(walkablePolygons);
+  assert.ok(navigation.localCirculation.length >= 3);
+  for (const circulation of navigation.localCirculation) {
+    const region = regionById.get(circulation.regionId);
+    const startAnchor = anchorById.get(circulation.startAnchorId);
+    const endAnchor = anchorById.get(circulation.endAnchorId);
+    assert.ok(region, circulation.id);
+    assert.ok(startAnchor, circulation.id);
+    assert.ok(endAnchor, circulation.id);
+    assert.equal(circulation.alternatives.length, 2, circulation.id);
+    assert.notDeepEqual(
+      circulation.alternatives[0].points,
+      circulation.alternatives[1].points,
+      circulation.id
+    );
+    for (const alternative of circulation.alternatives) {
+      assert.deepEqual(alternative.points[0], startAnchor.position);
+      assert.deepEqual(alternative.points.at(-1), endAnchor.position);
+      const horizontalSpan =
+        Math.max(...alternative.points.map(({ x }) => x)) -
+        Math.min(...alternative.points.map(({ x }) => x));
+      const verticalSpan =
+        Math.max(...alternative.points.map(({ y }) => y)) -
+        Math.min(...alternative.points.map(({ y }) => y));
+      assert.ok(
+        Math.max(horizontalSpan, verticalSpan) >= 300,
+        `${circulation.id}/${alternative.id} lacks meaningful circulation`
+      );
+      for (let index = 0; index < alternative.points.length - 1; index += 1) {
+        const start = alternative.points[index];
+        const end = alternative.points[index + 1];
+        assert.ok(
+          sweptCapsuleContainedByPolygonUnion(
+            start,
+            end,
+            navigation.agent.radius,
+            walkablePolygons,
+            boundarySegments
+          ),
+          `${circulation.id}/${alternative.id}/${index} leaves walkable space`
+        );
+        for (const collision of collisions.collisionPolygons) {
+          assert.ok(
+            distanceFromSegmentToPolygon(start, end, collision.polygon) >
+              navigation.agent.radius,
+            `${circulation.id}/${alternative.id}/${index} hits ${collision.id}`
+          );
+        }
+      }
+    }
+  }
+});
+
+test("normal and skip snapshots resolve every visible collider into safe world geometry", () => {
+  const spawnByActorId = new Map(
+    spawns.actorSpawns.map((spawn) => [spawn.actorId, spawn])
+  );
+  for (const snapshot of Object.values(FINAL_SNAPSHOTS)) {
+    const resolved = [];
+    for (const [storyActorId, actorState] of Object.entries(snapshot.actors)) {
+      const targetAnchor = anchorById.get(actorState.anchorId);
+      assert.ok(targetAnchor, `${snapshot.beatId}/${storyActorId}`);
+      for (const spawnId of STORY_ACTOR_SPAWN_IDS[storyActorId]) {
+        const spawn = spawnByActorId.get(spawnId);
+        const initialAnchor = anchorById.get(spawn.anchorId);
+        const position = {
+          x: targetAnchor.position.x + spawn.position.x - initialAnchor.position.x,
+          y: targetAnchor.position.y + spawn.position.y - initialAnchor.position.y
+        };
+        if (!actorState.visible || !actorState.collisionEnabled) {
+          continue;
+        }
+        assert.ok(
+          layout.regions.some(({ walkablePolygon }) =>
+            pointInPolygon(position, walkablePolygon)
+          ),
+          `${snapshot.beatId}/${spawnId} is outside walkable space`
+        );
+        for (const collision of collisions.collisionPolygons) {
+          assert.ok(
+            distanceToPolygon(position, collision.polygon) >
+              spawn.collisionRadius,
+            `${snapshot.beatId}/${spawnId} overlaps ${collision.id}`
+          );
+        }
+        resolved.push({ ...spawn, position });
+      }
+    }
+    for (let left = 0; left < resolved.length; left += 1) {
+      for (let right = left + 1; right < resolved.length; right += 1) {
+        const a = resolved[left];
+        const b = resolved[right];
+        assert.ok(
+          distanceBetween(a.position, b.position) >=
+            a.collisionRadius + b.collisionRadius,
+          `${snapshot.beatId}/${a.actorId} overlaps ${b.actorId}`
+        );
+      }
+    }
+  }
+});
+
 test("swept-capsule validation rejects a centerline-only false positive", () => {
   const fixture = {
     polygons: [
@@ -777,12 +1115,26 @@ test("swept-capsule validation rejects a centerline-only false positive", () => 
 });
 
 test("camera zones and safe-frame profiles support desktop and mobile targets", () => {
+  const cameraZoneByRegionId = new Map(
+    camera.cameraZones.map((zone) => [zone.regionId, zone])
+  );
   for (const zone of camera.cameraZones) {
-    assert.ok(regionById.has(zone.regionId), zone.id);
+    const region = regionById.get(zone.regionId);
+    assert.ok(region, zone.id);
     assert.ok(anchorById.has(zone.focusAnchorId), zone.id);
     assert.ok(boundsInBounds(zone.bounds, layout.worldBounds), zone.id);
+    assert.ok(boundsInBounds(region.bounds, zone.bounds), `${zone.id} coverage`);
     assert.ok(zone.deadZone.width > 0 && zone.deadZone.height > 0, zone.id);
     assert.ok(zone.transitionSeconds > 0, zone.id);
+  }
+  for (const anchor of anchors.anchors) {
+    assert.ok(
+      pointInBounds(
+        anchor.position,
+        cameraZoneByRegionId.get(anchor.regionId).bounds
+      ),
+      `${anchor.id} lacks camera coverage`
+    );
   }
 
   const expectedViewports = new Set(["1280x720", "390x844"]);

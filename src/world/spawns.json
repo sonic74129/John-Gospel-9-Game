@@ -9,7 +9,7 @@
       "anchorId": "roadside.player-start",
       "regionId": "roadside",
       "sourceLevel": "approved-bridge",
-      "position": { "x": 220, "y": 980 },
+      "position": { "x": 500, "y": 940 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -19,7 +19,7 @@
       "anchorId": "roadside.blind-man-seat",
       "regionId": "roadside",
       "sourceLevel": "scripture",
-      "position": { "x": 520, "y": 930 },
+      "position": { "x": 520, "y": 900 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -29,7 +29,7 @@
       "anchorId": "roadside.jesus",
       "regionId": "roadside",
       "sourceLevel": "scripture",
-      "position": { "x": 660, "y": 850 },
+      "position": { "x": 670, "y": 800 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -39,7 +39,7 @@
       "anchorId": "roadside.disciples",
       "regionId": "roadside",
       "sourceLevel": "scripture",
-      "position": { "x": 670, "y": 990 },
+      "position": { "x": 690, "y": 970 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -49,7 +49,7 @@
       "anchorId": "roadside.disciples",
       "regionId": "roadside",
       "sourceLevel": "scripture",
-      "position": { "x": 730, "y": 1010 },
+      "position": { "x": 750, "y": 990 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -59,7 +59,7 @@
       "anchorId": "neighbors.group-left",
       "regionId": "neighbor-gathering",
       "sourceLevel": "scripture",
-      "position": { "x": 1700, "y": 900 },
+      "position": { "x": 1350, "y": 860 },
       "collisionRadius": 18,
       "initiallyVisible": false
     },
@@ -69,7 +69,7 @@
       "anchorId": "neighbors.group-right",
       "regionId": "neighbor-gathering",
       "sourceLevel": "scripture",
-      "position": { "x": 1980, "y": 900 },
+      "position": { "x": 1610, "y": 860 },
       "collisionRadius": 18,
       "initiallyVisible": false
     },
@@ -79,7 +79,7 @@
       "anchorId": "inquiry.pharisees-left",
       "regionId": "inquiry-courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 2320, "y": 730 },
+      "position": { "x": 1970, "y": 500 },
       "collisionRadius": 18,
       "initiallyVisible": false
     },
@@ -89,7 +89,7 @@
       "anchorId": "inquiry.pharisees-right",
       "regionId": "inquiry-courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 2580, "y": 730 },
+      "position": { "x": 2230, "y": 500 },
       "collisionRadius": 18,
       "initiallyVisible": false
     },
@@ -99,7 +99,7 @@
       "anchorId": "inquiry.parents",
       "regionId": "inquiry-courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 2470, "y": 950 },
+      "position": { "x": 2110, "y": 720 },
       "collisionRadius": 18,
       "initiallyVisible": false
     },
@@ -109,7 +109,7 @@
       "anchorId": "inquiry.parents",
       "regionId": "inquiry-courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 2530, "y": 950 },
+      "position": { "x": 2170, "y": 720 },
       "collisionRadius": 18,
       "initiallyVisible": false
     }

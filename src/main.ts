@@ -13,6 +13,11 @@ import {
   disposeRuntimeBeforeGame,
 } from "./platform/page-lifecycle.js";
 import {
+  createResponsiveGameSizeController,
+  requireGameViewport,
+  type ResponsiveGameSizeController,
+} from "./platform/responsive-game-size.ts";
+import {
   createCommittedProgressTracker,
   createStoryPersistence,
   StoryPersistenceError,
@@ -28,6 +33,8 @@ if (root === null) {
 
 let game: Phaser.Game | undefined;
 let runtime: PlatformRuntime | undefined;
+let gameScene: GrayboxScene | undefined;
+let gameSizeController: ResponsiveGameSizeController | undefined;
 let starting = false;
 let formalStoryStarted = false;
 const UI_PAUSE_REASON = "ui-pause";
@@ -84,6 +91,7 @@ const shell = createAppShell(root, {
     try {
       const world = createWorldRuntime();
       const scene = new GrayboxScene(world, (readyScene) => {
+        readyScene.flushPendingViewportResize();
         runtime = createPlatformRuntime(readyScene, shell, reportError, {
           onProgress: (completedBeatIds) => {
             committedProgress.settle(completedBeatIds);
@@ -126,11 +134,13 @@ const shell = createAppShell(root, {
           })
           .catch(reportError);
       });
-      game = new Phaser.Game({
+      gameScene = scene;
+      const initialViewport = requireGameViewport(shell.gameContainer);
+      const activeGame = new Phaser.Game({
         type: Phaser.AUTO,
         parent: shell.gameContainer,
-        width: 1280,
-        height: 720,
+        width: initialViewport.width,
+        height: initialViewport.height,
         backgroundColor: "#83715d",
         scene,
         render: {
@@ -138,11 +148,25 @@ const shell = createAppShell(root, {
           pixelArt: false,
         },
         scale: {
-          mode: Phaser.Scale.FIT,
-          autoCenter: Phaser.Scale.CENTER_BOTH,
+          mode: Phaser.Scale.NONE,
         },
       });
+      game = activeGame;
+      gameSizeController = createResponsiveGameSizeController({
+        container: shell.gameContainer,
+        initialSize: initialViewport,
+        resize: ({ width, height }) => {
+          activeGame.scale.resize(width, height);
+          scene.resizeViewport(width, height);
+        },
+      });
+      gameSizeController.start();
     } catch (error) {
+      gameSizeController?.dispose();
+      gameSizeController = undefined;
+      game?.destroy(true);
+      game = undefined;
+      gameScene = undefined;
       starting = false;
       reportError(error);
     }
@@ -176,6 +200,7 @@ const shell = createAppShell(root, {
     }
     try {
       await runtime.resume(UI_PAUSE_REASON);
+      gameScene?.flushPendingViewportResize();
       runtime.setPaused(false);
       shell.setPaused(false);
     } catch (error) {
@@ -233,11 +258,21 @@ if (initialSave.status === "cleared") {
 }
 
 const pageLifecycle = createPageLifecycleController({
-  suspend: () => runtime?.suspend("bfcache"),
-  resume: () => runtime?.resume("bfcache"),
+  suspend: async () => {
+    gameSizeController?.suspend();
+    await runtime?.suspend("bfcache");
+  },
+  resume: async () => {
+    await runtime?.resume("bfcache");
+    gameSizeController?.resume();
+    gameScene?.flushPendingViewportResize();
+  },
   dispose: async () => {
     const activeRuntime = runtime;
     const activeGame = game;
+    gameSizeController?.dispose();
+    gameSizeController = undefined;
+    gameScene = undefined;
     runtime = undefined;
     game = undefined;
     await disposeRuntimeBeforeGame(activeRuntime, activeGame);
