@@ -239,6 +239,83 @@ function segmentCoveredByPolygonUnion(start, end, polygons) {
   });
 }
 
+function polygonUnionBoundarySegments(polygons) {
+  const boundarySegments = [];
+  const probeDistance = 1e-5;
+
+  for (const polygon of polygons) {
+    for (let edgeIndex = 0; edgeIndex < polygon.length; edgeIndex += 1) {
+      const start = polygon[edgeIndex];
+      const end = polygon[(edgeIndex + 1) % polygon.length];
+      const parameters = [0, 1];
+
+      for (const otherPolygon of polygons) {
+        for (
+          let otherEdgeIndex = 0;
+          otherEdgeIndex < otherPolygon.length;
+          otherEdgeIndex += 1
+        ) {
+          parameters.push(
+            ...segmentEdgeIntersectionParameters(
+              start,
+              end,
+              otherPolygon[otherEdgeIndex],
+              otherPolygon[(otherEdgeIndex + 1) % otherPolygon.length]
+            )
+          );
+        }
+      }
+
+      const cuts = [...new Set(parameters.map((value) => value.toFixed(10)))]
+        .map(Number)
+        .sort((a, b) => a - b);
+      const edgeVector = subtractPoints(end, start);
+      const edgeLength = Math.hypot(edgeVector.x, edgeVector.y);
+      const normal = {
+        x: (-edgeVector.y / edgeLength) * probeDistance,
+        y: (edgeVector.x / edgeLength) * probeDistance
+      };
+
+      for (let cutIndex = 0; cutIndex < cuts.length - 1; cutIndex += 1) {
+        const fragmentStart = pointAtSegmentParameter(
+          start,
+          end,
+          cuts[cutIndex]
+        );
+        const fragmentEnd = pointAtSegmentParameter(
+          start,
+          end,
+          cuts[cutIndex + 1]
+        );
+        if (distanceBetween(fragmentStart, fragmentEnd) <= 1e-8) {
+          continue;
+        }
+
+        const midpoint = pointAtSegmentParameter(
+          fragmentStart,
+          fragmentEnd,
+          0.5
+        );
+        const sides = [
+          { x: midpoint.x + normal.x, y: midpoint.y + normal.y },
+          { x: midpoint.x - normal.x, y: midpoint.y - normal.y }
+        ].map((point) =>
+          polygons.some((candidate) => pointInPolygon(point, candidate))
+        );
+
+        if (sides[0] !== sides[1]) {
+          boundarySegments.push({
+            start: fragmentStart,
+            end: fragmentEnd
+          });
+        }
+      }
+    }
+  }
+
+  return boundarySegments;
+}
+
 function distanceBetweenSegments(aStart, aEnd, bStart, bEnd) {
   if (
     segmentEdgeIntersectionParameters(aStart, aEnd, bStart, bEnd).length > 0
@@ -250,6 +327,24 @@ function distanceBetweenSegments(aStart, aEnd, bStart, bEnd) {
     distanceToSegment(aEnd, bStart, bEnd),
     distanceToSegment(bStart, aStart, aEnd),
     distanceToSegment(bEnd, aStart, aEnd)
+  );
+}
+
+function sweptCapsuleContainedByPolygonUnion(
+  start,
+  end,
+  radius,
+  polygons,
+  boundarySegments = polygonUnionBoundarySegments(polygons)
+) {
+  if (!segmentCoveredByPolygonUnion(start, end, polygons)) {
+    return false;
+  }
+
+  return boundarySegments.every(
+    (boundary) =>
+      distanceBetweenSegments(start, end, boundary.start, boundary.end) + 1e-8 >=
+      radius
   );
 }
 
@@ -561,6 +656,11 @@ test("required sequence paths keep every radius-aware segment walkable and colli
     requiredPathIds
   );
   assert.deepEqual(paths.travelTargetSeconds, { minimum: 10, maximum: 20 });
+  const walkablePolygons = layout.regions.map(
+    (region) => region.walkablePolygon
+  );
+  const walkableBoundarySegments =
+    polygonUnionBoundarySegments(walkablePolygons);
 
   for (const sequencePath of paths.sequencePaths) {
     const startAnchor = anchorById.get(sequencePath.startAnchorId);
@@ -600,12 +700,14 @@ test("required sequence paths keep every radius-aware segment walkable and colli
       const start = sequencePath.points[index];
       const end = sequencePath.points[index + 1];
       assert.ok(
-        segmentCoveredByPolygonUnion(
+        sweptCapsuleContainedByPolygonUnion(
           start,
           end,
-          layout.regions.map((region) => region.walkablePolygon)
+          sequencePath.actorRadius,
+          walkablePolygons,
+          walkableBoundarySegments
         ),
-        `${sequencePath.id} segment ${index} leaves the walkable union`
+        `${sequencePath.id} segment ${index} capsule leaves the walkable union`
       );
       for (const collision of collisions.collisionPolygons) {
         assert.ok(
@@ -616,6 +718,44 @@ test("required sequence paths keep every radius-aware segment walkable and colli
       }
     }
   }
+});
+
+test("swept-capsule validation rejects a centerline-only false positive", () => {
+  const fixture = {
+    polygons: [
+      [
+        { "x": 0, "y": 0 },
+        { "x": 100, "y": 0 },
+        { "x": 100, "y": 100 },
+        { "x": 0, "y": 100 }
+      ]
+    ],
+    segment: {
+      start: { "x": 10, "y": 5 },
+      end: { "x": 90, "y": 5 }
+    },
+    actorRadius: 10
+  };
+
+  assert.equal(
+    segmentCoveredByPolygonUnion(
+      fixture.segment.start,
+      fixture.segment.end,
+      fixture.polygons
+    ),
+    true,
+    "the regression fixture must remain a centerline-only false positive"
+  );
+  assert.equal(
+    sweptCapsuleContainedByPolygonUnion(
+      fixture.segment.start,
+      fixture.segment.end,
+      fixture.actorRadius,
+      fixture.polygons
+    ),
+    false,
+    "the actor body extends five units beyond the walkable boundary"
+  );
 });
 
 test("camera zones and safe-frame profiles support desktop and mobile targets", () => {
