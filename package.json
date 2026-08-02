@@ -5,6 +5,10 @@
   "description": "生來瞎眼的人：以約翰福音 9:1–41 為範圍的獨立聖經故事探索遊戲。",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "tsc --pretty false && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --pretty false",
     "story:init": "node scripts/init-story.mjs",
     "foundation:sync": "node scripts/sync-foundation.mjs",
     "foundation:check": "node scripts/check-foundation.mjs",
@@ -14,9 +18,25 @@
     "validate:story": "node scripts/validate-story.mjs",
     "validate:release": "node src/story/validate-scripture-release.mjs",
     "test:contracts": "node --test src/story/scripture.test.mjs tests/assets.test.mjs tests/story/*.test.mjs tests/world-contract.test.mjs",
-    "test": "npm run foundation:check && npm run validate:story && npm run test:contracts"
+    "test:platform": "node --test tests/platform/*.test.mjs",
+    "test": "npm run foundation:check && npm run validate:story && npm run test:contracts && npm run test:platform"
+  },
+  "dependencies": {
+    "@sonic74129/audio-runtime": "0.1.0",
+    "@sonic74129/content-schema": "0.1.0",
+    "@sonic74129/engine": "0.1.0",
+    "@sonic74129/map-runtime": "0.1.0",
+    "@sonic74129/sequence-runtime": "0.1.0",
+    "@sonic74129/story-runtime": "0.1.0",
+    "@sonic74129/ui": "0.1.0",
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@sonic74129/test-kit": "0.1.0",
+    "typescript": "6.0.3",
+    "vite": "7.2.4"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19.0"
   }
 }

@@ -13,7 +13,7 @@
   },
   "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
   "engineApiVersion": 1,
-  "sdkVersion": null,
+  "sdkVersion": "0.1.0",
   "stylePack": "storybook-realism-v1@0.1.0",
   "assetPacks": {
     "identity-jesus-storybook": "0.1.0",
