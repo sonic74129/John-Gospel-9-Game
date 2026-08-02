@@ -153,6 +153,30 @@ button:disabled {
   pointer-events: none;
 }
 
+.navigation-hint {
+  position: absolute;
+  z-index: 9;
+  left: 50%;
+  top: 4rem;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(90%, 42rem);
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border: 2px solid rgb(255 244 214 / 72%);
+  border-radius: 0.7rem;
+  color: #fffaf1;
+  background: rgb(60 53 47 / 92%);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: center;
+  pointer-events: none;
+}
+
+.navigation-hint[hidden] {
+  display: none;
+}
+
 .license-notice,
 .stage-goal {
   margin: 0;
@@ -488,6 +512,14 @@ button:disabled {
     inset: 0.5rem 0.5rem auto;
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .navigation-hint {
+    top: 5.5rem;
+    bottom: auto;
+    max-width: calc(100% - 1rem);
+    padding: 0.45rem 0.6rem;
+    font-size: 0.72rem;
   }
 
   .license-notice,

@@ -9,6 +9,10 @@ import {
 } from "./canonical-camera.ts";
 import type { SliceFinalState } from "./sequence-adapter.ts";
 import type { WorldRuntime } from "./world-adapter.ts";
+import type {
+  PlayerTraversal,
+  WorldNavigationObjective,
+} from "./world-navigation.ts";
 
 const AREA_COLORS = [0xd2b887, 0x8ca6a3, 0xc5a16e, 0xa85f3e, 0x66704b];
 
@@ -24,7 +28,7 @@ interface ActorVisual {
 }
 
 export interface SceneInteractionHandlers {
-  readonly onWorldUpdate: () => void;
+  readonly onWorldUpdate: (traversal?: PlayerTraversal) => void;
   readonly onInteract: (storyActorId: string) => void;
 }
 
@@ -120,6 +124,9 @@ export class GrayboxScene extends Phaser.Scene {
   #appliedFinalState: AppliedGrayboxFinalState | null = null;
   #tearingDown = false;
   #handlers: SceneInteractionHandlers | undefined;
+  #navigationObjective: WorldNavigationObjective | null = null;
+  #objectiveMarker?: Phaser.GameObjects.Container;
+  #objectiveLabel?: Phaser.GameObjects.Text;
 
   constructor(world: WorldRuntime, onReady: (scene: GrayboxScene) => void) {
     super({ key: "john-9-graybox" });
@@ -230,6 +237,26 @@ export class GrayboxScene extends Phaser.Scene {
       .setStrokeStyle(2, 0x3c352f)
       .setDepth(3)
       .setVisible(false);
+    const objectiveRing = this.add
+      .circle(0, 0, 30, 0xf0dfbd, 0.22)
+      .setStrokeStyle(5, 0xfff4d6, 0.96);
+    const objectiveArrow = this.add
+      .triangle(0, -48, -12, -10, 12, -10, 0, 8, 0xfff4d6, 0.96)
+      .setStrokeStyle(2, 0x3c352f, 0.8);
+    this.#objectiveLabel = this.add
+      .text(0, -68, "目標", {
+        color: "#3c352f",
+        backgroundColor: "#fff4d6f2",
+        fontFamily: "system-ui, sans-serif",
+        fontSize: "16px",
+        fontStyle: "bold",
+        padding: { x: 8, y: 5 },
+      })
+      .setOrigin(0.5, 1);
+    this.#objectiveMarker = this.add
+      .container(0, 0, [objectiveRing, objectiveArrow, this.#objectiveLabel])
+      .setDepth(8)
+      .setVisible(false);
 
     const cursorKeys = this.input.keyboard?.createCursorKeys();
     if (cursorKeys !== undefined) {
@@ -251,6 +278,18 @@ export class GrayboxScene extends Phaser.Scene {
         return;
       }
       const target = { x: pointer.worldX, y: pointer.worldY };
+      if (
+        this.#navigationObjective !== null &&
+        Phaser.Math.Distance.Between(
+          target.x,
+          target.y,
+          this.#navigationObjective.position.x,
+          this.#navigationObjective.position.y,
+        ) <= 64
+      ) {
+        this.#activateNavigationObjective();
+        return;
+      }
       const nearby = this.#nearestStoryActor(target, 52);
       if (nearby !== undefined && this.#interactionAllowed()) {
         this.#handlers?.onInteract(nearby);
@@ -328,6 +367,28 @@ export class GrayboxScene extends Phaser.Scene {
 
   setInteractionHandlers(handlers: SceneInteractionHandlers): void {
     this.#handlers = handlers;
+  }
+
+  setNavigationObjective(objective: WorldNavigationObjective | null): void {
+    this.#navigationObjective =
+      objective === null ? null : structuredClone(objective);
+    if (this.#objectiveMarker === undefined) {
+      return;
+    }
+    if (objective === null || this.#tearingDown) {
+      this.#objectiveMarker.setVisible(false);
+      return;
+    }
+    this.#objectiveMarker
+      .setPosition(objective.position.x, objective.position.y)
+      .setVisible(true);
+    this.#objectiveLabel?.setText(
+      objective.kind === "arrival"
+        ? "前往此處"
+        : objective.kind === "proximity"
+          ? `接近${objective.label}`
+          : `與${objective.label}互動`,
+    );
   }
 
   setMovementEnabled(enabled: boolean): void {
@@ -460,6 +521,16 @@ export class GrayboxScene extends Phaser.Scene {
         visuals.reduce((sum, { body }) => sum + body.y, 0) /
         visuals.length,
     };
+  }
+
+  storyActorLabel(storyActorId: string): string {
+    const visual = this.#storyActorVisuals(storyActorId).find(
+      ({ body }) => body.visible,
+    );
+    if (visual === undefined) {
+      throw new Error(`Story actor ${storyActorId} has no visible map actor.`);
+    }
+    return this.#runtimeActor(visual.actorId).state.label;
   }
 
   anchorPosition(anchorId: string): Point {
@@ -685,6 +756,7 @@ export class GrayboxScene extends Phaser.Scene {
 
   beginTeardown(): void {
     this.#tearingDown = true;
+    this.setNavigationObjective(null);
     this.#handlers = undefined;
     this.#path = [];
   }
@@ -814,8 +886,38 @@ export class GrayboxScene extends Phaser.Scene {
     }
     this.#player.body.setPosition(target.x, target.y);
     this.#syncLabel(this.#player);
-    this.#handlers?.onWorldUpdate();
+    this.#handlers?.onWorldUpdate({
+      previousPosition: start,
+      currentPosition: target,
+    });
     return true;
+  }
+
+  #activateNavigationObjective(): void {
+    if (
+      this.#navigationObjective === null ||
+      this.#player === undefined ||
+      !this.#movementAllowed()
+    ) {
+      return;
+    }
+    if (
+      this.#navigationObjective.kind === "interaction" &&
+      Phaser.Math.Distance.Between(
+        this.#player.body.x,
+        this.#player.body.y,
+        this.#navigationObjective.position.x,
+        this.#navigationObjective.position.y,
+      ) <= 110 &&
+      this.#interactionAllowed()
+    ) {
+      this.#handlers?.onInteract(this.#navigationObjective.targetId);
+      return;
+    }
+    this.#path = this.#world.findPath(
+      this.playerPosition(),
+      this.#navigationObjective.position,
+    );
   }
 
   #tweenVisual(

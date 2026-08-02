@@ -21,6 +21,13 @@ import {
   STORY_BEATS,
   TESTIMONY,
 } from "../../src/adapters/story-contracts.ts";
+import {
+  ARRIVAL_RADIUS_PIXELS,
+  describeWorldNavigationObjective,
+  resolveWorldNavigationObjective,
+  segmentIntersectsArrivalRadius,
+  worldNavigationEvent,
+} from "../../src/adapters/world-navigation.ts";
 
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 const readText = (path) => readFile(path, "utf8");
@@ -297,6 +304,175 @@ test("browser cancellation restores scene state and pause gates DOM progression"
   assert.match(platform, /if \(ui\.snapshot\(\)\.paused\)/);
   assert.match(shell, /dialogueNext\.disabled = value/);
   assert.match(shell, /skipButton\.disabled = value/);
+});
+
+test("B06 fires exactly once when one movement segment sweeps across neighbors.center", async () => {
+  const neighborsCenter = anchorContract.anchors.find(
+    ({ id }) => id === "neighbors.center",
+  ).position;
+  const traversal = {
+    previousPosition: {
+      x: neighborsCenter.x - ARRIVAL_RADIUS_PIXELS - 58,
+      y: neighborsCenter.y,
+    },
+    currentPosition: {
+      x: neighborsCenter.x + ARRIVAL_RADIUS_PIXELS + 48,
+      y: neighborsCenter.y,
+    },
+  };
+  assert.equal(
+    Math.hypot(
+      traversal.previousPosition.x - neighborsCenter.x,
+      traversal.previousPosition.y - neighborsCenter.y,
+    ) > ARRIVAL_RADIUS_PIXELS,
+    true,
+  );
+  assert.equal(
+    Math.hypot(
+      traversal.currentPosition.x - neighborsCenter.x,
+      traversal.currentPosition.y - neighborsCenter.y,
+    ) > ARRIVAL_RADIUS_PIXELS,
+    true,
+  );
+  assert.equal(
+    segmentIntersectsArrivalRadius(
+      traversal.previousPosition,
+      traversal.currentPosition,
+      neighborsCenter,
+    ),
+    true,
+  );
+  assert.equal(
+    segmentIntersectsArrivalRadius(
+      { ...traversal.previousPosition, y: neighborsCenter.y + 73 },
+      { ...traversal.currentPosition, y: neighborsCenter.y + 73 },
+      neighborsCenter,
+    ),
+    false,
+  );
+
+  const resolver = {
+    anchorPosition: (anchorId) =>
+      anchorContract.anchors.find(({ id }) => id === anchorId).position,
+    storyActorPosition: () => {
+      throw new Error("B06 arrival must not resolve an actor position.");
+    },
+  };
+  const event = worldNavigationEvent(
+    STORY_BEATS[5].trigger,
+    traversal,
+    resolver,
+  );
+  assert.deepEqual(event, {
+    type: "event",
+    name: "arrival:neighbors.center",
+  });
+
+  const executed = [];
+  const controller = new SliceStoryController({
+    runBeat: async (beat) => {
+      executed.push(beat.id);
+      return { status: "completed" };
+    },
+  });
+  controller.restoreCompletedBeatIds(["b01", "b02", "b03", "b04", "b05"]);
+  assert.equal((await controller.dispatch(event)).advanced, true);
+  assert.equal((await controller.dispatch(event)).advanced, false);
+  assert.deepEqual(executed, ["b06"]);
+  assert.equal(controller.engine.currentBeat?.id, "b07");
+});
+
+test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-safe", async () => {
+  const [platform, scene, shell, styles] = await Promise.all([
+    readText("src/adapters/sdk-platform.ts"),
+    readText("src/adapters/graybox-scene.ts"),
+    readText("src/platform/app-shell.ts"),
+    readText("src/platform/styles.css"),
+  ]);
+  const positions = {
+    "neighbors.center": { x: 1830, y: 820 },
+    "man-born-blind": { x: 1830, y: 820 },
+    neighbors: { x: 1730, y: 900 },
+  };
+  const labels = {
+    "man-born-blind": "生來瞎眼的人",
+    neighbors: "鄰舍",
+  };
+  const resolver = {
+    anchorPosition: (anchorId) => positions[anchorId],
+    storyActorPosition: (actorId) => positions[actorId],
+    storyActorLabel: (actorId) => labels[actorId],
+  };
+  const playerPosition = { x: 1600, y: 900 };
+  const arrival = resolveWorldNavigationObjective(
+    STORY_BEATS[5].trigger,
+    resolver,
+  );
+  const proximity = resolveWorldNavigationObjective(
+    STORY_BEATS[6].trigger,
+    resolver,
+  );
+  const interaction = resolveWorldNavigationObjective(
+    STORY_BEATS[7].trigger,
+    resolver,
+  );
+  assert.deepEqual(arrival, {
+    kind: "arrival",
+    targetId: "neighbors.center",
+    label: "目標地點",
+    position: positions["neighbors.center"],
+  });
+  assert.equal(proximity.kind, "proximity");
+  assert.equal(proximity.targetId, "man-born-blind");
+  assert.equal(interaction.kind, "interaction");
+  assert.equal(interaction.targetId, "neighbors");
+  assert.match(
+    describeWorldNavigationObjective(arrival, playerPosition),
+    /前往目標地點.*距離約.*點按標記移動/,
+  );
+  assert.match(
+    describeWorldNavigationObjective(proximity, playerPosition),
+    /接近生來瞎眼的人.*接近後自動繼續/,
+  );
+  assert.match(
+    describeWorldNavigationObjective(interaction, playerPosition),
+    /與鄰舍互動.*Space 或點按人物/,
+  );
+
+  assert.match(
+    platform,
+    /disposed \|\|[\s\S]*paused \|\|[\s\S]*scenePauseReasons\.size > 0 \|\|[\s\S]*story\.running \|\|[\s\S]*story\.storyComplete \|\|[\s\S]*overlayBlocking/,
+  );
+  assert.match(
+    platform,
+    /finally \{\s*syncNavigationObjective\(\);\s*\}/,
+  );
+  assert.match(
+    platform,
+    /restore:[\s\S]*setNavigationObjective\(null\)[\s\S]*syncNavigationObjective\(\)/,
+  );
+  assert.match(
+    platform,
+    /setPaused:[\s\S]*syncNavigationObjective\(\)/,
+  );
+  assert.match(
+    scene,
+    /#navigationObjective !== null[\s\S]*#activateNavigationObjective\(\)/,
+  );
+  assert.match(
+    scene,
+    /#activateNavigationObjective[\s\S]*this\.#world\.findPath\(/,
+  );
+  assert.match(
+    scene,
+    /beginTeardown[\s\S]*setNavigationObjective\(null\)/,
+  );
+  assert.match(shell, /data-navigation-hint role="status" aria-live="polite"/);
+  assert.match(shell, /setCompleted:[\s\S]*setNavigationHint\(null\)/);
+  assert.match(
+    styles,
+    /@media \(max-width: 640px\)[\s\S]*\.navigation-hint \{[\s\S]*top: 5\.5rem[\s\S]*max-width: calc\(100% - 1rem\)/,
+  );
 });
 
 test("MapSequence cancellation releases input and never finalizes or hands off", async () => {

@@ -29,6 +29,12 @@ import {
   type SliceStoryState,
 } from "./story-adapter.ts";
 import { FINAL_SNAPSHOTS } from "./story-contracts.ts";
+import {
+  describeWorldNavigationObjective,
+  resolveWorldNavigationObjective,
+  worldNavigationEvent,
+  type PlayerTraversal,
+} from "./world-navigation.ts";
 export interface AppliedPlatformFinalState {
   readonly finalState: SliceFinalState;
   readonly scene: AppliedGrayboxFinalState;
@@ -76,16 +82,6 @@ export interface PlatformRuntimeOptions {
   ) => void | Promise<void>;
 }
 
-const STORY_DISTANCE_UNIT_PIXELS = 96;
-const ARRIVAL_RADIUS_PIXELS = 72;
-
-function distance(
-  left: Readonly<{ x: number; y: number }>,
-  right: Readonly<{ x: number; y: number }>,
-): number {
-  return Math.hypot(left.x - right.x, left.y - right.y);
-}
-
 export function createPlatformRuntime(
   scene: GrayboxScene,
   shell: AppShell,
@@ -98,6 +94,9 @@ export function createPlatformRuntime(
   const input = new InputLock();
   const skipListeners = new Set<() => void>();
   const scenePauseReasons = new Set<string>();
+  let overlayBlocking = false;
+  let paused = false;
+  let syncNavigationObjective = (): void => {};
   let logicalMusicState: AppliedPlatformFinalState["music"] = {
     requested: {
       cueId: "",
@@ -143,6 +142,8 @@ export function createPlatformRuntime(
         setOverlay: (visible, blocking) => {
           ui.setOverlay(visible, blocking);
           shell.setOverlay(visible, blocking);
+          overlayBlocking = visible && blocking === true;
+          syncNavigationObjective();
         },
         presentDialogue: (...arguments_) =>
           shell.presentDialogue(...arguments_),
@@ -261,6 +262,7 @@ export function createPlatformRuntime(
   const sceneSystem: EngineSystem = {
     pause: (reason) => {
       scenePauseReasons.add(reason);
+      syncNavigationObjective();
       if (scenePauseReasons.size === 1) {
         scene.game.scene.pause(scene.scene.key);
       }
@@ -276,6 +278,7 @@ export function createPlatformRuntime(
       if (scenePauseReasons.size === 0) {
         scene.game.scene.resume(scene.scene.key);
       }
+      syncNavigationObjective();
     },
   };
   const composition = new EngineComposition<
@@ -295,22 +298,62 @@ export function createPlatformRuntime(
     systems: [sceneSystem],
   });
 
+  syncNavigationObjective = (): void => {
+    if (
+      disposed ||
+      paused ||
+      scenePauseReasons.size > 0 ||
+      story.running ||
+      story.storyComplete ||
+      overlayBlocking
+    ) {
+      scene.setNavigationObjective(null);
+      shell.setNavigationHint(null);
+      return;
+    }
+    try {
+      const objective = resolveWorldNavigationObjective(
+        story.engine.currentBeat?.trigger,
+        scene,
+      );
+      scene.setNavigationObjective(objective);
+      shell.setNavigationHint(
+        objective === null
+          ? null
+          : describeWorldNavigationObjective(
+              objective,
+              scene.playerPosition(),
+            ),
+      );
+    } catch (error) {
+      scene.setNavigationObjective(null);
+      shell.setNavigationHint(null);
+      onError(error);
+    }
+  };
+
   const dispatchAndContinue = async (
     firstEvent: SliceStoryEvent,
   ): Promise<void> => {
     let event: SliceStoryEvent | undefined = firstEvent;
-    while (event !== undefined && !disposed) {
-      const result = await story.dispatch(event);
-      if (!result.advanced || result.beatId === undefined) {
-        return;
+    try {
+      while (event !== undefined && !disposed) {
+        const operation = story.dispatch(event);
+        syncNavigationObjective();
+        const result = await operation;
+        if (!result.advanced || result.beatId === undefined) {
+          return;
+        }
+        const nextBeat = story.engine.currentBeat;
+        const expectedEvent = `beat:${result.beatId}:completed`;
+        event =
+          nextBeat?.trigger?.type === "event" &&
+          nextBeat.trigger.event === expectedEvent
+            ? { type: "event", name: expectedEvent }
+            : undefined;
       }
-      const nextBeat = story.engine.currentBeat;
-      const expectedEvent = `beat:${result.beatId}:completed`;
-      event =
-        nextBeat?.trigger?.type === "event" &&
-        nextBeat.trigger.event === expectedEvent
-          ? { type: "event", name: expectedEvent }
-          : undefined;
+    } finally {
+      syncNavigationObjective();
     }
   };
 
@@ -318,41 +361,26 @@ export function createPlatformRuntime(
     dispatchAndContinue(event).catch(onError);
   };
 
-  const evaluateWorldTrigger = (): void => {
-    if (disposed || story.running) {
+  const evaluateWorldTrigger = (traversal?: PlayerTraversal): void => {
+    syncNavigationObjective();
+    if (disposed || !begun || story.running || paused) {
       return;
     }
-    const trigger = story.engine.currentBeat?.trigger;
-    if (trigger?.type === "proximity") {
-      try {
-        const actor =
-          trigger.actorId === "observer"
-            ? scene.playerPosition()
-            : scene.storyActorPosition(trigger.actorId);
-        const target = scene.storyActorPosition(trigger.targetId);
-        dispatch({
-          type: "proximity",
-          actorId: trigger.actorId,
-          targetId: trigger.targetId,
-          distance: distance(actor, target) / STORY_DISTANCE_UNIT_PIXELS,
-        });
-      } catch (error) {
-        onError(error);
+    try {
+      const currentPosition = scene.playerPosition();
+      const event = worldNavigationEvent(
+        story.engine.currentBeat?.trigger,
+        traversal ?? {
+          previousPosition: currentPosition,
+          currentPosition,
+        },
+        scene,
+      );
+      if (event !== null) {
+        dispatch(event);
       }
-      return;
-    }
-    if (trigger?.type === "event" && trigger.event.startsWith("arrival:")) {
-      const anchorId = trigger.event.slice("arrival:".length);
-      try {
-        if (
-          distance(scene.playerPosition(), scene.anchorPosition(anchorId)) <=
-          ARRIVAL_RADIUS_PIXELS
-        ) {
-          dispatch({ type: "event", name: trigger.event });
-        }
-      } catch (error) {
-        onError(error);
-      }
+    } catch (error) {
+      onError(error);
     }
   };
 
@@ -375,6 +403,7 @@ export function createPlatformRuntime(
       const snapshot = story.snapshot();
       const completedBeatId = snapshot.state.completedBeatIds.at(-1);
       if (snapshot.completed) {
+        syncNavigationObjective();
         shell.setCompleted();
         return;
       }
@@ -400,8 +429,11 @@ export function createPlatformRuntime(
       story.restoreCompletedBeatIds(completedBeatIds);
       const lastBeatId = completedBeatIds.at(-1);
       if (lastBeatId === undefined) {
+        syncNavigationObjective();
         return;
       }
+      scene.setNavigationObjective(null);
+      shell.setNavigationHint(null);
       const finalState = FINAL_SNAPSHOTS[lastBeatId];
       if (finalState === undefined) {
         throw new RangeError(
@@ -419,9 +451,14 @@ export function createPlatformRuntime(
       if (story.storyComplete) {
         shell.setCompleted();
       }
+      syncNavigationObjective();
     },
     unlockAudio: () => music.unlock(),
-    setPaused: (paused) => ui.setPaused(paused),
+    setPaused: (value) => {
+      paused = value;
+      ui.setPaused(value);
+      syncNavigationObjective();
+    },
     setMuted: (muted) => ui.setMuted(muted),
     suspend: (reason) => composition.lifecycle.pause(reason),
     resume: (reason) => composition.lifecycle.resume(reason),
@@ -460,6 +497,7 @@ export function createPlatformRuntime(
         return;
       }
       disposed = true;
+      syncNavigationObjective();
       scene.beginTeardown();
       sequence.cancel();
       let activeFailure: unknown;

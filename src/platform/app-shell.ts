@@ -21,6 +21,7 @@ export interface AppShell extends SliceSequenceUi {
   setMuted(muted: boolean): void;
   setSubtitles(visible: boolean): void;
   setCompleted(): void;
+  setNavigationHint(message: string | null): void;
   setStatus(message: string, isError?: boolean): void;
   setPersistenceWarning(message: string | null): void;
   setDeveloperFixture(fixtureId: string | null): void;
@@ -57,6 +58,7 @@ export function createAppShell(
           <p class="license-notice" data-license-notice>經文待授權／審核</p>
           <p class="stage-goal" data-stage-goal>目標：留心路旁</p>
         </div>
+        <p class="navigation-hint" data-navigation-hint role="status" aria-live="polite" hidden></p>
         <div class="start-screen" data-start-screen>
           <p class="start-kicker">約翰福音第九章 · 完整故事</p>
           <h2>以觀察者的身分進入故事</h2>
@@ -159,6 +161,10 @@ export function createAppShell(
     "[data-persistence-warning]",
   );
   const goal = requireElement<HTMLElement>(root, "[data-stage-goal]");
+  const navigationHint = requireElement<HTMLElement>(
+    root,
+    "[data-navigation-hint]",
+  );
   const fixture = requireElement<HTMLElement>(root, "[data-developer-fixture]");
   const dialogue = requireElement<HTMLElement>(root, "[data-dialogue]");
   const dialogueSpeaker = requireElement<HTMLElement>(
@@ -445,6 +451,11 @@ export function createAppShell(
       skipButton.disabled = true;
       restartButton.disabled = false;
       shell.setStatus("故事已完成");
+      shell.setNavigationHint(null);
+    },
+    setNavigationHint: (message) => {
+      navigationHint.hidden = message === null;
+      navigationHint.textContent = message ?? "";
     },
     setStatus: (message, isError = false) => {
       status.textContent = message;
