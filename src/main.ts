@@ -63,14 +63,16 @@ const loadDeveloperFixture = async () => {
 
 const reportError = (error: unknown): void => {
   console.error(error);
-  shell.setStatus(
+  const message =
     error instanceof UnsupportedStoryBeatError
       ? "遇到正式 B01–B19 契約以外的故事節點，流程已安全停止。"
       : error instanceof StoryPersistenceError
         ? error.message
-        : "平台運行失敗，請重新載入。",
-    true,
-  );
+        : "平台運行失敗，請重新載入。";
+  if (error instanceof StoryPersistenceError) {
+    shell.setPersistenceWarning(message);
+  }
+  shell.setStatus(message, true);
 };
 
 const shell = createAppShell(root, {
@@ -90,6 +92,7 @@ const shell = createAppShell(root, {
             }
             try {
               persistence.save(completedBeatIds, preferences);
+              shell.setPersistenceWarning(null);
             } catch (error) {
               reportError(error);
             }
@@ -113,6 +116,7 @@ const shell = createAppShell(root, {
             } else {
               try {
                 persistence.save([], preferences);
+                shell.setPersistenceWarning(null);
               } catch (error) {
                 reportError(error);
               }
@@ -192,6 +196,7 @@ const shell = createAppShell(root, {
           committedProgress.snapshot(),
           preferences,
         );
+        shell.setPersistenceWarning(null);
       } catch (error) {
         reportError(error);
       }
@@ -205,6 +210,7 @@ const shell = createAppShell(root, {
           committedProgress.snapshot(),
           preferences,
         );
+        shell.setPersistenceWarning(null);
       } catch (error) {
         reportError(error);
       }
@@ -220,6 +226,7 @@ shell.setSubtitles(preferences.subtitles);
 if (initialSave.status === "cleared") {
   shell.setStatus(initialSave.message, true);
 } else if (initialSave.status === "progress-error") {
+  shell.setPersistenceWarning(initialSave.message);
   shell.setStatus(initialSave.message, true);
 } else if (initialPersistenceError !== undefined) {
   reportError(initialPersistenceError);

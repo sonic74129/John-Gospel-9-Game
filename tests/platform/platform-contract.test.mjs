@@ -168,4 +168,20 @@ test("persistence and ending expose only stable progress and approved study refe
   assert.match(main, /await runtime\?\.cancelAndSettleCurrent\(\)/);
   assert.match(platform, /await story\.waitForIdle\(\)/);
   assert.doesNotMatch(shell, /公開進度已標記完成/);
+  assert.match(shell, /data-persistence-warning role="alert" hidden/);
+  assert.match(shell, /setPersistenceWarning: \(message\)/);
+  assert.match(shell, /進度同步警告：\$\{message\}/);
+  assert.match(
+    main,
+    /error instanceof StoryPersistenceError[\s\S]*shell\.setPersistenceWarning\(message\)/,
+  );
+  assert.match(
+    main,
+    /persistence\.save\(completedBeatIds, preferences\);\s*shell\.setPersistenceWarning\(null\)/,
+  );
+  const completionBlock = shell.match(
+    /setCompleted: \(\) => \{[\s\S]*?\n    \},\n    setStatus:/,
+  );
+  assert.notEqual(completionBlock, null);
+  assert.doesNotMatch(completionBlock[0], /setPersistenceWarning/);
 });

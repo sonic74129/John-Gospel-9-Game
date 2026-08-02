@@ -22,6 +22,7 @@ export interface AppShell extends SliceSequenceUi {
   setSubtitles(visible: boolean): void;
   setCompleted(): void;
   setStatus(message: string, isError?: boolean): void;
+  setPersistenceWarning(message: string | null): void;
   setDeveloperFixture(fixtureId: string | null): void;
   snapshotAppliedState(): SliceFinalState | null;
 }
@@ -46,6 +47,7 @@ export function createAppShell(
         </div>
         <div class="status-stack">
           <p class="platform-status" data-status role="status">準備開始</p>
+          <p class="persistence-warning" data-persistence-warning role="alert" hidden></p>
           <p class="developer-fixture" data-developer-fixture hidden></p>
         </div>
       </header>
@@ -152,6 +154,10 @@ export function createAppShell(
   );
   const subtitlePanel = requireElement<HTMLElement>(root, "[data-subtitle]");
   const status = requireElement<HTMLElement>(root, "[data-status]");
+  const persistenceWarning = requireElement<HTMLElement>(
+    root,
+    "[data-persistence-warning]",
+  );
   const goal = requireElement<HTMLElement>(root, "[data-stage-goal]");
   const fixture = requireElement<HTMLElement>(root, "[data-developer-fixture]");
   const dialogue = requireElement<HTMLElement>(root, "[data-dialogue]");
@@ -443,6 +449,11 @@ export function createAppShell(
     setStatus: (message, isError = false) => {
       status.textContent = message;
       status.dataset.error = String(isError);
+    },
+    setPersistenceWarning: (message) => {
+      persistenceWarning.hidden = message === null;
+      persistenceWarning.textContent =
+        message === null ? "" : `進度同步警告：${message}`;
     },
     setDeveloperFixture: (fixtureId) => {
       fixture.hidden = fixtureId === null;

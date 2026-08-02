@@ -89,6 +89,17 @@ button:disabled {
   background: #f4d8cf;
 }
 
+.persistence-warning {
+  max-width: 32rem;
+  margin: 0;
+  padding: 0.45rem 0.8rem;
+  border-radius: 0.55rem;
+  color: #7a2f23;
+  background: #f4d8cf;
+  font-size: 0.82rem;
+  text-align: end;
+}
+
 .status-stack {
   display: grid;
   justify-items: end;
@@ -228,6 +239,7 @@ button:disabled {
 
 .dialogue-panel[hidden],
 .recall-card[hidden],
+.persistence-warning[hidden],
 .developer-fixture[hidden],
 .ending-panel[hidden],
 .restart-confirmation[hidden] {
