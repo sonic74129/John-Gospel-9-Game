@@ -8,7 +8,7 @@
       "regionId": "roadside",
       "sourceLevel": "approved-bridge",
       "kind": "player-spawn",
-      "position": { "x": 260, "y": 1020 },
+      "position": { "x": 420, "y": 1000 },
       "facing": "east",
       "clearanceRadius": 32
     },
@@ -89,7 +89,7 @@
       "regionId": "siloam-pool",
       "sourceLevel": "approved-bridge",
       "kind": "entrance",
-      "position": { "x": 900, "y": 1240 },
+      "position": { "x": 1120, "y": 1240 },
       "facing": "south-east",
       "clearanceRadius": 48
     },
@@ -143,7 +143,7 @@
       "regionId": "neighbor-gathering",
       "sourceLevel": "approved-bridge",
       "kind": "entrance",
-      "position": { "x": 1400, "y": 1040 },
+      "position": { "x": 1400, "y": 960 },
       "facing": "north",
       "clearanceRadius": 48
     },
@@ -197,7 +197,7 @@
       "regionId": "inquiry-courtyard",
       "sourceLevel": "approved-bridge",
       "kind": "entrance",
-      "position": { "x": 1800, "y": 680 },
+      "position": { "x": 1900, "y": 680 },
       "facing": "east",
       "clearanceRadius": 52
     },
@@ -242,7 +242,7 @@
       "regionId": "inquiry-courtyard",
       "sourceLevel": "approved-bridge",
       "kind": "group-staging",
-      "position": { "x": 2320, "y": 660 },
+      "position": { "x": 2290, "y": 660 },
       "facing": "west",
       "clearanceRadius": 52
     },
@@ -323,7 +323,7 @@
       "regionId": "outer-road",
       "sourceLevel": "approved-bridge",
       "kind": "exit",
-      "position": { "x": 2460, "y": 1240 },
+      "position": { "x": 2440, "y": 1240 },
       "facing": "east",
       "clearanceRadius": 40
     },

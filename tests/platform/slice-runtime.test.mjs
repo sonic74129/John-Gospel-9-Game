@@ -25,13 +25,23 @@ import {
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 const readText = (path) => readFile(path, "utf8");
 const storyBeats = STORY_BEATS;
-const [anchorContract, cameraContract, layoutContract, spawnContract] =
+const [
+  anchorContract,
+  cameraContract,
+  layoutContract,
+  spawnContract,
+  framingContract,
+] =
   await Promise.all([
     readJson("src/world/anchors.json"),
     readJson("src/world/camera.json"),
     readJson("src/world/layout.json"),
     readJson("src/world/spawns.json"),
+    readJson("src/world/framing.json"),
   ]);
+const desktopFrameProfile = framingContract.profiles.find(
+  ({ viewport }) => viewport.width === 1280,
+);
 
 const progressionEvents = storyBeats.map(({ trigger }) =>
   trigger.type === "proximity"
@@ -206,6 +216,60 @@ test("real sequence adapter exposes deep-equal canonical and actual camera state
     }
     assert.equal(completed.inputLocks, 0, definition.id);
     assert.equal(skipped.inputLocks, 0, definition.id);
+  }
+});
+
+test("actual final-state camera framing keeps every visible collider safe on desktop and mobile", async () => {
+  for (const profile of framingContract.profiles) {
+    for (const beat of storyBeats) {
+      for (const skip of [false, true]) {
+        const result = await runRealAdapter(beat.sequence, skip, profile);
+        const visibleActors = resolveVisibleActorColliders(
+          beat.finalState,
+        );
+        const cameraPosition = result.camera.applied.actual.position;
+        const zoom = result.camera.applied.actual.zoom;
+        for (const actor of visibleActors) {
+          assertActorInsideSafeFrame({
+            actor,
+            cameraPosition,
+            profile,
+            zoom,
+            label: `${beat.id}/${skip ? "skip" : "normal"}/${profile.id}/${actor.spawnId}`,
+          });
+        }
+
+        const player = visibleActors.find(
+          ({ storyActorId }) =>
+            storyActorId === beat.finalState.controls.playerActorId,
+        );
+        assert.ok(player, `${beat.id}/${profile.id} player`);
+        const movedPlayer = {
+          ...player,
+          position: {
+            x: player.position.x + 24,
+            y: player.position.y + 16,
+          },
+        };
+        const followOffset = result.camera.applied.actual.followOffset;
+        const movedCameraPosition = clampCameraCenter(
+          {
+            x: movedPlayer.position.x - followOffset.x,
+            y: movedPlayer.position.y - followOffset.y,
+          },
+          profile.viewport,
+          zoom,
+          layoutContract.worldBounds,
+        );
+        assertActorInsideSafeFrame({
+          actor: movedPlayer,
+          cameraPosition: movedCameraPosition,
+          profile,
+          zoom,
+          label: `${beat.id}/${skip ? "skip" : "normal"}/${profile.id}/moved-player`,
+        });
+      }
+    }
   }
 });
 
@@ -707,7 +771,11 @@ function createSequenceHost(mode) {
   return fixture;
 }
 
-async function runRealAdapter(definition, skip) {
+async function runRealAdapter(
+  definition,
+  skip,
+  profile = desktopFrameProfile,
+) {
   let inputLocks = 0;
   let sceneState = null;
   let uiState = null;
@@ -723,7 +791,7 @@ async function runRealAdapter(definition, skip) {
         followActorPath: async () => {},
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
-          const camera = createFaithfulCameraPort();
+          const camera = createFaithfulCameraPort(profile.viewport);
           const cameraAnchor = requireById(
             anchorContract.anchors,
             state.camera.anchorId,
@@ -767,7 +835,7 @@ async function runRealAdapter(definition, skip) {
             playerTarget,
             worldWidth: layoutContract.worldBounds.width,
             worldHeight: layoutContract.worldBounds.height,
-            mobile: false,
+            mobile: profile.viewport.width <= 640,
           });
           sceneState = structuredClone(state);
           cameraState = {
@@ -821,8 +889,89 @@ function requireById(values, id) {
   return value;
 }
 
-function createFaithfulCameraPort() {
-  const viewport = { width: 1280, height: 720 };
+function resolveVisibleActorColliders(finalState) {
+  const resolved = [];
+  for (const [storyActorId, actorState] of Object.entries(finalState.actors)) {
+    if (!actorState.visible || !actorState.collisionEnabled) {
+      continue;
+    }
+    const targetAnchor = requireById(
+      anchorContract.anchors,
+      actorState.anchorId,
+    );
+    for (const spawnId of STORY_ACTOR_SPAWN_IDS[storyActorId]) {
+      const spawn = requireById(spawnContract.actorSpawns, `spawn.${spawnId}`);
+      const initialAnchor = requireById(
+        anchorContract.anchors,
+        spawn.anchorId,
+      );
+      resolved.push({
+        storyActorId,
+        spawnId,
+        collisionRadius: spawn.collisionRadius,
+        position: {
+          x:
+            targetAnchor.position.x +
+            spawn.position.x -
+            initialAnchor.position.x,
+          y:
+            targetAnchor.position.y +
+            spawn.position.y -
+            initialAnchor.position.y,
+        },
+      });
+    }
+  }
+  return resolved;
+}
+
+function clampCameraCenter(center, viewport, zoom, bounds) {
+  const halfVisible = {
+    x: viewport.width / zoom / 2,
+    y: viewport.height / zoom / 2,
+  };
+  return {
+    x: Math.min(
+      Math.max(center.x, bounds.x + halfVisible.x),
+      bounds.x + bounds.width - halfVisible.x,
+    ),
+    y: Math.min(
+      Math.max(center.y, bounds.y + halfVisible.y),
+      bounds.y + bounds.height - halfVisible.y,
+    ),
+  };
+}
+
+function assertActorInsideSafeFrame({
+  actor,
+  cameraPosition,
+  profile,
+  zoom,
+  label,
+}) {
+  const screen = {
+    x:
+      profile.viewport.width / 2 +
+      (actor.position.x - cameraPosition.x) * zoom,
+    y:
+      profile.viewport.height / 2 +
+      (actor.position.y - cameraPosition.y) * zoom,
+  };
+  const radius = actor.collisionRadius * zoom;
+  const safe = profile.gameplaySafeRect;
+  assert.ok(screen.x - radius >= safe.x - 1e-8, `${label} left`);
+  assert.ok(
+    screen.x + radius <= safe.x + safe.width + 1e-8,
+    `${label} right`,
+  );
+  assert.ok(screen.y - radius >= safe.y - 1e-8, `${label} top`);
+  assert.ok(
+    screen.y + radius <= safe.y + safe.height + 1e-8,
+    `${label} bottom`,
+  );
+}
+
+function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
   const state = {
     mode: "fixed",
     position: { x: 0, y: 0 },
