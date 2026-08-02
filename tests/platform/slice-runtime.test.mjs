@@ -15,6 +15,10 @@ import {
 } from "../../src/adapters/navigation-geometry.js";
 import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
 import {
+  createResponsiveGameSizeController,
+  requireGameViewport,
+} from "../../src/platform/responsive-game-size.ts";
+import {
   SliceStoryController,
   UnsupportedStoryBeatError,
 } from "../../src/adapters/story-adapter.ts";
@@ -290,6 +294,50 @@ test("actual final-state camera framing keeps every visible collider safe on des
   }
 });
 
+test("orientation resize reapplies every settled canonical frame without changing story state", async () => {
+  const mobileProfile = framingContract.profiles.find(
+    ({ viewport }) => viewport.width === 390,
+  );
+  assert.ok(mobileProfile);
+  const landscapeProfile = {
+    id: "frame.mobile-844x390",
+    viewport: { width: 844, height: 390 },
+    gameplaySafeRect: { x: 20, y: 20, width: 804, height: 350 },
+  };
+
+  for (const beat of storyBeats) {
+    for (const skip of [false, true]) {
+      const result = await runRealAdapter(beat.sequence, skip, mobileProfile);
+      const settledState = structuredClone(result.scene);
+      const simulation = createFinalStateCameraSimulation(
+        result.scene,
+        mobileProfile,
+      );
+      simulation.resizeTo(landscapeProfile.viewport);
+      const landscapeCamera = simulation.camera.snapshot();
+      assert.deepEqual(
+        landscapeCamera.viewport,
+        landscapeProfile.viewport,
+        `${beat.id}/${skip ? "skip" : "normal"}/landscape viewport`,
+      );
+      assertActorInsideSafeFrame({
+        actor: simulation.player,
+        cameraPosition: landscapeCamera.position,
+        profile: landscapeProfile,
+        zoom: landscapeCamera.zoom,
+        label: `${beat.id}/${skip ? "skip" : "normal"}/landscape player`,
+      });
+
+      simulation.resizeTo(mobileProfile.viewport);
+      assertPlayerInsideSimulationSafeFrame(
+        simulation,
+        `${beat.id}/${skip ? "skip" : "normal"}/portrait-restored`,
+      );
+      assert.deepEqual(result.scene, settledState);
+    }
+  }
+});
+
 test("Phaser follow delay keeps valid keyboard and pointer movement inside every safe frame", async () => {
   const frameRates = [
     { id: "60fps", deltaMs: 1000 / 60, frames: 60 },
@@ -349,10 +397,23 @@ test("Phaser follow delay keeps valid keyboard and pointer movement inside every
             finalState,
             profile,
           );
+          const cameraState = simulation.camera.snapshot();
+          const pointerPosition = worldToViewportPoint(
+            simulation.focusPosition,
+            cameraState,
+          );
+          const pointerTarget = viewportToWorldPoint(
+            pointerPosition,
+            cameraState,
+          );
+          assert.ok(
+            distanceBetween(pointerTarget, simulation.focusPosition) < 1e-8,
+            `${beat.id}/${mode}/${profile.id}/${frameRate.id} pointer alignment`,
+          );
           const pointerPath = findWalkablePath(
             navigationGrid,
             simulation.player.position,
-            simulation.focusPosition,
+            pointerTarget,
             isWorldWalkable,
           );
           assert.ok(
@@ -933,7 +994,8 @@ async function runRealAdapter(
         followActorPath: async () => {},
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
-          const camera = createFaithfulCameraPort(profile.viewport);
+          const viewport = resolveInitialProductionViewport(profile.viewport);
+          const camera = createFaithfulCameraPort(viewport);
           const cameraAnchor = requireById(
             anchorContract.anchors,
             state.camera.anchorId,
@@ -977,7 +1039,7 @@ async function runRealAdapter(
             playerTarget,
             worldWidth: layoutContract.worldBounds.width,
             worldHeight: layoutContract.worldBounds.height,
-            mobile: profile.viewport.width <= 640,
+            mobile: Math.min(viewport.width, viewport.height) <= 640,
           });
           sceneState = structuredClone(state);
           cameraState = {
@@ -1081,18 +1143,27 @@ function createFinalStateCameraSimulation(finalState, profile) {
     ({ regionId }) => regionId === cameraAnchor.regionId,
   );
   assert.ok(zone, `${finalState.beatId}/${profile.id} camera zone`);
-  const camera = createFaithfulCameraPort(profile.viewport);
-  applyCanonicalCameraFinalState({
-    camera: camera.port,
-    canonical: finalState.camera,
-    zone,
-    anchorPosition: cameraAnchor.position,
-    playerActorId: finalState.controls.playerActorId,
-    playerTarget: player.position,
-    worldWidth: layoutContract.worldBounds.width,
-    worldHeight: layoutContract.worldBounds.height,
-    mobile: profile.viewport.width <= 640,
-  });
+  const viewport = { width: 1280, height: 720 };
+  const camera = createFaithfulCameraPort(viewport);
+  const applyCamera = () =>
+    applyCanonicalCameraFinalState({
+      camera: camera.port,
+      canonical: finalState.camera,
+      zone,
+      anchorPosition: cameraAnchor.position,
+      playerActorId: finalState.controls.playerActorId,
+      playerTarget: player.position,
+      worldWidth: layoutContract.worldBounds.width,
+      worldHeight: layoutContract.worldBounds.height,
+      mobile: Math.min(viewport.width, viewport.height) <= 640,
+    });
+  applyCamera();
+  const resizeTo = (nextViewport) =>
+    driveProductionResize(viewport, nextViewport, ({ width, height }) => {
+      camera.resizeViewport(width, height);
+      applyCamera();
+    });
+  resizeTo(profile.viewport);
   return {
     camera,
     focusPosition: cameraAnchor.position,
@@ -1101,6 +1172,7 @@ function createFinalStateCameraSimulation(finalState, profile) {
       ({ storyActorId }) => storyActorId !== finalState.controls.playerActorId,
     ),
     profile,
+    resizeTo,
   };
 }
 
@@ -1133,6 +1205,66 @@ function assertPlayerInsideSimulationSafeFrame(simulation, label) {
 
 function distanceBetween(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function worldToViewportPoint(point, camera) {
+  return {
+    x: camera.viewport.width / 2 + (point.x - camera.position.x) * camera.zoom,
+    y: camera.viewport.height / 2 + (point.y - camera.position.y) * camera.zoom,
+  };
+}
+
+function viewportToWorldPoint(point, camera) {
+  return {
+    x:
+      camera.position.x +
+      (point.x - camera.viewport.width / 2) / camera.zoom,
+    y:
+      camera.position.y +
+      (point.y - camera.viewport.height / 2) / camera.zoom,
+  };
+}
+
+function resolveInitialProductionViewport(viewport) {
+  return requireGameViewport({
+    getBoundingClientRect: () => ({ ...viewport }),
+  });
+}
+
+function driveProductionResize(initialSize, nextSize, onResize) {
+  let bounds = { ...initialSize };
+  let notifyResize = () => {};
+  let queuedFrame = null;
+  const controller = createResponsiveGameSizeController({
+    container: {
+      getBoundingClientRect: () => ({ ...bounds }),
+    },
+    initialSize,
+    resize: onResize,
+    createObserver: (listener) => {
+      notifyResize = listener;
+      return {
+        observe: () => {},
+        disconnect: () => {},
+      };
+    },
+    eventTarget: {
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    },
+    scheduleTask: (callback) => {
+      queuedFrame = callback;
+      return 1;
+    },
+    cancelTask: () => {
+      queuedFrame = null;
+    },
+  });
+  controller.start();
+  bounds = { ...nextSize };
+  notifyResize();
+  queuedFrame?.();
+  controller.dispose();
 }
 
 function assertActorInsideSafeFrame({
@@ -1174,6 +1306,7 @@ function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
     followOffset: { x: 0, y: 0 },
     lerp: { x: 1, y: 1 },
     bounds: { x: 0, y: 0, width: 0, height: 0 },
+    viewport: { ...viewport },
     scrollX: 0,
     scrollY: 0,
   };
@@ -1241,6 +1374,12 @@ function createFaithfulCameraPort(viewport = { width: 1280, height: 720 }) {
         state.scrollY = clampScroll(y - viewport.height / 2, "y");
         updatePosition();
       },
+    },
+    resizeViewport: (width, height) => {
+      viewport.width = width;
+      viewport.height = height;
+      state.viewport = { width, height };
+      updatePosition();
     },
     advanceFollow: (target) => {
       assert.equal(state.mode, "follow-observer");

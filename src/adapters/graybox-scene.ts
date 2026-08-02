@@ -434,6 +434,23 @@ export class GrayboxScene extends Phaser.Scene {
     }
   }
 
+  resizeViewport(width: number, height: number): void {
+    if (this.#tearingDown || !this.sys.isActive()) {
+      return;
+    }
+    this.cameras.main.setSize(width, height);
+    if (this.#appliedFinalState !== null && this.#sequenceInputEnabled) {
+      const camera = this.#applyCanonicalCamera(
+        this.#appliedFinalState.finalState,
+      );
+      this.#appliedFinalState = {
+        ...this.#appliedFinalState,
+        camera,
+      };
+    }
+    this.#handlers?.onWorldUpdate();
+  }
+
   captureRuntimeState(): GrayboxSceneSnapshot {
     const camera = this.cameras.main;
     return {
@@ -708,30 +725,7 @@ export class GrayboxScene extends Phaser.Scene {
     if (cameraAnchorContract === undefined) {
       throw new RangeError(`Unknown canonical anchor ${state.camera.anchorId}.`);
     }
-    const zone = this.#world.cameraZoneByRegionId.get(
-      cameraAnchorContract.regionId,
-    );
-    if (zone === undefined) {
-      throw new RangeError(
-        `No canonical camera zone exists for ${cameraAnchorContract.regionId}.`,
-      );
-    }
-    const mobile =
-      this.game.canvas.clientWidth <= 640 || window.innerWidth <= 640;
-    const camera = this.cameras.main;
-    const appliedCamera = applyCanonicalCameraFinalState({
-      camera,
-      canonical: state.camera,
-      zone,
-      anchorPosition: cameraAnchorContract.position,
-      playerActorId: state.controls.playerActorId,
-      playerTarget: this.#player!.body,
-      worldWidth: this.#world.definition.width,
-      worldHeight: this.#world.definition.height,
-      mobile,
-    });
-    this.#cameraFollowingObserver =
-      appliedCamera.actual.followTargetActorId === state.controls.playerActorId;
+    const appliedCamera = this.#applyCanonicalCamera(state);
     this.#appliedFinalState = {
       finalState: structuredClone(state),
       actors: Object.fromEntries(
@@ -788,6 +782,38 @@ export class GrayboxScene extends Phaser.Scene {
 
   get tearingDown(): boolean {
     return this.#tearingDown;
+  }
+
+  #applyCanonicalCamera(state: SliceFinalState): AppliedCanonicalCameraState {
+    const cameraAnchorContract = this.#world.anchorById.get(
+      state.camera.anchorId,
+    );
+    if (cameraAnchorContract === undefined) {
+      throw new RangeError(`Unknown canonical anchor ${state.camera.anchorId}.`);
+    }
+    const zone = this.#world.cameraZoneByRegionId.get(
+      cameraAnchorContract.regionId,
+    );
+    if (zone === undefined) {
+      throw new RangeError(
+        `No canonical camera zone exists for ${cameraAnchorContract.regionId}.`,
+      );
+    }
+    const camera = this.cameras.main;
+    const appliedCamera = applyCanonicalCameraFinalState({
+      camera,
+      canonical: state.camera,
+      zone,
+      anchorPosition: cameraAnchorContract.position,
+      playerActorId: state.controls.playerActorId,
+      playerTarget: this.#player!.body,
+      worldWidth: this.#world.definition.width,
+      worldHeight: this.#world.definition.height,
+      mobile: Math.min(camera.width, camera.height) <= 640,
+    });
+    this.#cameraFollowingObserver =
+      appliedCamera.actual.followTargetActorId === state.controls.playerActorId;
+    return appliedCamera;
   }
 
   #storyActorVisuals(storyActorId: string): readonly ActorVisual[] {

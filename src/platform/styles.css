@@ -119,9 +119,12 @@ button:disabled {
 .game-frame {
   position: relative;
   overflow: hidden;
-  width: 100%;
+  width: min(1280px, 100vw);
   aspect-ratio: 16 / 9;
-  border: 3px solid #3c352f;
+  justify-self: center;
+  border: 0;
+  outline: 3px solid #3c352f;
+  outline-offset: -3px;
   border-radius: 1.25rem;
   background: #83715d;
   box-shadow: 0 1.4rem 3.5rem rgb(60 53 47 / 24%);
@@ -464,15 +467,18 @@ button:disabled {
   gap: 0.75rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-width: 900px) and (max-height: 640px) {
   .platform-shell {
     align-content: start;
-    padding: 0.75rem;
+    width: 100%;
+    padding: 0;
+    gap: 0.75rem;
   }
 
   .platform-header {
     align-items: start;
     flex-direction: column;
+    margin: 0.75rem 0.75rem 0;
   }
 
   .status-stack {
@@ -480,8 +486,17 @@ button:disabled {
   }
 
   .game-frame {
-    aspect-ratio: 9 / 14;
-    border-radius: 1rem;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: min(480px, 100dvh);
+    aspect-ratio: auto;
+    border-radius: 0;
+    outline: 0;
+  }
+
+  .game-controls {
+    margin: 0 0.75rem 0.75rem;
   }
 
   .slice-hud {
