@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "sequence-paths",
+  "travelTargetSeconds": {
+    "minimum": 10,
+    "maximum": 20
+  },
+  "sequencePaths": [
+    {
+      "id": "man-to-pool",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "roadside.blind-man-seat",
+      "endAnchorId": "pool.wash-edge",
+      "expectedDurationSeconds": 16,
+      "movementSpeed": 46,
+      "actorRadius": 18,
+      "points": [
+        { "x": 520, "y": 930 },
+        { "x": 700, "y": 950 },
+        { "x": 820, "y": 950 },
+        { "x": 870, "y": 950 },
+        { "x": 1040, "y": 960 },
+        { "x": 1220, "y": 910 }
+      ]
+    },
+    {
+      "id": "pool-to-neighbors",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "pool.return",
+      "endAnchorId": "neighbors.center",
+      "expectedDurationSeconds": 14,
+      "movementSpeed": 33,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1380, "y": 900 },
+        { "x": 1510, "y": 900 },
+        { "x": 1570, "y": 900 },
+        { "x": 1700, "y": 860 },
+        { "x": 1830, "y": 820 }
+      ]
+    },
+    {
+      "id": "group-to-inquiry",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-and-neighbor-group",
+      "startAnchorId": "neighbors.center",
+      "endAnchorId": "inquiry.man-center",
+      "expectedDurationSeconds": 14,
+      "movementSpeed": 44,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1830, "y": 820 },
+        { "x": 2020, "y": 850 },
+        { "x": 2120, "y": 850 },
+        { "x": 2200, "y": 850 },
+        { "x": 2440, "y": 850 }
+      ]
+    },
+    {
+      "id": "parents-entry-exit",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "inquiry.parents-entry",
+      "endAnchorId": "inquiry.parents-exit",
+      "expectedDurationSeconds": 18,
+      "movementSpeed": 56,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2370, "y": 490 },
+        { "x": 2400, "y": 650 },
+        { "x": 2500, "y": 950 },
+        { "x": 2650, "y": 700 },
+        { "x": 2540, "y": 490 }
+      ]
+    },
+    {
+      "id": "expulsion",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "inquiry.man-center",
+      "endAnchorId": "outside.expelled",
+      "expectedDurationSeconds": 13,
+      "movementSpeed": 42,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2440, "y": 850 },
+        { "x": 2640, "y": 850 },
+        { "x": 2780, "y": 850 },
+        { "x": 2840, "y": 850 },
+        { "x": 2940, "y": 940 }
+      ]
+    },
+    {
+      "id": "jesus-entry",
+      "sourceLevel": "approved-bridge",
+      "subject": "jesus",
+      "startAnchorId": "outside.jesus-entry",
+      "endAnchorId": "outside.expelled",
+      "expectedDurationSeconds": 12,
+      "movementSpeed": 20,
+      "actorRadius": 18,
+      "points": [
+        { "x": 3090, "y": 760 },
+        { "x": 3070, "y": 820 },
+        { "x": 3030, "y": 870 },
+        { "x": 2980, "y": 900 },
+        { "x": 2940, "y": 940 }
+      ]
+    },
+    {
+      "id": "ending",
+      "sourceLevel": "approved-bridge",
+      "subject": "camera-focus",
+      "startAnchorId": "outside.belief",
+      "endAnchorId": "ending.camera",
+      "expectedDurationSeconds": 12,
+      "movementSpeed": 5.5,
+      "actorRadius": 0,
+      "points": [
+        { "x": 2990, "y": 900 },
+        { "x": 2970, "y": 880 },
+        { "x": 2990, "y": 850 }
+      ]
+    }
+  ]
+}

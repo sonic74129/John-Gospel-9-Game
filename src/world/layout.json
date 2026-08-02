@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "world-layout",
+  "description": "Stylized continuous Jerusalem gameplay space for John 9; this graybox is not a claimed historical reconstruction.",
+  "projection": "three-quarter-top-down",
+  "grayboxPolicy": {
+    "metadataOnly": true,
+    "binaryArtworkReferences": [],
+    "actorsBakedIntoMap": false,
+    "movablePropsBakedIntoMap": false
+  },
+  "coordinateSystem": {
+    "origin": "top-left",
+    "xAxis": "east",
+    "yAxis": "south",
+    "unit": "world-pixel"
+  },
+  "worldBounds": {
+    "x": 0,
+    "y": 0,
+    "width": 3200,
+    "height": 1792
+  },
+  "sourcePolicy": {
+    "scriptureNamedRegionIds": [
+      "siloam-pool"
+    ],
+    "neutralStagingSourceLevel": "approved-bridge",
+    "note": "Only Siloam Pool is named from scripture. Every other region name and its exact placement are neutral S2 staging for spatial continuity."
+  },
+  "regions": [
+    {
+      "id": "roadside",
+      "label": "Roadside",
+      "sourceLevel": "approved-bridge",
+      "purpose": "Neutral opening staging for the encounter while passing by.",
+      "bounds": {
+        "x": 80,
+        "y": 560,
+        "width": 760,
+        "height": 720
+      },
+      "walkablePolygon": [
+        { "x": 80, "y": 760 },
+        { "x": 180, "y": 600 },
+        { "x": 690, "y": 600 },
+        { "x": 840, "y": 760 },
+        { "x": 840, "y": 1120 },
+        { "x": 700, "y": 1280 },
+        { "x": 180, "y": 1280 },
+        { "x": 80, "y": 1120 }
+      ]
+    },
+    {
+      "id": "siloam-pool",
+      "label": "Siloam Pool",
+      "sourceLevel": "scripture",
+      "scriptureLocationName": "Siloam",
+      "purpose": "Named destination for the washing action and return route.",
+      "bounds": {
+        "x": 840,
+        "y": 680,
+        "width": 700,
+        "height": 660
+      },
+      "walkablePolygon": [
+        { "x": 840, "y": 800 },
+        { "x": 960, "y": 680 },
+        { "x": 1390, "y": 680 },
+        { "x": 1540, "y": 820 },
+        { "x": 1540, "y": 1160 },
+        { "x": 1390, "y": 1340 },
+        { "x": 980, "y": 1340 },
+        { "x": 840, "y": 1160 }
+      ]
+    },
+    {
+      "id": "neighbor-gathering",
+      "label": "Neighbor Gathering",
+      "sourceLevel": "approved-bridge",
+      "purpose": "Neutral open staging for neighbors and those who had seen the man before.",
+      "bounds": {
+        "x": 1540,
+        "y": 520,
+        "width": 620,
+        "height": 720
+      },
+      "walkablePolygon": [
+        { "x": 1540, "y": 720 },
+        { "x": 1660, "y": 520 },
+        { "x": 2030, "y": 520 },
+        { "x": 2160, "y": 700 },
+        { "x": 2160, "y": 1080 },
+        { "x": 2040, "y": 1240 },
+        { "x": 1660, "y": 1240 },
+        { "x": 1540, "y": 1080 }
+      ]
+    },
+    {
+      "id": "inquiry-courtyard",
+      "label": "Inquiry Courtyard",
+      "sourceLevel": "approved-bridge",
+      "purpose": "Neutral courtyard staging for inquiry scenes; it does not claim a named or identified historical venue.",
+      "bounds": {
+        "x": 2160,
+        "y": 440,
+        "width": 650,
+        "height": 760
+      },
+      "walkablePolygon": [
+        { "x": 2160, "y": 680 },
+        { "x": 2280, "y": 440 },
+        { "x": 2680, "y": 440 },
+        { "x": 2810, "y": 680 },
+        { "x": 2810, "y": 1040 },
+        { "x": 2700, "y": 1200 },
+        { "x": 2290, "y": 1200 },
+        { "x": 2160, "y": 1040 }
+      ]
+    },
+    {
+      "id": "outer-road",
+      "label": "Outer Road",
+      "sourceLevel": "approved-bridge",
+      "purpose": "Neutral road-edge staging for expulsion, Jesus' plausible entrance, belief, and ending.",
+      "bounds": {
+        "x": 2810,
+        "y": 520,
+        "width": 310,
+        "height": 680
+      },
+      "walkablePolygon": [
+        { "x": 2810, "y": 680 },
+        { "x": 2890, "y": 520 },
+        { "x": 3120, "y": 620 },
+        { "x": 3120, "y": 1080 },
+        { "x": 3010, "y": 1200 },
+        { "x": 2810, "y": 1040 }
+      ]
+    }
+  ],
+  "portals": [
+    {
+      "id": "portal.roadside-pool",
+      "sourceLevel": "approved-bridge",
+      "fromRegionId": "roadside",
+      "toRegionId": "siloam-pool",
+      "segment": [
+        { "x": 840, "y": 880 },
+        { "x": 840, "y": 1040 }
+      ],
+      "clearance": 96
+    },
+    {
+      "id": "portal.pool-neighbors",
+      "sourceLevel": "approved-bridge",
+      "fromRegionId": "siloam-pool",
+      "toRegionId": "neighbor-gathering",
+      "segment": [
+        { "x": 1540, "y": 840 },
+        { "x": 1540, "y": 1010 }
+      ],
+      "clearance": 96
+    },
+    {
+      "id": "portal.neighbors-inquiry",
+      "sourceLevel": "approved-bridge",
+      "fromRegionId": "neighbor-gathering",
+      "toRegionId": "inquiry-courtyard",
+      "segment": [
+        { "x": 2160, "y": 760 },
+        { "x": 2160, "y": 940 }
+      ],
+      "clearance": 104
+    },
+    {
+      "id": "portal.inquiry-outside",
+      "sourceLevel": "approved-bridge",
+      "fromRegionId": "inquiry-courtyard",
+      "toRegionId": "outer-road",
+      "segment": [
+        { "x": 2810, "y": 760 },
+        { "x": 2810, "y": 960 }
+      ],
+      "clearance": 112
+    }
+  ]
+}

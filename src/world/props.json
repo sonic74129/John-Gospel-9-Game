@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "movable-prop-anchors",
+  "movablePropAnchors": [
+    {
+      "id": "prop.clay-container",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "position": { "x": 570, "y": 930 },
+      "interactionAnchorId": "roadside.clay-action",
+      "isBakedIntoMap": false,
+      "initialState": "present",
+      "states": ["present", "handled", "restored"]
+    },
+    {
+      "id": "prop.pool-edge-marker",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "position": { "x": 1250, "y": 940 },
+      "interactionAnchorId": "pool.wash-edge",
+      "isBakedIntoMap": false,
+      "initialState": "present",
+      "states": ["present", "shifted", "restored"]
+    },
+    {
+      "id": "prop.inquiry-gate-panel",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "position": { "x": 2190, "y": 800 },
+      "interactionAnchorId": "inquiry.gate",
+      "isBakedIntoMap": false,
+      "initialState": "open",
+      "states": ["open", "closed"]
+    },
+    {
+      "id": "prop.waiting-stool",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "position": { "x": 2690, "y": 880 },
+      "interactionAnchorId": "inquiry.waiting",
+      "isBakedIntoMap": false,
+      "initialState": "present",
+      "states": ["present", "moved", "restored"]
+    }
+  ]
+}

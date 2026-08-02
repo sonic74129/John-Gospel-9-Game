@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "world-collisions",
+  "collisionPolygons": [
+    {
+      "id": "collision.roadside-north-edge",
+      "regionId": "roadside",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 220, "y": 620 },
+        { "x": 470, "y": 620 },
+        { "x": 470, "y": 700 },
+        { "x": 220, "y": 700 }
+      ]
+    },
+    {
+      "id": "collision.roadside-south-edge",
+      "regionId": "roadside",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 200, "y": 1160 },
+        { "x": 470, "y": 1160 },
+        { "x": 470, "y": 1240 },
+        { "x": 200, "y": 1240 }
+      ]
+    },
+    {
+      "id": "collision.pool-basin",
+      "regionId": "siloam-pool",
+      "material": "water-boundary",
+      "polygon": [
+        { "x": 1080, "y": 1000 },
+        { "x": 1310, "y": 1000 },
+        { "x": 1360, "y": 1160 },
+        { "x": 1040, "y": 1160 }
+      ]
+    },
+    {
+      "id": "collision.pool-north-terrace",
+      "regionId": "siloam-pool",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 950, "y": 700 },
+        { "x": 1090, "y": 700 },
+        { "x": 1090, "y": 780 },
+        { "x": 950, "y": 780 }
+      ]
+    },
+    {
+      "id": "collision.neighbors-shade",
+      "regionId": "neighbor-gathering",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 1660, "y": 550 },
+        { "x": 1920, "y": 550 },
+        { "x": 1920, "y": 650 },
+        { "x": 1660, "y": 650 }
+      ]
+    },
+    {
+      "id": "collision.inquiry-north-wall",
+      "regionId": "inquiry-courtyard",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 2280, "y": 470 },
+        { "x": 2330, "y": 470 },
+        { "x": 2330, "y": 610 },
+        { "x": 2280, "y": 610 }
+      ]
+    },
+    {
+      "id": "collision.inquiry-south-bench",
+      "regionId": "inquiry-courtyard",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 2600, "y": 1040 },
+        { "x": 2740, "y": 1040 },
+        { "x": 2740, "y": 1120 },
+        { "x": 2600, "y": 1120 }
+      ]
+    },
+    {
+      "id": "collision.outside-south-edge",
+      "regionId": "outer-road",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 2870, "y": 1080 },
+        { "x": 3050, "y": 1110 },
+        { "x": 3020, "y": 1170 },
+        { "x": 2940, "y": 1130 }
+      ]
+    }
+  ]
+}
