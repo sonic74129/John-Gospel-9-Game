@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --pretty false && vite build",
+    "build": "tsc --pretty false && vite build && node scripts/check-production-bundle.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --pretty false",
     "story:init": "node scripts/init-story.mjs",

@@ -4,6 +4,8 @@ import test from "node:test";
 
 import { MapSequence } from "@sonic74129/sequence-runtime";
 
+import { createB14StressSequence } from "../../src/adapters/dev-b14-fixture.ts";
+import { createSliceSequenceAdapter } from "../../src/adapters/sequence-adapter.ts";
 import {
   SliceStoryController,
   UnsupportedSliceBeatError,
@@ -103,6 +105,29 @@ test("each B01-B07 normal and skip run applies the same canonical final state", 
   );
 });
 
+test("real sequence adapter exposes deep-equal normal and skip snapshots", async () => {
+  const definitions = [
+    ...sliceBeats.map(({ sequence }) => sequence),
+    createB14StressSequence(),
+  ];
+  for (const definition of definitions) {
+    const completed = await runRealAdapter(definition, false);
+    const skipped = await runRealAdapter(definition, true);
+    assert.equal(completed.status, "completed", definition.id);
+    assert.equal(skipped.status, "skipped", definition.id);
+    assert.deepEqual(completed.applied, definition.finalState, definition.id);
+    assert.deepEqual(skipped.applied, definition.finalState, definition.id);
+    assert.deepEqual(completed.scene, skipped.scene, definition.id);
+    assert.deepEqual(completed.ui, skipped.ui, definition.id);
+    assert.deepEqual(completed.logical, skipped.logical, definition.id);
+    assert.deepEqual(completed.scene, definition.finalState, definition.id);
+    assert.deepEqual(completed.ui, definition.finalState, definition.id);
+    assert.deepEqual(completed.logical, definition.finalState, definition.id);
+    assert.equal(completed.inputLocks, 0, definition.id);
+    assert.equal(skipped.inputLocks, 0, definition.id);
+  }
+});
+
 test("cancellation rolls back StoryEngine and prevents reentry or stale handoff", async () => {
   let settle;
   let nextStatus = "cancelled";
@@ -137,6 +162,27 @@ test("cancellation rolls back StoryEngine and prevents reentry or stale handoff"
   assert.deepEqual(handoffs, ["b01"]);
 });
 
+test("story disposal waits for an active cancelled beat to settle", async () => {
+  let settle;
+  const controller = new SliceStoryController({
+    runBeat: () =>
+      new Promise((resolve) => {
+        settle = () => resolve({ status: "cancelled" });
+      }),
+  });
+  const active = controller.dispatch({ type: "event", name: "story:start" });
+  let disposed = false;
+  const disposal = controller.dispose().then(() => {
+    disposed = true;
+  });
+  await Promise.resolve();
+  assert.equal(disposed, false);
+  settle();
+  await Promise.all([active, disposal]);
+  assert.equal(disposed, true);
+  assert.deepEqual(controller.snapshot().state.completedBeatIds, []);
+});
+
 test("browser cancellation restores scene state and pause gates DOM progression", async () => {
   const [platform, scene, shell] = await Promise.all([
     readText("src/adapters/sdk-platform.ts"),
@@ -153,7 +199,15 @@ test("browser cancellation restores scene state and pause gates DOM progression"
     /catch \(error\)[\s\S]*scene\.restoreRuntimeState\(sceneBefore\)/,
   );
   assert.match(scene, /restoreRuntimeState\(snapshot: GrayboxSceneSnapshot\)/);
+  assert.match(
+    scene,
+    /restoreRuntimeState\(snapshot: GrayboxSceneSnapshot\)[\s\S]*if \(this\.#tearingDown\)/,
+  );
   assert.match(scene, /this\.cameras\.main\.resetFX\(\)/);
+  assert.match(
+    platform,
+    /scene\.beginTeardown\(\);\s*sequence\.cancel\(\);[\s\S]*await story\.dispose\(\);[\s\S]*Promise\.allSettled\(activeSequenceRuns\)/,
+  );
   assert.match(platform, /if \(ui\.snapshot\(\)\.paused\)/);
   assert.match(shell, /dialogueNext\.disabled = value/);
   assert.match(shell, /skipButton\.disabled = value/);
@@ -253,25 +307,34 @@ test("safe UI exposes only segment metadata and the licensing notice", async () 
   }
 });
 
-test("B14 stress fixture is explicit, isolated, and responsive", async () => {
-  const [platform, shell, styles, framing] = await Promise.all([
+test("B14 stress fixture is DEV-only, lazy, and absent from production paths", async () => {
+  const [main, platform, sequence, shell, fixture, checker, framing] =
+    await Promise.all([
+    readText("src/main.ts"),
     readText("src/adapters/sdk-platform.ts"),
+    readText("src/adapters/sequence-adapter.ts"),
     readText("src/platform/app-shell.ts"),
-    readText("src/platform/styles.css"),
+    readText("src/adapters/dev-b14-fixture.ts"),
+    readText("scripts/check-production-bundle.mjs"),
     readJson("src/world/framing.json"),
   ]);
-  assert.match(platform, /fixtureMode === "b14-stress"/);
-  assert.match(platform, /id: "developer-b14-stress"/);
-  assert.match(platform, /present-b14-stress/);
-  assert.match(platform, /正式故事進度未變/);
+  assert.match(main, /if \(!import\.meta\.env\.DEV\)/);
+  assert.match(main, /import\("\.\/adapters\/dev-b14-fixture\.ts"\)/);
+  for (const productionSource of [platform, sequence, shell]) {
+    assert.doesNotMatch(productionSource, /b14-stress|DEV_ONLY_B14/);
+  }
+  assert.match(fixture, /const FIXTURE_ID = "b14-stress"/);
+  assert.match(fixture, /JOHN9_DEV_ONLY_B14_STRESS/);
+  assert.match(fixture, /command: "present-scripture-segments"/);
+  assert.match(fixture, /音樂狀態：silence/);
+  assert.match(fixture, /對話模式：blocking/);
+  assert.match(fixture, /正式故事進度未變/);
+  assert.match(checker, /JOHN9_DEV_ONLY_B14_STRESS/);
+  assert.match(checker, /b14-stress/);
   assert.match(
     platform,
     /skipCurrent:[\s\S]*for \(const listener of skipListeners\)/,
   );
-  assert.match(shell, /音樂狀態：silence/);
-  assert.match(shell, /對話模式：blocking/);
-  assert.match(shell, /data-stress-testimony/);
-  assert.match(styles, /max-height:\s*calc\(100% - 5\.5rem\)/);
   assert.deepEqual(
     framing.profiles.map(({ viewport }) => viewport),
     [
@@ -279,6 +342,36 @@ test("B14 stress fixture is explicit, isolated, and responsive", async () => {
       { width: 390, height: 844 },
     ],
   );
+});
+
+test("scene applies and exposes every canonical final-state surface", async () => {
+  const [scene, platform] = await Promise.all([
+    readText("src/adapters/graybox-scene.ts"),
+    readText("src/adapters/sdk-platform.ts"),
+  ]);
+  for (const field of [
+    "actorState.collisionEnabled",
+    "state.props.clay.anchorId",
+    "state.props.clay.state",
+    "state.props.clay.collisionEnabled",
+    "state.camera.anchorId",
+    "state.camera.mode",
+    "state.controls.playerActorId",
+  ]) {
+    assert.match(scene, new RegExp(field.replaceAll(".", "\\.")), field);
+  }
+  assert.match(scene, /camera\.centerOn\(/);
+  assert.match(scene, /#cameraFollowPending = state\.camera\.mode/);
+  assert.match(scene, /#canonicalControls = structuredClone\(state\.controls\)/);
+  const applyFinalStateBody = scene.slice(
+    scene.indexOf("  async applyFinalState("),
+    scene.indexOf("  snapshotAppliedFinalState("),
+  );
+  assert.doesNotMatch(applyFinalStateBody, /startFollow\(/);
+  assert.match(platform, /testimony:\s*structuredClone\(finalState\.testimony\)/);
+  assert.match(platform, /triggers:\s*structuredClone\(finalState\.triggers\)/);
+  assert.match(platform, /status:\s*state\.music\.playing[\s\S]*"silent-unavailable"/);
+  assert.match(platform, /inputLocked:\s*input\.locked/);
 });
 
 test("candidate Jesus graybox uses the pinned sheet mapping and no candidate props", async () => {
@@ -360,4 +453,60 @@ function createSequenceHost(mode) {
     },
   };
   return fixture;
+}
+
+async function runRealAdapter(definition, skip) {
+  let inputLocks = 0;
+  let sceneState = null;
+  let uiState = null;
+  let logicalState = null;
+  const adapter = createSliceSequenceAdapter(
+    {
+      scene: {
+        setMovementEnabled: () => {},
+        focusAnchor: () => {},
+        setActorPose: () => {},
+        setActorVisible: () => {},
+        followActorPath: async () => {},
+        followCameraPath: async () => {},
+        applyFinalState: async (state) => {
+          sceneState = structuredClone(state);
+        },
+      },
+      ui: {
+        setOverlay: () => {},
+        presentDialogue: async () => {},
+        applyFinalState: (state) => {
+          uiState = structuredClone(state);
+        },
+        setHandoff: () => {},
+      },
+      applyLogicalFinalState: (state) => {
+        logicalState = structuredClone(state);
+      },
+    },
+    {
+      subscribeSkip: () => () => {},
+      acquireInputLock: () => {
+        inputLocks += 1;
+        return () => {
+          inputLocks -= 1;
+        };
+      },
+    },
+  );
+  const sequence = new MapSequence(adapter);
+  const running = sequence.run(definition);
+  if (skip) {
+    sequence.skip();
+  }
+  const result = await running;
+  return {
+    status: result.status,
+    applied: sceneState,
+    scene: sceneState,
+    ui: uiState,
+    logical: logicalState,
+    inputLocks,
+  };
 }

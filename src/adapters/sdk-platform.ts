@@ -12,7 +12,10 @@ import {
 import { GameUIShell } from "@sonic74129/ui";
 
 import type { AppShell } from "../platform/app-shell.ts";
-import type { GrayboxScene } from "./graybox-scene.ts";
+import type {
+  AppliedGrayboxFinalState,
+  GrayboxScene,
+} from "./graybox-scene.ts";
 import { BrowserAudioFactory } from "./browser-audio.ts";
 import {
   createSliceSequenceAdapter,
@@ -24,14 +27,29 @@ import {
   type SliceStoryEvent,
   type SliceStoryState,
 } from "./story-adapter.ts";
-import { FINAL_SNAPSHOTS } from "./story-contracts.ts";
-
-export type DeveloperFixtureMode = "b14-stress" | null;
+export interface AppliedPlatformFinalState {
+  readonly finalState: SliceFinalState;
+  readonly scene: AppliedGrayboxFinalState;
+  readonly ui: SliceFinalState;
+  readonly controls: SliceFinalState["controls"] &
+    Readonly<{ inputLocked: boolean }>;
+  readonly testimony: SliceFinalState["testimony"];
+  readonly triggers: SliceFinalState["triggers"];
+  readonly music: Readonly<{
+    requested: SliceFinalState["music"];
+    actual: Readonly<{
+      cueId: string | null;
+      playing: boolean;
+      ducked: boolean;
+      status: "stopped" | "silent-unavailable";
+    }>;
+  }>;
+  readonly sequenceStatus: "completed" | "skipped";
+}
 
 export interface PlatformRuntime {
   readonly mode: "story-slice";
   readonly story: SliceStoryController;
-  readonly fixtureMode: DeveloperFixtureMode;
   start(): Promise<void>;
   begin(): void;
   unlockAudio(): Promise<void>;
@@ -44,6 +62,7 @@ export interface PlatformRuntime {
   runSequence(
     definition: SequenceDefinition<SliceFinalState>,
   ): Promise<SequenceResult>;
+  snapshotAppliedFinalState(): AppliedPlatformFinalState | null;
   dispose(): Promise<void>;
 }
 
@@ -60,7 +79,6 @@ function distance(
 export function createPlatformRuntime(
   scene: GrayboxScene,
   shell: AppShell,
-  fixtureMode: DeveloperFixtureMode,
   onError: (error: unknown) => void,
 ): PlatformRuntime {
   const factory = new BrowserAudioFactory();
@@ -69,6 +87,19 @@ export function createPlatformRuntime(
   const input = new InputLock();
   const skipListeners = new Set<() => void>();
   const scenePauseReasons = new Set<string>();
+  let logicalMusicState: AppliedPlatformFinalState["music"] = {
+    requested: {
+      cueId: "",
+      playing: false,
+      ducked: false,
+    },
+    actual: {
+      cueId: null,
+      playing: false,
+      ducked: false,
+      status: "stopped",
+    },
+  };
   const ui = new GameUIShell({
     labels: {
       pause: "暫停",
@@ -95,19 +126,37 @@ export function createPlatformRuntime(
   });
 
   const sequenceAdapter = createSliceSequenceAdapter(
-    { scene, ui: {
-      setOverlay: (visible, blocking) => {
-        ui.setOverlay(visible, blocking);
-        shell.setOverlay(visible, blocking);
+    {
+      scene,
+      ui: {
+        setOverlay: (visible, blocking) => {
+          ui.setOverlay(visible, blocking);
+          shell.setOverlay(visible, blocking);
+        },
+        presentDialogue: (...arguments_) =>
+          shell.presentDialogue(...arguments_),
+        applyFinalState: (...arguments_) =>
+          shell.applyFinalState(...arguments_),
+        setHandoff: (status) => shell.setHandoff(status),
       },
-      presentDialogue: (...arguments_) =>
-        shell.presentDialogue(...arguments_),
-      presentStressFixture: (...arguments_) =>
-        shell.presentStressFixture(...arguments_),
-      applyFinalState: (...arguments_) =>
-        shell.applyFinalState(...arguments_),
-      setHandoff: (status) => shell.setHandoff(status),
-    }, fixtureMode: fixtureMode === "b14-stress" },
+      applyLogicalFinalState: (state) => {
+        music.setDuckMultiplier(state.music.ducked ? 0.35 : 1);
+        if (!state.music.playing) {
+          music.stop();
+        }
+        logicalMusicState = {
+          requested: structuredClone(state.music),
+          actual: {
+            cueId: null,
+            playing: false,
+            ducked: false,
+            status: state.music.playing
+              ? "silent-unavailable"
+              : "stopped",
+          },
+        };
+      },
+    },
     {
       subscribeSkip: (listener) => {
         skipListeners.add(listener);
@@ -117,21 +166,72 @@ export function createPlatformRuntime(
     },
   );
   const sequence = new MapSequence<SliceFinalState>(sequenceAdapter);
+  const activeSequenceRuns = new Set<Promise<SequenceResult>>();
+  let appliedFinalState: AppliedPlatformFinalState | null = null;
+  let disposed = false;
+  let begun = false;
+
+  const captureAppliedFinalState = (
+    finalState: SliceFinalState,
+    status: "completed" | "skipped",
+  ): void => {
+    const sceneState = scene.snapshotAppliedFinalState();
+    const uiState = shell.snapshotAppliedState();
+    if (sceneState === null || uiState === null) {
+      throw new Error("Canonical final state was not applied by every adapter.");
+    }
+    appliedFinalState = {
+      finalState: structuredClone(finalState),
+      scene: sceneState,
+      ui: uiState,
+      controls: {
+        ...structuredClone(finalState.controls),
+        inputLocked: input.locked,
+      },
+      testimony: structuredClone(finalState.testimony),
+      triggers: structuredClone(finalState.triggers),
+      music: structuredClone(logicalMusicState),
+      sequenceStatus: status,
+    };
+  };
+
+  const runSequence = (
+    definition: SequenceDefinition<SliceFinalState>,
+  ): Promise<SequenceResult> => {
+    if (disposed) {
+      return Promise.reject(new Error("Cannot run a disposed sequence runtime."));
+    }
+    const operation = sequence.run(definition);
+    const trackedOperation = operation
+      .then((result) => {
+        if (result.status !== "cancelled") {
+          captureAppliedFinalState(definition.finalState, result.status);
+        }
+        return result;
+      })
+      .finally(() => {
+        activeSequenceRuns.delete(trackedOperation);
+      });
+    activeSequenceRuns.add(trackedOperation);
+    return trackedOperation;
+  };
   const storyEngine = createStoryEngine();
   const story = new SliceStoryController({
     engine: storyEngine,
     runBeat: async (beat) => {
       const sceneBefore = scene.captureRuntimeState();
       try {
-        const result = await sequence.run(
+        const result = await runSequence(
           beat.sequence as SequenceDefinition<SliceFinalState>,
         );
-        if (result.status === "cancelled") {
+        if (result.status === "cancelled" && !scene.tearingDown) {
           scene.restoreRuntimeState(sceneBefore);
         }
         return result;
       } catch (error) {
-        scene.restoreRuntimeState(sceneBefore);
+        if (!scene.tearingDown) {
+          scene.restoreRuntimeState(sceneBefore);
+        }
         throw error;
       }
     },
@@ -174,9 +274,6 @@ export function createPlatformRuntime(
     systems: [sceneSystem],
   });
 
-  let disposed = false;
-  let begun = false;
-
   const dispatchAndContinue = async (
     firstEvent: SliceStoryEvent,
   ): Promise<void> => {
@@ -204,7 +301,7 @@ export function createPlatformRuntime(
   };
 
   const evaluateWorldTrigger = (): void => {
-    if (disposed || story.running || fixtureMode !== null) {
+    if (disposed || story.running) {
       return;
     }
     const trigger = story.engine.currentBeat?.trigger;
@@ -248,42 +345,16 @@ export function createPlatformRuntime(
     },
   });
 
-  const runStressFixture = async (): Promise<void> => {
-    const finalState = FINAL_SNAPSHOTS.b14;
-    if (finalState === undefined) {
-      throw new Error("Canonical B14 final state is missing.");
-    }
-    const result = await sequence.run({
-      id: "developer-b14-stress",
-      steps: [
-        {
-          kind: "command",
-          command: "present-b14-stress",
-          payload: { fixtureId: "b14-stress" },
-        },
-      ],
-      finalState,
-    });
-    shell.setStatus(
-      `DEV B14 壓力測試已${result.status === "skipped" ? "跳過" : "完成"}；正式故事進度未變`,
-    );
-  };
-
   return {
     mode: "story-slice",
     story,
-    fixtureMode,
     start: () => composition.lifecycle.start(),
     begin: () => {
       if (begun || disposed) {
         return;
       }
       begun = true;
-      if (fixtureMode === "b14-stress") {
-        runStressFixture().catch(onError);
-      } else {
-        dispatch({ type: "event", name: "story:start" });
-      }
+      dispatch({ type: "event", name: "story:start" });
     },
     unlockAudio: () => music.unlock(),
     setPaused: (paused) => ui.setPaused(paused),
@@ -301,14 +372,33 @@ export function createPlatformRuntime(
     cancelCurrent: () => {
       sequence.cancel();
     },
-    runSequence: (definition) => sequence.run(definition),
+    runSequence,
+    snapshotAppliedFinalState: () =>
+      appliedFinalState === null
+        ? null
+        : structuredClone(appliedFinalState),
     dispose: async () => {
       if (disposed) {
         return;
       }
       disposed = true;
-      story.dispose();
+      scene.beginTeardown();
+      sequence.cancel();
+      let activeFailure: unknown;
+      try {
+        await story.dispose();
+      } catch (error) {
+        activeFailure = error;
+      }
+      const sequenceResults = await Promise.allSettled(activeSequenceRuns);
+      activeFailure ??= sequenceResults.find(
+        (result): result is PromiseRejectedResult =>
+          result.status === "rejected",
+      )?.reason;
       await composition.dispose();
+      if (activeFailure !== undefined) {
+        throw activeFailure;
+      }
     },
   };
 }

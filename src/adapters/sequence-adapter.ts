@@ -40,11 +40,6 @@ export interface SliceSequenceUi {
     lines: readonly SliceDialogueLine[],
     signal: AbortSignal,
   ): Promise<void>;
-  presentStressFixture(
-    lines: readonly SliceDialogueLine[],
-    testimony: readonly CanonicalTestimony[],
-    signal: AbortSignal,
-  ): Promise<void>;
   applyFinalState(
     state: SliceFinalState,
     goal: CanonicalStageGoal,
@@ -57,7 +52,10 @@ export interface SliceSequenceUi {
 export interface SliceSequenceContext {
   readonly scene: SliceSequenceScene;
   readonly ui: SliceSequenceUi;
-  readonly fixtureMode: boolean;
+  readonly applyLogicalFinalState?: (
+    state: SliceFinalState,
+    signal: AbortSignal,
+  ) => void | Promise<void>;
 }
 
 export interface SliceSequenceControls {
@@ -166,23 +164,6 @@ export function createSliceSequenceAdapter(
           }
           return;
         }
-        case "present-b14-stress": {
-          if (!target.fixtureMode) {
-            failUnwiredOperation("sequence.command:present-b14-stress");
-          }
-          const lines = DIALOGUE_BY_BEAT.b14;
-          if (lines === undefined) {
-            throw new RangeError("Canonical B14 dialogue is missing.");
-          }
-          const testimony = TESTIMONY.filter(({ beatId }) => beatId === "b14");
-          target.ui.setOverlay(true, true);
-          try {
-            await target.ui.presentStressFixture(lines, testimony, signal);
-          } finally {
-            target.ui.setOverlay(false);
-          }
-          return;
-        }
         default:
           failUnwiredOperation(`sequence.command:${command}`);
       }
@@ -206,6 +187,7 @@ export function createSliceSequenceAdapter(
         TESTIMONY.filter(({ id }) => activeTestimonyIds.has(id)),
         RECALL_BY_AFTER_BEAT[state.beatId],
       );
+      await target.applyLogicalFinalState?.(state, signal);
     },
     handoff: (status, target, signal) => {
       if (signal.aborted) {

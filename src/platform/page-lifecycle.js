@@ -23,6 +23,7 @@ export function createPageLifecycleController(operations) {
       if (disposed) {
         return;
       }
+
       if (persisted) {
         if (!cacheSuspended) {
           cacheSuspended = true;
@@ -43,4 +44,16 @@ export function createPageLifecycleController(operations) {
       await operations.resume();
     },
   });
+}
+
+/**
+ * @param {{ dispose: () => void | Promise<void> } | undefined} runtime
+ * @param {{ destroy: (removeCanvas: boolean) => void } | undefined} game
+ */
+export async function disposeRuntimeBeforeGame(runtime, game) {
+  try {
+    await runtime?.dispose();
+  } finally {
+    game?.destroy(true);
+  }
 }

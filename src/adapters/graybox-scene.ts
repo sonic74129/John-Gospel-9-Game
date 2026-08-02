@@ -14,7 +14,9 @@ interface ActorVisual {
   readonly body: Phaser.GameObjects.Arc | Phaser.GameObjects.Sprite;
   readonly label: Phaser.GameObjects.Text;
   readonly anchorOffset: Point;
+  readonly collisionRadius: number;
   pose: string;
+  collisionEnabled: boolean;
 }
 
 export interface SceneInteractionHandlers {
@@ -32,11 +34,58 @@ export interface GrayboxSceneSnapshot {
         visible: boolean;
         label: string;
         pose: string;
+        collisionEnabled: boolean;
       }>
     >
   >;
-  readonly clayVisible: boolean;
-  readonly movementEnabled: boolean;
+  readonly clay: Readonly<{
+    x: number;
+    y: number;
+    visible: boolean;
+    state: string;
+    collisionEnabled: boolean;
+  }>;
+  readonly controls: SliceFinalState["controls"];
+  readonly sequenceInputEnabled: boolean;
+  readonly camera: Readonly<{
+    scrollX: number;
+    scrollY: number;
+    zoom: number;
+    followingObserver: boolean;
+    followPending: boolean;
+  }>;
+  readonly appliedFinalState: AppliedGrayboxFinalState | null;
+}
+
+export interface AppliedGrayboxFinalState {
+  readonly finalState: SliceFinalState;
+  readonly actors: Readonly<
+    Record<
+      string,
+      SliceFinalState["actors"][string] &
+        Readonly<{
+          resolvedPositions: readonly Point[];
+        }>
+    >
+  >;
+  readonly props: Readonly<{
+    clay: SliceFinalState["props"]["clay"] &
+      Readonly<{ position: Point }>;
+  }>;
+  readonly camera: SliceFinalState["camera"] &
+    Readonly<{
+      zoneId: string;
+      position: Point;
+      zoom: number;
+      deadZone: Readonly<{ width: number; height: number }>;
+      followPending: boolean;
+    }>;
+  readonly controls: SliceFinalState["controls"] &
+    Readonly<{
+      sequenceInputEnabled: boolean;
+      effectiveMovementEnabled: boolean;
+      effectiveInteractionEnabled: boolean;
+    }>;
 }
 
 function abortError(): Error {
@@ -60,8 +109,21 @@ export class GrayboxScene extends Phaser.Scene {
     right: Phaser.Input.Keyboard.Key;
   }>;
   #path: readonly Point[] = [];
-  #movementEnabled = true;
-  #handlers?: SceneInteractionHandlers;
+  #sequenceInputEnabled = true;
+  #canonicalControls: SliceFinalState["controls"] = {
+    playerActorId: "observer",
+    movementEnabled: true,
+    interactionEnabled: true,
+    dialogueEnabled: false,
+    locked: false,
+  };
+  #clayState = "absent";
+  #clayCollisionEnabled = false;
+  #cameraFollowingObserver = false;
+  #cameraFollowPending = false;
+  #appliedFinalState: AppliedGrayboxFinalState | null = null;
+  #tearingDown = false;
+  #handlers: SceneInteractionHandlers | undefined;
 
   constructor(world: WorldRuntime, onReady: (scene: GrayboxScene) => void) {
     super({ key: "john-9-graybox" });
@@ -151,7 +213,9 @@ export class GrayboxScene extends Phaser.Scene {
         body,
         label,
         anchorOffset: actor.state.anchorOffset,
+        collisionRadius: actor.state.collisionRadius,
         pose: actor.state.pose,
+        collisionEnabled: actor.state.collisionEnabled,
       };
       this.#visuals.set(actor.definition.id, visual);
       this.#setVisualVisible(visual, actor.state.visible);
@@ -187,18 +251,23 @@ export class GrayboxScene extends Phaser.Scene {
       );
     }
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      if (!this.#movementEnabled || this.#player === undefined) {
+      if (this.#player === undefined || this.#tearingDown) {
         return;
       }
       const target = { x: pointer.worldX, y: pointer.worldY };
       const nearby = this.#nearestStoryActor(target, 52);
-      if (nearby !== undefined) {
+      if (nearby !== undefined && this.#interactionAllowed()) {
         this.#handlers?.onInteract(nearby);
         return;
       }
+      if (!this.#movementAllowed()) {
+        return;
+      }
+      this.#activatePendingCameraFollow();
       this.#path = this.#world.findPath(this.playerPosition(), target);
     });
     this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
+    this.#cameraFollowingObserver = true;
     this.#onReady(this);
     this.#handlers?.onWorldUpdate();
   }
@@ -208,7 +277,7 @@ export class GrayboxScene extends Phaser.Scene {
       return;
     }
     if (
-      this.#movementEnabled &&
+      this.#interactionAllowed() &&
       this.#interactKey !== undefined &&
       Phaser.Input.Keyboard.JustDown(this.#interactKey)
     ) {
@@ -217,7 +286,7 @@ export class GrayboxScene extends Phaser.Scene {
         this.#handlers?.onInteract(nearby);
       }
     }
-    if (!this.#movementEnabled) {
+    if (!this.#movementAllowed()) {
       return;
     }
 
@@ -267,13 +336,14 @@ export class GrayboxScene extends Phaser.Scene {
   }
 
   setMovementEnabled(enabled: boolean): void {
-    this.#movementEnabled = enabled;
+    this.#sequenceInputEnabled = enabled;
     if (!enabled) {
       this.#path = [];
     }
   }
 
   captureRuntimeState(): GrayboxSceneSnapshot {
+    const camera = this.cameras.main;
     return {
       actors: Object.fromEntries(
         [...this.#visuals.entries()].map(([actorId, visual]) => [
@@ -284,15 +354,37 @@ export class GrayboxScene extends Phaser.Scene {
             visible: visual.body.visible,
             label: visual.label.text,
             pose: visual.pose,
+            collisionEnabled: visual.collisionEnabled,
           },
         ]),
       ),
-      clayVisible: this.#clay?.visible ?? false,
-      movementEnabled: this.#movementEnabled,
+      clay: {
+        x: this.#clay?.x ?? 0,
+        y: this.#clay?.y ?? 0,
+        visible: this.#clay?.visible ?? false,
+        state: this.#clayState,
+        collisionEnabled: this.#clayCollisionEnabled,
+      },
+      controls: structuredClone(this.#canonicalControls),
+      sequenceInputEnabled: this.#sequenceInputEnabled,
+      camera: {
+        scrollX: camera.scrollX,
+        scrollY: camera.scrollY,
+        zoom: camera.zoom,
+        followingObserver: this.#cameraFollowingObserver,
+        followPending: this.#cameraFollowPending,
+      },
+      appliedFinalState:
+        this.#appliedFinalState === null
+          ? null
+          : structuredClone(this.#appliedFinalState),
     };
   }
 
   restoreRuntimeState(snapshot: GrayboxSceneSnapshot): void {
+    if (this.#tearingDown) {
+      return;
+    }
     this.tweens.killAll();
     this.cameras.main.resetFX();
     for (const [actorId, actorState] of Object.entries(snapshot.actors)) {
@@ -302,15 +394,38 @@ export class GrayboxScene extends Phaser.Scene {
       }
       visual.body.setPosition(actorState.x, actorState.y);
       visual.pose = actorState.pose;
+      visual.collisionEnabled = actorState.collisionEnabled;
       visual.label.setText(actorState.label);
+      const runtimeActor = this.#runtimeActor(visual.actorId);
+      runtimeActor.state.pose = actorState.pose;
+      runtimeActor.state.collisionEnabled = actorState.collisionEnabled;
+      runtimeActor.state.label = actorState.label;
       this.#syncLabel(visual);
       this.#setVisualVisible(visual, actorState.visible);
     }
-    this.#clay?.setVisible(snapshot.clayVisible);
-    this.#movementEnabled = snapshot.movementEnabled;
+    this.#clay
+      ?.setPosition(snapshot.clay.x, snapshot.clay.y)
+      .setVisible(snapshot.clay.visible);
+    this.#clayState = snapshot.clay.state;
+    this.#clayCollisionEnabled = snapshot.clay.collisionEnabled;
+    this.#canonicalControls = structuredClone(snapshot.controls);
+    this.#sequenceInputEnabled = snapshot.sequenceInputEnabled;
+    this.#appliedFinalState =
+      snapshot.appliedFinalState === null
+        ? null
+        : structuredClone(snapshot.appliedFinalState);
     this.#path = [];
-    if (this.#player !== undefined) {
+    this.cameras.main.setZoom(snapshot.camera.zoom);
+    this.cameras.main.setScroll(
+      snapshot.camera.scrollX,
+      snapshot.camera.scrollY,
+    );
+    this.#cameraFollowPending = snapshot.camera.followPending;
+    this.#cameraFollowingObserver = snapshot.camera.followingObserver;
+    if (snapshot.camera.followingObserver && this.#player !== undefined) {
       this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
+    } else {
+      this.cameras.main.stopFollow();
     }
     this.#handlers?.onWorldUpdate();
   }
@@ -346,12 +461,15 @@ export class GrayboxScene extends Phaser.Scene {
   focusAnchor(anchorId: string): void {
     const anchor = this.#requireAnchor(anchorId);
     this.cameras.main.stopFollow();
+    this.#cameraFollowingObserver = false;
+    this.#cameraFollowPending = false;
     this.cameras.main.pan(anchor.x, anchor.y, 350, "Sine.easeInOut");
   }
 
   setActorPose(storyActorId: string, pose: string): void {
     for (const visual of this.#storyActorVisuals(storyActorId)) {
       visual.pose = pose;
+      this.#runtimeActor(visual.actorId).state.pose = pose;
       visual.label.setText(
         `${visual.label.text.split(" · ")[0]} · ${pose}`,
       );
@@ -427,7 +545,7 @@ export class GrayboxScene extends Phaser.Scene {
     state: SliceFinalState,
     signal: AbortSignal,
   ): Promise<void> {
-    if (signal.aborted) {
+    if (signal.aborted || this.#tearingDown) {
       throw abortError();
     }
     for (const [storyActorId, actorState] of Object.entries(state.actors)) {
@@ -442,6 +560,12 @@ export class GrayboxScene extends Phaser.Scene {
           visual.body.y - this.#labelOffset(visual),
         );
         visual.pose = actorState.pose;
+        visual.collisionEnabled = actorState.collisionEnabled;
+        const runtimeActor = this.#runtimeActor(visual.actorId);
+        runtimeActor.state.pose = actorState.pose;
+        runtimeActor.state.label = actorState.label;
+        runtimeActor.state.collisionEnabled = actorState.collisionEnabled;
+        runtimeActor.state.anchorId = actorState.anchorId;
         visual.label.setText(
           visual.storyActorId === "jesus"
             ? `${actorState.label} · 候選身分灰盒`
@@ -451,15 +575,118 @@ export class GrayboxScene extends Phaser.Scene {
       }
     }
     if (this.#clay !== undefined) {
-      this.#clay.setVisible(state.props.clay.visible);
+      const clayAnchor = this.#requireAnchor(state.props.clay.anchorId);
+      this.#clay
+        .setPosition(clayAnchor.x, clayAnchor.y)
+        .setVisible(state.props.clay.visible);
     }
-    this.#movementEnabled = state.controls.movementEnabled;
+    this.#clayState = state.props.clay.state;
+    this.#clayCollisionEnabled = state.props.clay.collisionEnabled;
+    this.#canonicalControls = structuredClone(state.controls);
+    const playerVisuals = this.#storyActorVisuals(state.controls.playerActorId);
+    if (!playerVisuals.includes(this.#player!)) {
+      throw new Error(
+        `Canonical player actor ${state.controls.playerActorId} is not the rendered player.`,
+      );
+    }
     this.#path = [];
-    if (this.#player !== undefined) {
-      this.cameras.main.resetFX();
-      this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
+    const cameraAnchorContract = this.#world.anchorById.get(
+      state.camera.anchorId,
+    );
+    if (cameraAnchorContract === undefined) {
+      throw new RangeError(`Unknown canonical anchor ${state.camera.anchorId}.`);
     }
+    const zone = this.#world.cameraZoneByRegionId.get(
+      cameraAnchorContract.regionId,
+    );
+    if (zone === undefined) {
+      throw new RangeError(
+        `No canonical camera zone exists for ${cameraAnchorContract.regionId}.`,
+      );
+    }
+    const mobile =
+      this.game.canvas.clientWidth <= 640 || window.innerWidth <= 640;
+    const zoom = mobile ? zone.mobileZoom : zone.desktopZoom;
+    const camera = this.cameras.main;
+    camera.stopFollow();
+    camera.resetFX();
+    camera.setBounds(
+      0,
+      0,
+      this.#world.definition.width,
+      this.#world.definition.height,
+    );
+    camera.setZoom(zoom);
+    camera.setDeadzone(zone.deadZone.width, zone.deadZone.height);
+    camera.centerOn(
+      cameraAnchorContract.position.x,
+      cameraAnchorContract.position.y,
+    );
+    this.#cameraFollowingObserver = false;
+    this.#cameraFollowPending = state.camera.mode === "follow-observer";
+    this.#appliedFinalState = {
+      finalState: structuredClone(state),
+      actors: Object.fromEntries(
+        Object.entries(state.actors).map(([storyActorId, actorState]) => [
+          storyActorId,
+          {
+            ...structuredClone(actorState),
+            resolvedPositions: this.#storyActorVisuals(storyActorId).map(
+              ({ body }) => ({ x: body.x, y: body.y }),
+            ),
+          },
+        ]),
+      ),
+      props: {
+        clay: {
+          ...structuredClone(state.props.clay),
+          position: {
+            x: this.#clay?.x ?? cameraAnchorContract.position.x,
+            y: this.#clay?.y ?? cameraAnchorContract.position.y,
+          },
+        },
+      },
+      camera: {
+        ...structuredClone(state.camera),
+        zoneId: zone.id,
+        position: structuredClone(cameraAnchorContract.position),
+        zoom,
+        deadZone: structuredClone(zone.deadZone),
+        followPending: this.#cameraFollowPending,
+      },
+      controls: {
+        ...structuredClone(state.controls),
+        sequenceInputEnabled: this.#sequenceInputEnabled,
+        effectiveMovementEnabled: this.#movementAllowed(),
+        effectiveInteractionEnabled: this.#interactionAllowed(),
+      },
+    };
     this.#handlers?.onWorldUpdate();
+  }
+
+  snapshotAppliedFinalState(): AppliedGrayboxFinalState | null {
+    if (this.#appliedFinalState === null) {
+      return null;
+    }
+    return {
+      ...structuredClone(this.#appliedFinalState),
+      controls: {
+        ...structuredClone(this.#appliedFinalState.controls),
+        sequenceInputEnabled: this.#sequenceInputEnabled,
+        effectiveMovementEnabled: this.#movementAllowed(),
+        effectiveInteractionEnabled: this.#interactionAllowed(),
+      },
+    };
+  }
+
+  beginTeardown(): void {
+    this.#tearingDown = true;
+    this.#handlers = undefined;
+    this.#path = [];
+  }
+
+  get tearingDown(): boolean {
+    return this.#tearingDown;
   }
 
   #storyActorVisuals(storyActorId: string): readonly ActorVisual[] {
@@ -481,7 +708,11 @@ export class GrayboxScene extends Phaser.Scene {
       | Readonly<{ storyActorId: string; distance: number }>
       | undefined;
     for (const visual of this.#visuals.values()) {
-      if (!visual.body.visible || visual.storyActorId === "observer") {
+      if (
+        !visual.body.visible ||
+        visual.storyActorId === "observer" ||
+        !visual.collisionEnabled
+      ) {
         continue;
       }
       const distance = Phaser.Math.Distance.Between(
@@ -511,6 +742,17 @@ export class GrayboxScene extends Phaser.Scene {
   #setVisualVisible(visual: ActorVisual, visible: boolean): void {
     visual.body.setVisible(visible);
     visual.label.setVisible(visible);
+    this.#runtimeActor(visual.actorId).state.visible = visible;
+  }
+
+  #runtimeActor(actorId: string): WorldRuntime["actors"][number] {
+    const actor = this.#world.actors.find(
+      ({ definition }) => definition.id === actorId,
+    );
+    if (actor === undefined) {
+      throw new Error(`Map actor ${actorId} has no runtime state.`);
+    }
+    return actor;
   }
 
   #labelOffset(visual: ActorVisual): number {
@@ -533,6 +775,40 @@ export class GrayboxScene extends Phaser.Scene {
     if (!this.#world.isWalkableSegment(start, target)) {
       return false;
     }
+    for (const visual of this.#visuals.values()) {
+      if (
+        visual === this.#player ||
+        !visual.body.visible ||
+        !visual.collisionEnabled
+      ) {
+        continue;
+      }
+      if (
+        Phaser.Math.Distance.Between(
+          target.x,
+          target.y,
+          visual.body.x,
+          visual.body.y,
+        ) <
+        this.#world.agentRadius + visual.collisionRadius
+      ) {
+        return false;
+      }
+    }
+    if (
+      this.#clay?.visible &&
+      this.#clayCollisionEnabled &&
+      Phaser.Math.Distance.Between(
+        target.x,
+        target.y,
+        this.#clay.x,
+        this.#clay.y,
+      ) <
+        this.#world.agentRadius + 10
+    ) {
+      return false;
+    }
+    this.#activatePendingCameraFollow();
     this.#player.body.setPosition(target.x, target.y);
     this.#syncLabel(this.#player);
     this.#handlers?.onWorldUpdate();
@@ -564,7 +840,11 @@ export class GrayboxScene extends Phaser.Scene {
         y: target.y,
         duration: Math.max(0, duration),
         ease: "Linear",
-        onUpdate: () => this.#syncLabel(visual),
+        onUpdate: () => {
+          if (!this.#tearingDown) {
+            this.#syncLabel(visual);
+          }
+        },
         onComplete: () => finish(resolve),
       });
       const onAbort = (): void => {
@@ -573,5 +853,36 @@ export class GrayboxScene extends Phaser.Scene {
       };
       signal.addEventListener("abort", onAbort, { once: true });
     });
+  }
+
+  #movementAllowed(): boolean {
+    return (
+      this.#sequenceInputEnabled &&
+      this.#canonicalControls.movementEnabled &&
+      !this.#canonicalControls.locked &&
+      !this.#tearingDown
+    );
+  }
+
+  #interactionAllowed(): boolean {
+    return (
+      this.#sequenceInputEnabled &&
+      this.#canonicalControls.interactionEnabled &&
+      !this.#canonicalControls.locked &&
+      !this.#tearingDown
+    );
+  }
+
+  #activatePendingCameraFollow(): void {
+    if (
+      !this.#cameraFollowPending ||
+      this.#player === undefined ||
+      this.#tearingDown
+    ) {
+      return;
+    }
+    this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
+    this.#cameraFollowPending = false;
+    this.#cameraFollowingObserver = true;
   }
 }

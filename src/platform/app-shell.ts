@@ -20,6 +20,7 @@ export interface AppShell extends SliceSequenceUi {
   setSubtitles(visible: boolean): void;
   setStatus(message: string, isError?: boolean): void;
   setDeveloperFixture(fixtureId: string | null): void;
+  snapshotAppliedState(): SliceFinalState | null;
 }
 
 function abortError(): Error {
@@ -67,12 +68,6 @@ export function createAppShell(
           </header>
           <div class="dialogue-placeholder" data-dialogue-placeholder></div>
           <dl class="dialogue-metadata" data-dialogue-metadata></dl>
-          <section class="stress-metadata" data-stress-metadata hidden>
-            <h3>開發壓力資料</h3>
-            <p>音樂狀態：silence · 對話模式：blocking · 經文內容：withheld</p>
-            <p>此長版面只驗證窄屏捲動、按鈕可達性、來源標記與安全 placeholder；不包含逐字經文。</p>
-            <div data-stress-testimony></div>
-          </section>
           <footer>
             <span class="license-notice">經文待授權／審核</span>
             <button type="button" data-dialogue-next>下一段</button>
@@ -145,14 +140,6 @@ export function createAppShell(
     root,
     "[data-dialogue-next]",
   );
-  const stressMetadata = requireElement<HTMLElement>(
-    root,
-    "[data-stress-metadata]",
-  );
-  const stressTestimony = requireElement<HTMLElement>(
-    root,
-    "[data-stress-testimony]",
-  );
   const testimonyList = requireElement<HTMLElement>(
     root,
     "[data-testimony-list]",
@@ -167,18 +154,17 @@ export function createAppShell(
   let paused = false;
   let muted = false;
   let subtitles = true;
+  let appliedState: SliceFinalState | null = null;
 
   const presentLines = (
     lines: readonly SliceDialogueLine[],
     signal: AbortSignal,
-    stress: boolean,
   ): Promise<void> => {
     if (signal.aborted) {
       return Promise.reject(abortError());
     }
     dialogue.hidden = false;
     dialogue.dataset.blocking = "true";
-    stressMetadata.hidden = !stress;
     let index = 0;
 
     const renderLine = (): void => {
@@ -213,8 +199,6 @@ export function createAppShell(
         signal.removeEventListener("abort", onAbort);
         dialogue.hidden = true;
         delete dialogue.dataset.blocking;
-        stressMetadata.hidden = true;
-        stressTestimony.replaceChildren();
       };
       const onNext = (): void => {
         if (paused) {
@@ -279,30 +263,15 @@ export function createAppShell(
       fixture.textContent =
         fixtureId === null ? "" : `DEV FIXTURE · ${fixtureId}`;
     },
+    snapshotAppliedState: () =>
+      appliedState === null ? null : structuredClone(appliedState),
     setOverlay: (visible, blocking = visible) => {
       dialogue.dataset.sdkOverlayVisible = String(visible);
       dialogue.dataset.sdkInteractionBlocked = String(visible && blocking);
     },
-    presentDialogue: (_beatId, lines, signal) =>
-      presentLines(lines, signal, false),
-    presentStressFixture: (lines, testimony, signal) => {
-      stressTestimony.replaceChildren(
-        ...testimony.map((entry) => {
-          const card = document.createElement("article");
-          card.className = "stress-testimony-card";
-          card.dataset.testimonyId = entry.id;
-          const heading = document.createElement("h4");
-          heading.textContent = entry.id;
-          const metadata = document.createElement("p");
-          metadata.textContent =
-            `${entry.sourceLevel} · ${entry.category} · ${entry.segmentIds.join(", ")}`;
-          card.append(heading, metadata);
-          return card;
-        }),
-      );
-      return presentLines(lines, signal, true);
-    },
+    presentDialogue: (_beatId, lines, signal) => presentLines(lines, signal),
     applyFinalState: (state, stageGoal, testimony, optionalRecall) => {
+      appliedState = structuredClone(state);
       goal.textContent = `目標：${stageGoal.description}`;
       goal.dataset.goalId = stageGoal.id;
       testimonyList.replaceChildren(
@@ -327,6 +296,12 @@ export function createAppShell(
         recall.dataset.blocking = String(optionalRecall.blocking);
         recall.dataset.score = String(optionalRecall.score);
         recallIds.textContent = optionalRecall.focusTestimonyIds.join(" · ");
+      } else {
+        recall.hidden = true;
+        delete recall.dataset.recallId;
+        delete recall.dataset.blocking;
+        delete recall.dataset.score;
+        recallIds.textContent = "";
       }
       shell.setStatus(
         state.beatId === "b07"

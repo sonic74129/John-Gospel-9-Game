@@ -15,6 +15,7 @@ import {
 } from "@sonic74129/map-runtime";
 
 import anchors from "../world/anchors.json";
+import camera from "../world/camera.json";
 import collisions from "../world/collisions.json";
 import layout from "../world/layout.json";
 import navigation from "../world/navigation.json";
@@ -36,6 +37,8 @@ export interface GrayboxActorState {
   pose: string;
   label: string;
   collisionEnabled: boolean;
+  anchorId: string;
+  readonly collisionRadius: number;
   readonly anchorOffset: Point;
 }
 
@@ -51,6 +54,10 @@ export interface WorldRuntime {
   readonly actors: readonly MapActor<GrayboxActorState>[];
   readonly areas: readonly MapArea<GrayboxAreaMetadata>[];
   readonly anchorById: ReadonlyMap<string, (typeof anchors.anchors)[number]>;
+  readonly cameraZoneByRegionId: ReadonlyMap<
+    string,
+    (typeof camera.cameraZones)[number]
+  >;
   readonly pathById: ReadonlyMap<
     string,
     (typeof paths.sequencePaths)[number]
@@ -193,6 +200,8 @@ export function createWorldRuntime(): WorldRuntime {
         pose: "idle",
         label: actor.label,
         collisionEnabled: spawn.initiallyVisible,
+        anchorId: spawn.anchorId,
+        collisionRadius: spawn.collisionRadius,
         anchorOffset: {
           x: spawn.position.x - anchor.position.x,
           y: spawn.position.y - anchor.position.y,
@@ -206,6 +215,9 @@ export function createWorldRuntime(): WorldRuntime {
         }),
     ),
     anchorById,
+    cameraZoneByRegionId: new Map(
+      camera.cameraZones.map((zone) => [zone.regionId, zone]),
+    ),
     pathById,
     storyActorSpawnIds: STORY_ACTOR_SPAWN_IDS,
     isWalkable,

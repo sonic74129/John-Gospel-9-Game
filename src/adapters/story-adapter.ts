@@ -179,8 +179,9 @@ export class SliceStoryController {
     });
   }
 
-  dispose(): void {
+  async dispose(): Promise<void> {
     this.#disposed = true;
+    await this.#active;
   }
 
   async #dispatch(event: SliceStoryEvent): Promise<SliceDispatchResult> {

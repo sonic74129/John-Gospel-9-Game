@@ -3,13 +3,15 @@ import Phaser from "phaser";
 import { GrayboxScene } from "./adapters/graybox-scene.ts";
 import {
   createPlatformRuntime,
-  type DeveloperFixtureMode,
   type PlatformRuntime,
 } from "./adapters/sdk-platform.ts";
 import { UnsupportedSliceBeatError } from "./adapters/story-adapter.ts";
 import { createWorldRuntime } from "./adapters/world-adapter.ts";
 import { createAppShell } from "./platform/app-shell.ts";
-import { createPageLifecycleController } from "./platform/page-lifecycle.js";
+import {
+  createPageLifecycleController,
+  disposeRuntimeBeforeGame,
+} from "./platform/page-lifecycle.js";
 import "./platform/styles.css";
 
 const root = document.querySelector<HTMLElement>("#app");
@@ -19,11 +21,14 @@ if (root === null) {
 
 let game: Phaser.Game | undefined;
 let runtime: PlatformRuntime | undefined;
-const requestedFixture = new URLSearchParams(window.location.search).get(
-  "fixture",
-);
-const fixtureMode: DeveloperFixtureMode =
-  requestedFixture === "b14-stress" ? "b14-stress" : null;
+
+const loadDeveloperFixture = async () => {
+  if (!import.meta.env.DEV) {
+    return null;
+  }
+  const fixtures = await import("./adapters/dev-b14-fixture.ts");
+  return fixtures.resolveDeveloperFixture(window.location.search);
+};
 
 const reportError = (error: unknown): void => {
   console.error(error);
@@ -40,19 +45,18 @@ const shell = createAppShell(root, {
     try {
       const world = createWorldRuntime();
       const scene = new GrayboxScene(world, (readyScene) => {
-        runtime = createPlatformRuntime(
-          readyScene,
-          shell,
-          fixtureMode,
-          reportError,
-        );
-        runtime
-          .start()
-          .then(() => runtime?.unlockAudio())
-          .then(() => {
+        runtime = createPlatformRuntime(readyScene, shell, reportError);
+        const readyRuntime = runtime;
+        Promise.all([readyRuntime.start(), loadDeveloperFixture()])
+          .then(async ([, fixture]) => {
+            await readyRuntime.unlockAudio();
             shell.setStarted();
-            shell.setDeveloperFixture(fixtureMode);
-            runtime?.begin();
+            shell.setDeveloperFixture(fixture?.id ?? null);
+            if (fixture === null) {
+              readyRuntime.begin();
+            } else {
+              await fixture.run(readyRuntime, shell);
+            }
           })
           .catch(reportError);
       });
@@ -99,10 +103,10 @@ const pageLifecycle = createPageLifecycleController({
   resume: () => runtime?.resume("bfcache"),
   dispose: async () => {
     const activeRuntime = runtime;
+    const activeGame = game;
     runtime = undefined;
-    game?.destroy(true);
     game = undefined;
-    await activeRuntime?.dispose();
+    await disposeRuntimeBeforeGame(activeRuntime, activeGame);
   },
 });
 
