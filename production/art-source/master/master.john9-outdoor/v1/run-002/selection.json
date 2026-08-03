@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "master.john9-outdoor",
+  "family": "master",
+  "promptVersion": "v1",
+  "run": "run-002",
+  "selectedCandidate": 1,
+  "reason": "Candidate 1 has the stronger text-free three-quarter projection, readable broad route, believable basin and courtyard scale, coherent warm materials, and restrained natural lighting; candidate 2 is rejected for embedded text.",
+  "visualAcceptance": [
+    "Perspective remains consistently three-quarter top-down",
+    "A 120 px-tall adult overlay would read at believable scale",
+    "Routes remain visually separable from scenery",
+    "Palette, material and light match storybook-realism-v1",
+    "No forbidden theological or period content"
+  ],
+  "source": {
+    "path": "production/art-source/master/master.john9-outdoor/v1/run-002/selected-source.png",
+    "bytes": 1800396,
+    "sha256": "98ade4a48d20df0058b8a624d43e29ff5742f5f9be39adfef3c395576105db34"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:17:29.265Z"
+}

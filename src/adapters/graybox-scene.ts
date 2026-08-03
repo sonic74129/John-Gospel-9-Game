@@ -2,7 +2,13 @@ import Phaser from "phaser";
 
 import type { Point } from "@sonic74129/content-schema";
 
-import { CANDIDATE_JESUS_SHEET } from "./candidate-asset-adapter.ts";
+import occlusion from "../world/occlusion.json";
+import props from "../world/props.json";
+import {
+  actorTextureForSpawn,
+  STORY_ART,
+  STORY_ART_ASSET_LIST,
+} from "./art-asset-adapter.ts";
 import {
   applyCanonicalCameraFinalState,
   type AppliedCanonicalCameraState,
@@ -52,12 +58,18 @@ function polygonCenter(polygon: readonly Point[]): Point {
 interface ActorVisual {
   readonly actorId: string;
   readonly storyActorId: string;
-  readonly body: Phaser.GameObjects.Arc | Phaser.GameObjects.Sprite;
+  readonly body: Phaser.GameObjects.Image;
   readonly label: Phaser.GameObjects.Text;
   readonly anchorOffset: Point;
   readonly collisionRadius: number;
   pose: string;
   collisionEnabled: boolean;
+}
+
+interface OccluderVisual {
+  readonly image: Phaser.GameObjects.Image;
+  readonly polygon: Phaser.Geom.Polygon;
+  readonly fadedOpacity: number;
 }
 
 export interface SceneInteractionHandlers {
@@ -136,8 +148,9 @@ export class GrayboxScene extends Phaser.Scene {
   readonly #onReady: (scene: GrayboxScene) => void;
   readonly #viewportResize: ViewportResizeTransaction;
   readonly #visuals = new Map<string, ActorVisual>();
+  readonly #occluders: OccluderVisual[] = [];
   #player?: ActorVisual;
-  #clay?: Phaser.GameObjects.Arc;
+  #clay?: Phaser.GameObjects.Image;
   #cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
   #interactKey?: Phaser.Input.Keyboard.Key;
   #wasd?: Readonly<{
@@ -180,35 +193,43 @@ export class GrayboxScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.spritesheet(
-      CANDIDATE_JESUS_SHEET.key,
-      `${import.meta.env.BASE_URL}${CANDIDATE_JESUS_SHEET.path}`,
-      {
-        frameWidth: CANDIDATE_JESUS_SHEET.frameWidth,
-        frameHeight: CANDIDATE_JESUS_SHEET.frameHeight,
-      },
-    );
+    for (const asset of STORY_ART_ASSET_LIST) {
+      this.load.image(asset.key, `${import.meta.env.BASE_URL}${asset.path}`);
+    }
   }
 
   create(): void {
     const { definition } = this.#world;
     this.cameras.main.setBounds(0, 0, definition.width, definition.height);
+    this.add
+      .image(0, 0, STORY_ART.worldBase.key)
+      .setOrigin(0)
+      .setDisplaySize(definition.width, definition.height)
+      .setDepth(0);
 
+    const debugEnabled =
+      import.meta.env.DEV &&
+      new URLSearchParams(window.location.search).get("debug") === "1";
+    const debugLayer = this.add
+      .container(0, 0)
+      .setDepth(100)
+      .setVisible(debugEnabled);
     const graphics = this.add.graphics();
+    debugLayer.add(graphics);
     this.#world.regionContracts.forEach((region, index) => {
       const { x, y, id } = this.#world.areas[index]!.definition;
       graphics.fillStyle(AREA_COLORS[index % AREA_COLORS.length]!, 0.72);
       graphics.lineStyle(4, 0x3c352f, 0.55);
       drawPolygon(graphics, region.walkablePolygon);
       if (import.meta.env.DEV) {
-        this.add
-          .text(x + 24, y + 20, `${id} · walkable`, {
+        debugLayer.add(
+          this.add.text(x + 24, y + 20, `${id} · walkable`, {
             color: "#3c352f",
             fontFamily: "system-ui, sans-serif",
             fontSize: "22px",
             fontStyle: "bold",
-          })
-          .setDepth(2);
+          }),
+        );
       }
     });
 
@@ -223,15 +244,14 @@ export class GrayboxScene extends Phaser.Scene {
       drawPolygon(graphics, collision.polygon);
       if (import.meta.env.DEV) {
         const center = polygonCenter(collision.polygon);
-        this.add
-          .text(center.x, center.y, collision.id.replace("collision.", ""), {
+        debugLayer.add(
+          this.add.text(center.x, center.y, collision.id.replace("collision.", ""), {
             color: "#fffaf1",
             fontFamily: "system-ui, sans-serif",
             fontSize: "13px",
             align: "center",
-          })
-          .setOrigin(0.5)
-          .setDepth(2);
+          }).setOrigin(0.5),
+        );
       }
     }
 
@@ -247,16 +267,15 @@ export class GrayboxScene extends Phaser.Scene {
         y: (start.y + end.y) / 2,
       };
       if (import.meta.env.DEV) {
-        this.add
-          .text(center.x, center.y - 18, "transition", {
+        debugLayer.add(
+          this.add.text(center.x, center.y - 18, "transition", {
             color: "#3c352f",
             backgroundColor: "#e2d2b2dd",
             fontFamily: "system-ui, sans-serif",
             fontSize: "12px",
             padding: { x: 4, y: 2 },
-          })
-          .setOrigin(0.5, 1)
-          .setDepth(2);
+          }).setOrigin(0.5, 1),
+        );
       }
     }
 
@@ -269,8 +288,8 @@ export class GrayboxScene extends Phaser.Scene {
       graphics.fillCircle(anchor.position.x, anchor.position.y, 12);
       graphics.strokeCircle(anchor.position.x, anchor.position.y, 12);
       if (import.meta.env.DEV) {
-        this.add
-          .text(
+        debugLayer.add(
+          this.add.text(
             anchor.position.x,
             anchor.position.y - 18,
             anchor.id.split(".").at(-1) ?? anchor.id,
@@ -281,44 +300,31 @@ export class GrayboxScene extends Phaser.Scene {
               fontSize: "12px",
               padding: { x: 4, y: 2 },
             },
-          )
-          .setOrigin(0.5, 1)
-          .setDepth(2);
+          ).setOrigin(0.5, 1),
+        );
       }
     }
+    if (import.meta.env.DEV && this.input.keyboard !== null) {
+      this.input.keyboard
+        .addKey(Phaser.Input.Keyboard.KeyCodes.G)
+        .on("down", () => debugLayer.setVisible(!debugLayer.visible));
+    }
+
+    this.#createStaticProps();
+    this.#createOccluders();
 
     for (const actor of this.#world.actors) {
       const isPlayer = actor.state.role === "player";
-      const isCandidateJesus = actor.state.storyActorId === "jesus";
-      const body = isCandidateJesus
-        ? this.add
-            .sprite(
-              actor.definition.position.x,
-              actor.definition.position.y,
-              CANDIDATE_JESUS_SHEET.key,
-              CANDIDATE_JESUS_SHEET.idleFrontFrame,
-            )
-            .setOrigin(
-              0.5,
-              CANDIDATE_JESUS_SHEET.footBaseline /
-                CANDIDATE_JESUS_SHEET.frameHeight,
-            )
-            .setScale(0.42)
-        : this.add.circle(
-            actor.definition.position.x,
-            actor.definition.position.y,
-            isPlayer ? 24 : 18,
-            isPlayer ? 0x526c73 : 0x5a3d4b,
-          );
-      body.setDepth(4);
-      if (body instanceof Phaser.GameObjects.Arc) {
-        body.setStrokeStyle(4, 0xe2d2b2);
-      }
-      const labelText = import.meta.env.DEV && isCandidateJesus
-        ? `${actor.state.label} · 候選身分灰盒`
-        : actor.state.label;
+      const body = this.add
+        .image(
+          actor.definition.position.x,
+          actor.definition.position.y,
+          actorTextureForSpawn(actor.definition.id),
+        )
+        .setOrigin(0.5, 0.92)
+        .setDepth(this.#actorDepth(actor.definition.position.y));
       const label = this.add
-        .text(actor.definition.position.x, actor.definition.position.y - 44, labelText, {
+        .text(actor.definition.position.x, actor.definition.position.y - 84, actor.state.label, {
           color: "#fffaf1",
           backgroundColor: "#3c352fe6",
           fontFamily: "system-ui, sans-serif",
@@ -326,7 +332,7 @@ export class GrayboxScene extends Phaser.Scene {
           padding: { x: 7, y: 4 },
         })
         .setOrigin(0.5, 1)
-        .setDepth(5);
+        .setDepth(30);
       const visual: ActorVisual = {
         actorId: actor.definition.id,
         storyActorId: actor.state.storyActorId,
@@ -350,9 +356,9 @@ export class GrayboxScene extends Phaser.Scene {
 
     const clayAnchor = this.#requireAnchor("roadside.clay-action");
     this.#clay = this.add
-      .circle(clayAnchor.x, clayAnchor.y, 10, 0x8f5f42)
-      .setStrokeStyle(2, 0x3c352f)
-      .setDepth(3)
+      .image(clayAnchor.x, clayAnchor.y, STORY_ART.props.clayVessel.key)
+      .setOrigin(0.5, 0.82)
+      .setDepth(this.#actorDepth(clayAnchor.y) - 0.01)
       .setVisible(false);
     const objectiveRing = this.add
       .circle(0, 0, 30, 0xf0dfbd, 0.22)
@@ -372,7 +378,7 @@ export class GrayboxScene extends Phaser.Scene {
       .setOrigin(0.5, 1);
     this.#objectiveMarker = this.add
       .container(0, 0, [objectiveRing, objectiveArrow, this.#objectiveLabel])
-      .setDepth(8)
+      .setDepth(40)
       .setVisible(false);
 
     const cursorKeys = this.input.keyboard?.createCursorKeys();
@@ -419,6 +425,8 @@ export class GrayboxScene extends Phaser.Scene {
     });
     this.cameras.main.startFollow(this.#player.body, true, 0.08, 0.08);
     this.#cameraFollowingObserver = true;
+    this.#syncNarrativeTextures();
+    this.#syncOccluderAlpha();
     this.#onReady(this);
     this.#handlers?.onWorldUpdate("gameplay");
   }
@@ -427,6 +435,7 @@ export class GrayboxScene extends Phaser.Scene {
     if (this.#player === undefined) {
       return;
     }
+    this.#syncOccluderAlpha();
     if (
       this.#interactionAllowed() &&
       this.#interactKey !== undefined &&
@@ -591,6 +600,7 @@ export class GrayboxScene extends Phaser.Scene {
         throw new Error(`Cannot restore unknown map actor ${actorId}.`);
       }
       visual.body.setPosition(actorState.x, actorState.y);
+      visual.body.setDepth(this.#actorDepth(actorState.y));
       visual.pose = actorState.pose;
       visual.collisionEnabled = actorState.collisionEnabled;
       visual.label.setText(actorState.label);
@@ -635,6 +645,8 @@ export class GrayboxScene extends Phaser.Scene {
     } else {
       this.cameras.main.stopFollow();
     }
+    this.#syncNarrativeTextures();
+    this.#syncOccluderAlpha();
     this.#handlers?.onWorldUpdate("gameplay");
   }
 
@@ -694,6 +706,7 @@ export class GrayboxScene extends Phaser.Scene {
           : runtimeActor.state.label,
       );
     }
+    this.#syncNarrativeTextures();
   }
 
   setActorVisible(storyActorId: string, visible: boolean): void {
@@ -783,6 +796,7 @@ export class GrayboxScene extends Phaser.Scene {
           anchor.x + visual.anchorOffset.x,
           anchor.y + visual.anchorOffset.y,
         );
+        visual.body.setDepth(this.#actorDepth(visual.body.y));
         visual.label.setPosition(
           visual.body.x,
           visual.body.y - this.#labelOffset(visual),
@@ -813,6 +827,8 @@ export class GrayboxScene extends Phaser.Scene {
     this.#clayState = state.props.clay.state;
     this.#clayCollisionEnabled = state.props.clay.collisionEnabled;
     this.#canonicalControls = structuredClone(state.controls);
+    this.#syncNarrativeTextures();
+    this.#syncOccluderAlpha();
     const playerVisuals = this.#storyActorVisuals(state.controls.playerActorId);
     if (!playerVisuals.includes(this.#player!)) {
       throw new Error(
@@ -986,7 +1002,7 @@ export class GrayboxScene extends Phaser.Scene {
   }
 
   #labelOffset(visual: ActorVisual): number {
-    return visual.storyActorId === "jesus" ? 78 : 44;
+    return Math.max(74, visual.body.displayHeight * 0.76);
   }
 
   #syncLabel(visual: ActorVisual): void {
@@ -1039,7 +1055,9 @@ export class GrayboxScene extends Phaser.Scene {
       return false;
     }
     this.#player.body.setPosition(target.x, target.y);
+    this.#player.body.setDepth(this.#actorDepth(target.y));
     this.#syncLabel(this.#player);
+    this.#syncOccluderAlpha();
     this.#handlers?.onWorldUpdate("gameplay", {
       previousPosition: start,
       currentPosition: target,
@@ -1101,6 +1119,7 @@ export class GrayboxScene extends Phaser.Scene {
         ease: "Linear",
         onUpdate: () => {
           if (!this.#tearingDown) {
+            visual.body.setDepth(this.#actorDepth(visual.body.y));
             this.#syncLabel(visual);
           }
         },
@@ -1112,6 +1131,99 @@ export class GrayboxScene extends Phaser.Scene {
       };
       signal.addEventListener("abort", onAbort, { once: true });
     });
+  }
+
+  #actorDepth(y: number): number {
+    return 10 + y / 10000;
+  }
+
+  #createStaticProps(): void {
+    const textureById: Readonly<Record<string, string>> = {
+      "prop.pool-edge-marker": STORY_ART.props.poolMarker.key,
+      "prop.inquiry-gate-panel": STORY_ART.props.courtyardGate.key,
+      "prop.waiting-stool": STORY_ART.props.waitingStool.key,
+    };
+    for (const prop of props.movablePropAnchors) {
+      const texture = textureById[prop.id];
+      if (texture === undefined || prop.id === "prop.clay-container") {
+        continue;
+      }
+      this.add
+        .image(prop.position.x, prop.position.y, texture)
+        .setOrigin(0.5, 0.82)
+        .setDepth(8 + prop.position.y / 10000);
+    }
+  }
+
+  #createOccluders(): void {
+    const textureById: Readonly<Record<string, string>> = {
+      "occluder.roadside-canopy": STORY_ART.props.roadsideCanopy.key,
+      "occluder.pool-south-frond": STORY_ART.props.poolPalmFrond.key,
+      "occluder.neighbors-awning": STORY_ART.props.neighborsAwning.key,
+      "occluder.inquiry-gate-edge": STORY_ART.props.courtyardGate.key,
+      "occluder.outside-branch": STORY_ART.props.outerOliveBranch.key,
+    };
+    for (const occluder of occlusion.foregroundOccluders) {
+      const xs = occluder.polygon.map(({ x }) => x);
+      const ys = occluder.polygon.map(({ y }) => y);
+      const left = Math.min(...xs);
+      const right = Math.max(...xs);
+      const top = Math.min(...ys);
+      const bottom = Math.max(...ys);
+      const image = this.add
+        .image(
+          (left + right) / 2,
+          (top + bottom) / 2,
+          textureById[occluder.id]!,
+        )
+        .setDisplaySize(right - left, bottom - top)
+        .setDepth(25);
+      this.#occluders.push({
+        image,
+        polygon: new Phaser.Geom.Polygon(occluder.polygon),
+        fadedOpacity: occluder.fadedOpacity,
+      });
+    }
+  }
+
+  #syncOccluderAlpha(): void {
+    if (this.#player === undefined) {
+      return;
+    }
+    for (const occluder of this.#occluders) {
+      occluder.image.setAlpha(
+        Phaser.Geom.Polygon.Contains(
+          occluder.polygon,
+          this.#player.body.x,
+          this.#player.body.y,
+        )
+          ? occluder.fadedOpacity
+          : 1,
+      );
+    }
+  }
+
+  #syncNarrativeTextures(): void {
+    const man = this.#storyActorVisuals("man-born-blind")[0];
+    if (man !== undefined) {
+      const textureByPose: Readonly<Record<string, string>> = {
+        idle: STORY_ART.actors.manBlind.key,
+        "clay-on-eyes": STORY_ART.actors.manClay.key,
+        "standing-seeing": STORY_ART.actors.manSeeing.key,
+        worship: STORY_ART.actors.manWorship.key,
+      };
+      man.body.setTexture(textureByPose[man.pose] ?? STORY_ART.actors.manSeeing.key);
+    }
+    const jesus = this.#storyActorVisuals("jesus")[0];
+    if (jesus !== undefined) {
+      const texture =
+        man?.pose === "clay-on-eyes"
+          ? STORY_ART.actors.jesusClayAction.key
+          : jesus.pose === "standing" || jesus.pose === "walking"
+            ? STORY_ART.actors.jesusFoundMan.key
+            : STORY_ART.actors.jesusIdle.key;
+      jesus.body.setTexture(texture);
+    }
   }
 
   #movementAllowed(): boolean {

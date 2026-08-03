@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
   "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
-  "reviewStatus": "conditional-private-graybox-only",
+  "reviewStatus": "polished-private-preview-with-candidate-rights",
   "releaseEligible": false,
   "publicRedistributionApproved": false,
   "packs": [
@@ -21,10 +21,11 @@
           ]
         }
       ],
-      "storyLocalGaps": [
-        "john9-clay-action-pose",
-        "john9-found-man-pose",
-        "john9-dialogue-portraits"
+      "storyLocalGaps": [],
+      "storyLocalResolution": [
+        "character.jesus-john9@v1",
+        "character.man-born-blind@v1",
+        "Portraits intentionally omitted because the current dialogue UI does not consume them."
       ],
       "requiredBeforeFinalUse": [
         "per-story-theological-review",
@@ -59,13 +60,10 @@
         "martha-house-roof",
         "tomb-entrance"
       ],
-      "storyLocalGaps": [
-        "john9-continuous-world-map",
-        "siloam-pool",
-        "neutral-inquiry-courtyard",
-        "outer-road",
-        "foreground-occluders",
-        "movable-courtyard-gate"
+      "storyLocalGaps": [],
+      "storyLocalResolution": [
+        "environment.john9-world-base@v1",
+        "environment.john9-foreground-props@v1"
       ],
       "requiredBeforeFinalUse": [
         "atlas-cell-order-validation",
@@ -78,7 +76,7 @@
   "globalReleaseBlockers": [
     "Both packs remain candidate and releaseEligible=false.",
     "Public redistribution is not approved.",
-    "The graybox has not yet been calibrated against final actor dimensions.",
-    "Story-local maps, characters, poses, portraits and movable props are incomplete."
+    "Generated story-local assets are approved only for private preview pending owner rights review.",
+    "No pack-specific public redistribution approval or LICENSE/NOTICE exists."
   ]
 }

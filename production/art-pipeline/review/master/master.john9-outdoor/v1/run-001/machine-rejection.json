@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "master.john9-outdoor",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "status": "machine-rejected",
+  "reason": "The initial request used the unsupported size field. The service ignored it and returned 1024x1024 rather than the registered 1536x1024 dimensions.",
+  "observed": [
+    {
+      "candidate": 1,
+      "width": 1024,
+      "height": 1024,
+      "sha256": "e90d5296b98d06984ff7a37a37ca9d8905e0cd446523148bed2af302cefdf0c0"
+    },
+    {
+      "candidate": 2,
+      "width": 1024,
+      "height": 1024,
+      "sha256": "150d317837344dc10e9f8c200af976cd1af7f4377e3855a3903fa214d7d0132e"
+    }
+  ],
+  "correctiveAction": "Preserve run-001, change only the request schema to documented width and height fields, use a supported 1152x768 output, and create run-002."
+}

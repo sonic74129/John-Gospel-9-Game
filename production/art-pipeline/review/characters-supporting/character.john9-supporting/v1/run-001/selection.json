@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "character.john9-supporting",
+  "family": "characters-supporting",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "selectedCandidate": 1,
+  "reason": "Candidate 1 preserves all eight cells in exact order with distinct disciples, male and female neighbors, two restrained inquiry figures, father and mother. It has stronger role separation, period materials, clean full-body silhouettes, adult scale, text-free background and no villain caricature; candidate 2 makes the first disciple too visually close to the pinned Jesus identity.",
+  "visualAcceptance": [
+    "All eight requested roles appear in exact order",
+    "Group roles remain distinct without moral caricature",
+    "Each silhouette reads at 96-112 runtime pixels tall",
+    "Palette, perspective, materials and lighting match core actors",
+    "No forbidden theological or period content"
+  ],
+  "source": {
+    "path": "production/art-source/characters-supporting/character.john9-supporting/v1/run-001/selected-source.png",
+    "bytes": 1180474,
+    "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:33:11.734Z"
+}

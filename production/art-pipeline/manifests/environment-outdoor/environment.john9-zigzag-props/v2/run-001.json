@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "family": "environment-outdoor",
+  "assetId": "environment.john9-zigzag-props",
+  "promptVersion": "v2",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1152,
+    "height": 768
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: stylized-concept. Asset type: production game-object atlas calibrated to the 2560x1792 John 9 zig-zag world. On a perfectly flat uniform pale cream #F7F0DE background, present exactly eight isolated first-century Judean objects in a precise 4 columns by 2 rows grid, one centered object per equal 288x384 cell, generous empty margin, no overlap, no dividing lines, no labels and no shadows crossing cell boundaries. Exact order, row 1 left to right: a sparse broad olive canopy for the roadside foreground polygon near runtime x140-400 y980-1220; a short diagonal palm frond for the Siloam foreground near x700-900 y1420-1660; a woven dusty-olive market awning edge for the neighbor foreground near x1620-1800 y800-1060; an irregular quiet olive branch for the outer-road foreground near x1880-2100 y1240-1480. Row 2 left to right: a simple open timber courtyard gate panel sized for the inquiry gate around x1970 y720; a tiny shallow clay vessel suitable for ordinary prepared mud; a low limestone pool-edge marker stone; a simple low wooden waiting stool. All objects use the same fixed three-quarter top-down projection as the world and share polished warm hand-painted storybook realism, clean silhouettes, believable first-century materials, upper-left natural light, soft compact grounding shadows and the palette warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, sand #C5A16E and deep warm shadow #3C352F. Each object must be complete and fully inside its cell. No people, text, symbols or narrative action.",
+  "must": [
+    "Exactly eight isolated objects in 4x2 order",
+    "Uniform #F7F0DE removable background",
+    "Complete clean silhouettes with generous margins",
+    "Three-quarter top-down perspective",
+    "Consistent upper-left light and first-century materials"
+  ],
+  "avoid": [
+    "People, animals, buildings or narrative scene",
+    "Cell borders, labels, text, UI, watermark",
+    "Object overlap or clipped silhouettes",
+    "Modern hinges, steel hardware or furniture",
+    "Glow, particles, icon outlines, sticker style",
+    "Tomb or John 11 objects"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1152,
+    "exactHeight": 768,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "All eight requested cells are present in exact order",
+    "Background is sufficiently uniform for keyed transparency",
+    "Object silhouettes remain legible at 64-260 runtime pixels",
+    "Perspective, palette, material and light match the world base",
+    "No forbidden or story-extraneous content"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "master:master.john9-outdoor@v1",
+    "environment:environment.john9-zigzag-world@v2",
+    "world:src/world/occlusion.json",
+    "world:src/world/props.json"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "azureResource": {
+    "subscriptionName": "MCAPS-Hybrid-REQ-132159-2025-sonicchung",
+    "subscriptionId": "550d1332-62fa-4132-8473-b6af0bc88dfd",
+    "resourceGroup": "rg-sonicchung-7894_ai",
+    "account": "ai-johnrpg-sonic-74129",
+    "deployment": "mai-image-2-5-pro",
+    "capacity": 1,
+    "generationMode": "serial"
+  },
+  "startedAt": "2026-08-03T00:03:42.155Z",
+  "status": "complete",
+  "completedAt": "2026-08-03T00:04:58.248Z",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 806458,
+      "sha256": "6094610dd033396801fd3746adb49491bebcc62a31f5f624ce1f496fb74f7c79",
+      "observedDimensions": {
+        "width": 1152,
+        "height": 768
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-03T00:04:22.686Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 717186,
+      "sha256": "f6fe9aab6664a9ecca015f90765d77f281ad93b1383e1cd7c00fd2767eda21f9",
+      "observedDimensions": {
+        "width": 1152,
+        "height": 768
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-03T00:04:58.079Z"
+    }
+  ],
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/environment-outdoor/environment.john9-zigzag-props/v2/run-001/contact-sheet.jpg",
+    "bytes": 80757,
+    "sha256": "00a708e54155680c8ed00dfddb17b3f6dad0d1ef7b61d1eb6dd1396e12b5db6f",
+    "maximumLongEdge": 1600
+  }
+}
