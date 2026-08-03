@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "assetId": "environment.john9-zigzag-world",
+  "family": "environment-outdoor",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-zigzag-world/v2/run-001/selected-source.png",
+    "bytes": 1708705,
+    "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0"
+  },
+  "selectedCandidate": 2,
+  "selectionReason": "Candidate 2 most closely matches the canonical 2560x1792 topology: Siloam is lower-middle, the inquiry courtyard is upper-right, the right-lower outer-road space remains open, and the broad dry route connects all regions without baked characters or text.",
+  "outputs": [
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp",
+      "mediaType": "image/webp",
+      "bytes": 689654,
+      "sha256": "f2e250ca357a1949c807952ea674c0f5cb9b4b13d18a6e44693fc4426a9fb5ca",
+      "dimensions": {
+        "width": 2560,
+        "height": 1792
+      },
+      "processing": {
+        "tool": "Pillow",
+        "resizeKernel": "lanczos",
+        "crop": [
+          27,
+          0,
+          1125,
+          768
+        ],
+        "outputSize": [
+          2560,
+          1792
+        ],
+        "format": "webp",
+        "quality": 90
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

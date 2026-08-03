@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "family": "environment-outdoor",
+  "assetId": "environment.john9-zigzag-world",
+  "promptVersion": "v2",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1152,
+    "height": 768
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: historical-scene. Asset type: primary continuous game-world base for a three-quarter top-down RPG, designed for an exact 2560x1792 runtime canvas and generated as a 1152x768 source whose central 1098x768 area is the safe crop. Create one seamless outdoor world, never panels or a horizontal corridor. Match this north-south zig-zag composition when mapped into 2560x1792 coordinates: roadside occupies x80-1040 y420-1320; the Pool of Siloam occupies x640-1620 y960-1720; a neutral neighbor gathering occupies x1120-1880 y420-1240; a neutral inquiry courtyard occupies x1680-2480 y120-1120; and an outer road occupies x1880-2520 y920-1680. The broad dry walkable route must visibly bend southeast from roadside to Siloam, northeast to the neighbor shade, east and north into the inquiry courtyard, then south through its gate to the outer road. Preserve the four portal centers corresponding approximately to runtime (840,1200), (1420,1140), (1770,690), and (2100,1020), each with generous open clearance. Show the Pool of Siloam as a restrained stepped limestone basin near runtime x980-1380 y1480-1640, with a dry accessible washing edge at x1120 y1440. Show a broad inquiry standing area around x2100 y620, a simple open gate near x1990 y680, and a quiet olive-edged ending space around x2260 y1320. Keep fixed walls, basin water, terraces, shade structures, benches and tree islands outside the canonical route. Actors are separate and about 105-132 runtime pixels tall, so maintain believable doorway, gate, wall, stool and basin scale. Fixed three-quarter top-down RPG projection, coherent verticals and roof planes, polished warm hand-painted storybook realism, clean readable forms, subtle paper-and-gouache texture, upper-left natural afternoon light and soft shadows. Palette: warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, muted blue #526C73, sand #C5A16E, natural linen #E2D2B2, deep warm shadow #3C352F. Empty environment only: no people, no labels and no story event.",
+  "must": [
+    "One continuous five-region north-south zig-zag outdoor world",
+    "Clear broad dry route through four canonical portal centers",
+    "Siloam basin in the lower middle, inquiry courtyard upper right, outer road lower right",
+    "Three-quarter top-down projection and believable scale",
+    "Empty environment with upper-left natural light"
+  ],
+  "avoid": [
+    "People or baked characters",
+    "Horizontal corridor, disconnected panels, collage seams, inset frames",
+    "Eye-level or side-on camera",
+    "Decorative maze, blocked route, deep water crossing",
+    "Temple identification or unsupported named venue",
+    "Halos, glow, fantasy effects, modern objects",
+    "Embedded text, labels, UI, watermark",
+    "Tomb, Bethany, Lazarus, Martha, John 11 imagery"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1152,
+    "exactHeight": 768,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "Five regions read in canonical zig-zag order without becoming separate panels",
+    "Canonical route and all four portals remain unobstructed",
+    "Pool, gate and outer road are immediately legible at gameplay zoom",
+    "Scale accepts 105-132 px runtime actors without crowding",
+    "Perspective, palette, materials and lighting are coherent",
+    "Theological restraint and period rules pass"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "master:master.john9-outdoor@v1",
+    "world:src/world/layout.json",
+    "world:src/world/collisions.json",
+    "world:src/world/anchors.json",
+    "world:src/world/paths.json"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "azureResource": {
+    "subscriptionName": "MCAPS-Hybrid-REQ-132159-2025-sonicchung",
+    "subscriptionId": "550d1332-62fa-4132-8473-b6af0bc88dfd",
+    "resourceGroup": "rg-sonicchung-7894_ai",
+    "account": "ai-johnrpg-sonic-74129",
+    "deployment": "mai-image-2-5-pro",
+    "capacity": 1,
+    "generationMode": "serial"
+  },
+  "startedAt": "2026-08-03T00:01:46.856Z",
+  "status": "complete",
+  "completedAt": "2026-08-03T00:03:12.239Z",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 1740489,
+      "sha256": "eb6aa8687af917f876d7d2a456a52dd5b417ddbe6688d181aeb44fe37b429d56",
+      "observedDimensions": {
+        "width": 1152,
+        "height": 768
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-03T00:02:34.783Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 1708705,
+      "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0",
+      "observedDimensions": {
+        "width": 1152,
+        "height": 768
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-03T00:03:11.954Z"
+    }
+  ],
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/environment-outdoor/environment.john9-zigzag-world/v2/run-001/contact-sheet.jpg",
+    "bytes": 177301,
+    "sha256": "2195c0ee427717c1f761322c134cf9daf8b42da21bbd88aa39528017d1a2244b",
+    "maximumLongEdge": 1600
+  }
+}

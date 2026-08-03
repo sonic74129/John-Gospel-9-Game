@@ -126,7 +126,7 @@ button:disabled {
   outline: 3px solid #3c352f;
   outline-offset: -3px;
   border-radius: 1.25rem;
-  background: #83715d;
+  background: #ead9b7;
   box-shadow: 0 1.4rem 3.5rem rgb(60 53 47 / 24%);
 }
 
@@ -206,8 +206,10 @@ button:disabled {
   padding: clamp(1.5rem, 7vw, 6rem);
   text-align: center;
   background:
-    linear-gradient(rgb(60 53 47 / 38%), rgb(60 53 47 / 68%)),
-    linear-gradient(135deg, #d2b887, #66704b);
+    linear-gradient(rgb(60 53 47 / 34%), rgb(60 53 47 / 72%)),
+    url("/games/john-9-man-born-blind/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp")
+      center / cover no-repeat,
+    #66704b;
   color: #fffaf1;
 }
 

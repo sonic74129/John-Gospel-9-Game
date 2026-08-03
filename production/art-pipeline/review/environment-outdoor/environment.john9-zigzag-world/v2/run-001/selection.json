@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "assetId": "environment.john9-zigzag-world",
+  "family": "environment-outdoor",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "selectedCandidate": 2,
+  "reason": "Candidate 2 most closely matches the canonical 2560x1792 topology: Siloam is lower-middle, the inquiry courtyard is upper-right, the right-lower outer-road space remains open, and the broad dry route connects all regions without baked characters or text.",
+  "visualAcceptance": [
+    "Five regions read in canonical zig-zag order without becoming separate panels",
+    "Canonical route and all four portals remain unobstructed",
+    "Pool, gate and outer road are immediately legible at gameplay zoom",
+    "Scale accepts 105-132 px runtime actors without crowding",
+    "Perspective, palette, materials and lighting are coherent",
+    "Theological restraint and period rules pass"
+  ],
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-zigzag-world/v2/run-001/selected-source.png",
+    "bytes": 1708705,
+    "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-03T00:03:41.091Z"
+}

@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "assetId": "environment.john9-zigzag-props",
+  "family": "environment-outdoor",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-zigzag-props/v2/run-001/selected-source.png",
+    "bytes": 806458,
+    "sha256": "6094610dd033396801fd3746adb49491bebcc62a31f5f624ce1f496fb74f7c79"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Candidate 1 preserves the exact eight-cell order with the cleanest isolated silhouettes, a period-plausible timber gate without modern metal latch hardware, a low rectangular waiting stool, compact pool stones, and no text, people, overlaps or clipped objects.",
+  "outputs": [
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/roadside-canopy.png",
+      "mediaType": "image/png",
+      "bytes": 67747,
+      "sha256": "5723d5e41bfa0e0db59d3652b0120feb216446ccafe0435737f6dd8bd0dccc68",
+      "dimensions": {
+        "width": 180,
+        "height": 240
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:0:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:240:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/pool-palm-frond.png",
+      "mediaType": "image/png",
+      "bytes": 44661,
+      "sha256": "4030a957ca597c4fb56353f5c970a9f9fa39cad8df439abd2500f3963ec7d42b",
+      "dimensions": {
+        "width": 166,
+        "height": 220
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:288:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:220:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/neighbors-awning.png",
+      "mediaType": "image/png",
+      "bytes": 49774,
+      "sha256": "fc0ba8ac7ce41942a598a4bdba1049bc8caad1a450cbbed7f4dac30535555b53",
+      "dimensions": {
+        "width": 166,
+        "height": 220
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:576:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:220:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/outer-olive-branch.png",
+      "mediaType": "image/png",
+      "bytes": 43272,
+      "sha256": "28780901c75d97c68309bb4fcb168a44eee4c1bbe8ffdf1f87cb641754ed1670",
+      "dimensions": {
+        "width": 150,
+        "height": 200
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:864:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:200:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/courtyard-gate.png",
+      "mediaType": "image/png",
+      "bytes": 40935,
+      "sha256": "5a70424eb65f2dbfae76d5e37858e480047b44eef9d17872c5f8807594b96c28",
+      "dimensions": {
+        "width": 166,
+        "height": 220
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:0:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:220:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/clay-vessel.png",
+      "mediaType": "image/png",
+      "bytes": 4448,
+      "sha256": "61175f931547ea4540d792a30c12a16db0710597cbc3c5b8d7212580870fb6f4",
+      "dimensions": {
+        "width": 54,
+        "height": 72
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:288:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:72:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/pool-marker.png",
+      "mediaType": "image/png",
+      "bytes": 8969,
+      "sha256": "9af0d41454f2a0aace5d951e430d4509e4517ec47481fcb71a0880a6468fbdde",
+      "dimensions": {
+        "width": 72,
+        "height": 96
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:576:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:96:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/waiting-stool.png",
+      "mediaType": "image/png",
+      "bytes": 8127,
+      "sha256": "0779720e8bd00122d4887a4b8d37f869454e628709432299f1ba73f1d4171951",
+      "dimensions": {
+        "width": 72,
+        "height": 96
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:864:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:96:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

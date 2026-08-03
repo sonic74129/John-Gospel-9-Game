@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "family": "characters-supporting",
+  "assetId": "character.john9-supporting",
+  "promptVersion": "v1",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1024,
+    "height": 1024
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: historical-scene. Asset type: isolated supporting-character sprite atlas for a three-quarter top-down RPG. On a perfectly flat uniform pale cream #F7F0DE background, present exactly eight isolated full-body first-century Judean adults in a precise 4 columns by 2 rows grid, one centered person per equal cell, generous margin, no overlap, no grid lines and no labels. Exact cell order: row 1: male disciple A in muted blue-gray wrap; male disciple B in dusty olive wrap; male neighbor in sand tunic; female neighbor in muted terracotta wrap. Row 2: restrained older male Pharisee in layered natural linen and muted plum-brown shawl; second Judean authority in a different dusty-olive layered robe; the man's father in worn sand and brown garments; the man's mother in a modest muted-blue head covering and natural-linen dress. Middle Eastern appearances, varied but believable faces and ages, adult anatomy with head about one seventh body height, plain leather sandals. Neutral attentive or questioning expressions, hands low, no theatrical accusation. Fixed three-quarter top-down game camera, polished warm hand-painted storybook realism, clean silhouettes, upper-left natural light and compact soft grounding shadows. The image must contain only the eight figures and flat empty background: absolutely no title, caption, role name, numbering, lettering, symbol, border, grid line or typography anywhere.",
+  "must": [
+    "Exactly eight people in exact 4x2 cell order",
+    "Uniform #F7F0DE removable background",
+    "Distinct readable identities with coherent period clothing",
+    "Full bodies and feet visible",
+    "Restrained expressions and adult proportions"
+  ],
+  "avoid": [
+    "Crowd scene, overlapping people or clipped bodies",
+    "Villain caricature, rage, pointing accusation",
+    "Royal, priestly-fantasy or modern costume",
+    "Halo, glow, particles",
+    "Text, grid lines, borders, UI, watermark",
+    "Children or unrelated extra figures"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1024,
+    "exactHeight": 1024,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "All eight requested roles appear in exact order",
+    "Group roles remain distinct without moral caricature",
+    "Each silhouette reads at 96-112 runtime pixels tall",
+    "Palette, perspective, materials and lighting match core actors",
+    "No forbidden theological or period content"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "master:master.john9-outdoor@v1",
+    "scripture:John 9:2,8-34"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "startedAt": "2026-08-02T22:31:37.799Z",
+  "status": "complete",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 1180474,
+      "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:32:10.395Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 1230445,
+      "sha256": "46413048b4cadb9ebbd4351049f7805ea45e82411e926624fb85ccf25c9af85c",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:32:47.088Z"
+    }
+  ],
+  "completedAt": "2026-08-02T22:32:47.227Z",
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/characters-supporting/character.john9-supporting/v1/run-001/contact-sheet.jpg",
+    "bytes": 166153,
+    "sha256": "2dcd6e97b255e00e5d5db56632fe6a10fc7baddfa5d04813abf504981fa5e6b0",
+    "maximumLongEdge": 1600
+  }
+}

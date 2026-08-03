@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "family": "characters-core",
+  "entries": [
+    {
+      "assetId": "character.observer",
+      "runtimeUse": "Player observer map sprite",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v3",
+      "dimensions": { "width": 1024, "height": 1024 },
+      "candidateCount": 2,
+      "prompt": "Use case: historical-scene. Asset type: isolated map-character sprite atlas for a three-quarter top-down RPG. On a perfectly flat uniform pale cream #F7F0DE background, show exactly four isolated full-body views of the same unnamed adult first-century Judean observer in one horizontal row, evenly spaced and not overlapping. Exact orientation is mandatory: figure 1 faces mostly toward the viewer; figure 2 faces directly away from the viewer; figure 3 is a side profile with nose and toes pointing to the image's RIGHT edge; figure 4 is the mirrored opposite side profile with nose and toes pointing to the image's LEFT edge. The observer is modest and visually secondary, Middle Eastern appearance, medium-brown skin, dark brown hair mostly covered by a simple dusty-olive head cloth, natural-linen knee-length tunic, muted-blue sleeveless outer wrap, rope belt and plain leather sandals. Neutral attentive expression, hands relaxed, restrained stance, adult anatomy with head about one seventh of body height, no weapon and no speaking gesture. Match a three-quarter top-down game camera so feet and shoulders read clearly. Polished warm hand-painted storybook realism, clean silhouette, subtle gouache texture, upper-left natural light and a compact soft shadow directly under each figure. The image must contain only the four figures and the flat empty background: absolutely no title, caption, direction name, lettering, symbol, border or typography anywhere.",
+      "revision": {
+        "target": "Correct the fourth profile orientation after both v2 candidates repeated a right-facing profile.",
+        "changeOnly": "Make figure 4 face the image's left edge.",
+        "keepUnchanged": "Text-free output, four-view order, observer identity, clothing, restrained pose, adult proportions, palette, lighting and removable background.",
+        "acceptance": "Figure 3 nose and toes point right; figure 4 nose and toes point left; no typography remains."
+      },
+      "must": [
+        "Exactly four views of one identical observer in one row",
+        "Uniform #F7F0DE removable background",
+        "Full body and feet visible with consistent identity",
+        "Adult non-chibi proportions and restrained neutral stance",
+        "First-century Judean clothing and upper-left light"
+      ],
+      "avoid": [
+        "Named or heroic protagonist cues",
+        "Speech, pointing, prayer or miracle gesture",
+        "Weapon, armor, royal clothing, modern object",
+        "Halo, glow, particles",
+        "Text, borders, UI, watermark",
+        "Clipped body or overlapping figures"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1024,
+        "exactHeight": 1024,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "All four views clearly depict one identity and costume",
+        "Silhouette reads at 96-112 runtime pixels tall",
+        "Observer remains visually secondary and theologically neutral",
+        "Perspective, palette and light match the world"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "master:master.john9-outdoor@v1"
+      ]
+    },
+    {
+      "assetId": "character.man-born-blind",
+      "runtimeUse": "Man born blind state and pose sheet",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v1",
+      "dimensions": { "width": 1024, "height": 1024 },
+      "candidateCount": 2,
+      "prompt": "Use case: historical-scene. Asset type: four-state isolated map-character sprite atlas for a three-quarter top-down RPG. On a perfectly flat uniform pale cream #F7F0DE background, show exactly four isolated full-body depictions in one horizontal row of the same adult first-century Judean man born blind, evenly spaced, no overlap: (1) seated calmly at a low roadside edge before washing, eyes naturally unfocused and no injury; (2) seated with a small restrained trace of ordinary brown clay applied over closed eyes, no glow; (3) standing after washing and able to see, same face and clothes, quietly alert; (4) kneeling respectfully in the later belief scene, restrained and not theatrical. Identity lock across all four: Middle Eastern appearance, lean adult build, short dark curly hair, close dark beard, weathered natural-linen tunic, faded terracotta shoulder wrap, rope belt and simple leather sandals. Adult anatomy, head about one seventh body height. Fixed three-quarter top-down game camera, polished warm hand-painted storybook realism, clean silhouettes, subtle gouache texture, upper-left natural light, compact soft ground shadows. The image must contain only the four figures and flat empty background: absolutely no title, caption, state name, numbering, lettering, symbol, border or typography anywhere.",
+      "must": [
+        "Exactly four ordered states of the same man",
+        "Blind, clay-applied, seeing and restrained belief poses",
+        "Uniform #F7F0DE removable background",
+        "Identity, clothing and body proportions unchanged across states",
+        "No injury and no supernatural visual effect"
+      ],
+      "avoid": [
+        "White eyes, wounds, horror or disability caricature",
+        "Miracle glow, halo, beam, particles",
+        "Exaggerated joy, collapse or theatrical worship",
+        "Modern clothing or objects",
+        "Text, labels, borders, UI, watermark",
+        "Clipped or overlapping figures"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1024,
+        "exactHeight": 1024,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "One identity remains continuous through all four states",
+        "Blind and seeing states differ through gaze and pose, not injury",
+        "Clay is visible but ordinary and restrained",
+        "Belief pose reads clearly without spectacle",
+        "Silhouettes read at 96-112 runtime pixels tall"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "master:master.john9-outdoor@v1",
+        "scripture:John 9:1-38"
+      ]
+    },
+    {
+      "assetId": "character.jesus-john9",
+      "runtimeUse": "John 9 special map poses while retaining pinned Jesus identity",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v1",
+      "dimensions": { "width": 1024, "height": 1024 },
+      "candidateCount": 2,
+      "prompt": "Use case: historical-scene. Asset type: isolated story-local special-pose sprite atlas matching the pinned identity-jesus-storybook@0.1.0 map identity. On a perfectly flat uniform pale cream #F7F0DE background, show exactly three isolated full-body views in one horizontal row of the same respectful first-century Jewish man with Middle Eastern appearance: shoulder-length wavy dark-brown hair, short full dark beard, warm medium complexion, undyed natural-linen long tunic, muted dusty-olive sleeveless mantle with a gray-green outer drape, plain leather sandals. Pose 1: calm three-quarter standing idle. Pose 2: restrained crouching or leaning action suitable for preparing ordinary clay near a seated person, hands low and no dramatic gesture. Pose 3: calm standing conversation after finding the man later, one open hand low at waist height. Preserve the pinned identity's face, age, hair, complexion, clothing layers, colors, materials and adult proportions; head about one seventh of body height. Fixed three-quarter top-down RPG camera, polished warm hand-painted storybook realism, clean silhouettes, subtle gouache texture, upper-left natural light, compact soft shadows. The image must contain only the three figures and flat empty background: absolutely no title, caption, pose name, numbering, lettering, symbol, border or typography anywhere.",
+      "must": [
+        "Exactly three ordered poses of one identity",
+        "Match pinned Jesus identity clothing and appearance",
+        "Uniform #F7F0DE removable background",
+        "Restrained clay action and later conversation pose",
+        "Adult non-chibi proportions and natural light"
+      ],
+      "avoid": [
+        "Halo, glow, beam, particles or luminous clothing",
+        "Royal robe, armor, Europeanized iconography",
+        "Raised theatrical blessing pose",
+        "Control by player or implication player causes miracle",
+        "Text, borders, UI, watermark",
+        "Clipped or overlapping figures"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1024,
+        "exactHeight": 1024,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "Face, hair, beard and layered olive/linen clothing match pinned identity",
+        "All poses are readable at 105 runtime pixels tall",
+        "Clay action remains ordinary and theologically restrained",
+        "No iconographic, magical or theatrical treatment"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "identity:identity-jesus-storybook@0.1.0",
+        "identity-source:character.jesus@v3",
+        "scripture:John 9:1-7,35-38"
+      ]
+    }
+  ]
+}

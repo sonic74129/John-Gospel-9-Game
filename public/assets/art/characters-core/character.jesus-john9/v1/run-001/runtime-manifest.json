@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "character.jesus-john9",
+  "family": "characters-core",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/characters-core/character.jesus-john9/v1/run-001/selected-source.png",
+    "bytes": 1065998,
+    "sha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Candidate 1 best preserves the pinned identity vocabulary: warm Middle Eastern face, wavy dark hair, short full beard, undyed long tunic and layered gray-green/dusty-olive mantle. Its idle, low ordinary-clay action and waist-height conversation poses are clearly separated, text-free and restrained; candidate 2 lacks a visible clay action.",
+  "outputs": [
+    {
+      "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-idle.png",
+      "mediaType": "image/png",
+      "bytes": 11995,
+      "sha256": "8201b430a3c1af6bbd41bcb498d048ec36fe8252ed730bdaf65ff41d77d1a9e8",
+      "dimensions": {
+        "width": 50,
+        "height": 132
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=341:900:0:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:132:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-clay-action.png",
+      "mediaType": "image/png",
+      "bytes": 11437,
+      "sha256": "b6159e5807fa248322a6f63cf558e907dd45419ee05460357c728c6437479ba6",
+      "dimensions": {
+        "width": 50,
+        "height": 132
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=341:900:341:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:132:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-found-man.png",
+      "mediaType": "image/png",
+      "bytes": 12450,
+      "sha256": "3078de8d8b06e8b8df2dfb50c04fb923560ca7f67d079ae7e612d4c6861c11f0",
+      "dimensions": {
+        "width": 50,
+        "height": 132
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=342:900:682:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:132:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}
