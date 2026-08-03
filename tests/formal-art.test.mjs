@@ -14,6 +14,12 @@ const manifest = await readJson("public/assets/art/manifest.json");
 const review = await readJson(
   "production/asset-reviews/story-local-art-review.json",
 );
+const worldSelection = await readJson(
+  "production/art-source/environment-outdoor/environment.john9-zigzag-world/v2/run-001/selection.json",
+);
+const propsSelection = await readJson(
+  "production/art-source/environment-outdoor/environment.john9-zigzag-props/v2/run-001/selection.json",
+);
 const adapterSource = await readFile(
   "src/adapters/art-asset-adapter.ts",
   "utf8",
@@ -61,6 +67,21 @@ test("formal art manifest pins the v2 zig-zag private-preview contract", () => {
   });
   assert.ok(review.selectedAssets.some((id) => id.includes("zigzag-world@v2")));
   assert.ok(review.selectedAssets.every((id) => !id.includes("world-base@v1")));
+});
+
+test("formal environment review points to the exact processed selections", () => {
+  for (const selection of [worldSelection, propsSelection]) {
+    const selected = `${selection.assetId}@${selection.promptVersion}/${selection.run}/candidate-${String(selection.selectedCandidate).padStart(2, "0")}`;
+    assert.ok(review.selectedAssets.includes(selected), selected);
+    const runtime = manifest.assets.find(
+      ({ assetId, promptVersion, run }) =>
+        assetId === selection.assetId &&
+        promptVersion === selection.promptVersion &&
+        run === selection.run,
+    );
+    assert.equal(runtime?.selectedCandidate, selection.selectedCandidate, selected);
+    assert.equal(runtime?.source.sha256, selection.source.sha256, selected);
+  }
 });
 
 test("all 25 runtime outputs match recorded bytes, hashes, and dimensions", async () => {

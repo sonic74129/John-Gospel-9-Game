@@ -10,8 +10,8 @@
   "publicRedistributionApproved": false,
   "selectedAssets": [
     "master.john9-outdoor@v1/run-002/candidate-01",
-    "environment.john9-zigzag-world@v2/run-001/candidate-01",
-    "environment.john9-zigzag-props@v2/run-001/candidate-02",
+    "environment.john9-zigzag-world@v2/run-001/candidate-02",
+    "environment.john9-zigzag-props@v2/run-001/candidate-01",
     "character.observer@v3/run-001/candidate-01",
     "character.man-born-blind@v1/run-001/candidate-02",
     "character.jesus-john9@v1/run-001/candidate-01",
