@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
-  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
   "reviewStatus": "polished-private-preview-with-candidate-rights",
   "releaseEligible": false,
   "publicRedistributionApproved": false,
@@ -62,8 +62,8 @@
       ],
       "storyLocalGaps": [],
       "storyLocalResolution": [
-        "environment.john9-world-base@v1",
-        "environment.john9-foreground-props@v1"
+        "environment.john9-zigzag-world@v2",
+        "environment.john9-zigzag-props@v2"
       ],
       "requiredBeforeFinalUse": [
         "atlas-cell-order-validation",

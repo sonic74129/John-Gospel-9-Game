@@ -27,7 +27,10 @@ test("candidate packs are explicitly pinned and cannot be presented as release-r
   assert.ok(lock.assetPacks.every(({ status }) => status === "candidate"));
   assert.equal(evaluation.releaseEligible, false);
   assert.equal(evaluation.publicRedistributionApproved, false);
-  assert.equal(evaluation.reviewStatus, "conditional-private-graybox-only");
+  assert.equal(
+    evaluation.reviewStatus,
+    "polished-private-preview-with-candidate-rights",
+  );
   assert.ok(
     evaluation.packs.every(
       ({ status, decision }) =>
@@ -81,18 +84,20 @@ test("John 11-specific source cells never enter the John 9 runtime", () => {
   ]);
 });
 
-test("candidate review records the required John 9-local gaps", () => {
-  const gaps = new Set(
-    evaluation.packs.flatMap(({ storyLocalGaps }) => storyLocalGaps),
+test("candidate review records resolved John 9-local art without relaxing release gates", () => {
+  assert.ok(
+    evaluation.packs.every(({ storyLocalGaps }) => storyLocalGaps.length === 0),
+  );
+  const resolutions = new Set(
+    evaluation.packs.flatMap(({ storyLocalResolution }) => storyLocalResolution),
   );
   for (const required of [
-    "john9-continuous-world-map",
-    "siloam-pool",
-    "neutral-inquiry-courtyard",
-    "john9-clay-action-pose",
-    "john9-dialogue-portraits",
+    "character.jesus-john9@v1",
+    "character.man-born-blind@v1",
+    "environment.john9-zigzag-world@v2",
+    "environment.john9-zigzag-props@v2",
   ]) {
-    assert.ok(gaps.has(required), required);
+    assert.ok(resolutions.has(required), required);
   }
   assert.ok(evaluation.globalReleaseBlockers.length >= 4);
 });

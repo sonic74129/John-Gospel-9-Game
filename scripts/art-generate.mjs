@@ -10,13 +10,26 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 const ROOT = process.cwd();
-const ENDPOINT =
-  process.env.AZURE_MAI_ENDPOINT ??
-  "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/";
+const APPROVED_ENDPOINT = new URL(
+  "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/",
+);
+const ENDPOINT = new URL(process.env.AZURE_MAI_ENDPOINT ?? APPROVED_ENDPOINT);
+if (
+  ENDPOINT.protocol !== "https:" ||
+  ENDPOINT.origin !== APPROVED_ENDPOINT.origin ||
+  ENDPOINT.pathname !== APPROVED_ENDPOINT.pathname ||
+  ENDPOINT.username !== "" ||
+  ENDPOINT.password !== ""
+) {
+  throw new Error(
+    `AZURE_MAI_ENDPOINT must use the approved origin ${APPROVED_ENDPOINT.origin}.`,
+  );
+}
 const DEPLOYMENT = process.env.AZURE_MAI_DEPLOYMENT ?? "mai-image-2-5-pro";
 const TOKEN_RESOURCE = "https://cognitiveservices.azure.com/";
 const FOUNDATION_COMMIT = "6c836d55bfd786b8a55b4e0c7356bf8791505653";
@@ -176,6 +189,7 @@ async function requestCandidate(entry) {
       if (typeof image?.b64_json === "string") {
         return Buffer.from(image.b64_json, "base64");
       }
+
       if (typeof image?.url === "string") {
         const imageResponse = await fetch(image.url);
         if (!imageResponse.ok) {
@@ -203,6 +217,78 @@ async function requestCandidate(entry) {
     await new Promise((resolvePromise) => setTimeout(resolvePromise, delay));
   }
   throw new Error("MAI generation exhausted finite retries.");
+}
+
+function candidateRecord(entry, index, path, bytes, generatedAt, recovered = false) {
+  const observedDimensions = pngDimensions(bytes);
+  return {
+    index,
+    path,
+    bytes: bytes.byteLength,
+    sha256: sha256(bytes),
+    observedDimensions,
+    machineAccepted:
+      observedDimensions.width === entry.machineAcceptance.exactWidth &&
+      observedDimensions.height === entry.machineAcceptance.exactHeight &&
+      bytes.byteLength <= entry.machineAcceptance.maximumBytes,
+    generatedAt,
+    ...(recovered ? { recoveredFromInterruptedWrite: true } : {}),
+  };
+}
+
+export async function reconcileCandidateFiles(runDirectory, entry, candidates) {
+  const candidateFiles = (await readdir(runDirectory))
+    .map((name) => {
+      const match = /^candidate-(\d{2})\.png$/.exec(name);
+      return match === null ? null : { name, index: Number(match[1]) };
+    })
+    .filter((candidate) => candidate !== null)
+    .sort((left, right) => left.index - right.index);
+
+  for (let offset = 0; offset < candidateFiles.length; offset += 1) {
+    const file = candidateFiles[offset];
+    const expectedIndex = offset + 1;
+    if (file.index !== expectedIndex || file.index > entry.candidateCount) {
+      throw new Error(
+        `${entry.assetId} has a non-sequential or excess candidate file ${file.name}.`,
+      );
+    }
+    const bytes = await readFile(join(runDirectory, file.name));
+    const existing = candidates[file.index - 1];
+    if (existing !== undefined) {
+      if (
+        existing.index !== file.index ||
+        existing.path !== file.name ||
+        existing.bytes !== bytes.byteLength ||
+        existing.sha256 !== sha256(bytes)
+      ) {
+        throw new Error(`${entry.assetId} ${file.name} failed resume integrity.`);
+      }
+      const observed = pngDimensions(bytes);
+      if (
+        existing.observedDimensions?.width !== observed.width ||
+        existing.observedDimensions?.height !== observed.height
+      ) {
+        throw new Error(`${entry.assetId} ${file.name} changed dimensions.`);
+      }
+      continue;
+    }
+    if (file.index !== candidates.length + 1) {
+      throw new Error(`${entry.assetId} cannot recover a candidate manifest gap.`);
+    }
+    const metadata = await stat(join(runDirectory, file.name));
+    candidates.push(
+      candidateRecord(
+        entry,
+        file.index,
+        file.name,
+        bytes,
+        metadata.mtime.toISOString(),
+        true,
+      ),
+    );
+  }
+  return candidates;
 }
 
 async function existingRuns(directory) {
@@ -418,7 +504,11 @@ async function main() {
     if (prior.status === "complete") {
       throw new Error(`${entry.assetId} ${runName} is already complete.`);
     }
-    candidates = prior.candidates;
+    candidates = await reconcileCandidateFiles(
+      runDirectory,
+      entry,
+      [...prior.candidates],
+    );
   }
   const manifestBase = {
     schemaVersion: "1.0.0",
@@ -448,6 +538,11 @@ async function main() {
   };
   if (mode !== "resume") {
     await writeImmutable(runManifestPath, { ...manifestBase, candidates });
+  } else {
+    await writeFile(
+      runManifestPath,
+      `${JSON.stringify({ ...manifestBase, candidates }, null, 2)}\n`,
+    );
   }
   for (let index = candidates.length + 1; index <= entry.candidateCount; index += 1) {
     console.log(
@@ -455,21 +550,10 @@ async function main() {
     );
     const bytes = await requestCandidate(entry);
     const path = `candidate-${String(index).padStart(2, "0")}.png`;
-    const observedDimensions = pngDimensions(bytes);
-    const machineAccepted =
-      observedDimensions.width === entry.machineAcceptance.exactWidth &&
-      observedDimensions.height === entry.machineAcceptance.exactHeight &&
-      bytes.byteLength <= entry.machineAcceptance.maximumBytes;
     await writeFile(join(runDirectory, path), bytes, { flag: "wx" });
-    candidates.push({
-      index,
-      path,
-      bytes: bytes.byteLength,
-      sha256: sha256(bytes),
-      observedDimensions,
-      machineAccepted,
-      generatedAt: new Date().toISOString(),
-    });
+    candidates.push(
+      candidateRecord(entry, index, path, bytes, new Date().toISOString()),
+    );
     await writeFile(
       runManifestPath,
       `${JSON.stringify({ ...manifestBase, candidates }, null, 2)}\n`,
@@ -498,7 +582,9 @@ async function main() {
   console.log(`Completed ${entry.assetId} ${runName}.`);
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  });
+}

@@ -8,6 +8,24 @@
     "height": 1792,
     "topology": "north-south-zig-zag"
   },
+  "actorFootBaselines": {
+    "observer.png": 99,
+    "man-blind.png": 112,
+    "man-clay.png": 114,
+    "man-seeing.png": 112,
+    "man-worship.png": 112,
+    "jesus-idle.png": 112,
+    "jesus-clay-action.png": 104,
+    "jesus-found-man.png": 115,
+    "disciple-a.png": 118,
+    "disciple-b.png": 118,
+    "neighbor-a.png": 118,
+    "neighbor-b.png": 117,
+    "pharisee.png": 110,
+    "judean-authority.png": 110,
+    "father.png": 110,
+    "mother.png": 109
+  },
   "assets": [
     {
       "schemaVersion": "1.0.0",

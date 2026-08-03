@@ -1114,7 +1114,8 @@ test("production bundle gate covers Foundation player-version QA residue", async
     scene,
     /if \(import\.meta\.env\.DEV\) \{[\s\S]*\.text\(x \+ 24, y \+ 20, `\$\{id\} · walkable`,/,
   );
-  assert.match(scene, /import\.meta\.env\.DEV && isCandidateJesus/);
+  assert.doesNotMatch(scene, /isCandidateJesus|候選身分灰盒/);
+  assert.match(scene, /actorArtForSpawn\(actor\.definition\.id\)/);
   assert.match(
     scene,
     /import\.meta\.env\.DEV[\s\S]*runtimeActor\.state\.label/,
@@ -1227,7 +1228,7 @@ test("scene applies and exposes every canonical final-state surface", async () =
   assert.match(platform, /inputLocked:\s*input\.locked/);
 });
 
-test("candidate Jesus graybox uses the pinned sheet mapping and no candidate props", async () => {
+test("candidate Jesus pack stays pinned for evidence but formal art owns runtime actors", async () => {
   const [adapter, scene, pack, manifest] = await Promise.all([
     readText("src/adapters/candidate-asset-adapter.ts"),
     readText("src/adapters/graybox-scene.ts"),
@@ -1246,8 +1247,11 @@ test("candidate Jesus graybox uses the pinned sheet mapping and no candidate pro
   assert.equal(runtime.height, sheet.runtimeMapping.sheetHeight);
   assert.match(adapter, /characterSheet\.runtimeMapping\.cellWidth/);
   assert.match(adapter, /characterSheet\.runtimeMapping\.cellHeight/);
-  assert.match(scene, /候選身分灰盒/);
-  assert.doesNotMatch(scene, /household-props-atlas|world-ground-atlas/);
+  assert.match(scene, /art-asset-adapter\.ts/);
+  assert.doesNotMatch(
+    scene,
+    /candidate-asset-adapter|候選身分灰盒|household-props-atlas|world-ground-atlas/,
+  );
 });
 
 test("out-of-order restored progress fails explicitly outside the canonical contract", () => {

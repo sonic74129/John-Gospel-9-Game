@@ -19,7 +19,7 @@
     "art:process": "node scripts/art-process.mjs",
     "validate:story": "node scripts/validate-story.mjs",
     "validate:release": "node src/story/validate-scripture-release.mjs",
-    "test:contracts": "node --test src/story/scripture.test.mjs tests/assets.test.mjs tests/story/*.test.mjs tests/world-contract.test.mjs",
+    "test:contracts": "node --test src/story/scripture.test.mjs tests/assets.test.mjs tests/formal-art.test.mjs tests/story/*.test.mjs tests/world-contract.test.mjs",
     "test:platform": "node --test tests/platform/*.test.mjs",
     "test": "npm run foundation:check && npm run validate:story && npm run test:contracts && npm run test:platform"
   },

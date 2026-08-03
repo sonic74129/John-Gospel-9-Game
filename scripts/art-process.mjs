@@ -8,6 +8,24 @@ const execFileAsync = promisify(execFile);
 const ROOT = process.cwd();
 const FOUNDATION_COMMIT = "6c836d55bfd786b8a55b4e0c7356bf8791505653";
 const KEY = "colorkey=0xF7F0DE:0.24:0.08";
+const actorFootBaselines = Object.freeze({
+  "observer.png": 99,
+  "man-blind.png": 112,
+  "man-clay.png": 114,
+  "man-seeing.png": 112,
+  "man-worship.png": 112,
+  "jesus-idle.png": 112,
+  "jesus-clay-action.png": 104,
+  "jesus-found-man.png": 115,
+  "disciple-a.png": 118,
+  "disciple-b.png": 118,
+  "neighbor-a.png": 118,
+  "neighbor-b.png": 117,
+  "pharisee.png": 110,
+  "judean-authority.png": 110,
+  "father.png": 110,
+  "mother.png": 109,
+});
 
 const reusedManifestPaths = [
   "public/assets/art/characters-core/character.observer/v3/run-001/runtime-manifest.json",
@@ -250,6 +268,7 @@ async function main() {
       height: 1792,
       topology: "north-south-zig-zag",
     },
+    actorFootBaselines,
     assets: [...reused, ...generated],
     reviewStatus: "polished-private-preview",
     releaseEligible: false,

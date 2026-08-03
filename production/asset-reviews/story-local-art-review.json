@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
-  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
   "provider": "Azure AI Services",
   "deployment": "mai-image-2-5-pro",
   "model": "MAI-Image-2.5-Pro@2026-06-19",
@@ -10,8 +10,8 @@
   "publicRedistributionApproved": false,
   "selectedAssets": [
     "master.john9-outdoor@v1/run-002/candidate-01",
-    "environment.john9-world-base@v1/run-001/candidate-02",
-    "environment.john9-foreground-props@v1/run-001/candidate-01",
+    "environment.john9-zigzag-world@v2/run-001/candidate-01",
+    "environment.john9-zigzag-props@v2/run-001/candidate-02",
     "character.observer@v3/run-001/candidate-01",
     "character.man-born-blind@v1/run-001/candidate-02",
     "character.jesus-john9@v1/run-001/candidate-01",
@@ -20,15 +20,15 @@
   "runtimeInventory": {
     "manifest": "public/assets/art/manifest.json",
     "assetFamilies": 6,
-    "files": 23,
+    "files": 25,
     "worldDimensions": {
-      "width": 3200,
+      "width": 2560,
       "height": 1792
     }
   },
   "visualAcceptance": {
     "cameraAndPerspective": "accepted",
-    "routeReadability": "accepted against the locked five-zone horizontal route",
+    "routeReadability": "accepted against the locked five-zone north-south zig-zag route",
     "actorAndDoorScale": "accepted for 96-132 px actor frames",
     "identityContinuity": "accepted for private preview; pinned Jesus clothing and face vocabulary retained",
     "poseAndStateClarity": "accepted for blind, clay-applied, seeing, worship, clay action and found-man states",
@@ -38,7 +38,7 @@
   },
   "limitations": [
     "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
-    "The world base is a single painted strip aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
+    "The world base is a single painted two-dimensional zig-zag composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
     "Runtime actors use restrained static poses rather than full directional walk animation.",
     "Dialogue portraits were not generated because the current UI has no portrait surface.",
     "All generated and pinned packs remain non-release-eligible until rights and public redistribution review."

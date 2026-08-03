@@ -5,7 +5,7 @@ import type { Point } from "@sonic74129/content-schema";
 import occlusion from "../world/occlusion.json";
 import props from "../world/props.json";
 import {
-  actorTextureForSpawn,
+  actorArtForSpawn,
   STORY_ART,
   STORY_ART_ASSET_LIST,
 } from "./art-asset-adapter.ts";
@@ -315,13 +315,14 @@ export class GrayboxScene extends Phaser.Scene {
 
     for (const actor of this.#world.actors) {
       const isPlayer = actor.state.role === "player";
+      const art = actorArtForSpawn(actor.definition.id);
       const body = this.add
         .image(
           actor.definition.position.x,
           actor.definition.position.y,
-          actorTextureForSpawn(actor.definition.id),
+          art.key,
         )
-        .setOrigin(0.5, 0.92)
+        .setOrigin(0.5, art.footBaseline! / art.height)
         .setDepth(this.#actorDepth(actor.definition.position.y));
       const label = this.add
         .text(actor.definition.position.x, actor.definition.position.y - 84, actor.state.label, {
@@ -809,11 +810,9 @@ export class GrayboxScene extends Phaser.Scene {
         runtimeActor.state.collisionEnabled = actorState.collisionEnabled;
         runtimeActor.state.anchorId = actorState.anchorId;
         visual.label.setText(
-          import.meta.env.DEV && visual.storyActorId === "jesus"
-            ? `${actorState.label} · 候選身分灰盒`
-            : import.meta.env.DEV
-              ? `${actorState.label} · ${actorState.pose}`
-              : actorState.label,
+          import.meta.env.DEV
+            ? `${actorState.label} · ${actorState.pose}`
+            : actorState.label,
         );
         this.#setVisualVisible(visual, actorState.visible);
       }
@@ -1206,23 +1205,30 @@ export class GrayboxScene extends Phaser.Scene {
   #syncNarrativeTextures(): void {
     const man = this.#storyActorVisuals("man-born-blind")[0];
     if (man !== undefined) {
-      const textureByPose: Readonly<Record<string, string>> = {
-        idle: STORY_ART.actors.manBlind.key,
-        "clay-on-eyes": STORY_ART.actors.manClay.key,
-        "standing-seeing": STORY_ART.actors.manSeeing.key,
-        worship: STORY_ART.actors.manWorship.key,
+      const artByPose = {
+        idle: STORY_ART.actors.manBlind,
+        "clay-on-eyes": STORY_ART.actors.manClay,
+        "standing-seeing": STORY_ART.actors.manSeeing,
+        worship: STORY_ART.actors.manWorship,
       };
-      man.body.setTexture(textureByPose[man.pose] ?? STORY_ART.actors.manSeeing.key);
+      const art =
+        artByPose[man.pose as keyof typeof artByPose] ??
+        STORY_ART.actors.manSeeing;
+      man.body
+        .setTexture(art.key)
+        .setOrigin(0.5, art.footBaseline! / art.height);
     }
     const jesus = this.#storyActorVisuals("jesus")[0];
     if (jesus !== undefined) {
-      const texture =
+      const art =
         man?.pose === "clay-on-eyes"
-          ? STORY_ART.actors.jesusClayAction.key
+          ? STORY_ART.actors.jesusClayAction
           : jesus.pose === "standing" || jesus.pose === "walking"
-            ? STORY_ART.actors.jesusFoundMan.key
-            : STORY_ART.actors.jesusIdle.key;
-      jesus.body.setTexture(texture);
+            ? STORY_ART.actors.jesusFoundMan
+            : STORY_ART.actors.jesusIdle;
+      jesus.body
+        .setTexture(art.key)
+        .setOrigin(0.5, art.footBaseline! / art.height);
     }
   }
 
