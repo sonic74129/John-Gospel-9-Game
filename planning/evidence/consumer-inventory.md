@@ -216,6 +216,9 @@ released, or currently wired. Do not restore assets or create audio.
 
 ## Minimal decisions and external dependencies
 
+The user-owned subset is specified as a field-level checklist in
+[`user-decisions.md`](user-decisions.md).
+
 1. Choose and supply the exact authorized John 9:1-41 zh-Hant source artifact,
    including provider, canonical edition, translation ID, and 神/上帝 variant.
 2. Supply approved rights evidence and scope for repository storage/display,
