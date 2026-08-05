@@ -12,7 +12,10 @@ divine-name variant are fixed and must not be asked again.
 
 **Still required:**
 
-1. Supply the exact authorized 1919 神版 source artifact and provider.
+1. Supply the exact authorized 1919 神版 source artifact and provider. The
+   completed candidate search and acquisition threshold are recorded in
+   [`1919-cuv-source-investigation.md`](1919-cuv-source-investigation.md); none
+   of the located candidates is currently an authorized John 9 artifact.
 2. Confirm that the supplied artifact covers all 41 verse slots for
    John 9:1-41 with stable verse boundaries.
 3. Confirm canonical artifact, edition and translation IDs that identify the
@@ -24,6 +27,11 @@ divine-name variant are fixed and must not be asked again.
 - Provider, artifact ID, edition, language and translation metadata.
 - A trusted source locator using either a repository path plus SHA-256 or an
   external trust identity, external record ID and SHA-256.
+- Title, imprint and variant-identifying images plus every John 9 source page,
+  tied to an institutional catalog or identified custodian.
+- Independent double-key records from two Traditional-Chinese-literate keyers,
+  third-adjudicator evidence, a 41-boundary review, and whole-file/per-verse
+  hashes under the normalization rules in the source investigation.
 
 No text may be copied from an unverified website, remembered text, another
 story repository or a runtime branch.

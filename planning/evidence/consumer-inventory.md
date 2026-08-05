@@ -103,6 +103,17 @@ not supply source bytes or authorization. The 1988 New Punctuation CUV/CUNP,
 2010 RCUV, modern/legacy CCB, YouVersion/API text and eBible `cmn-cu89t` are
 rejected as substitutions without separate authorization.
 
+The completed source search is recorded in
+[`1919-cuv-source-investigation.md`](1919-cuv-source-investigation.md). No
+ready-to-download institutionally hosted 1919 神版 scan was found with
+verifiable bibliography, variant pages, every John 9 page, reuse terms and
+stable IDs. Cambridge University Library's physical first-edition record is
+the strongest bibliographic lead, but it is not digitized and its variant is
+not confirmed. FHL item 403 remains an unverified retrieval lead. The fixed
+`mondain-dev/cuv-1919@4cc18e40ee87681dee6aacc2c529d2d9d09e50ac`
+experiment contains Genesis only and no license, so it is discarded as John 9
+authority. None changes `availability: "missing"` or the blocked Gate.
+
 ## S0/S1/S2/S3 evidence ledger
 
 The pinned Playbook defines:
@@ -229,8 +240,10 @@ The user-owned subset is specified as a field-level checklist in
 1. Supply the exact authorized original 1919 Traditional Chinese Union
    Version (和合本), 神版 John 9:1-41 source artifact, including provider,
    canonical artifact/edition/translation IDs, stable 41-verse boundaries,
-   bytes/SHA-256 and trusted provenance locator. Translation and 神版 identity
-   are already fixed and must not be asked again.
+   source-image and canonical-text bytes/SHA-256, trusted provenance locator,
+   independently double-keyed transcription, third-party adjudication and
+   trusted review anchors. Translation and 神版 identity are already fixed and
+   must not be asked again.
 2. Supply approved rights evidence and scope for repository storage/display,
    offline use, redistribution territories, attribution and scripture-text
    TTS use. TTS engine/voice output redistribution requires separate approval.
