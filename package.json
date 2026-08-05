@@ -19,17 +19,17 @@
     "test": "npm run planning:check && npm run foundation:check && npm run test:contracts && npm run test:platform"
   },
   "dependencies": {
-    "@sonic74129/audio-runtime": "0.3.0",
-    "@sonic74129/content-schema": "0.3.0",
-    "@sonic74129/engine": "0.3.0",
-    "@sonic74129/map-runtime": "0.3.0",
-    "@sonic74129/sequence-runtime": "0.3.0",
-    "@sonic74129/story-runtime": "0.3.0",
-    "@sonic74129/ui": "0.3.0",
+    "@sonic74129/audio-runtime": "file:packages/sdk/sonic74129-audio-runtime-0.3.0.tgz",
+    "@sonic74129/content-schema": "file:packages/sdk/sonic74129-content-schema-0.3.0.tgz",
+    "@sonic74129/engine": "file:packages/sdk/sonic74129-engine-0.3.0.tgz",
+    "@sonic74129/map-runtime": "file:packages/sdk/sonic74129-map-runtime-0.3.0.tgz",
+    "@sonic74129/sequence-runtime": "file:packages/sdk/sonic74129-sequence-runtime-0.3.0.tgz",
+    "@sonic74129/story-runtime": "file:packages/sdk/sonic74129-story-runtime-0.3.0.tgz",
+    "@sonic74129/ui": "file:packages/sdk/sonic74129-ui-0.3.0.tgz",
     "phaser": "3.90.0"
   },
   "devDependencies": {
-    "@sonic74129/test-kit": "0.3.0",
+    "@sonic74129/test-kit": "file:packages/sdk/sonic74129-test-kit-0.3.0.tgz",
     "typescript": "6.0.3",
     "vite": "7.2.4"
   },

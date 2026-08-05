@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -18,23 +19,50 @@ const runtimePackages = [
   "@sonic74129/ui",
 ];
 
-test("platform dependencies are immutable registry versions", () => {
+test("platform dependencies are immutable hashed SDK 0.3.0 packages", async () => {
+  const sdkManifest = await readJson("packages/sdk/manifest.json");
+  const sdkPackages = new Map(
+    sdkManifest.packages.map((entry) => [entry.name, entry]),
+  );
   for (const packageName of runtimePackages) {
-    assert.equal(packageJson.dependencies[packageName], "0.3.0", packageName);
+    const entry = sdkPackages.get(packageName);
+    assert.equal(entry.version, "0.3.0", packageName);
+    assert.equal(
+      packageJson.dependencies[packageName],
+      `file:packages/sdk/${entry.file}`,
+      packageName,
+    );
+    assert.equal(
+      createHash("sha256")
+        .update(await readFile(`packages/sdk/${entry.file}`))
+        .digest("hex"),
+      entry.sha256,
+      packageName,
+    );
   }
+  const testKit = sdkPackages.get("@sonic74129/test-kit");
+  assert.equal(testKit.version, "0.3.0");
+  assert.equal(
+    packageJson.devDependencies["@sonic74129/test-kit"],
+    `file:packages/sdk/${testKit.file}`,
+  );
+  assert.equal(
+    createHash("sha256")
+      .update(await readFile(`packages/sdk/${testKit.file}`))
+      .digest("hex"),
+    testKit.sha256,
+  );
   assert.equal(packageJson.dependencies.phaser, "3.90.0");
-  assert.equal(packageJson.devDependencies["@sonic74129/test-kit"], "0.3.0");
   assert.equal(packageJson.devDependencies.typescript, "6.0.3");
   assert.equal(packageJson.devDependencies.vite, "7.2.4");
   assert.equal(packageJson.dependencies["@sonic74129/test-kit"], undefined);
 
-  const allSources = Object.values({
-    ...packageJson.dependencies,
-    ...packageJson.devDependencies,
-  });
-  for (const source of allSources) {
+  for (const source of [
+    packageJson.dependencies.phaser,
+    packageJson.devDependencies.typescript,
+    packageJson.devDependencies.vite,
+  ]) {
     assert.match(source, /^\d+\.\d+\.\d+$/);
-    assert.doesNotMatch(source, /(?:file:|git|github|https?:|latest|main)/i);
   }
 });
 
