@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "nt-judea-first-century",
+  "version": "0.1.0",
+  "status": "candidate",
+  "metadataSha256": "2dbf1d1338ff72eb64d3c3dc256e8b9709ffe07dc8afb7df28f8a236463c7d50",
+  "files": [
+    {
+      "path": "runtime/household-props-atlas.png",
+      "role": "runtime",
+      "mediaType": "image/png",
+      "bytes": 583840,
+      "sha256": "05ec304840a4053b828eaffd14f29fae2627ca790adce635855bfc9e42288348",
+      "width": 1360,
+      "height": 768
+    },
+    {
+      "path": "runtime/world-ground-atlas.png",
+      "role": "runtime",
+      "mediaType": "image/png",
+      "bytes": 2072963,
+      "sha256": "69eec3acbf20651026dc80b1053a30f8d1176a51880b89d9efe25e8a3fea1d58",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "path": "source/household-props-atlas.png",
+      "role": "source",
+      "mediaType": "image/png",
+      "bytes": 887890,
+      "sha256": "f459820535e150e5cd3f8957c3d3e1904feae01510a93dd6c7cc81996a7131f2",
+      "width": 1360,
+      "height": 768
+    },
+    {
+      "path": "source/world-ground-atlas.png",
+      "role": "source",
+      "mediaType": "image/png",
+      "bytes": 1900218,
+      "sha256": "2783e5068e043b3b48b9cc21912ee1b7b9b9b6791af6d9b58e58dbce4b7b4d6f",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "path": "source/world-objects-atlas.png",
+      "role": "source",
+      "mediaType": "image/png",
+      "bytes": 1060207,
+      "sha256": "291a327fd083c18cd5195c7f2252fb91f26ea23ad30f153892e8c5e9ba2f6de0",
+      "width": 1024,
+      "height": 1024
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "character.observer",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "status": "visual-rejected",
+  "sharedDefect": "Both candidates repeat a right-facing profile in the fourth cell instead of supplying the required left-facing view.",
+  "acceptedDetailsToPreserve": [
+    "No embedded text",
+    "Consistent observer identity and clothing",
+    "Front, back and right-facing views",
+    "Restrained adult proportions, uniform background and coherent light"
+  ],
+  "revisionTarget": "Correct only the fourth orientation.",
+  "nextPromptVersion": "v3"
+}

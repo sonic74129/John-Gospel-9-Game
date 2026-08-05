@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "sequence-paths",
+  "travelTargetSeconds": {
+    "minimum": 10,
+    "maximum": 20
+  },
+  "sequencePaths": [
+    {
+      "id": "man-to-pool",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "roadside.blind-man-seat",
+      "endAnchorId": "pool.wash-edge",
+      "expectedDurationSeconds": 16,
+      "movementSpeed": 52,
+      "actorRadius": 18,
+      "points": [
+        { "x": 520, "y": 900 },
+        { "x": 650, "y": 980 },
+        { "x": 780, "y": 1080 },
+        { "x": 870, "y": 1190 },
+        { "x": 900, "y": 1240 },
+        { "x": 980, "y": 1340 },
+        { "x": 1120, "y": 1440 }
+      ]
+    },
+    {
+      "id": "pool-wash-to-return",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "pool.wash-edge",
+      "endAnchorId": "pool.return",
+      "expectedDurationSeconds": 10,
+      "movementSpeed": 30,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1120, "y": 1440 },
+        { "x": 1180, "y": 1360 },
+        { "x": 1240, "y": 1280 },
+        { "x": 1320, "y": 1220 }
+      ]
+    },
+    {
+      "id": "pool-to-neighbors",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "pool.return",
+      "endAnchorId": "neighbors.center",
+      "expectedDurationSeconds": 14,
+      "movementSpeed": 35,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1320, "y": 1220 },
+        { "x": 1420, "y": 1140 },
+        { "x": 1400, "y": 1040 },
+        { "x": 1440, "y": 920 },
+        { "x": 1480, "y": 780 }
+      ]
+    },
+    {
+      "id": "group-to-inquiry",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-and-neighbor-group",
+      "startAnchorId": "neighbors.center",
+      "endAnchorId": "inquiry.man-center",
+      "expectedDurationSeconds": 14,
+      "movementSpeed": 47,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1480, "y": 780 },
+        { "x": 1600, "y": 780 },
+        { "x": 1740, "y": 700 },
+        { "x": 1800, "y": 680 },
+        { "x": 1920, "y": 620 },
+        { "x": 2100, "y": 620 }
+      ]
+    },
+    {
+      "id": "parents-entry",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "inquiry.parents-entry",
+      "endAnchorId": "inquiry.parents",
+      "expectedDurationSeconds": 12,
+      "movementSpeed": 61,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2040, "y": 240 },
+        { "x": 1900, "y": 260 },
+        { "x": 1860, "y": 300 },
+        { "x": 1860, "y": 460 },
+        { "x": 1960, "y": 520 },
+        { "x": 2140, "y": 720 }
+      ]
+    },
+    {
+      "id": "parents-exit",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "inquiry.parents",
+      "endAnchorId": "inquiry.parents-exit",
+      "expectedDurationSeconds": 13,
+      "movementSpeed": 44,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2140, "y": 720 },
+        { "x": 2320, "y": 560 },
+        { "x": 2320, "y": 440 },
+        { "x": 2300, "y": 240 }
+      ]
+    },
+    {
+      "id": "parents-entry-exit",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "inquiry.parents-entry",
+      "endAnchorId": "inquiry.parents-exit",
+      "expectedDurationSeconds": 18,
+      "movementSpeed": 72,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2040, "y": 240 },
+        { "x": 1900, "y": 260 },
+        { "x": 1860, "y": 300 },
+        { "x": 1860, "y": 460 },
+        { "x": 1960, "y": 520 },
+        { "x": 2140, "y": 720 },
+        { "x": 2320, "y": 560 },
+        { "x": 2320, "y": 440 },
+        { "x": 2300, "y": 240 }
+      ]
+    },
+    {
+      "id": "expulsion",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "inquiry.man-center",
+      "endAnchorId": "outside.expelled",
+      "expectedDurationSeconds": 13,
+      "movementSpeed": 51,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2100, "y": 620 },
+        { "x": 2100, "y": 780 },
+        { "x": 2120, "y": 1000 },
+        { "x": 2140, "y": 1060 },
+        { "x": 2160, "y": 1260 }
+      ]
+    },
+    {
+      "id": "jesus-entry",
+      "sourceLevel": "approved-bridge",
+      "subject": "jesus",
+      "startAnchorId": "outside.jesus-entry",
+      "endAnchorId": "outside.belief",
+      "expectedDurationSeconds": 12,
+      "movementSpeed": 16,
+      "actorRadius": 18,
+      "points": [
+        { "x": 2420, "y": 1400 },
+        { "x": 2380, "y": 1360 },
+        { "x": 2320, "y": 1340 },
+        { "x": 2260, "y": 1320 }
+      ]
+    },
+    {
+      "id": "ending",
+      "sourceLevel": "approved-bridge",
+      "subject": "camera-focus",
+      "startAnchorId": "outside.belief",
+      "endAnchorId": "ending.camera",
+      "expectedDurationSeconds": 12,
+      "movementSpeed": 4,
+      "actorRadius": 0,
+      "points": [
+        { "x": 2260, "y": 1320 },
+        { "x": 2240, "y": 1300 },
+        { "x": 2260, "y": 1300 }
+      ]
+    }
+  ]
+}

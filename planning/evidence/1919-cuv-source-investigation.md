@@ -15,9 +15,16 @@ high-assurance default: one stable online/source artifact with URL, provider,
 captured bytes and SHA-256, followed by one designated human review, is enough
 unless a concrete dispute or public/commercial risk triggers escalation.
 
-No such source-review bundle has been supplied yet. The fixed translation
-identity is unchanged, all scripture text remains null, and the Gate remains
-`blocked-text-unavailable`.
+The lightweight source bundle has now been supplied from Scrollmapper
+`bible_databases` commit
+`e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c`. The upstream ChiUn JSON SHA-256
+is `995b8f77e27014eda3e1946c588b34dc418a2e63202698cf2aac07b7391e5743`;
+the exact story-local John 9 artifact SHA-256 is
+`9d3f8ef447849c9545df32ca2ef78a88de91762e148203316d2505916079a814`.
+It contains 41 ordered verses, uses 神, contains no 上帝, and is identified by
+the provider as Traditional Chinese Union Version/Public Domain. The Gate is
+now `pending-reviewer-assignment`, with only the transparent owner review
+pending.
 
 ## Candidate evidence
 
@@ -43,7 +50,7 @@ The default unblock evidence is one combined source-review bundle:
    Chinese Union Version (和合本), 神版 and recording any displayed reuse or
    public-domain statement needed for the intended private small-game use.
 4. One designated human reviewer ID and one dated approval that confirms source
-   identity, exact bytes, 41-verse order, the six-Beat outline, player-role
+   identity, exact bytes, 41-verse order, the nineteen-Beat outline, player-role
    limits, final state, and contextual language.
 
 This default does not require Cambridge scans, institutional provenance,
@@ -66,5 +73,5 @@ risk cannot be handled by the lightweight bundle. Escalation may then require:
    review of unresolved glyphs.
 
 Neither the background investigation nor an escalation step is a default
-blocker. The missing lightweight source-review bundle is the only remaining
-user input.
+blocker. The source bundle is complete; the only remaining user action is the
+single owner review in `owner-review.json`.

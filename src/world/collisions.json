@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "world-collisions",
+  "collisionPolygons": [
+    {
+      "id": "collision.roadside-north-wall",
+      "regionId": "roadside",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 260, "y": 500 },
+        { "x": 600, "y": 500 },
+        { "x": 600, "y": 620 },
+        { "x": 260, "y": 620 }
+      ]
+    },
+    {
+      "id": "collision.roadside-south-wall",
+      "regionId": "roadside",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 240, "y": 1140 },
+        { "x": 440, "y": 1160 },
+        { "x": 420, "y": 1240 },
+        { "x": 260, "y": 1220 }
+      ]
+    },
+    {
+      "id": "collision.pool-basin",
+      "regionId": "siloam-pool",
+      "material": "water-boundary",
+      "polygon": [
+        { "x": 980, "y": 1480 },
+        { "x": 1320, "y": 1480 },
+        { "x": 1380, "y": 1640 },
+        { "x": 920, "y": 1640 }
+      ]
+    },
+    {
+      "id": "collision.pool-north-terrace",
+      "regionId": "siloam-pool",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 1120, "y": 1040 },
+        { "x": 1280, "y": 1020 },
+        { "x": 1340, "y": 1100 },
+        { "x": 1220, "y": 1160 }
+      ]
+    },
+    {
+      "id": "collision.neighbors-shade",
+      "regionId": "neighbor-gathering",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 1400, "y": 500 },
+        { "x": 1620, "y": 460 },
+        { "x": 1680, "y": 580 },
+        { "x": 1460, "y": 620 }
+      ]
+    },
+    {
+      "id": "collision.neighbors-stall",
+      "regionId": "neighbor-gathering",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 1640, "y": 820 },
+        { "x": 1760, "y": 820 },
+        { "x": 1760, "y": 960 },
+        { "x": 1640, "y": 960 }
+      ]
+    },
+    {
+      "id": "collision.inquiry-north-screen",
+      "regionId": "inquiry-courtyard",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 1940, "y": 320 },
+        { "x": 2180, "y": 320 },
+        { "x": 2180, "y": 410 },
+        { "x": 1940, "y": 410 }
+      ]
+    },
+    {
+      "id": "collision.inquiry-south-bench",
+      "regionId": "inquiry-courtyard",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 2260, "y": 840 },
+        { "x": 2400, "y": 840 },
+        { "x": 2400, "y": 920 },
+        { "x": 2260, "y": 920 }
+      ]
+    },
+    {
+      "id": "collision.outside-tree-island",
+      "regionId": "outer-road",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 1980, "y": 1280 },
+        { "x": 2080, "y": 1240 },
+        { "x": 2140, "y": 1360 },
+        { "x": 2020, "y": 1400 }
+      ]
+    },
+    {
+      "id": "collision.outside-south-wall",
+      "regionId": "outer-road",
+      "material": "fixed-graybox-mass",
+      "polygon": [
+        { "x": 2240, "y": 1520 },
+        { "x": 2380, "y": 1500 },
+        { "x": 2360, "y": 1560 },
+        { "x": 2300, "y": 1620 }
+      ]
+    }
+  ]
+}

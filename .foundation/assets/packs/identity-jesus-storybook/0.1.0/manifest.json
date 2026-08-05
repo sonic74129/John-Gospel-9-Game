@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "identity-jesus-storybook",
+  "version": "0.1.0",
+  "status": "candidate",
+  "metadataSha256": "c7119ff52f3f20a140d38ae7dcf1a581fc102c9e9616be5b2d1c2ab8e7256ef3",
+  "files": [
+    {
+      "path": "runtime/character-sheet.png",
+      "role": "runtime",
+      "mediaType": "image/png",
+      "bytes": 265705,
+      "sha256": "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636",
+      "width": 288,
+      "height": 800
+    },
+    {
+      "path": "source/character-sheet.png",
+      "role": "source",
+      "mediaType": "image/png",
+      "bytes": 589063,
+      "sha256": "a85d53db28a9cb4f6aca4452e71ee6297fbc2047b672d83b0a314d1fefeb06f9",
+      "width": 1360,
+      "height": 768
+    }
+  ]
+}

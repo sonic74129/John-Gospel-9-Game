@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "camera-zones",
+  "cameraZones": [
+    {
+      "id": "camera.roadside",
+      "regionId": "roadside",
+      "bounds": { "x": 80, "y": 420, "width": 960, "height": 900 },
+      "focusAnchorId": "roadside.clay-action",
+      "desktopZoom": 1,
+      "mobileZoom": 0.82,
+      "deadZone": { "width": 16, "height": 16 },
+      "transitionSeconds": 0.8
+    },
+    {
+      "id": "camera.siloam",
+      "regionId": "siloam-pool",
+      "bounds": { "x": 640, "y": 960, "width": 980, "height": 760 },
+      "focusAnchorId": "pool.camera",
+      "desktopZoom": 0.95,
+      "mobileZoom": 0.76,
+      "deadZone": { "width": 16, "height": 16 },
+      "transitionSeconds": 0.8
+    },
+    {
+      "id": "camera.neighbors",
+      "regionId": "neighbor-gathering",
+      "bounds": { "x": 1120, "y": 420, "width": 760, "height": 820 },
+      "focusAnchorId": "neighbors.center",
+      "desktopZoom": 1,
+      "mobileZoom": 0.76,
+      "deadZone": { "width": 16, "height": 16 },
+      "transitionSeconds": 0.8
+    },
+    {
+      "id": "camera.inquiry",
+      "regionId": "inquiry-courtyard",
+      "bounds": { "x": 1680, "y": 120, "width": 800, "height": 1000 },
+      "focusAnchorId": "inquiry.man-center",
+      "desktopZoom": 0.95,
+      "mobileZoom": 0.72,
+      "deadZone": { "width": 16, "height": 16 },
+      "transitionSeconds": 0.9
+    },
+    {
+      "id": "camera.outer",
+      "regionId": "outer-road",
+      "bounds": { "x": 1880, "y": 920, "width": 640, "height": 760 },
+      "focusAnchorId": "ending.camera",
+      "desktopZoom": 1.05,
+      "mobileZoom": 0.82,
+      "deadZone": { "width": 16, "height": 16 },
+      "transitionSeconds": 1
+    }
+  ]
+}

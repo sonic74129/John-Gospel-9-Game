@@ -1,0 +1,39 @@
+{
+  "name": "@sonic74129/bible-story-john-9-man-born-blind",
+  "version": "0.1.0",
+  "private": true,
+  "description": "生來瞎眼的人：以約翰福音 9:1–41 為範圍的獨立聖經故事探索遊戲。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --pretty false && vite build && node scripts/check-production-bundle.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc --pretty false",
+    "planning:sync": "node scripts/sync-story-plan.mjs",
+    "planning:check": "node scripts/sync-story-plan.mjs --check",
+    "foundation:check": "node scripts/check-foundation.mjs",
+    "art:generate": "node scripts/art-generate.mjs",
+    "art:process": "node scripts/art-process.mjs",
+    "test:contracts": "node --test tests/assets.test.mjs tests/formal-art.test.mjs tests/story/*.test.mjs tests/world-contract.test.mjs",
+    "test:platform": "node --test tests/platform/*.test.mjs",
+    "test": "npm run planning:check && npm run foundation:check && npm run test:contracts && npm run test:platform"
+  },
+  "dependencies": {
+    "@sonic74129/audio-runtime": "0.3.0",
+    "@sonic74129/content-schema": "0.3.0",
+    "@sonic74129/engine": "0.3.0",
+    "@sonic74129/map-runtime": "0.3.0",
+    "@sonic74129/sequence-runtime": "0.3.0",
+    "@sonic74129/story-runtime": "0.3.0",
+    "@sonic74129/ui": "0.3.0",
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@sonic74129/test-kit": "0.3.0",
+    "typescript": "6.0.3",
+    "vite": "7.2.4"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

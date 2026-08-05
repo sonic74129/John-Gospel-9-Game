@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "foreground-occlusion",
+  "foregroundOccluders": [
+    {
+      "id": "occluder.roadside-canopy",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "polygon": [
+        { "x": 140, "y": 1040 },
+        { "x": 360, "y": 980 },
+        { "x": 400, "y": 1180 },
+        { "x": 180, "y": 1220 }
+      ],
+      "depthBand": "foreground-high",
+      "fadeWhenActorBehind": true,
+      "fadedOpacity": 0.3
+    },
+    {
+      "id": "occluder.pool-south-frond",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "polygon": [
+        { "x": 700, "y": 1460 },
+        { "x": 860, "y": 1420 },
+        { "x": 900, "y": 1640 },
+        { "x": 740, "y": 1660 }
+      ],
+      "depthBand": "foreground-high",
+      "fadeWhenActorBehind": true,
+      "fadedOpacity": 0.28
+    },
+    {
+      "id": "occluder.neighbors-awning",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "polygon": [
+        { "x": 1620, "y": 840 },
+        { "x": 1780, "y": 800 },
+        { "x": 1800, "y": 1020 },
+        { "x": 1640, "y": 1060 }
+      ],
+      "depthBand": "foreground-high",
+      "fadeWhenActorBehind": true,
+      "fadedOpacity": 0.3
+    },
+    {
+      "id": "occluder.inquiry-gate-edge",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "polygon": [
+        { "x": 1700, "y": 620 },
+        { "x": 1780, "y": 600 },
+        { "x": 1800, "y": 840 },
+        { "x": 1720, "y": 860 }
+      ],
+      "depthBand": "foreground-high",
+      "fadeWhenActorBehind": true,
+      "fadedOpacity": 0.25
+    },
+    {
+      "id": "occluder.outside-branch",
+      "regionId": "outer-road",
+      "sourceLevel": "approved-bridge",
+      "polygon": [
+        { "x": 1880, "y": 1300 },
+        { "x": 2040, "y": 1240 },
+        { "x": 2100, "y": 1440 },
+        { "x": 1920, "y": 1480 }
+      ],
+      "depthBand": "foreground-high",
+      "fadeWhenActorBehind": true,
+      "fadedOpacity": 0.28
+    }
+  ]
+}

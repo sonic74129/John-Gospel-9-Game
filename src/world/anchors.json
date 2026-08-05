@@ -1,0 +1,349 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "world-anchors",
+  "anchors": [
+    {
+      "id": "roadside.player-start",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "kind": "player-spawn",
+      "position": { "x": 500, "y": 940 },
+      "facing": "east",
+      "clearanceRadius": 32
+    },
+    {
+      "id": "roadside.blind-man-seat",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": { "x": 520, "y": 900 },
+      "facing": "south-east",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "roadside.jesus",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": { "x": 670, "y": 800 },
+      "facing": "south-west",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "roadside.disciples",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": { "x": 720, "y": 980 },
+      "facing": "north-west",
+      "clearanceRadius": 70
+    },
+    {
+      "id": "roadside.clay-action",
+      "regionId": "roadside",
+      "sourceLevel": "scripture",
+      "kind": "action",
+      "position": { "x": 600, "y": 860 },
+      "facing": "south-west",
+      "clearanceRadius": 40
+    },
+    {
+      "id": "roadside.west-entry",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 130, "y": 940 },
+      "facing": "east",
+      "clearanceRadius": 44
+    },
+    {
+      "id": "roadside.pool-exit",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "kind": "exit",
+      "position": { "x": 840, "y": 1160 },
+      "facing": "south-east",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "route.pool-entry",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "kind": "route",
+      "position": { "x": 870, "y": 1190 },
+      "facing": "south-east",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "roadside.north-lookout",
+      "regionId": "roadside",
+      "sourceLevel": "approved-bridge",
+      "kind": "landmark",
+      "position": { "x": 760, "y": 560 },
+      "facing": "south-west",
+      "clearanceRadius": 32
+    },
+    {
+      "id": "pool.roadside-entry",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 1220, "y": 1240 },
+      "facing": "south-east",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "pool.wash-edge",
+      "regionId": "siloam-pool",
+      "sourceLevel": "scripture",
+      "kind": "action",
+      "position": { "x": 1120, "y": 1440 },
+      "facing": "south",
+      "clearanceRadius": 40
+    },
+    {
+      "id": "pool.return",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "route",
+      "position": { "x": 1320, "y": 1220 },
+      "facing": "north-east",
+      "clearanceRadius": 44
+    },
+    {
+      "id": "pool.camera",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "camera-focus",
+      "position": { "x": 1220, "y": 1340 },
+      "facing": "south",
+      "clearanceRadius": 0
+    },
+    {
+      "id": "pool.neighbor-exit",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "exit",
+      "position": { "x": 1360, "y": 1060 },
+      "facing": "north-east",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "pool.south-steps",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "landmark",
+      "position": { "x": 820, "y": 1580 },
+      "facing": "north-east",
+      "clearanceRadius": 32
+    },
+    {
+      "id": "neighbors.pool-entry",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 1480, "y": 840 },
+      "facing": "north",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "neighbors.center",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": { "x": 1480, "y": 780 },
+      "facing": "south",
+      "clearanceRadius": 46
+    },
+    {
+      "id": "neighbors.group-left",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "kind": "group-staging",
+      "position": { "x": 1380, "y": 860 },
+      "facing": "north-east",
+      "clearanceRadius": 58
+    },
+    {
+      "id": "neighbors.group-right",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "kind": "group-staging",
+      "position": { "x": 1580, "y": 860 },
+      "facing": "north-west",
+      "clearanceRadius": 58
+    },
+    {
+      "id": "neighbors.inquiry-exit",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "kind": "exit",
+      "position": { "x": 1740, "y": 700 },
+      "facing": "north-east",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "neighbors.north-shade",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "kind": "landmark",
+      "position": { "x": 1740, "y": 540 },
+      "facing": "south-west",
+      "clearanceRadius": 32
+    },
+    {
+      "id": "inquiry.gate",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 1990, "y": 680 },
+      "facing": "east",
+      "clearanceRadius": 52
+    },
+    {
+      "id": "inquiry.man-center",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": { "x": 2100, "y": 620 },
+      "facing": "north",
+      "clearanceRadius": 38
+    },
+    {
+      "id": "inquiry.pharisees-left",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": { "x": 2000, "y": 500 },
+      "facing": "south-east",
+      "clearanceRadius": 56
+    },
+    {
+      "id": "inquiry.pharisees-right",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": { "x": 2200, "y": 500 },
+      "facing": "south-west",
+      "clearanceRadius": 56
+    },
+    {
+      "id": "inquiry.parents",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": { "x": 2140, "y": 720 },
+      "facing": "north",
+      "clearanceRadius": 58
+    },
+    {
+      "id": "inquiry.waiting",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "group-staging",
+      "position": { "x": 2290, "y": 660 },
+      "facing": "west",
+      "clearanceRadius": 52
+    },
+    {
+      "id": "inquiry.parents-entry",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 2040, "y": 240 },
+      "facing": "south",
+      "clearanceRadius": 38
+    },
+    {
+      "id": "inquiry.parents-exit",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "exit",
+      "position": { "x": 2300, "y": 240 },
+      "facing": "north",
+      "clearanceRadius": 38
+    },
+    {
+      "id": "inquiry.outer-exit",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "exit",
+      "position": { "x": 2120, "y": 1000 },
+      "facing": "south",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "inquiry.upper-walk",
+      "regionId": "inquiry-courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "landmark",
+      "position": { "x": 2380, "y": 320 },
+      "facing": "south-west",
+      "clearanceRadius": 32
+    },
+    {
+      "id": "outside.inquiry-entry",
+      "regionId": "outer-road",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 2140, "y": 1120 },
+      "facing": "south",
+      "clearanceRadius": 48
+    },
+    {
+      "id": "outside.expelled",
+      "regionId": "outer-road",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": { "x": 2160, "y": 1260 },
+      "facing": "east",
+      "clearanceRadius": 38
+    },
+    {
+      "id": "outside.jesus-entry",
+      "regionId": "outer-road",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": { "x": 2420, "y": 1400 },
+      "facing": "north-west",
+      "clearanceRadius": 42
+    },
+    {
+      "id": "outside.belief",
+      "regionId": "outer-road",
+      "sourceLevel": "scripture",
+      "kind": "action",
+      "position": { "x": 2260, "y": 1320 },
+      "facing": "north-west",
+      "clearanceRadius": 44
+    },
+    {
+      "id": "outside.east-exit",
+      "regionId": "outer-road",
+      "sourceLevel": "approved-bridge",
+      "kind": "exit",
+      "position": { "x": 2340, "y": 1240 },
+      "facing": "east",
+      "clearanceRadius": 40
+    },
+    {
+      "id": "ending.camera",
+      "regionId": "outer-road",
+      "sourceLevel": "approved-bridge",
+      "kind": "camera-focus",
+      "position": { "x": 2260, "y": 1300 },
+      "facing": "south",
+      "clearanceRadius": 0
+    },
+    {
+      "id": "outside.lower-turn",
+      "regionId": "outer-road",
+      "sourceLevel": "approved-bridge",
+      "kind": "landmark",
+      "position": { "x": 2020, "y": 1540 },
+      "facing": "north-east",
+      "clearanceRadius": 32
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "foundation": {
+    "repository": "sonic74129/bible-game-foundation",
+    "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653"
+  },
+  "assetPacks": [
+    {
+      "id": "identity-jesus-storybook",
+      "version": "0.1.0",
+      "status": "candidate"
+    },
+    {
+      "id": "nt-judea-first-century",
+      "version": "0.1.0",
+      "status": "candidate"
+    }
+  ],
+  "files": [
+    {
+      "source": "art-direction/storybook-realism-v1/style.json",
+      "target": ".foundation/art-direction/storybook-realism-v1/style.json",
+      "bytes": 2379,
+      "sha256": "9b8e6905e0a0dc0926d08818093a6acaa1e42c46ee0e92cacbee6bb8a4579e5a"
+    },
+    {
+      "source": "assets/catalog.json",
+      "target": ".foundation/assets/catalog.json",
+      "bytes": 810,
+      "sha256": "345a5d2f2e0c7fdfad9b297c75a82f61116674a930d0682cdad04afddde12224"
+    },
+    {
+      "source": "assets/candidates/identity-jesus-storybook/0.1.0/manifest.json",
+      "target": ".foundation/assets/packs/identity-jesus-storybook/0.1.0/manifest.json",
+      "bytes": 742,
+      "sha256": "6db58b71eb37b1c62217ecc298ceb3ca4ae3934b868e42f068a94f19b7300f26"
+    },
+    {
+      "source": "assets/candidates/identity-jesus-storybook/0.1.0/pack.json",
+      "target": ".foundation/assets/packs/identity-jesus-storybook/0.1.0/pack.json",
+      "bytes": 2316,
+      "sha256": "c7119ff52f3f20a140d38ae7dcf1a581fc102c9e9616be5b2d1c2ab8e7256ef3"
+    },
+    {
+      "source": "assets/candidates/nt-judea-first-century/0.1.0/manifest.json",
+      "target": ".foundation/assets/packs/nt-judea-first-century/0.1.0/manifest.json",
+      "bytes": 1554,
+      "sha256": "f8061c55ef033c5aa288f8b0326ab2dfc632433d5f2f0d414029a9316ac65775"
+    },
+    {
+      "source": "assets/candidates/nt-judea-first-century/0.1.0/pack.json",
+      "target": ".foundation/assets/packs/nt-judea-first-century/0.1.0/pack.json",
+      "bytes": 3151,
+      "sha256": "2dbf1d1338ff72eb64d3c3dc256e8b9709ffe07dc8afb7df28f8a236463c7d50"
+    },
+    {
+      "source": "docs/ASSET_GOVERNANCE.zh-CN.md",
+      "target": ".foundation/docs/ASSET_GOVERNANCE.zh-CN.md",
+      "bytes": 3065,
+      "sha256": "3fae5302ecd755a967a0b9bc83fdf505df1e22e2e739968c298d55b90a88211e"
+    },
+    {
+      "source": "docs/standards/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
+      "target": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
+      "bytes": 40881,
+      "sha256": "f363b37ac1f6bab765af91deef2174803c6f3c102324e1c1c5b4d77026b34b03"
+    },
+    {
+      "source": "docs/END_TO_END_DELIVERY.zh-CN.md",
+      "target": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md",
+      "bytes": 5613,
+      "sha256": "8a67e66354ddba3d005fac842e163dc69cd051f31bef9ffc7441ca38d447222d"
+    },
+    {
+      "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
+      "target": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md",
+      "bytes": 5319,
+      "sha256": "9a8990230d4d662044d1a09bddb07cea0ff28b84ff67dce393d38a78f9ef1faa"
+    },
+    {
+      "source": "docs/standards/MULTI_REPO_ARCHITECTURE.zh-CN.md",
+      "target": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md",
+      "bytes": 22418,
+      "sha256": "86f400f99c5106465c4091ada543b24c93fbbaf61578b9411b5c8110ff7f56ca"
+    },
+    {
+      "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
+      "target": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
+      "bytes": 1654,
+      "sha256": "56910ac1ca7a9e551079d27b9f980ca818598b7ec726881ed09a66ed33dfea54"
+    },
+    {
+      "source": "assets/candidates/identity-jesus-storybook/0.1.0/runtime/character-sheet.png",
+      "target": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+      "bytes": 265705,
+      "sha256": "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636"
+    },
+    {
+      "source": "assets/candidates/nt-judea-first-century/0.1.0/runtime/household-props-atlas.png",
+      "target": "public/assets/vendor/nt-judea-first-century/0.1.0/household-props-atlas.png",
+      "bytes": 583840,
+      "sha256": "05ec304840a4053b828eaffd14f29fae2627ca790adce635855bfc9e42288348"
+    },
+    {
+      "source": "assets/candidates/nt-judea-first-century/0.1.0/runtime/world-ground-atlas.png",
+      "target": "public/assets/vendor/nt-judea-first-century/0.1.0/world-ground-atlas.png",
+      "bytes": 2072963,
+      "sha256": "69eec3acbf20651026dc80b1053a30f8d1176a51880b89d9efe25e8a3fea1d58"
+    }
+  ]
+}

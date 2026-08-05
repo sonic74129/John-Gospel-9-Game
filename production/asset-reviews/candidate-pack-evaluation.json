@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "reviewStatus": "polished-private-preview-with-candidate-rights",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "packs": [
+    {
+      "id": "identity-jesus-storybook",
+      "version": "0.1.0",
+      "status": "candidate",
+      "decision": "conditional-accept",
+      "acceptedRuntimeFiles": [
+        {
+          "path": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+          "uses": [
+            "private-graybox",
+            "identity-scale-evaluation",
+            "base-directional-movement"
+          ]
+        }
+      ],
+      "storyLocalGaps": [],
+      "storyLocalResolution": [
+        "character.jesus-john9@v1",
+        "character.man-born-blind@v1",
+        "Portraits intentionally omitted because the current dialogue UI does not consume them."
+      ],
+      "requiredBeforeFinalUse": [
+        "per-story-theological-review",
+        "identity-continuity-review",
+        "runtime-scale-and-foot-baseline-calibration",
+        "pack-specific-rights-and-redistribution-approval"
+      ]
+    },
+    {
+      "id": "nt-judea-first-century",
+      "version": "0.1.0",
+      "status": "candidate",
+      "decision": "conditional-accept",
+      "acceptedRuntimeFiles": [
+        {
+          "path": "public/assets/vendor/nt-judea-first-century/0.1.0/world-ground-atlas.png",
+          "uses": [
+            "private-graybox",
+            "ground-scale-evaluation",
+            "route-readability-evaluation"
+          ]
+        }
+      ],
+      "deferredRuntimeFiles": [
+        {
+          "path": "public/assets/vendor/nt-judea-first-century/0.1.0/household-props-atlas.png",
+          "reason": "The current John 9 flow is outdoor-first and the atlas cell mapping is not validated for shared use."
+        }
+      ],
+      "excludedSourceCells": [
+        "martha-house-base",
+        "martha-house-roof",
+        "tomb-entrance"
+      ],
+      "storyLocalGaps": [],
+      "storyLocalResolution": [
+        "environment.john9-zigzag-world@v2",
+        "environment.john9-zigzag-props@v2"
+      ],
+      "requiredBeforeFinalUse": [
+        "atlas-cell-order-validation",
+        "runtime-anchor-and-collision-calibration",
+        "second-story-visual-validation",
+        "pack-specific-rights-and-redistribution-approval"
+      ]
+    }
+  ],
+  "globalReleaseBlockers": [
+    "Both packs remain candidate and releaseEligible=false.",
+    "Public redistribution is not approved.",
+    "Generated story-local assets are approved only for private preview pending owner rights review.",
+    "No pack-specific public redistribution approval or LICENSE/NOTICE exists."
+  ]
+}

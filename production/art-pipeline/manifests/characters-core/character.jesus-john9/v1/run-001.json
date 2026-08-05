@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "family": "characters-core",
+  "assetId": "character.jesus-john9",
+  "promptVersion": "v1",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1024,
+    "height": 1024
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: historical-scene. Asset type: isolated story-local special-pose sprite atlas matching the pinned identity-jesus-storybook@0.1.0 map identity. On a perfectly flat uniform pale cream #F7F0DE background, show exactly three isolated full-body views in one horizontal row of the same respectful first-century Jewish man with Middle Eastern appearance: shoulder-length wavy dark-brown hair, short full dark beard, warm medium complexion, undyed natural-linen long tunic, muted dusty-olive sleeveless mantle with a gray-green outer drape, plain leather sandals. Pose 1: calm three-quarter standing idle. Pose 2: restrained crouching or leaning action suitable for preparing ordinary clay near a seated person, hands low and no dramatic gesture. Pose 3: calm standing conversation after finding the man later, one open hand low at waist height. Preserve the pinned identity's face, age, hair, complexion, clothing layers, colors, materials and adult proportions; head about one seventh of body height. Fixed three-quarter top-down RPG camera, polished warm hand-painted storybook realism, clean silhouettes, subtle gouache texture, upper-left natural light, compact soft shadows. The image must contain only the three figures and flat empty background: absolutely no title, caption, pose name, numbering, lettering, symbol, border or typography anywhere.",
+  "must": [
+    "Exactly three ordered poses of one identity",
+    "Match pinned Jesus identity clothing and appearance",
+    "Uniform #F7F0DE removable background",
+    "Restrained clay action and later conversation pose",
+    "Adult non-chibi proportions and natural light"
+  ],
+  "avoid": [
+    "Halo, glow, beam, particles or luminous clothing",
+    "Royal robe, armor, Europeanized iconography",
+    "Raised theatrical blessing pose",
+    "Control by player or implication player causes miracle",
+    "Text, borders, UI, watermark",
+    "Clipped or overlapping figures"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1024,
+    "exactHeight": 1024,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "Face, hair, beard and layered olive/linen clothing match pinned identity",
+    "All poses are readable at 105 runtime pixels tall",
+    "Clay action remains ordinary and theologically restrained",
+    "No iconographic, magical or theatrical treatment"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "identity:identity-jesus-storybook@0.1.0",
+    "identity-source:character.jesus@v3",
+    "scripture:John 9:1-7,35-38"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "startedAt": "2026-08-02T22:29:07.952Z",
+  "status": "complete",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 1065998,
+      "sha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:29:40.386Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 1171541,
+      "sha256": "2f27423bbae50490af5f5118acf4bbcd50c660387a599d9af3cee247aa715c71",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:31:03.061Z"
+    }
+  ],
+  "completedAt": "2026-08-02T22:31:03.202Z",
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/characters-core/character.jesus-john9/v1/run-001/contact-sheet.jpg",
+    "bytes": 118762,
+    "sha256": "b31820940ec57cc812f03f71aa125c06cf5d8744cce32f83abcbd6b3ca8fa27f",
+    "maximumLongEdge": 1600
+  }
+}

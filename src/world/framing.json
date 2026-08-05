@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "responsive-safe-framing",
+  "profiles": [
+    {
+      "id": "frame.desktop-1280x720",
+      "viewport": { "width": 1280, "height": 720 },
+      "safeInsets": { "left": 80, "right": 80, "top": 56, "bottom": 144 },
+      "gameplaySafeRect": { "x": 80, "y": 56, "width": 1120, "height": 520 },
+      "cameraZoomRange": { "minimum": 0.9, "maximum": 1.1 },
+      "minimumVisibleWorldSpan": { "width": 960, "height": 540 }
+    },
+    {
+      "id": "frame.mobile-390x844",
+      "viewport": { "width": 390, "height": 844 },
+      "safeInsets": { "left": 20, "right": 20, "top": 96, "bottom": 190 },
+      "gameplaySafeRect": { "x": 20, "y": 96, "width": 350, "height": 558 },
+      "cameraZoomRange": { "minimum": 0.72, "maximum": 0.86 },
+      "minimumVisibleWorldSpan": { "width": 440, "height": 600 }
+    }
+  ],
+  "sequenceFrames": [
+    {
+      "id": "frame.roadside-action",
+      "cameraZoneId": "camera.roadside",
+      "focusAnchorIds": ["roadside.blind-man-seat", "roadside.jesus", "roadside.clay-action"],
+      "horizontalPadding": 72,
+      "verticalPadding": 64
+    },
+    {
+      "id": "frame.pool-action",
+      "cameraZoneId": "camera.siloam",
+      "focusAnchorIds": ["pool.wash-edge", "pool.return"],
+      "horizontalPadding": 72,
+      "verticalPadding": 64
+    },
+    {
+      "id": "frame.neighbor-group",
+      "cameraZoneId": "camera.neighbors",
+      "focusAnchorIds": ["neighbors.group-left", "neighbors.center", "neighbors.group-right"],
+      "horizontalPadding": 64,
+      "verticalPadding": 64
+    },
+    {
+      "id": "frame.inquiry-group",
+      "cameraZoneId": "camera.inquiry",
+      "focusAnchorIds": ["inquiry.pharisees-left", "inquiry.man-center", "inquiry.pharisees-right", "inquiry.parents"],
+      "horizontalPadding": 64,
+      "verticalPadding": 60
+    },
+    {
+      "id": "frame.ending",
+      "cameraZoneId": "camera.outer",
+      "focusAnchorIds": ["outside.expelled", "outside.belief", "ending.camera"],
+      "horizontalPadding": 48,
+      "verticalPadding": 56
+    }
+  ]
+}

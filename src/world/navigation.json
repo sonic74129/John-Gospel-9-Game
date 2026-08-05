@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-graybox",
+  "contractType": "world-navigation",
+  "grid": {
+    "origin": { "x": 0, "y": 0 },
+    "cellSize": 32,
+    "columns": 80,
+    "rows": 56,
+    "diagonalMovement": false,
+    "preventCornerCutting": true,
+    "defaultWalkCost": 1
+  },
+  "agent": {
+    "radius": 18,
+    "height": 72,
+    "minimumGroupLaneWidth": 112,
+    "repathDistance": 24
+  },
+  "generation": {
+    "walkableSource": "layout.regions[].walkablePolygon",
+    "blockedSource": "collisions.collisionPolygons[]",
+    "portalSource": "layout.portals[]",
+    "debugOverlay": true
+  },
+  "localCirculation": [
+    {
+      "id": "circulation.pool-basin",
+      "regionId": "siloam-pool",
+      "startAnchorId": "pool.wash-edge",
+      "endAnchorId": "pool.south-steps",
+      "alternatives": [
+        {
+          "id": "west",
+          "points": [
+            { "x": 1120, "y": 1440 },
+            { "x": 900, "y": 1420 },
+            { "x": 820, "y": 1580 }
+          ]
+        },
+        {
+          "id": "east",
+          "points": [
+            { "x": 1120, "y": 1440 },
+            { "x": 1400, "y": 1420 },
+            { "x": 1480, "y": 1540 },
+            { "x": 1440, "y": 1660 },
+            { "x": 900, "y": 1680 },
+            { "x": 820, "y": 1580 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "circulation.inquiry-screen",
+      "regionId": "inquiry-courtyard",
+      "startAnchorId": "inquiry.parents-entry",
+      "endAnchorId": "inquiry.parents",
+      "alternatives": [
+        {
+          "id": "west",
+          "points": [
+            { "x": 2040, "y": 240 },
+            { "x": 1900, "y": 260 },
+            { "x": 1860, "y": 300 },
+            { "x": 1860, "y": 460 },
+            { "x": 1960, "y": 520 },
+            { "x": 2140, "y": 720 }
+          ]
+        },
+        {
+          "id": "east",
+          "points": [
+            { "x": 2040, "y": 240 },
+            { "x": 2260, "y": 260 },
+            { "x": 2260, "y": 460 },
+            { "x": 2240, "y": 540 },
+            { "x": 2140, "y": 720 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "circulation.outer-tree",
+      "regionId": "outer-road",
+      "startAnchorId": "outside.inquiry-entry",
+      "endAnchorId": "outside.lower-turn",
+      "alternatives": [
+        {
+          "id": "west",
+          "points": [
+            { "x": 2140, "y": 1120 },
+            { "x": 1940, "y": 1160 },
+            { "x": 1920, "y": 1420 },
+            { "x": 1960, "y": 1500 },
+            { "x": 2020, "y": 1540 }
+          ]
+        },
+        {
+          "id": "east",
+          "points": [
+            { "x": 2140, "y": 1120 },
+            { "x": 2240, "y": 1180 },
+            { "x": 2240, "y": 1420 },
+            { "x": 2140, "y": 1500 },
+            { "x": 2020, "y": 1540 }
+          ]
+        }
+      ]
+    }
+  ],
+  "regionCosts": [
+    { "regionId": "roadside", "walkCost": 1 },
+    { "regionId": "siloam-pool", "walkCost": 1.1 },
+    { "regionId": "neighbor-gathering", "walkCost": 1 },
+    { "regionId": "inquiry-courtyard", "walkCost": 1 },
+    { "regionId": "outer-road", "walkCost": 1 }
+  ]
+}

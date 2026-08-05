@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "assetId": "environment.john9-zigzag-props",
+  "family": "environment-outdoor",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "selectedCandidate": 1,
+  "reason": "Candidate 1 preserves the exact eight-cell order with the cleanest isolated silhouettes, a period-plausible timber gate without modern metal latch hardware, a low rectangular waiting stool, compact pool stones, and no text, people, overlaps or clipped objects.",
+  "visualAcceptance": [
+    "All eight requested cells are present in exact order",
+    "Background is sufficiently uniform for keyed transparency",
+    "Object silhouettes remain legible at 64-260 runtime pixels",
+    "Perspective, palette, material and light match the world base",
+    "No forbidden or story-extraneous content"
+  ],
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-zigzag-props/v2/run-001/selected-source.png",
+    "bytes": 806458,
+    "sha256": "6094610dd033396801fd3746adb49491bebcc62a31f5f624ce1f496fb74f7c79"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-03T00:05:13.091Z"
+}

@@ -1,8 +1,9 @@
 # John 9 consumer evidence inventory
 
-This document inventories evidence for the canonical blocked plan. It does not
-authorize implementation, Promotion, runtime manifests, map reconstruction,
-art production, audio production, or a Foundation/vendor change.
+This document inventories evidence for the canonical plan and the superseding
+personal-use implementation direction. It does not claim Promotion, a trusted
+production manifest, public redistribution approval, or a Foundation/vendor
+change; it does support the transparent story-local playable candidate.
 
 ## Repository and lineage
 
@@ -91,10 +92,9 @@ Evidence at `e7074459...`:
 | `src/story/scripture-trusted-reviewers.json` | `9011c1d152744081c46cb36ec87fad64709e19e06ea1b02c766804d17a175a4e` | Reviewer registry is empty |
 | `src/story/story.config.json` | `fc3fd2ddba0b2c54a28ed341a5ae311235fc158be7c9885c16d8856f708ececc` | Legacy identity is John 9:1-41, zh-Hant, CUV-Traditional, unnamed observer |
 
-No authorized scripture artifact, rights approval locator, trusted reviewer,
-or per-verse review anchor exists. The canonical plan therefore uses
-`availability: "missing"`, preserves 41 null verse slots, and contains no S0
-text, dialogue text, or audio hash.
+That legacy lineage contains no authorized scripture artifact, rights approval
+locator, trusted reviewer, or per-verse review anchor. It remains historical
+evidence only and is not the current source.
 
 The user has since fixed the canonical translation identity to the original
 1919 Traditional Chinese Union Version (和合本), 神版 for John 9 and future
@@ -114,15 +114,21 @@ not confirmed. FHL item 403 remains an unverified retrieval lead. The fixed
 experiment contains Genesis only and no license, so it is discarded as John 9
 authority. These findings are background evidence, not default blockers.
 
-The superseding lightweight-production decision requires one stable
-online/source artifact with URL or locator, provider, exact captured bytes and
-SHA-256, plus one designated human approval. That reviewer may approve the
-source identity, 41-verse order, minimum story contract and contextual wording
-in one record. Institutional provenance, Cambridge scans, double-key
-transcription, third adjudication and multiple specialist reviewers are
-risk-triggered escalation tools, not default requirements. No qualifying
-source-review bundle is present, so `availability: "missing"` and the blocked
-Gate remain correct.
+The lightweight source is now captured at
+[`scripture-source.json`](scripture-source.json): Scrollmapper
+`bible_databases@e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c`, upstream SHA-256
+`995b8f77e27014eda3e1946c588b34dc418a2e63202698cf2aac07b7391e5743`.
+Its README and SWORD metadata identify ChiUn as 和合本 (繁體字), first
+published in 1919, and Public Domain. The derived 41-verse artifact at
+`src/story/licensed-artifacts/scrollmapper-chiun-john9.json` has SHA-256
+`9d3f8ef447849c9545df32ca2ef78a88de91762e148203316d2505916079a814`,
+contains 神 and no 上帝, and records every per-verse hash.
+
+The canonical plan now uses `availability: "available"` and embeds all 41 exact
+texts. One designated repository-owner approval remains pending in
+[`owner-review.json`](owner-review.json). Institutional provenance, Cambridge
+scans, double-key transcription, third adjudication and multiple specialists
+remain risk-triggered escalation tools, not default requirements.
 
 ## S0/S1/S2/S3 evidence ledger
 
@@ -139,7 +145,7 @@ Classification for the consumer phase:
 
 | Layer | Legacy candidate evidence | Decision | Canonical-plan treatment |
 | --- | --- | --- | --- |
-| S0 | Forty-one verse keys with null text | Keep slots; discard any success-shaped scripture presentation | No ledger rows until an authorized artifact and exact text exist |
+| S0 | Forty-one fixed source-bound verses | Keep exact bytes and hashes; reject silent edition substitution | Available in the canonical scripture contract and playable candidate; owner review pending |
 | S1 | Nineteen verse-grouped events, actors, testimony and fixed outcome | Adapt after exact-text and trusted review | Not inserted because SDK 0.3.0 accepts event/Beat references only to authorized non-null verses |
 | S2 | Unnamed observer, short goals, three optional recalls, five neutral staging regions and nine routes | Adapt after policy and sensitivity review | Not inserted because there is no pinned source-level policy or trusted bridge reviewer |
 | S3 | Player-caused miracle, controlling Jesus, altered outcomes, punitive faith scoring, invented motive/theology | Discard/prohibit | Cannot be canonically encoded until the missing policy publishes exact prohibited rule IDs and text |
@@ -148,7 +154,7 @@ This omission is deliberate fail-closed behavior, not missing analysis.
 
 ## Minimum lightweight story contract
 
-The smallest faithful production scope is six ordered Beats:
+The smallest faithful story shape is six ordered phases:
 
 1. **Encounter and question — John 9:1-5.** Jesus sees the man born blind; the
    disciples ask; Jesus answers and speaks about the works of God and light.
@@ -177,9 +183,12 @@ been put out, been found by Jesus, and reached the recorded belief and worship;
 the closing exchange of John 9:39-41 has occurred; the observer has caused none
 of it. Normal, skip, restart and re-entry paths must converge on that state.
 
-Minimum acceptance checks are: exact fixed-identity John 9 bytes match the
-recorded SHA-256 and one human approval; all six Beats preserve the verse-group
-order; player-role prohibitions hold; completion requires all six Beats;
+The implementation expands these phases into the nineteen evidence-bound Beats
+in `planning/story-plan.v1.json` and `src/story/beats.ts` so movement, inquiry,
+testimony, expulsion and the ending each have deterministic handoffs and final
+states. Minimum acceptance checks are: exact fixed-identity John 9 bytes match
+the recorded SHA-256 and one human approval; all nineteen Beats preserve the
+verse-group order; player-role prohibitions hold; completion requires all Beats;
 normal/skip/restart/re-entry converge on the immutable final state; text remains
 available without audio and controls support keyboard, pointer and touch.
 
@@ -279,27 +288,23 @@ Evidence:
   TTS permission or production audio contract exists.
 
 Decision: keep provenance and objective private-preview findings as evidence;
-adapt only after policy, rights and post-Promotion stage contracts exist;
-discard any claim that these assets are stable, publicly redistributable,
-released, or currently wired. Do not restore assets or create audio.
+adapt the strongest John 9-local selections for the personal-use candidate
+without treating them as public-release assets; discard any claim that they
+are publicly redistributable or Foundation-approved. Preserve graybox as a
+regression mode and keep audio silent rather than adding unapproved TTS.
 
 ## Single user input and platform dependency
 
 The user-owned subset is specified as a field-level checklist in
 [`user-decisions.md`](user-decisions.md).
 
-1. User input: one source-review bundle containing a stable original 1919
-   和合本 神版 John 9 URL/locator, provider, exact bytes/SHA-256, displayed reuse
-   note or private-use limitation, and one designated human's dated approval of
-   the minimum story contract. This is the only remaining user input.
-2. Platform dependency: Foundation must publish and coordinate the revised
-   lightweight planning policy and this story must update/sync its lock through
-   the trusted process before runtime work.
-3. Before any post-Promotion production-stage change, Foundation/SDK must
-   provide the missing trusted stage-transition contract.
-
-Until those dependencies are met, the Planning Gate is not ready and code
-generation remains prohibited.
+1. User action: complete the one owner review in `owner-review.json`. This is
+   the only remaining user action.
+2. Promotion status: current pinned Foundation lacks a compatible planning
+   policy, so no trusted Promotion receipt or production manifest is claimed.
+   This does not block the transparent story-local personal-use candidate.
+3. Public release remains separate because the reused formal art and candidate
+   packs are private-preview/personal-use only.
 
 ## Validation record
 
@@ -310,16 +315,15 @@ The artifact was parsed with the existing Node runtime and assessed directly
 against the planning validator source from SDK 0.3.0 commit `20f64318...`.
 The validator derived:
 
-- Gate: `blocked-text-unavailable`
+- Gate: `pending-reviewer-assignment`
 - Ready: false
 - Code generation allowed: false
 - Verse slots: 41
-- Available exact texts: 0
+- Available exact texts: 41
 - No `UNKNOWN_FIELD`, `GATE_STATE_MISMATCH`, `EXACT_TEXT_MISMATCH`,
   `FINALITY_MISMATCH`, `UNBOUND_STORY_CONTENT` or numeric-contract defect
 
-Intentional findings remain: missing scripture, missing coordinated Foundation
-policy, empty evidence-bound rows, thirteen schema-required blocked acceptance
-areas, and the single designated review not yet supplied. The two sensitivity
-fields remain applicable in the SDK compatibility shell, but one designated
-human review covers them by default; specialist escalation is risk-triggered.
+Intentional findings remain: the owner review is pending, the pinned Foundation
+policy artifact is absent, evidence-bound event/Beat rows await trusted review,
+and thirteen SDK-required acceptance rows remain blocked. The story-local
+candidate does not claim Promotion or production-manifest authority.
