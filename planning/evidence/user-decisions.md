@@ -4,19 +4,19 @@ These are the only user-owned decisions needed to unblock scripture evidence.
 They do not make the Planning Gate ready by themselves. Foundation policy and
 trusted post-Promotion stage-transition work remain separate platform blockers.
 
-## 1. Authorized scripture source and translation
+## 1. Fixed translation identity; source artifact still required
 
-**Current evidence:** The story identity is `zh-Hant`, John 9:1-41. Legacy
-files name `CUV-Traditional`, but provide no text, provider, canonical edition
-or artifact. The 神/上帝 edition variant is unresolved.
+**Recorded user decision:** John 9 and future story games default to the
+original 1919 Traditional Chinese Union Version (和合本), 神版. Translation and
+divine-name variant are fixed and must not be asked again.
 
-**Decision required:**
+**Still required:**
 
-1. Select the authorized translation provider and exact source artifact.
-2. Confirm the canonical edition name/ID and translation ID.
-3. Select the exact 神 or 上帝 variant represented by that edition.
-4. Confirm that the supplied artifact covers all 41 verse slots for
+1. Supply the exact authorized 1919 神版 source artifact and provider.
+2. Confirm that the supplied artifact covers all 41 verse slots for
    John 9:1-41 with stable verse boundaries.
+3. Confirm canonical artifact, edition and translation IDs that identify the
+   selected 1919 神版 without changing that decision.
 
 **Evidence that must accompany the decision:**
 
@@ -27,6 +27,15 @@ or artifact. The 神/上帝 edition variant is unresolved.
 
 No text may be copied from an unverified website, remembered text, another
 story repository or a runtime branch.
+
+The following are explicitly rejected as substitutes unless separately
+authorized by a new user decision and complete source/rights/review evidence:
+
+- 1988 New Punctuation CUV/CUNP;
+- 2010 RCUV;
+- modern or legacy CCB;
+- YouVersion or other API text;
+- eBible `cmn-cu89t`.
 
 ## 2. Usage rights and provenance
 
@@ -43,7 +52,7 @@ Legacy art/source provenance does not grant scripture rights.
    - offline bundling;
    - public or private artifact redistribution;
    - permitted territories;
-   - TTS and derived audio;
+   - TTS and derived audio text usage;
    - required attribution wording.
 3. Confirm the provenance chain from provider artifact to the exact bytes
    supplied for this plan.
@@ -58,6 +67,10 @@ Legacy art/source provenance does not grant scripture rights.
 Any pending, restricted or rejected required scope keeps the Gate closed. This
 inventory records engineering evidence and is not legal advice.
 
+TTS engine and voice-output redistribution rights are separate from scripture
+text rights. They remain blocked until the chosen engine/voice terms and the
+intended audio distribution scope are independently approved and evidenced.
+
 ## 3. Qualified reviewers and approval anchors
 
 **Current evidence:** The trusted reviewer registry is empty; all 41 verse
@@ -67,7 +80,8 @@ applicable and required.
 **Decision required:**
 
 1. Nominate qualified reviewers with stable IDs, names and roles for:
-   - exact text, verse boundaries, edition and 神/上帝 variant;
+   - exact text, verse boundaries and conformance to the fixed original 1919
+     和合本 神版 identity;
    - rights scope, attribution and provenance;
    - disability portrayal and language;
    - Jewish-group terminology and contextual portrayal.

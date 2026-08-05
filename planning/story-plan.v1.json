@@ -53,13 +53,13 @@
   },
   "planningGate": {
     "state": "blocked-text-unavailable",
-    "reason": "The repository contains no authorized exact-text artifact, approved scripture rights evidence, trusted reviewer registry entry, or review anchor. Pinned Foundation commit 6c836d55bfd786b8a55b4e0c7356bf8791505653 also publishes no planning policy artifact.",
-    "recoveryCondition": "Materialize the pinned Foundation lock and guidance through trusted sync, supply an authorized John 9:1-41 exact-text artifact and approved rights scope, select the exact edition and divine-name variant, register trusted text/rights/sensitivity reviewers and approved anchors, publish and pin the Foundation planning policy, then complete and validate every evidence-bound planning contract before trusted Promotion."
+    "reason": "The translation identity is fixed to the original 1919 Traditional Chinese Union Version (和合本), 神版, but the repository contains no authorized exact-text artifact with stable John 9:1-41 boundaries, bytes/SHA-256 and trusted provenance locator, no approved scripture rights evidence, trusted reviewer registry entry, or review anchor. Pinned Foundation commit 6c836d55bfd786b8a55b4e0c7356bf8791505653 also publishes no planning policy artifact.",
+    "recoveryCondition": "Materialize the pinned Foundation lock and guidance through trusted sync, supply and review an exact original 1919 Traditional Chinese Union Version (和合本), 神版 John 9:1-41 source artifact with stable 41-verse boundaries, bytes/SHA-256 and trusted provenance locator, supply approved rights scope, register trusted text/rights/sensitivity reviewers and approved anchors, publish and pin the Foundation planning policy, then complete and validate every evidence-bound planning contract before trusted Promotion."
   },
   "storyCharter": {
     "id": "john-9-man-born-blind",
     "title": "生來瞎眼的人",
-    "passage": "John 9:1-41",
+    "passage": "John 9:1-41 — original 1919 Traditional Chinese Union Version (和合本), 神版",
     "audience": "General Bible-study audience; reviewer confirmation required",
     "targetMinutes": 15,
     "learningObjective": "Trace the chapter's ordered witness and inquiry movement without changing its outcome.",
@@ -69,7 +69,7 @@
   },
   "scripture": {
     "availability": "missing",
-    "blockerReason": "Legacy evidence identifies CUV-Traditional but leaves the provider, canonical edition, 神/上帝 variant, territories, redistribution, offline and TTS permissions unresolved; all exactText values are null and the trusted reviewer registry is empty.",
+    "blockerReason": "The original 1919 Traditional Chinese Union Version (和合本), 神版 is selected. No exact source artifact with stable John 9:1-41 boundaries, bytes/SHA-256 and trusted provenance locator has been supplied or reviewed; usage rights, provenance, qualified reviewers and approval anchors remain unresolved, all exactText values are null, and TTS engine/voice redistribution remains separately blocked. The 1988 New Punctuation CUV/CUNP, 2010 RCUV, modern or legacy CCB, YouVersion/API text, and eBible cmn-cu89t are not authorized substitutes.",
     "reviewers": [],
     "verses": [
       {

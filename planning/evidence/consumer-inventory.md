@@ -96,6 +96,13 @@ or per-verse review anchor exists. The canonical plan therefore uses
 `availability: "missing"`, preserves 41 null verse slots, and contains no S0
 text, dialogue text, or audio hash.
 
+The user has since fixed the canonical translation identity to the original
+1919 Traditional Chinese Union Version (和合本), 神版 for John 9 and future
+stories. This supersedes the legacy file's unresolved 神/上帝 choice but does
+not supply source bytes or authorization. The 1988 New Punctuation CUV/CUNP,
+2010 RCUV, modern/legacy CCB, YouVersion/API text and eBible `cmn-cu89t` are
+rejected as substitutions without separate authorization.
+
 ## S0/S1/S2/S3 evidence ledger
 
 The pinned Playbook defines:
@@ -219,10 +226,14 @@ released, or currently wired. Do not restore assets or create audio.
 The user-owned subset is specified as a field-level checklist in
 [`user-decisions.md`](user-decisions.md).
 
-1. Choose and supply the exact authorized John 9:1-41 zh-Hant source artifact,
-   including provider, canonical edition, translation ID, and 神/上帝 variant.
+1. Supply the exact authorized original 1919 Traditional Chinese Union
+   Version (和合本), 神版 John 9:1-41 source artifact, including provider,
+   canonical artifact/edition/translation IDs, stable 41-verse boundaries,
+   bytes/SHA-256 and trusted provenance locator. Translation and 神版 identity
+   are already fixed and must not be asked again.
 2. Supply approved rights evidence and scope for repository storage/display,
-   offline use, redistribution territories, attribution and TTS.
+   offline use, redistribution territories, attribution and scripture-text
+   TTS use. TTS engine/voice output redistribution requires separate approval.
 3. Register trusted reviewers and approved evidence anchors for exact text,
    rights, disability portrayal and Jewish-group language.
 4. Foundation must publish the planning policy artifact at a pinned commit;
