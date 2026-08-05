@@ -112,7 +112,17 @@ the strongest bibliographic lead, but it is not digitized and its variant is
 not confirmed. FHL item 403 remains an unverified retrieval lead. The fixed
 `mondain-dev/cuv-1919@4cc18e40ee87681dee6aacc2c529d2d9d09e50ac`
 experiment contains Genesis only and no license, so it is discarded as John 9
-authority. None changes `availability: "missing"` or the blocked Gate.
+authority. These findings are background evidence, not default blockers.
+
+The superseding lightweight-production decision requires one stable
+online/source artifact with URL or locator, provider, exact captured bytes and
+SHA-256, plus one designated human approval. That reviewer may approve the
+source identity, 41-verse order, minimum story contract and contextual wording
+in one record. Institutional provenance, Cambridge scans, double-key
+transcription, third adjudication and multiple specialist reviewers are
+risk-triggered escalation tools, not default requirements. No qualifying
+source-review bundle is present, so `availability: "missing"` and the blocked
+Gate remain correct.
 
 ## S0/S1/S2/S3 evidence ledger
 
@@ -135,6 +145,49 @@ Classification for the consumer phase:
 | S3 | Player-caused miracle, controlling Jesus, altered outcomes, punitive faith scoring, invented motive/theology | Discard/prohibit | Cannot be canonically encoded until the missing policy publishes exact prohibited rule IDs and text |
 
 This omission is deliberate fail-closed behavior, not missing analysis.
+
+## Minimum lightweight story contract
+
+The smallest faithful production scope is six ordered Beats:
+
+1. **Encounter and question — John 9:1-5.** Jesus sees the man born blind; the
+   disciples ask; Jesus answers and speaks about the works of God and light.
+2. **Action, washing and sight — John 9:6-7.** Jesus makes clay, applies it,
+   directs the man to Siloam, and the man washes and returns seeing.
+3. **Neighbors and first testimony — John 9:8-12.** Neighbors dispute identity;
+   the man identifies himself, recounts what happened, and does not know where
+   Jesus is.
+4. **First inquiry and parents — John 9:13-23.** The Sabbath inquiry divides
+   those questioning him; his parents confirm his identity and former
+   blindness but defer the explanation to him.
+5. **Second inquiry and expulsion — John 9:24-34.** The man maintains what he
+   knows, answers repeated questioning, reasons from the change, and is put out.
+6. **Jesus finds him and the chapter closes — John 9:35-41.** Jesus finds him;
+   the exchange reaches belief and worship; the closing saying and response
+   occur unchanged.
+
+The player is an unnamed observer-witness. Allowed participation is movement,
+observation, listening, simple interaction to continue, and optional
+non-punitive recall. The player cannot control Jesus, cause the healing, answer
+for a scripture actor, change event order, alter testimony, select theology, or
+change the outcome.
+
+The immutable final state is: the man has received sight, given his testimony,
+been put out, been found by Jesus, and reached the recorded belief and worship;
+the closing exchange of John 9:39-41 has occurred; the observer has caused none
+of it. Normal, skip, restart and re-entry paths must converge on that state.
+
+Minimum acceptance checks are: exact fixed-identity John 9 bytes match the
+recorded SHA-256 and one human approval; all six Beats preserve the verse-group
+order; player-role prohibitions hold; completion requires all six Beats;
+normal/skip/restart/re-entry converge on the immutable final state; text remains
+available without audio and controls support keyboard, pointer and touch.
+
+SDK 0.3.0 cannot bind event or Beat rows to null scripture slots. Therefore the
+canonical JSON keeps those arrays empty while blocked and records this minimum
+contract in its charter, role, completion and acceptance evidence. The schema's
+13 acceptance-area rows remain as compatibility shells; they do not expand the
+lightweight production scope.
 
 ## Story and gameplay evidence
 
@@ -191,18 +244,16 @@ Legacy candidate hashes:
 - Camera `995bd79536136048af2253139afca753cfe55e2fc99891f0489b83a95909a7dd`
 - Responsive framing `7e84549c37c3951b2eefa15a985886a86e21d14c41838cd6774e1c1fad413c62`
 
-Candidate topology is a 2560x1792 continuous, three-quarter, north-south
-zig-zag space with five ordered staging regions: roadside, Siloam Pool,
-neighbor gathering, inquiry courtyard and outer road. Only Siloam is claimed
-as scripture-named; all other exact names and placements are removable S2
-staging. Nine candidate paths cover travel to Siloam, return, neighbor and
-inquiry movement, parent entry/exit, expulsion, Jesus' entrance and ending
-camera motion. Desktop 1280x720 and mobile 390x844 framing were tested.
-The blocked schema shell records the legacy 32-pixel navigation grid, 72-pixel
-agent height and 48-pixel anchor clearance. Because the outdoor candidate has
-no door contract, the required positive `doorHeight` retains the merged
-template starter's 160-pixel structural placeholder; it is not a John 9 fact
-or production scale.
+Legacy evidence describes a 2560x1792 continuous, three-quarter, north-south
+zig-zag space with five staging regions and nine paths; desktop 1280x720 and
+mobile 390x844 framing were tested. Only Siloam is scripture-named. All other
+names, placements, dimensions and paths are optional implementation evidence,
+not part of the lightweight canonical scope.
+
+The canonical blocked JSON now uses positive value `1` for every SDK-required
+world, scale and viewport number. Those values are explicit compatibility
+sentinels, not dimensions, a map, or production state. No legacy topology is
+selected by the plan.
 
 Decision: keep the evidence and responsive/finality requirements; adapt the
 topology only after S1/S2 review; discard claims that this stylized composition
@@ -232,26 +283,19 @@ adapt only after policy, rights and post-Promotion stage contracts exist;
 discard any claim that these assets are stable, publicly redistributable,
 released, or currently wired. Do not restore assets or create audio.
 
-## Minimal decisions and external dependencies
+## Single user input and platform dependency
 
 The user-owned subset is specified as a field-level checklist in
 [`user-decisions.md`](user-decisions.md).
 
-1. Supply the exact authorized original 1919 Traditional Chinese Union
-   Version (和合本), 神版 John 9:1-41 source artifact, including provider,
-   canonical artifact/edition/translation IDs, stable 41-verse boundaries,
-   source-image and canonical-text bytes/SHA-256, trusted provenance locator,
-   independently double-keyed transcription, third-party adjudication and
-   trusted review anchors. Translation and 神版 identity are already fixed and
-   must not be asked again.
-2. Supply approved rights evidence and scope for repository storage/display,
-   offline use, redistribution territories, attribution and scripture-text
-   TTS use. TTS engine/voice output redistribution requires separate approval.
-3. Register trusted reviewers and approved evidence anchors for exact text,
-   rights, disability portrayal and Jewish-group language.
-4. Foundation must publish the planning policy artifact at a pinned commit;
-   this story must then update/sync its lock through the trusted process.
-5. Before any post-Promotion production-stage change, Foundation/SDK must
+1. User input: one source-review bundle containing a stable original 1919
+   和合本 神版 John 9 URL/locator, provider, exact bytes/SHA-256, displayed reuse
+   note or private-use limitation, and one designated human's dated approval of
+   the minimum story contract. This is the only remaining user input.
+2. Platform dependency: Foundation must publish and coordinate the revised
+   lightweight planning policy and this story must update/sync its lock through
+   the trusted process before runtime work.
+3. Before any post-Promotion production-stage change, Foundation/SDK must
    provide the missing trusted stage-transition contract.
 
 Until those dependencies are met, the Planning Gate is not ready and code
@@ -274,9 +318,8 @@ The validator derived:
 - No `UNKNOWN_FIELD`, `GATE_STATE_MISMATCH`, `EXACT_TEXT_MISMATCH`,
   `FINALITY_MISMATCH`, `UNBOUND_STORY_CONTENT` or numeric-contract defect
 
-Intentional findings remain: missing scripture, missing Foundation policy,
-empty evidence-bound contracts, thirteen blocked acceptance areas, and
-required disability/Jewish-group sensitivity reviews without trusted
-reviewers. The latter sensitivity findings are preserved even though the
-merged template's generic blocked-starter allowlist does not list them; hiding
-applicability would weaken validation.
+Intentional findings remain: missing scripture, missing coordinated Foundation
+policy, empty evidence-bound rows, thirteen schema-required blocked acceptance
+areas, and the single designated review not yet supplied. The two sensitivity
+fields remain applicable in the SDK compatibility shell, but one designated
+human review covers them by default; specialist escalation is risk-triggered.

@@ -4,13 +4,19 @@ This record captures the completed search for an exact original 1919
 Traditional Chinese Union Version (和合本), 神版 source for John 9. It contains no
 scripture text and grants no source, rights, transcription, or review approval.
 
-## Result
+## Result and current use
 
 No ready-to-download, institutionally hosted 1919 神版 scan was found with all
 of the evidence needed for use: verifiable bibliography, title/imprint/variant
 pages, every John 9 page, reuse terms, and stable institutional identifiers.
-The fixed translation identity is therefore unchanged, but no candidate is an
-authorized John 9 source artifact. The Gate remains
+This is useful background evidence, not the default acquisition threshold for
+this small game. The lightweight production decision supersedes the earlier
+high-assurance default: one stable online/source artifact with URL, provider,
+captured bytes and SHA-256, followed by one designated human review, is enough
+unless a concrete dispute or public/commercial risk triggers escalation.
+
+No such source-review bundle has been supplied yet. The fixed translation
+identity is unchanged, all scripture text remains null, and the Gate remains
 `blocked-text-unavailable`.
 
 ## Candidate evidence
@@ -27,49 +33,38 @@ copied. The FHL description is a lead, not a verified source. The GitHub
 experiment is neither complete nor licensed. None supplies source bytes,
 per-page hashes, stable 41-verse boundaries, or a trusted provenance chain.
 
-## Required source package
+## Default lightweight path
 
-To unblock exact-text acquisition, a custodian-backed source package must
-provide:
+The default unblock evidence is one combined source-review bundle:
 
-1. Images of the title, imprint, and variant-identifying pages, plus every page
-   containing John 9, all tied to an institutional catalog record or identified
-   custodian.
-2. Stable catalog, object, and page identifiers sufficient to reproduce the
-   acquisition.
-3. Acquisition date and method, original source-image bytes, and SHA-256 for
-   every image and for the complete image set.
-4. Reuse terms or an approval record covering the intended handling of scan
-   images, with an evidence locator and hash.
-5. A documented conclusion that the imaged volume is the original 1919 和合本
-   神版 rather than a later punctuation, revision, 上帝版, API, or modern
-   substitute.
+1. One stable URL or source locator and its provider.
+2. The exact captured John 9 bytes and SHA-256, preserving 41 verse boundaries.
+3. A source note identifying the artifact as the original 1919 Traditional
+   Chinese Union Version (和合本), 神版 and recording any displayed reuse or
+   public-domain statement needed for the intended private small-game use.
+4. One designated human reviewer ID and one dated approval that confirms source
+   identity, exact bytes, 41-verse order, the six-Beat outline, player-role
+   limits, final state, and contextual language.
 
-If scan reuse is unclear, source images must remain private. Only an
-independently transcribed public-domain text may be distributed, and only after
-rights/provenance approval confirms that scope. Public-domain text status does
-not itself authorize redistribution of a custodian's scan files.
+This default does not require Cambridge scans, institutional provenance,
+double-key transcription, a third adjudicator, or multiple specialist
+reviewers. Source images remain private when their reuse terms are unclear.
 
-## Required transcription and review package
+## Risk-triggered escalation
 
-The authorized images must be converted to text under this minimum protocol:
+The earlier high-assurance protocol is retained only as an escalation option.
+Escalate when there is an actual source/variant/glyph dispute, conflicting
+versions, unresolved rights, or intended public/commercial distribution whose
+risk cannot be handled by the lightweight bundle. Escalation may then require:
 
-1. Two Traditional-Chinese-literate keyers independently double-key John 9
-   from the source images without sharing intermediate transcriptions.
-2. A third qualified adjudicator resolves every disagreement against the source
-   images and records the decision evidence.
-3. A qualified reviewer confirms exactly 41 stable verse boundaries and the
-   complete John 9:1-41 sequence.
-4. The canonical text uses UTF-8, NFC normalization, and LF line endings. NFKC,
-   OpenCC conversion, automated punctuation modernization, and automatic
-   substitution from another edition are prohibited.
-5. No unresolved, uncertain, illegible, or replacement glyph remains. Any such
-   glyph keeps the text unavailable.
-6. The package records SHA-256 for the canonical whole-file bytes and for each
-   of the 41 exact verse byte sequences.
-7. Trusted reviewer anchors identify the source images, both keying records,
-   adjudication record, verse-boundary review, canonical bytes, and hashes.
+1. Custodian-backed title, imprint, variant, and John 9 page images with stable
+   identifiers, acquisition records, hashes, and reuse terms.
+2. Independent double-keying by two Traditional-Chinese-literate keyers and a
+   third adjudicator.
+3. Separate specialist review appropriate to the concrete dispute or risk.
+4. Whole-file and per-verse hashes, strict UTF-8/NFC/LF handling, and explicit
+   review of unresolved glyphs.
 
-Only that evidence, together with approved rights/provenance and trusted
-reviewer records, can populate the currently null verse slots. This
-investigation does not satisfy those approvals.
+Neither the background investigation nor an escalation step is a default
+blocker. The missing lightweight source-review bundle is the only remaining
+user input.

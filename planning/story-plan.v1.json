@@ -53,8 +53,8 @@
   },
   "planningGate": {
     "state": "blocked-text-unavailable",
-    "reason": "The translation identity is fixed to the original 1919 Traditional Chinese Union Version (和合本), 神版, but the repository contains no authorized exact-text artifact with stable John 9:1-41 boundaries, bytes/SHA-256 and trusted provenance locator, no approved scripture rights evidence, trusted reviewer registry entry, or review anchor. Pinned Foundation commit 6c836d55bfd786b8a55b4e0c7356bf8791505653 also publishes no planning policy artifact.",
-    "recoveryCondition": "Materialize the pinned Foundation lock and guidance through trusted sync, supply and review an exact original 1919 Traditional Chinese Union Version (和合本), 神版 John 9:1-41 source artifact with stable 41-verse boundaries, bytes/SHA-256 and trusted provenance locator, supply approved rights scope, register trusted text/rights/sensitivity reviewers and approved anchors, publish and pin the Foundation planning policy, then complete and validate every evidence-bound planning contract before trusted Promotion."
+    "reason": "The translation identity is fixed to the original 1919 Traditional Chinese Union Version (和合本), 神版, but no lightweight source-review bundle has been supplied: one stable John 9:1-41 URL/locator and provider, exact captured bytes/SHA-256, and one designated human approval. Pinned Foundation commit 6c836d55bfd786b8a55b4e0c7356bf8791505653 also lacks the coordinated lightweight planning policy.",
+    "recoveryCondition": "Supply one combined source-review bundle for the fixed original 1919 和合本 神版: stable URL/locator, provider, exact John 9:1-41 bytes with 41 boundaries and SHA-256, displayed reuse note or private-use limitation, and one designated human's dated approval of source identity, six-Beat order, observer role, immutable final state and contextual wording. Then pin the coordinated lightweight Foundation policy and validate the minimum evidence-bound plan before trusted Promotion."
   },
   "storyCharter": {
     "id": "john-9-man-born-blind",
@@ -69,7 +69,7 @@
   },
   "scripture": {
     "availability": "missing",
-    "blockerReason": "The original 1919 Traditional Chinese Union Version (和合本), 神版 is selected. No exact source artifact with stable John 9:1-41 boundaries, bytes/SHA-256 and trusted provenance locator has been supplied or reviewed; usage rights, provenance, qualified reviewers and approval anchors remain unresolved, all exactText values are null, and TTS engine/voice redistribution remains separately blocked. The 1988 New Punctuation CUV/CUNP, 2010 RCUV, modern or legacy CCB, YouVersion/API text, and eBible cmn-cu89t are not authorized substitutes.",
+    "blockerReason": "The original 1919 Traditional Chinese Union Version (和合本), 神版 is selected. The one required lightweight source-review bundle has not been supplied: stable John 9:1-41 URL/locator and provider, exact captured bytes/SHA-256, and one designated human approval. All exactText values remain null. Cambridge scans, institutional provenance, double-keying, third adjudication and multiple specialist reviewers are escalation-only, not default blockers. The 1988 New Punctuation CUV/CUNP, 2010 RCUV, modern or legacy CCB, YouVersion/API text, and eBible cmn-cu89t are not authorized substitutes.",
     "reviewers": [],
     "verses": [
       {
@@ -366,8 +366,8 @@
   },
   "eventSpine": [],
   "playerRoleWarrant": {
-    "role": "unnamed observer-witness candidate",
-    "warrant": "Legacy evidence supports movement, observation, listening and non-punitive recall, but no action may be authorized until pinned policy rules and trusted scripture review can bind the S0/S1/S2/S3 ledger.",
+    "role": "unnamed observer-witness",
+    "warrant": "Minimum role: move, observe, listen, continue simple interactions and use optional non-punitive recall; never control Jesus, cause the healing, answer for a scripture actor, alter event order or testimony, select theology, or change the outcome. SDK-bound action rows remain empty until the source-review bundle and coordinated lightweight policy exist.",
     "allowedActions": [],
     "prohibitedActions": [],
     "policyRuleIds": []
@@ -380,31 +380,31 @@
     "recalls": []
   },
   "grayboxWorld": {
-    "coordinateSystem": "legacy candidate: top-left world pixels, positive x east, positive y south",
+    "coordinateSystem": "deferred SDK compatibility shell; no production coordinate system selected",
     "world": {
-      "width": 2560,
-      "height": 1792,
-      "tileSize": 32
+      "width": 1,
+      "height": 1,
+      "tileSize": 1
     },
     "routes": [],
     "doors": [],
     "collisions": [],
     "cameraZones": [],
     "scale": {
-      "actorHeight": 72,
-      "doorHeight": 160,
-      "interactionDistance": 48
+      "actorHeight": 1,
+      "doorHeight": 1,
+      "interactionDistance": 1
     },
     "responsiveViewports": [
       {
         "name": "desktop",
-        "width": 1280,
-        "height": 720
+        "width": 1,
+        "height": 1
       },
       {
         "name": "mobile",
-        "width": 390,
-        "height": 844
+        "width": 1,
+        "height": 1
       }
     ],
     "developmentOnly": true,
@@ -414,104 +414,104 @@
   "dialogueMatrix": [],
   "audioSheet": [],
   "completionContract": {
-    "condition": "Complete every reviewed Beat in canonical order without changing scripture outcomes.",
+    "condition": "Complete six reviewed Beats in John 9:1-41 order without changing scripture outcomes: encounter/question; action/washing/sight; neighbors/testimony; first inquiry/parents; second inquiry/expulsion; Jesus finds him/chapter closes.",
     "requiredBeatIds": [],
-    "completionStateId": "planning-blocked",
+    "completionStateId": "john9-witness-complete",
     "policyRuleIds": [],
-    "restartBehavior": "No real story runtime or restart state may be created before trusted Promotion.",
-    "reentryBehavior": "No real story runtime or re-entry state may be created before trusted Promotion."
+    "restartBehavior": "After implementation, restart must replay canonical order and converge on the same immutable final state; no runtime is created before coordinated policy and trusted Promotion.",
+    "reentryBehavior": "After implementation, re-entry must restore only reviewed progress and converge on the same immutable final state; no runtime is created before coordinated policy and trusted Promotion."
   },
   "acceptanceInventory": [
     {
       "id": "accept-scripture",
       "area": "scripture",
-      "category": "Authorized exact text, rights and trusted review",
+      "category": "One source artifact and one human review",
       "status": "blocked",
-      "evidence": "planning/evidence/consumer-inventory.md#scripture-source-rights-and-reviewers records 41 null text slots, unresolved rights, and an empty trusted reviewer registry; planning/evidence/1919-cuv-source-investigation.md records why no investigated candidate is an authorized John 9 source and the evidence required to unblock acquisition."
+      "evidence": "planning/evidence/user-decisions.md defines the single remaining source-review bundle; planning/evidence/1919-cuv-source-investigation.md is background evidence with risk-triggered escalation only."
     },
     {
       "id": "accept-event-spine",
       "area": "event-spine",
-      "category": "Reviewed canonical event order",
+      "category": "Six ordered scripture phases",
       "status": "blocked",
-      "evidence": "planning/evidence/consumer-inventory.md#story-and-gameplay-evidence records a 19-part legacy candidate, but SDK 0.3.0 forbids binding events to unauthorized null verse slots."
+      "evidence": "planning/evidence/consumer-inventory.md#minimum-lightweight-story-contract defines six ordered phases; SDK 0.3.0 forbids binding event rows while exact text remains null."
     },
     {
       "id": "accept-player-role",
       "area": "player-role",
-      "category": "Evidence-bound witness limits",
+      "category": "Immutable observer limits",
       "status": "blocked",
-      "evidence": "Legacy observer restrictions are retained as candidate evidence; the missing Foundation planning policy prevents canonical action warrants."
+      "evidence": "The minimum contract fixes an unnamed observer who cannot cause, answer for, reorder or alter scripture events; SDK action rows await coordinated lightweight policy."
     },
     {
       "id": "accept-beats",
       "area": "beats",
-      "category": "Ordered evidence-bound Beats",
+      "category": "Six minimal reviewed Beats",
       "status": "blocked",
-      "evidence": "Nineteen legacy Beat groupings are catalogued for adaptation, not promoted into canonical rows without S0/S1 ledger and policy bindings."
+      "evidence": "The minimum contract groups John 9 into six Beats; Beat rows remain empty only because SDK 0.3.0 requires authorized scripture and policy bindings."
     },
     {
       "id": "accept-actor-state",
       "area": "actor-state",
-      "category": "Actor continuity and final-state ownership",
+      "category": "Immutable scripture final state",
       "status": "blocked",
-      "evidence": "Legacy snapshots provide candidate continuity evidence, but trusted scripture and sensitivity review are absent."
+      "evidence": "The minimum contract fixes the man's sight, testimony, expulsion, encounter, belief and worship and the closing exchange; one designated review is pending."
     },
     {
       "id": "accept-bridges-clues",
       "area": "bridges-clues",
-      "category": "Removable reviewed S2 content",
+      "category": "No required invented bridges",
       "status": "blocked",
-      "evidence": "Legacy routes and neutral region labels are classified adapt; none has a trusted new-schema reviewer approval."
+      "evidence": "Lightweight scope requires no bridge or clue; any later bridge must remain removable and receive the same designated review or risk-triggered escalation."
     },
     {
       "id": "accept-recall-goals",
       "area": "recall-goals",
-      "category": "Non-punitive recall and short goals",
+      "category": "Optional non-punitive recall",
       "status": "blocked",
-      "evidence": "Legacy non-blocking recalls and nineteen short goals are candidate evidence only until scripture and policy bindings exist."
+      "evidence": "Recall is optional, scoreless and never blocks progress; no recall content is required for the six-Beat minimum."
     },
     {
       "id": "accept-graybox-world",
       "area": "graybox-world",
-      "category": "Map, route, collision and responsive contracts",
+      "category": "Deferred implementation world",
       "status": "blocked",
-      "evidence": "Only legacy candidate dimensions and viewports are recorded; no runtime/map reconstruction is authorized in this phase."
+      "evidence": "World construction is outside the minimum planning contract and remains deferred until coordinated policy; current values are SDK compatibility placeholders only."
     },
     {
       "id": "accept-sequence-finality",
       "area": "sequence-finality",
-      "category": "Normal, skip, restart and re-entry parity",
+      "category": "One final state on every path",
       "status": "blocked",
-      "evidence": "Legacy tests assert normal/skip parity, but canonical sequence rows and hashes require authorized Beat and policy contracts."
+      "evidence": "Normal, skip, restart and re-entry must converge on the immutable final state defined in the minimum contract; sequence rows await authorized Beats."
     },
     {
       "id": "accept-dialogue-portraits",
       "area": "dialogue-portraits",
-      "category": "Exact dialogue and identity-continuous portraits",
+      "category": "Exact text before presentation",
       "status": "blocked",
-      "evidence": "Exact text is unavailable and the legacy UI omitted portrait production; dialogue rows must remain empty."
+      "evidence": "No dialogue or portrait production is required for planning; exact scripture presentation remains empty until the source-review bundle is approved."
     },
     {
       "id": "accept-audio",
       "area": "audio",
-      "category": "Text-hashed audio with subtitle fallback",
+      "category": "Text-first optional audio",
       "status": "blocked",
-      "evidence": "No exact scripture text hash or authorized TTS right exists; audio rows must remain empty and audio must never block progress."
+      "evidence": "Audio is optional and never blocks progress; no audio work begins before exact text and coordinated runtime policy."
     },
     {
       "id": "accept-completion",
       "area": "completion",
-      "category": "Deterministic evidence-bound completion",
+      "category": "All six Beats complete",
       "status": "blocked",
-      "evidence": "Legacy completion required nineteen fixed Beats, but no canonical Beat IDs may be required before the Gate dependencies are resolved."
+      "evidence": "Completion requires the six ordered Beats and the immutable final state; required Beat IDs remain empty while SDK-bound Beat rows are blocked."
     },
     {
       "id": "accept-accessibility-sensitivity",
       "area": "accessibility-sensitivity",
-      "category": "Disability and Jewish-group language review",
+      "category": "One contextual human review",
       "status": "blocked",
-      "evidence": "Both conditional reviews are applicable to John 9 and have no trusted assigned reviewer."
+      "evidence": "One designated human review covers disability and Jewish-group contextual wording by default; specialist review occurs only if a concrete dispute or public/commercial risk appears."
     }
   ],
   "accessibilitySensitivity": {
@@ -524,12 +524,12 @@
     "nonPunitiveRecall": true,
     "disabilityReview": {
       "applicable": true,
-      "rationale": "John 9 directly depicts a man described as blind from birth, healing, identity questioning and social treatment; respectful disability review is required.",
+      "rationale": "John 9 directly depicts blindness, healing, identity questioning and social treatment; the single designated lightweight reviewer must confirm respectful wording, with specialist escalation only for a concrete dispute or public/commercial risk.",
       "status": "required"
     },
     "jewishGroupLanguageReview": {
       "applicable": true,
-      "rationale": "The passage and legacy model distinguish Pharisees and a group labeled Judean authorities; contextual language review is required to avoid flattening or stigmatizing Jewish groups.",
+      "rationale": "The passage distinguishes Pharisees and other Jewish participants; the single designated lightweight reviewer must confirm contextual wording, with specialist escalation only for a concrete dispute or public/commercial risk.",
       "status": "required"
     },
     "policyRuleIds": []
