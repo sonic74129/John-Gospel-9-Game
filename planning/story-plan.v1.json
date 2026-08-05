@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 1,
+  "requestClassification": {
+    "scope": "story-local",
+    "rationale": "Plan one independent John 9 story in sonic74129/John-Gospel-9-Game without importing another story repository.",
+    "targetRepository": "sonic74129/John-Gospel-9-Game",
+    "targetRepositoryKind": "story"
+  },
+  "foundationInspection": {
+    "lockFile": "foundation.lock.json",
+    "repository": "sonic74129/bible-game-foundation",
+    "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+    "lockSha256": "84894d020a2ee1723bd95d5cae561d6d00365c03baa7b65883a5723919408c20",
+    "guidanceFiles": [
+      {
+        "path": ".foundation/art-direction/storybook-realism-v1/style.json",
+        "sha256": "9b8e6905e0a0dc0926d08818093a6acaa1e42c46ee0e92cacbee6bb8a4579e5a"
+      },
+      {
+        "path": ".foundation/assets/catalog.json",
+        "sha256": "345a5d2f2e0c7fdfad9b297c75a82f61116674a930d0682cdad04afddde12224"
+      },
+      {
+        "path": ".foundation/docs/ASSET_GOVERNANCE.zh-CN.md",
+        "sha256": "3fae5302ecd755a967a0b9bc83fdf505df1e22e2e739968c298d55b90a88211e"
+      },
+      {
+        "path": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
+        "sha256": "f363b37ac1f6bab765af91deef2174803c6f3c102324e1c1c5b4d77026b34b03"
+      },
+      {
+        "path": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md",
+        "sha256": "8a67e66354ddba3d005fac842e163dc69cd051f31bef9ffc7441ca38d447222d"
+      },
+      {
+        "path": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md",
+        "sha256": "9a8990230d4d662044d1a09bddb07cea0ff28b84ff67dce393d38a78f9ef1faa"
+      },
+      {
+        "path": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md",
+        "sha256": "86f400f99c5106465c4091ada543b24c93fbbaf61578b9411b5c8110ff7f56ca"
+      },
+      {
+        "path": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
+        "sha256": "56910ac1ca7a9e551079d27b9f980ca818598b7ec726881ed09a66ed33dfea54"
+      }
+    ],
+    "policyArtifact": {
+      "path": ".foundation/policy/story-planning-policy.v1.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "policyAcceptances": []
+  },
+  "planningGate": {
+    "state": "blocked-text-unavailable",
+    "reason": "The repository contains no authorized exact-text artifact, approved scripture rights evidence, trusted reviewer registry entry, or review anchor. Pinned Foundation commit 6c836d55bfd786b8a55b4e0c7356bf8791505653 also publishes no planning policy artifact.",
+    "recoveryCondition": "Materialize the pinned Foundation lock and guidance through trusted sync, supply an authorized John 9:1-41 exact-text artifact and approved rights scope, select the exact edition and divine-name variant, register trusted text/rights/sensitivity reviewers and approved anchors, publish and pin the Foundation planning policy, then complete and validate every evidence-bound planning contract before trusted Promotion."
+  },
+  "storyCharter": {
+    "id": "john-9-man-born-blind",
+    "title": "生來瞎眼的人",
+    "passage": "John 9:1-41",
+    "audience": "General Bible-study audience; reviewer confirmation required",
+    "targetMinutes": 15,
+    "learningObjective": "Trace the chapter's ordered witness and inquiry movement without changing its outcome.",
+    "playerExperience": "Observe, explore, listen, and recall as an unnamed witness who cannot alter scripture events.",
+    "language": "zh-Hant",
+    "deliveryMode": "end-to-end"
+  },
+  "scripture": {
+    "availability": "missing",
+    "blockerReason": "Legacy evidence identifies CUV-Traditional but leaves the provider, canonical edition, 神/上帝 variant, territories, redistribution, offline and TTS permissions unresolved; all exactText values are null and the trusted reviewer registry is empty.",
+    "reviewers": [],
+    "verses": [
+      {
+        "key": "john9:1",
+        "reference": "John 9:1",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:2",
+        "reference": "John 9:2",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:3",
+        "reference": "John 9:3",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:4",
+        "reference": "John 9:4",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:5",
+        "reference": "John 9:5",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:6",
+        "reference": "John 9:6",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:7",
+        "reference": "John 9:7",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:8",
+        "reference": "John 9:8",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:9",
+        "reference": "John 9:9",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:10",
+        "reference": "John 9:10",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:11",
+        "reference": "John 9:11",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:12",
+        "reference": "John 9:12",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:13",
+        "reference": "John 9:13",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:14",
+        "reference": "John 9:14",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:15",
+        "reference": "John 9:15",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:16",
+        "reference": "John 9:16",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:17",
+        "reference": "John 9:17",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:18",
+        "reference": "John 9:18",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:19",
+        "reference": "John 9:19",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:20",
+        "reference": "John 9:20",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:21",
+        "reference": "John 9:21",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:22",
+        "reference": "John 9:22",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:23",
+        "reference": "John 9:23",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:24",
+        "reference": "John 9:24",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:25",
+        "reference": "John 9:25",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:26",
+        "reference": "John 9:26",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:27",
+        "reference": "John 9:27",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:28",
+        "reference": "John 9:28",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:29",
+        "reference": "John 9:29",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:30",
+        "reference": "John 9:30",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:31",
+        "reference": "John 9:31",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:32",
+        "reference": "John 9:32",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:33",
+        "reference": "John 9:33",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:34",
+        "reference": "John 9:34",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:35",
+        "reference": "John 9:35",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:36",
+        "reference": "John 9:36",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:37",
+        "reference": "John 9:37",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:38",
+        "reference": "John 9:38",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:39",
+        "reference": "John 9:39",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:40",
+        "reference": "John 9:40",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      },
+      {
+        "key": "john9:41",
+        "reference": "John 9:41",
+        "exactText": null,
+        "reviewStatus": "unreviewed",
+        "reviewAnchors": []
+      }
+    ]
+  },
+  "contentLedger": {
+    "entries": []
+  },
+  "eventSpine": [],
+  "playerRoleWarrant": {
+    "role": "unnamed observer-witness candidate",
+    "warrant": "Legacy evidence supports movement, observation, listening and non-punitive recall, but no action may be authorized until pinned policy rules and trusted scripture review can bind the S0/S1/S2/S3 ledger.",
+    "allowedActions": [],
+    "prohibitedActions": [],
+    "policyRuleIds": []
+  },
+  "beats": [],
+  "actorStateMatrix": [],
+  "bridgesAndClues": [],
+  "recallGoalSheet": {
+    "goals": [],
+    "recalls": []
+  },
+  "grayboxWorld": {
+    "coordinateSystem": "legacy candidate: top-left world pixels, positive x east, positive y south",
+    "world": {
+      "width": 2560,
+      "height": 1792,
+      "tileSize": 32
+    },
+    "routes": [],
+    "doors": [],
+    "collisions": [],
+    "cameraZones": [],
+    "scale": {
+      "actorHeight": 72,
+      "doorHeight": 160,
+      "interactionDistance": 48
+    },
+    "responsiveViewports": [
+      {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "developmentOnly": true,
+    "preservedAsRegressionBaseline": true
+  },
+  "sequenceFinality": [],
+  "dialogueMatrix": [],
+  "audioSheet": [],
+  "completionContract": {
+    "condition": "Complete every reviewed Beat in canonical order without changing scripture outcomes.",
+    "requiredBeatIds": [],
+    "completionStateId": "planning-blocked",
+    "policyRuleIds": [],
+    "restartBehavior": "No real story runtime or restart state may be created before trusted Promotion.",
+    "reentryBehavior": "No real story runtime or re-entry state may be created before trusted Promotion."
+  },
+  "acceptanceInventory": [
+    {
+      "id": "accept-scripture",
+      "area": "scripture",
+      "category": "Authorized exact text, rights and trusted review",
+      "status": "blocked",
+      "evidence": "planning/evidence/consumer-inventory.md#scripture-source-rights-and-reviewers records 41 null text slots, unresolved rights, and an empty trusted reviewer registry."
+    },
+    {
+      "id": "accept-event-spine",
+      "area": "event-spine",
+      "category": "Reviewed canonical event order",
+      "status": "blocked",
+      "evidence": "planning/evidence/consumer-inventory.md#story-and-gameplay-evidence records a 19-part legacy candidate, but SDK 0.3.0 forbids binding events to unauthorized null verse slots."
+    },
+    {
+      "id": "accept-player-role",
+      "area": "player-role",
+      "category": "Evidence-bound witness limits",
+      "status": "blocked",
+      "evidence": "Legacy observer restrictions are retained as candidate evidence; the missing Foundation planning policy prevents canonical action warrants."
+    },
+    {
+      "id": "accept-beats",
+      "area": "beats",
+      "category": "Ordered evidence-bound Beats",
+      "status": "blocked",
+      "evidence": "Nineteen legacy Beat groupings are catalogued for adaptation, not promoted into canonical rows without S0/S1 ledger and policy bindings."
+    },
+    {
+      "id": "accept-actor-state",
+      "area": "actor-state",
+      "category": "Actor continuity and final-state ownership",
+      "status": "blocked",
+      "evidence": "Legacy snapshots provide candidate continuity evidence, but trusted scripture and sensitivity review are absent."
+    },
+    {
+      "id": "accept-bridges-clues",
+      "area": "bridges-clues",
+      "category": "Removable reviewed S2 content",
+      "status": "blocked",
+      "evidence": "Legacy routes and neutral region labels are classified adapt; none has a trusted new-schema reviewer approval."
+    },
+    {
+      "id": "accept-recall-goals",
+      "area": "recall-goals",
+      "category": "Non-punitive recall and short goals",
+      "status": "blocked",
+      "evidence": "Legacy non-blocking recalls and nineteen short goals are candidate evidence only until scripture and policy bindings exist."
+    },
+    {
+      "id": "accept-graybox-world",
+      "area": "graybox-world",
+      "category": "Map, route, collision and responsive contracts",
+      "status": "blocked",
+      "evidence": "Only legacy candidate dimensions and viewports are recorded; no runtime/map reconstruction is authorized in this phase."
+    },
+    {
+      "id": "accept-sequence-finality",
+      "area": "sequence-finality",
+      "category": "Normal, skip, restart and re-entry parity",
+      "status": "blocked",
+      "evidence": "Legacy tests assert normal/skip parity, but canonical sequence rows and hashes require authorized Beat and policy contracts."
+    },
+    {
+      "id": "accept-dialogue-portraits",
+      "area": "dialogue-portraits",
+      "category": "Exact dialogue and identity-continuous portraits",
+      "status": "blocked",
+      "evidence": "Exact text is unavailable and the legacy UI omitted portrait production; dialogue rows must remain empty."
+    },
+    {
+      "id": "accept-audio",
+      "area": "audio",
+      "category": "Text-hashed audio with subtitle fallback",
+      "status": "blocked",
+      "evidence": "No exact scripture text hash or authorized TTS right exists; audio rows must remain empty and audio must never block progress."
+    },
+    {
+      "id": "accept-completion",
+      "area": "completion",
+      "category": "Deterministic evidence-bound completion",
+      "status": "blocked",
+      "evidence": "Legacy completion required nineteen fixed Beats, but no canonical Beat IDs may be required before the Gate dependencies are resolved."
+    },
+    {
+      "id": "accept-accessibility-sensitivity",
+      "area": "accessibility-sensitivity",
+      "category": "Disability and Jewish-group language review",
+      "status": "blocked",
+      "evidence": "Both conditional reviews are applicable to John 9 and have no trusted assigned reviewer."
+    }
+  ],
+  "accessibilitySensitivity": {
+    "subtitlesAlwaysAvailable": true,
+    "audioNeverBlocksProgress": true,
+    "keyboardSupported": true,
+    "pointerSupported": true,
+    "touchSupported": true,
+    "noColorOnlyMeaning": true,
+    "nonPunitiveRecall": true,
+    "disabilityReview": {
+      "applicable": true,
+      "rationale": "John 9 directly depicts a man described as blind from birth, healing, identity questioning and social treatment; respectful disability review is required.",
+      "status": "required"
+    },
+    "jewishGroupLanguageReview": {
+      "applicable": true,
+      "rationale": "The passage and legacy model distinguish Pharisees and a group labeled Judean authorities; contextual language review is required to avoid flattening or stigmatizing Jewish groups.",
+      "status": "required"
+    },
+    "policyRuleIds": []
+  }
+}
