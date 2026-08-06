@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0-draft",
-  "contractStatus": "blocked-rights-unresolved",
+  "contractStatus": "release-ready",
   "passage": {
     "book": "John",
     "chapter": 9,
@@ -9,584 +9,1248 @@
   },
   "translation": {
     "id": "CUV-Traditional",
-    "editionId": "CUV-Traditional",
-    "editionStatus": "unresolved",
+    "editionId": "CUNP-Shen",
+    "editionStatus": "confirmed",
     "language": "zh-Hant"
+  },
+  "source": {
+    "repository": "https://github.com/biblebase/biblebase",
+    "commit": "13435cd33fb00d3265aa885aac8672454d4df058",
+    "path": "public/json/cunp/43/9.json",
+    "url": "https://raw.githubusercontent.com/biblebase/biblebase/13435cd33fb00d3265aa885aac8672454d4df058/public/json/cunp/43/9.json",
+    "sha256": "460327d5ac56801f3bfb32e272b54602179f9e7ad35eb46df81659b016bac44c",
+    "repositoryLicense": "Apache-2.0"
   },
   "verses": [
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:1",
-      "reference": { "book": "John", "chapter": 9, "verse": 1 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 1
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌過去的時候，看見一個人生來是瞎眼的。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:1:full",
+            "text": "耶穌過去的時候，看見一個人生來是瞎眼的。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:2",
-      "reference": { "book": "John", "chapter": 9, "verse": 2 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 2
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:2:full",
+            "text": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:3",
-      "reference": { "book": "John", "chapter": 9, "verse": 3 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 3
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:3:full",
+            "text": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:4",
-      "reference": { "book": "John", "chapter": 9, "verse": 4 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 4
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "趁着白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:4:full",
+            "text": "趁着白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:5",
-      "reference": { "book": "John", "chapter": 9, "verse": 5 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 5
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "我在世上的時候，是世上的光。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:5:full",
+            "text": "我在世上的時候，是世上的光。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:6",
-      "reference": { "book": "John", "chapter": 9, "verse": 6 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 6
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:6:full",
+            "text": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:7",
-      "reference": { "book": "John", "chapter": 9, "verse": 7 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 7
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "對他說：「你往西羅亞池子裏去洗。」（西羅亞翻出來就是「奉差遣」。） 他去一洗，回頭就看見了。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:7:full",
+            "text": "對他說：「你往西羅亞池子裏去洗。」（西羅亞翻出來就是「奉差遣」。） 他去一洗，回頭就看見了。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:8",
-      "reference": { "book": "John", "chapter": 9, "verse": 8 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 8
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他的鄰舍和那素常見他是討飯的，就說：「這不是那從前坐着討飯的人嗎？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:8:full",
+            "text": "他的鄰舍和那素常見他是討飯的，就說：「這不是那從前坐着討飯的人嗎？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:9",
-      "reference": { "book": "John", "chapter": 9, "verse": 9 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 9
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "有人說：「是他」；又有人說：「不是，卻是像他。」他自己說：「是我。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:9:full",
+            "text": "有人說：「是他」；又有人說：「不是，卻是像他。」他自己說：「是我。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:10",
-      "reference": { "book": "John", "chapter": 9, "verse": 10 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 10
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們對他說：「你的眼睛是怎麼開的呢？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:10:full",
+            "text": "他們對他說：「你的眼睛是怎麼開的呢？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:11",
-      "reference": { "book": "John", "chapter": 9, "verse": 11 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 11
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他回答說：「有一個人，名叫耶穌，他和泥抹我的眼睛，對我說：『你往西羅亞池子去洗。』我去一洗，就看見了。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:11:full",
+            "text": "他回答說：「有一個人，名叫耶穌，他和泥抹我的眼睛，對我說：『你往西羅亞池子去洗。』我去一洗，就看見了。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:12",
-      "reference": { "book": "John", "chapter": 9, "verse": 12 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 12
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們說：「那個人在哪裏？」他說：「我不知道。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:12:full",
+            "text": "他們說：「那個人在哪裏？」他說：「我不知道。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:13",
-      "reference": { "book": "John", "chapter": 9, "verse": 13 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 13
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們把從前瞎眼的人帶到法利賽人那裏。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:13:full",
+            "text": "他們把從前瞎眼的人帶到法利賽人那裏。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:14",
-      "reference": { "book": "John", "chapter": 9, "verse": 14 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 14
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌和泥開他眼睛的日子是安息日。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:14:full",
+            "text": "耶穌和泥開他眼睛的日子是安息日。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:15",
-      "reference": { "book": "John", "chapter": 9, "verse": 15 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 15
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "法利賽人也問他是怎麼得看見的。瞎子對他們說：「他把泥抹在我的眼睛上，我去一洗，就看見了。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:15:full",
+            "text": "法利賽人也問他是怎麼得看見的。瞎子對他們說：「他把泥抹在我的眼睛上，我去一洗，就看見了。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:16",
-      "reference": { "book": "John", "chapter": 9, "verse": 16 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 16
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "法利賽人中有的說：「這個人不是從神來的，因為他不守安息日。」又有人說：「一個罪人怎能行這樣的神蹟呢？」他們就起了紛爭。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:16:full",
+            "text": "法利賽人中有的說：「這個人不是從神來的，因為他不守安息日。」又有人說：「一個罪人怎能行這樣的神蹟呢？」他們就起了紛爭。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:17",
-      "reference": { "book": "John", "chapter": 9, "verse": 17 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 17
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們又對瞎子說：「他既然開了你的眼睛，你說他是怎樣的人呢？」他說：「是個先知。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:17:full",
+            "text": "他們又對瞎子說：「他既然開了你的眼睛，你說他是怎樣的人呢？」他說：「是個先知。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:18",
-      "reference": { "book": "John", "chapter": 9, "verse": 18 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 18
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "猶太人不信他從前是瞎眼，後來能看見的，等到叫了他的父母來，",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:18:full",
+            "text": "猶太人不信他從前是瞎眼，後來能看見的，等到叫了他的父母來，"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:19",
-      "reference": { "book": "John", "chapter": 9, "verse": 19 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 19
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "問他們說：「這是你們的兒子嗎？你們說他生來是瞎眼的，如今怎麼能看見了呢？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:19:full",
+            "text": "問他們說：「這是你們的兒子嗎？你們說他生來是瞎眼的，如今怎麼能看見了呢？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:20",
-      "reference": { "book": "John", "chapter": 9, "verse": 20 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 20
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他父母回答說：「他是我們的兒子，生來就瞎眼，這是我們知道的。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:20:full",
+            "text": "他父母回答說：「他是我們的兒子，生來就瞎眼，這是我們知道的。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:21",
-      "reference": { "book": "John", "chapter": 9, "verse": 21 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 21
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "至於他如今怎麼能看見，我們卻不知道；是誰開了他的眼睛，我們也不知道。他已經成了人，你們問他吧，他自己必能說。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:21:full",
+            "text": "至於他如今怎麼能看見，我們卻不知道；是誰開了他的眼睛，我們也不知道。他已經成了人，你們問他吧，他自己必能說。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:22",
-      "reference": { "book": "John", "chapter": 9, "verse": 22 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 22
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他父母說這話，是怕猶太人；因為猶太人已經商議定了，若有認耶穌是基督的，要把他趕出會堂。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:22:full",
+            "text": "他父母說這話，是怕猶太人；因為猶太人已經商議定了，若有認耶穌是基督的，要把他趕出會堂。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:23",
-      "reference": { "book": "John", "chapter": 9, "verse": 23 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 23
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "因此他父母說：「他已經成了人，你們問他吧。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:23:full",
+            "text": "因此他父母說：「他已經成了人，你們問他吧。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:24",
-      "reference": { "book": "John", "chapter": 9, "verse": 24 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 24
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "所以法利賽人第二次叫了那從前瞎眼的人來，對他說：「你該將榮耀歸給神，我們知道這人是個罪人。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:24:full",
+            "text": "所以法利賽人第二次叫了那從前瞎眼的人來，對他說：「你該將榮耀歸給神，我們知道這人是個罪人。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:25",
-      "reference": { "book": "John", "chapter": 9, "verse": 25 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 25
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他說：「他是個罪人不是，我不知道；有一件事我知道，從前我是眼瞎的，如今能看見了。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:25:full",
+            "text": "他說：「他是個罪人不是，我不知道；有一件事我知道，從前我是眼瞎的，如今能看見了。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:26",
-      "reference": { "book": "John", "chapter": 9, "verse": 26 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 26
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們就問他說：「他向你做甚麼？是怎麼開了你的眼睛呢？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:26:full",
+            "text": "他們就問他說：「他向你做甚麼？是怎麼開了你的眼睛呢？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:27",
-      "reference": { "book": "John", "chapter": 9, "verse": 27 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 27
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他回答說：「我方才告訴你們，你們不聽，為甚麼又要聽呢？莫非你們也要作他的門徒嗎？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:27:full",
+            "text": "他回答說：「我方才告訴你們，你們不聽，為甚麼又要聽呢？莫非你們也要作他的門徒嗎？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:28",
-      "reference": { "book": "John", "chapter": 9, "verse": 28 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 28
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們就罵他說：「你是他的門徒；我們是摩西的門徒。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:28:full",
+            "text": "他們就罵他說：「你是他的門徒；我們是摩西的門徒。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:29",
-      "reference": { "book": "John", "chapter": 9, "verse": 29 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 29
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "神對摩西說話是我們知道的；只是這個人，我們不知道他從哪裏來！」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:29:full",
+            "text": "神對摩西說話是我們知道的；只是這個人，我們不知道他從哪裏來！」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:30",
-      "reference": { "book": "John", "chapter": 9, "verse": 30 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 30
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "那人回答說：「他開了我的眼睛，你們竟不知道他從哪裏來，這真是奇怪！",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:30:full",
+            "text": "那人回答說：「他開了我的眼睛，你們竟不知道他從哪裏來，這真是奇怪！"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:31",
-      "reference": { "book": "John", "chapter": 9, "verse": 31 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 31
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "我們知道神不聽罪人，惟有敬奉神、遵行他旨意的，神才聽他。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:31:full",
+            "text": "我們知道神不聽罪人，惟有敬奉神、遵行他旨意的，神才聽他。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:32",
-      "reference": { "book": "John", "chapter": 9, "verse": 32 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 32
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "從創世以來，未曾聽見有人把生來是瞎子的眼睛開了。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:32:full",
+            "text": "從創世以來，未曾聽見有人把生來是瞎子的眼睛開了。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:33",
-      "reference": { "book": "John", "chapter": 9, "verse": 33 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 33
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "這人若不是從神來的，甚麼也不能做。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:33:full",
+            "text": "這人若不是從神來的，甚麼也不能做。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:34",
-      "reference": { "book": "John", "chapter": 9, "verse": 34 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 34
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他們回答說：「你全然生在罪孽中，還要教訓我們嗎？」於是把他趕出去了。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:34:full",
+            "text": "他們回答說：「你全然生在罪孽中，還要教訓我們嗎？」於是把他趕出去了。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:35",
-      "reference": { "book": "John", "chapter": 9, "verse": 35 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 35
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌聽說他們把他趕出去，後來遇見他，就說：「你信神的兒子嗎？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:35:full",
+            "text": "耶穌聽說他們把他趕出去，後來遇見他，就說：「你信神的兒子嗎？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:36",
-      "reference": { "book": "John", "chapter": 9, "verse": 36 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 36
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他回答說：「主啊，誰是神的兒子，叫我信他呢？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:36:full",
+            "text": "他回答說：「主啊，誰是神的兒子，叫我信他呢？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:37",
-      "reference": { "book": "John", "chapter": 9, "verse": 37 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 37
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌說：「你已經看見他，現在和你說話的就是他。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:37:full",
+            "text": "耶穌說：「你已經看見他，現在和你說話的就是他。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:38",
-      "reference": { "book": "John", "chapter": 9, "verse": 38 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 38
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "他說：「主啊，我信！」就拜耶穌。",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:38:full",
+            "text": "他說：「主啊，我信！」就拜耶穌。"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:39",
-      "reference": { "book": "John", "chapter": 9, "verse": 39 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 39
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌說：「我為審判到這世上來，叫不能看見的，可以看見；能看見的，反瞎了眼。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:39:full",
+            "text": "耶穌說：「我為審判到這世上來，叫不能看見的，可以看見；能看見的，反瞎了眼。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:40",
-      "reference": { "book": "John", "chapter": 9, "verse": 40 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 40
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "同他在那裏的法利賽人聽見這話，就說：「難道我們也瞎了眼嗎？」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:40:full",
+            "text": "同他在那裏的法利賽人聽見這話，就說：「難道我們也瞎了眼嗎？」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     },
     {
       "schemaVersion": "1.0.0-draft",
       "key": "john9:41",
-      "reference": { "book": "John", "chapter": 9, "verse": 41 },
+      "reference": {
+        "book": "John",
+        "chapter": 9,
+        "verse": 41
+      },
       "translationId": "CUV-Traditional",
-      "editionId": "CUV-Traditional",
-      "editionStatus": "unresolved",
+      "editionId": "CUNP-Shen",
+      "editionStatus": "confirmed",
       "language": "zh-Hant",
       "sourceLevel": "scripture",
-      "textAvailability": "unavailable-rights-pending",
-      "exactText": null,
-      "display": { "mode": "unavailable", "segments": [] },
-      "review": { "status": "pending", "reviewer": null, "reviewedAt": null }
+      "textAvailability": "licensed",
+      "exactText": "耶穌對他們說：「你們若瞎了眼，就沒有罪了；但如今你們說『我們能看見』，所以你們的罪還在。」",
+      "display": {
+        "mode": "full",
+        "segments": [
+          {
+            "id": "john9:41:full",
+            "text": "耶穌對他們說：「你們若瞎了眼，就沒有罪了；但如今你們說『我們能看見』，所以你們的罪還在。」"
+          }
+        ]
+      },
+      "review": {
+        "status": "approved",
+        "reviewer": "copilot:text",
+        "reviewedAt": "2026-08-06"
+      }
     }
   ]
 }

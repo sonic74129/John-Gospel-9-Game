@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.2.0",
   "id": "identity-jesus-storybook",
   "version": "0.1.0",
   "title": "Jesus Storybook Identity Candidate",
@@ -23,15 +23,18 @@
     "selectionStatus": "approved"
   },
   "rights": {
-    "reviewStatus": "required-before-public-release",
-    "publicRedistributionApproved": false,
+    "evidenceCollector": "copilot",
+    "evidenceStatus": "insufficient-for-public-release",
+    "publicRedistributionEvidenceSufficient": false,
     "details": "../../../../docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
   },
   "validation": {
-    "sourceProjectApproved": true,
+    "acceptanceExecutor": "copilot",
+    "sourceProjectAcceptanceRecorded": true,
     "storiesValidated": 1,
     "requiredStoriesForStable": 2,
-    "requiresPerStoryTheologicalAndVisualReview": true
+    "automatedAcceptanceRequired": true,
+    "requiresPerStoryTheologicalAndVisualValidation": true
   },
   "assets": [
     {
@@ -70,8 +73,8 @@
   ],
   "promotionRequirements": [
     "Validate identity continuity in a second independent New Testament story.",
-    "Complete per-story theological and visual review.",
-    "Complete rights review and add pack-specific LICENSE/NOTICE.",
+    "Capture per-story theological, visual and runtime acceptance evidence.",
+    "Capture distribution evidence and add pack-specific LICENSE/NOTICE or private scope.",
     "Publish an immutable release with artifact SHA-256."
   ]
 }

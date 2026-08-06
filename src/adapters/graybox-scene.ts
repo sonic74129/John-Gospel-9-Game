@@ -6,6 +6,8 @@ import occlusion from "../world/occlusion.json";
 import props from "../world/props.json";
 import {
   actorArtForSpawn,
+  observerArtForDirection,
+  type ObserverDirection,
   STORY_ART,
   STORY_ART_ASSET_LIST,
 } from "./art-asset-adapter.ts";
@@ -160,6 +162,7 @@ export class GrayboxScene extends Phaser.Scene {
     right: Phaser.Input.Keyboard.Key;
   }>;
   #path: readonly Point[] = [];
+  #playerFacing: ObserverDirection = "down";
   #sequenceInputEnabled = true;
   #canonicalControls: SliceFinalState["controls"] = {
     playerActorId: "observer",
@@ -461,6 +464,7 @@ export class GrayboxScene extends Phaser.Scene {
 
     if (direction.lengthSq() > 0) {
       this.#path = [];
+      this.#syncPlayerFacing(direction.x, direction.y);
       direction.normalize().scale(distance);
       if (!this.#movePlayer(direction.x, direction.y)) {
         if (!this.#movePlayer(direction.x, 0)) {
@@ -478,6 +482,7 @@ export class GrayboxScene extends Phaser.Scene {
       next.x - this.#player.body.x,
       next.y - this.#player.body.y,
     );
+    this.#syncPlayerFacing(toNext.x, toNext.y);
     if (toNext.length() <= distance) {
       if (this.#movePlayer(toNext.x, toNext.y)) {
         this.#path = this.#path.slice(1);
@@ -1218,6 +1223,7 @@ export class GrayboxScene extends Phaser.Scene {
         .setTexture(art.key)
         .setOrigin(0.5, art.footBaseline! / art.height);
     }
+
     const jesus = this.#storyActorVisuals("jesus")[0];
     if (jesus !== undefined) {
       const art =
@@ -1230,6 +1236,28 @@ export class GrayboxScene extends Phaser.Scene {
         .setTexture(art.key)
         .setOrigin(0.5, art.footBaseline! / art.height);
     }
+  }
+
+  #syncPlayerFacing(dx: number, dy: number): void {
+    if (this.#player === undefined || (dx === 0 && dy === 0)) {
+      return;
+    }
+    const direction: ObserverDirection =
+      Math.abs(dx) > Math.abs(dy)
+        ? dx > 0
+          ? "right"
+          : "left"
+        : dy > 0
+          ? "down"
+          : "up";
+    if (direction === this.#playerFacing) {
+      return;
+    }
+    const art = observerArtForDirection(direction);
+    this.#player.body
+      .setTexture(art.key)
+      .setOrigin(0.5, art.footBaseline! / art.height);
+    this.#playerFacing = direction;
   }
 
   #movementAllowed(): boolean {

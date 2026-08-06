@@ -51,16 +51,17 @@ function imageDimensions(bytes, path) {
   throw new Error(`Unsupported runtime image format: ${path}`);
 }
 
-test("formal art manifest pins the v2 zig-zag private-preview contract", () => {
-  assert.equal(manifest.reviewStatus, "polished-private-preview");
-  assert.equal(manifest.releaseEligible, false);
-  assert.equal(manifest.publicRedistributionApproved, false);
+test("formal art manifest pins the v2 zig-zag release contract", () => {
+  assert.equal(manifest.reviewStatus, "copilot-accepted-runtime-ready");
+  assert.equal(manifest.distributionScope, "private");
+  assert.equal(manifest.evidenceCollector, "copilot");
+  assert.equal(manifest.acceptanceExecutor, "copilot");
   assert.deepEqual(manifest.worldContract, {
     width: 2560,
     height: 1792,
     topology: "north-south-zig-zag",
   });
-  assert.equal(review.runtimeInventory.files, 25);
+  assert.equal(review.runtimeInventory.files, 28);
   assert.deepEqual(review.runtimeInventory.worldDimensions, {
     width: 2560,
     height: 1792,
@@ -84,9 +85,9 @@ test("formal environment review points to the exact processed selections", () =>
   }
 });
 
-test("all 25 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
+test("all 28 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
   const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
-  assert.equal(outputs.length, 25);
+  assert.equal(outputs.length, 28);
   assert.equal(new Set(outputs.map(({ path }) => path)).size, outputs.length);
   for (const output of outputs) {
     const bytes = await readFile(output.path);
@@ -113,8 +114,8 @@ test("actor foot baselines are complete and applied on spawn and pose changes", 
   const actorOutputs = manifest.assets
     .filter(({ family }) => family.startsWith("characters-"))
     .flatMap(({ outputs }) => outputs);
-  assert.equal(actorOutputs.length, 16);
-  assert.equal(Object.keys(manifest.actorFootBaselines).length, 16);
+  assert.equal(actorOutputs.length, 19);
+  assert.equal(Object.keys(manifest.actorFootBaselines).length, 19);
   for (const { path, dimensions } of actorOutputs) {
     const baseline = manifest.actorFootBaselines[basename(path)];
     assert.ok(Number.isInteger(baseline), path);
@@ -122,6 +123,18 @@ test("actor foot baselines are complete and applied on spawn and pose changes", 
   }
   assert.match(sceneSource, /art\.footBaseline! \/ art\.height/g);
   assert.match(sceneSource, /#syncNarrativeTextures\(\)/);
+  for (const direction of ["down", "up", "right", "left"]) {
+    assert.ok(
+      actorOutputs.some(({ path }) => path.endsWith(`/observer-${direction}.png`)),
+      direction,
+    );
+  }
+  assert.match(sceneSource, /#syncPlayerFacing\(direction\.x, direction\.y\)/);
+  assert.match(sceneSource, /#syncPlayerFacing\(toNext\.x, toNext\.y\)/);
+  const observer = manifest.assets.find(
+    ({ assetId }) => assetId === "character.observer",
+  );
+  assert.equal(observer?.reuseStatus, undefined);
 });
 
 test("formal props, occluders, and development graybox remain runtime-wired", () => {

@@ -29,7 +29,7 @@ candidate
 
 - 至少第二个独立故事实际接入。
 - 尺寸、锚点、碰撞、镜头和风格契约通过。
-- 权利审查没有阻塞项。
+- provenance 与 distribution-scope evidence 已自动记录。
 
 ### stable
 
@@ -45,17 +45,18 @@ candidate
 
 ## 3. 提升门槛
 
-素材从 candidate 提升前必须回答：
+素材从 candidate 提升前由流水线自动生成以下 evidence：
 
 1. 第二个故事是否真的需要，而不是“可能需要”？
 2. 是否属于同一时代、地区、镜头和比例？
 3. 人物身份是否应该跨故事固定？
 4. runtime 锚点、透明边缘、尺寸和压缩是否稳定？
-5. 来源、模型、prompt version、人工处理和 SHA-256 是否完整？
+5. 来源、模型、prompt version、自动/人工处理事实和 SHA-256 是否完整？
 6. 是否允许私有使用、发布和再分发？
 7. 升级后是否会改变已经发布的故事？
 
-任一项不清楚时保持 candidate。
+任一项不清楚时保持 candidate，但故事流水线不得停下：自动改用 stable pack、处理
+story-local 正式资产或重新生成，并继续 runtime 接线与 QA。
 
 ## 4. Pack 规则
 
@@ -70,7 +71,7 @@ candidate
 
 - 耶稣等跨故事人物可以建立 identity pack，但必须逐故事复核时代、年龄、服装和叙事
   连续性。
-- identity pack 不是自动批准；故事必须显式选择版本。
+- identity pack 不隐式漂移；Copilot 根据故事 contract 显式锁定版本并自动验证。
 - 马大、马利、拉撒路等与具体叙事状态紧密相关的人物默认留在故事 repo。
 - 肖像必须从同一 identity 生成，不能另选不一致的演员脸。
 

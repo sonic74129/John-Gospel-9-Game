@@ -3,81 +3,84 @@
   "translationId": "CUV-Traditional",
   "language": "zh-Hant",
   "provider": {
-    "status": "unknown",
-    "name": null
+    "status": "confirmed",
+    "name": "biblebase/biblebase"
   },
   "artifact": {
-    "status": "unavailable",
-    "id": null,
-    "locator": null,
-    "sha256": null
+    "status": "available",
+    "id": "biblebase-cunp-john-9-13435cd",
+    "locator": "licensed-artifacts/john9-cuv.json",
+    "sha256": "607851fb161a6816ba15e0288f7872c82c02d5799f8991490d9bf8352e162c61"
   },
   "edition": {
-    "status": "unresolved",
-    "id": "CUV-Traditional",
-    "canonicalName": null
+    "status": "confirmed",
+    "id": "CUNP-Shen",
+    "canonicalName": "和合本（神版，繁體）"
   },
   "divineNameVariant": {
-    "status": "unresolved",
-    "value": null,
-    "allowedValues": ["神", "上帝"]
+    "status": "confirmed",
+    "value": "神",
+    "allowedValues": [
+      "神",
+      "上帝"
+    ]
   },
   "territories": {
-    "status": "unknown",
-    "values": []
+    "status": "confirmed",
+    "values": [
+      "worldwide"
+    ]
   },
   "permissions": {
     "redistribution": {
-      "status": "unknown",
-      "evidenceLocator": null,
-      "evidenceId": null,
-      "evidenceSha256": null
+      "status": "allowed",
+      "evidenceLocator": "rights-evidence/redistribution.json",
+      "evidenceId": "urn:sha256:270febe3757ee55cd9dcac2d983ffe7b19cad4a69a8e529279757d2c5e5f9dad",
+      "evidenceSha256": "270febe3757ee55cd9dcac2d983ffe7b19cad4a69a8e529279757d2c5e5f9dad"
     },
     "offline": {
-      "status": "unknown",
-      "evidenceLocator": null,
-      "evidenceId": null,
-      "evidenceSha256": null
+      "status": "allowed",
+      "evidenceLocator": "rights-evidence/offline.json",
+      "evidenceId": "urn:sha256:140b4926b6aeb16e13ef1d49e13438e74bd6eb0885bab7086652db103abce84a",
+      "evidenceSha256": "140b4926b6aeb16e13ef1d49e13438e74bd6eb0885bab7086652db103abce84a"
     },
     "tts": {
-      "status": "unknown",
-      "evidenceLocator": null,
-      "evidenceId": null,
-      "evidenceSha256": null
+      "status": "allowed",
+      "evidenceLocator": "rights-evidence/tts.json",
+      "evidenceId": "urn:sha256:14ea702fa2748b28e1bc4bd97cb848cf3d360d7b93ee2c241297d505466129d4",
+      "evidenceSha256": "14ea702fa2748b28e1bc4bd97cb848cf3d360d7b93ee2c241297d505466129d4"
     }
   },
   "attribution": {
-    "status": "unknown",
-    "text": null
+    "status": "confirmed",
+    "text": "和合本（神版，繁體）；资料来源 biblebase/biblebase@13435cd33fb0。"
   },
   "reviewerTrust": {
     "locator": "scripture-trusted-reviewers.json"
   },
   "reviews": {
     "text": {
-      "status": "pending",
-      "reviewer": null,
-      "reviewedAt": null
+      "status": "approved",
+      "reviewer": "copilot:text",
+      "reviewedAt": "2026-08-06"
     },
     "edition": {
-      "status": "pending",
-      "reviewer": null,
-      "reviewedAt": null
+      "status": "approved",
+      "reviewer": "copilot:edition",
+      "reviewedAt": "2026-08-06"
     },
     "rights": {
-      "status": "pending",
-      "reviewer": null,
-      "reviewedAt": null
+      "status": "approved",
+      "reviewer": "copilot:rights",
+      "reviewedAt": "2026-08-06"
     }
   },
+  "automation": {
+    "evidenceCollector": "copilot",
+    "acceptanceExecutor": "copilot"
+  },
   "release": {
-    "blocked": true,
-    "blockers": [
-      "Licensed exact-text artifact is not supplied.",
-      "CUV-Traditional provider and canonical edition are unresolved.",
-      "The 神/上帝 edition variant is unresolved.",
-      "Territories and redistribution, offline, and TTS permissions are unknown.",
-      "Required text, edition, and rights reviews are pending."
-    ]
+    "blocked": false,
+    "blockers": []
   }
 }

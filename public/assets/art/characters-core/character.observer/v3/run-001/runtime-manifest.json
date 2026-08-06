@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
-  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
   "assetId": "character.observer",
   "family": "characters-core",
   "promptVersion": "v3",
@@ -15,7 +15,7 @@
   "selectionReason": "Candidate 1 passes the v3 orientation gate: front, back, right-facing and left-facing profiles are distinct, text is absent, identity and clothing remain continuous, anatomy is non-chibi, the pose is restrained, and the uniform background supports clean runtime extraction.",
   "outputs": [
     {
-      "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer.png",
+      "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer-down.png",
       "mediaType": "image/png",
       "bytes": 7183,
       "sha256": "5386cadd94cac4de72f0f2bb5731fa59b2623160424a134c5980dcbc56dc5c92",
@@ -28,9 +28,55 @@
         "resizeKernel": "lanczos",
         "filter": "crop=256:900:0:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
       }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer-up.png",
+      "mediaType": "image/png",
+      "bytes": 7914,
+      "sha256": "70a57dc14820d32443726210ccc3793c7a9bfa2ec7214fece0ad40d50779efe1",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:256:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer-right.png",
+      "mediaType": "image/png",
+      "bytes": 6627,
+      "sha256": "dba5a3ff9cd258ca98cf8b95f0d223328bc1342d350120eca39fbd40773fd8e6",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:512:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer-left.png",
+      "mediaType": "image/png",
+      "bytes": 6778,
+      "sha256": "ed9fb568376fb846bc19d51747d0bfc92839b2c7305aeb4372bd1525e5cf42ae",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:768:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
     }
   ],
-  "reviewStatus": "processed-for-polished-private-preview",
-  "releaseEligible": false,
-  "publicRedistributionApproved": false
+  "reviewStatus": "copilot-accepted-runtime-ready",
+  "distributionScope": "private",
+  "evidenceCollector": "copilot",
+  "acceptanceExecutor": "copilot"
 }

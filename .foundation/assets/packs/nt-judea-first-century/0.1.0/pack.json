@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.2.0",
   "id": "nt-judea-first-century",
   "version": "0.1.0",
   "title": "New Testament Judea, First Century",
@@ -19,14 +19,17 @@
     "model": "MAI-Image-2.5-Pro@2026-06-19"
   },
   "rights": {
-    "reviewStatus": "required-before-public-release",
-    "publicRedistributionApproved": false,
+    "evidenceCollector": "copilot",
+    "evidenceStatus": "insufficient-for-public-release",
+    "publicRedistributionEvidenceSufficient": false,
     "details": "../../../../docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
   },
   "validation": {
-    "sourceProjectApproved": true,
+    "acceptanceExecutor": "copilot",
+    "sourceProjectAcceptanceRecorded": true,
     "storiesValidated": 1,
-    "requiredStoriesForStable": 2
+    "requiredStoriesForStable": 2,
+    "automatedAcceptanceRequired": true
   },
   "assets": [
     {
@@ -110,7 +113,7 @@
     "Validate in a second independent story repository.",
     "Finalize atlas cell mappings and runtime anchors.",
     "Extract only generic world-object cells.",
-    "Complete rights review and add pack-specific LICENSE/NOTICE.",
+    "Capture distribution evidence and add pack-specific LICENSE/NOTICE or private scope.",
     "Publish an immutable release with artifact SHA-256."
   ]
 }

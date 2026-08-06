@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "foundation": {
     "repository": "sonic74129/bible-game-foundation",
-    "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653"
+    "commit": "b534680100ce4006a7c0bf6a5b50923afaeb6266"
   },
   "assetPacks": [
     {
@@ -20,74 +20,74 @@
     {
       "source": "art-direction/storybook-realism-v1/style.json",
       "target": ".foundation/art-direction/storybook-realism-v1/style.json",
-      "bytes": 2379,
-      "sha256": "9b8e6905e0a0dc0926d08818093a6acaa1e42c46ee0e92cacbee6bb8a4579e5a"
+      "bytes": 2566,
+      "sha256": "019d40cf8072c2c5ec14b1de3eae7c075713f7bf97d4fba3bef1f65f52d95e27"
     },
     {
       "source": "assets/catalog.json",
       "target": ".foundation/assets/catalog.json",
       "bytes": 810,
-      "sha256": "345a5d2f2e0c7fdfad9b297c75a82f61116674a930d0682cdad04afddde12224"
+      "sha256": "d9afb125cca593d069d659240377b1ca909c391c90d9f58f4f0f06ee56ab5770"
     },
     {
       "source": "assets/candidates/identity-jesus-storybook/0.1.0/manifest.json",
       "target": ".foundation/assets/packs/identity-jesus-storybook/0.1.0/manifest.json",
       "bytes": 742,
-      "sha256": "6db58b71eb37b1c62217ecc298ceb3ca4ae3934b868e42f068a94f19b7300f26"
+      "sha256": "707a644b9e5c8ee786fcf1bcf658a4179aea93a0b2eb45ef5dee332b0cca0255"
     },
     {
       "source": "assets/candidates/identity-jesus-storybook/0.1.0/pack.json",
       "target": ".foundation/assets/packs/identity-jesus-storybook/0.1.0/pack.json",
-      "bytes": 2316,
-      "sha256": "c7119ff52f3f20a140d38ae7dcf1a581fc102c9e9616be5b2d1c2ab8e7256ef3"
+      "bytes": 2502,
+      "sha256": "6c309f1bd84635f5e0aa22c487de503272d5c5e407611d2aa68eaa6e5c2a37f0"
     },
     {
       "source": "assets/candidates/nt-judea-first-century/0.1.0/manifest.json",
       "target": ".foundation/assets/packs/nt-judea-first-century/0.1.0/manifest.json",
       "bytes": 1554,
-      "sha256": "f8061c55ef033c5aa288f8b0326ab2dfc632433d5f2f0d414029a9316ac65775"
+      "sha256": "5ff0b32b410c1a37383f8820a1329fa43b3dc1997c7f50526c725f156cc63e47"
     },
     {
       "source": "assets/candidates/nt-judea-first-century/0.1.0/pack.json",
       "target": ".foundation/assets/packs/nt-judea-first-century/0.1.0/pack.json",
-      "bytes": 3151,
-      "sha256": "2dbf1d1338ff72eb64d3c3dc256e8b9709ffe07dc8afb7df28f8a236463c7d50"
+      "bytes": 3312,
+      "sha256": "02552c663c3093f886301fca80e6b1c0b7c1f002fb8564bf6d2bb073b30ba124"
     },
     {
       "source": "docs/ASSET_GOVERNANCE.zh-CN.md",
       "target": ".foundation/docs/ASSET_GOVERNANCE.zh-CN.md",
-      "bytes": 3065,
-      "sha256": "3fae5302ecd755a967a0b9bc83fdf505df1e22e2e739968c298d55b90a88211e"
+      "bytes": 3308,
+      "sha256": "bb6de69679ee899d1b64844fd80ef937e1b9bcd4af897ca2b5e223439b8c8cc6"
     },
     {
       "source": "docs/standards/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
       "target": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
-      "bytes": 40881,
-      "sha256": "f363b37ac1f6bab765af91deef2174803c6f3c102324e1c1c5b4d77026b34b03"
+      "bytes": 45056,
+      "sha256": "58f09fe261d0b3bbb23dafd198d39cc7e23f904a65519d62bb0312787ab5f215"
     },
     {
       "source": "docs/END_TO_END_DELIVERY.zh-CN.md",
       "target": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md",
-      "bytes": 5613,
-      "sha256": "8a67e66354ddba3d005fac842e163dc69cd051f31bef9ffc7441ca38d447222d"
+      "bytes": 9535,
+      "sha256": "941d3ad43ebc79038da77b0ca25699b2aac866a8537deb0785439c78cbfa2590"
     },
     {
       "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
       "target": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md",
-      "bytes": 5319,
-      "sha256": "9a8990230d4d662044d1a09bddb07cea0ff28b84ff67dce393d38a78f9ef1faa"
+      "bytes": 8707,
+      "sha256": "25e186b811a2cf0f3a2c91d7403ab6c6b737e835df9f27712b1bb2112ad2187b"
     },
     {
       "source": "docs/standards/MULTI_REPO_ARCHITECTURE.zh-CN.md",
       "target": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md",
-      "bytes": 22418,
-      "sha256": "86f400f99c5106465c4091ada543b24c93fbbaf61578b9411b5c8110ff7f56ca"
+      "bytes": 23297,
+      "sha256": "257586e14b3646700da3cf01052d14dce264533b7a4911a8335fef5e145763b8"
     },
     {
       "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
       "target": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
-      "bytes": 1654,
-      "sha256": "56910ac1ca7a9e551079d27b9f980ca818598b7ec726881ed09a66ed33dfea54"
+      "bytes": 3156,
+      "sha256": "ab38c935af5c3d70ecc4f00214223e4a1b72eee1ff47d50e4c3b0cd5b3ae31c4"
     },
     {
       "source": "assets/candidates/identity-jesus-storybook/0.1.0/runtime/character-sheet.png",

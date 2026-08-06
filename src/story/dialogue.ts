@@ -1,3 +1,132 @@
+import scripture from "./scripture.json" with { type: "json" };
+
+type TextSelector =
+  | Readonly<{ kind: "full" }>
+  | Readonly<{ kind: "quote"; index: number }>
+  | Readonly<{ kind: "after-open" }>
+  | Readonly<{ kind: "before-quote" }>
+  | Readonly<{ kind: "before"; token: string }>
+  | Readonly<{ kind: "from"; token: string }>
+  | Readonly<{ kind: "between"; start: string; end: string }>;
+
+const selectors: Readonly<Record<string, TextSelector>> = {
+  "john9:2:disciples-question": { kind: "quote", index: 0 },
+  "john9:3:jesus-answer": { kind: "after-open" },
+  "john9:4:jesus-works": { kind: "full" },
+  "john9:5:jesus-light": { kind: "full" },
+  "john9:7:jesus-instruction": { kind: "quote", index: 0 },
+  "john9:8:neighbors-question": { kind: "quote", index: 0 },
+  "john9:9:people-disagree-a": { kind: "quote", index: 0 },
+  "john9:9:people-disagree-b": { kind: "quote", index: 1 },
+  "john9:9:man-identifies": { kind: "quote", index: 2 },
+  "john9:10:neighbors-ask-how": { kind: "quote", index: 0 },
+  "john9:11:man-answers": { kind: "quote", index: 0 },
+  "john9:12:neighbors-ask-where": { kind: "quote", index: 0 },
+  "john9:12:man-does-not-know": { kind: "quote", index: 1 },
+  "john9:15:pharisees-ask-how": {
+    kind: "before",
+    token: "瞎子對他們說",
+  },
+  "john9:15:man-answers": { kind: "quote", index: 0 },
+  "john9:16:pharisees-disagree-a": { kind: "quote", index: 0 },
+  "john9:16:pharisees-disagree-b": { kind: "quote", index: 1 },
+  "john9:17:pharisees-ask-opinion": { kind: "quote", index: 0 },
+  "john9:17:man-answers": { kind: "quote", index: 1 },
+  "john9:19:authorities-question": { kind: "quote", index: 0 },
+  "john9:20:parents-identify": { kind: "after-open" },
+  "john9:21:parents-do-not-know": { kind: "before", token: "他已經成了人" },
+  "john9:21:parents-defer": { kind: "from", token: "他已經成了人" },
+  "john9:24:pharisees-demand": { kind: "quote", index: 0 },
+  "john9:25:man-does-not-know": {
+    kind: "between",
+    start: "：「",
+    end: "；有一件事",
+  },
+  "john9:25:man-known-fact": { kind: "from", token: "有一件事" },
+  "john9:26:pharisees-repeat-question": { kind: "quote", index: 0 },
+  "john9:27:man-answers-again": { kind: "quote", index: 0 },
+  "john9:28:pharisees-revile": { kind: "after-open" },
+  "john9:29:pharisees-claim": { kind: "full" },
+  "john9:30:man-answer-a": { kind: "after-open" },
+  "john9:31:man-answer-b": { kind: "full" },
+  "john9:32:man-answer-c": { kind: "full" },
+  "john9:33:man-answer-d": { kind: "full" },
+  "john9:34:pharisees-answer": { kind: "quote", index: 0 },
+  "john9:35:jesus-question": { kind: "quote", index: 0 },
+  "john9:36:man-question": { kind: "quote", index: 0 },
+  "john9:37:jesus-answer": { kind: "quote", index: 0 },
+  "john9:38:man-confession": { kind: "quote", index: 0 },
+  "john9:39:jesus-saying": { kind: "quote", index: 0 },
+  "john9:40:pharisees-question": { kind: "quote", index: 0 },
+  "john9:41:jesus-answer": { kind: "quote", index: 0 },
+};
+
+const verseTextByKey = new Map(
+  scripture.verses.map(({ key, exactText }) => [key, exactText]),
+);
+
+function trimSpeechPunctuation(text: string): string {
+  return text.replace(/^「/, "").replace(/」$/, "").trim();
+}
+
+function selectText(verseKey: string, segmentId: string): string {
+  const text = verseTextByKey.get(verseKey);
+  const selector = selectors[segmentId];
+  if (typeof text !== "string" || text.length === 0 || selector === undefined) {
+    throw new Error(`Missing exact scripture text for ${segmentId}.`);
+  }
+  switch (selector.kind) {
+    case "full":
+      return trimSpeechPunctuation(text);
+    case "quote": {
+      const quotes = [...text.matchAll(/「([^」]+)」/g)];
+      const selected = quotes[selector.index]?.[1];
+      if (selected === undefined) {
+        throw new Error(`Missing quote ${selector.index} for ${segmentId}.`);
+      }
+      return selected;
+    }
+    case "after-open": {
+      const marker = text.indexOf("：「");
+      if (marker < 0) {
+        throw new Error(`Missing speech opening for ${segmentId}.`);
+      }
+      return trimSpeechPunctuation(text.slice(marker + 2));
+    }
+    case "before-quote": {
+      const marker = text.indexOf("「");
+      if (marker < 0) {
+        throw new Error(`Missing quote boundary for ${segmentId}.`);
+      }
+      return text.slice(0, marker).trim();
+    }
+    case "before": {
+      const marker = text.indexOf(selector.token);
+      if (marker < 0) {
+        throw new Error(`Missing split token for ${segmentId}.`);
+      }
+      return trimSpeechPunctuation(text.slice(0, marker));
+    }
+    case "from": {
+      const marker = text.indexOf(selector.token);
+      if (marker < 0) {
+        throw new Error(`Missing split token for ${segmentId}.`);
+      }
+      return trimSpeechPunctuation(text.slice(marker));
+    }
+    case "between": {
+      const start = text.indexOf(selector.start);
+      const end = text.indexOf(selector.end, start + selector.start.length);
+      if (start < 0 || end < 0) {
+        throw new Error(`Missing split boundary for ${segmentId}.`);
+      }
+      return trimSpeechPunctuation(
+        text.slice(start + selector.start.length, end),
+      );
+    }
+  }
+}
+
 const scriptureLine = (id, beatId, speakerId, verseKey, segmentId) =>
   Object.freeze({
     id,
@@ -7,6 +136,7 @@ const scriptureLine = (id, beatId, speakerId, verseKey, segmentId) =>
     segmentId,
     sourceLevel: "S0",
     sourceLabel: "經文原文",
+    text: selectText(verseKey, segmentId),
   });
 
 export const DIALOGUE_SEGMENTS = Object.freeze([

@@ -18,23 +18,25 @@ const expectedPacks = [
   "nt-judea-first-century@0.1.0",
 ];
 
-test("candidate packs are explicitly pinned and cannot be presented as release-ready", () => {
+test("candidate packs are pinned as evidence while story-local art is release-ready", () => {
   assert.equal(lock.allowCandidateAssets, true);
   assert.deepEqual(
     lock.assetPacks.map(({ id, version }) => `${id}@${version}`).sort(),
     expectedPacks,
   );
   assert.ok(lock.assetPacks.every(({ status }) => status === "candidate"));
-  assert.equal(evaluation.releaseEligible, false);
-  assert.equal(evaluation.publicRedistributionApproved, false);
+  assert.equal(evaluation.distributionScope, "private");
+  assert.equal(evaluation.evidenceCollector, "copilot");
+  assert.equal(evaluation.acceptanceExecutor, "copilot");
   assert.equal(
     evaluation.reviewStatus,
-    "polished-private-preview-with-candidate-rights",
+    "copilot-accepted-story-local-replacement",
   );
   assert.ok(
     evaluation.packs.every(
       ({ status, decision }) =>
-        status === "candidate" && decision === "conditional-accept",
+        status === "candidate" &&
+        decision === "evidence-only-story-local-replacement",
     ),
   );
 });
@@ -84,7 +86,7 @@ test("John 11-specific source cells never enter the John 9 runtime", () => {
   ]);
 });
 
-test("candidate review records resolved John 9-local art without relaxing release gates", () => {
+test("candidate review records complete John 9-local replacements", () => {
   assert.ok(
     evaluation.packs.every(({ storyLocalGaps }) => storyLocalGaps.length === 0),
   );
@@ -99,5 +101,5 @@ test("candidate review records resolved John 9-local art without relaxing releas
   ]) {
     assert.ok(resolutions.has(required), required);
   }
-  assert.ok(evaluation.globalReleaseBlockers.length >= 4);
+  assert.equal(evaluation.distributionNotes.length, 3);
 });

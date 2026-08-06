@@ -2,15 +2,16 @@
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
   "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
-  "reviewStatus": "polished-private-preview-with-candidate-rights",
-  "releaseEligible": false,
-  "publicRedistributionApproved": false,
+  "reviewStatus": "copilot-accepted-story-local-replacement",
+  "distributionScope": "private",
+  "evidenceCollector": "copilot",
+  "acceptanceExecutor": "copilot",
   "packs": [
     {
       "id": "identity-jesus-storybook",
       "version": "0.1.0",
       "status": "candidate",
-      "decision": "conditional-accept",
+      "decision": "evidence-only-story-local-replacement",
       "acceptedRuntimeFiles": [
         {
           "path": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
@@ -38,7 +39,7 @@
       "id": "nt-judea-first-century",
       "version": "0.1.0",
       "status": "candidate",
-      "decision": "conditional-accept",
+      "decision": "evidence-only-story-local-replacement",
       "acceptedRuntimeFiles": [
         {
           "path": "public/assets/vendor/nt-judea-first-century/0.1.0/world-ground-atlas.png",
@@ -73,10 +74,9 @@
       ]
     }
   ],
-  "globalReleaseBlockers": [
-    "Both packs remain candidate and releaseEligible=false.",
-    "Public redistribution is not approved.",
-    "Generated story-local assets are approved only for private preview pending owner rights review.",
-    "No pack-specific public redistribution approval or LICENSE/NOTICE exists."
+  "distributionNotes": [
+    "Candidate packs remain pinned as evidence inputs only.",
+    "All player-visible runtime art is processed story-local output with immutable hashes.",
+    "Evidence does not establish public redistribution, so the complete release scope is private."
   ]
 }

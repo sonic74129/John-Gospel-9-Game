@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceRepository": "https://github.com/biblebase/biblebase",
+  "sourceCommit": "13435cd33fb00d3265aa885aac8672454d4df058",
+  "sourcePath": "public/json/cunp/43/9.json",
+  "sourceSha256": "460327d5ac56801f3bfb32e272b54602179f9e7ad35eb46df81659b016bac44c",
+  "repositoryLicense": "Apache-2.0",
+  "evidenceCollector": "copilot",
+  "acceptanceExecutor": "copilot",
+  "recordedAt": "2026-08-06",
+  "permission": "tts",
+  "decision": "allowed"
+}

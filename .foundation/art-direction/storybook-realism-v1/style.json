@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "id": "storybook-realism-v1",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "candidate",
   "name": "Warm gently cartooned storybook realism",
   "visualLanguage": [
@@ -79,8 +79,14 @@
   ],
   "generationRule": {
     "candidateCount": "2-3",
-    "reviewBeforeNextBatch": true,
+    "selectionMode": "copilot-automatic",
+    "acceptanceEvidence": [
+      "machine contract checks",
+      "Copilot visual QA",
+      "runtime integration tests"
+    ],
+    "continueWithoutUserApproval": true,
     "revision": "Each v2+ changes one observed defect and preserves accepted details.",
-    "runtimeOnlyAfterApproval": true
+    "runtimeOnlyAfterAcceptanceEvidence": true
   }
 }

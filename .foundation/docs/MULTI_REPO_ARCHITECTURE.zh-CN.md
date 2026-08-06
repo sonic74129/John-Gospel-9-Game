@@ -127,7 +127,7 @@ examples/
 
 ### 3.2 `bible-game-assets`
 
-职责：批准的共用运行时素材、资产 manifest 和时代/地区包。
+职责：自动验收通过的共用运行时素材、资产 manifest 和时代/地区包。
 
 建议：
 
@@ -152,7 +152,7 @@ tests/
 
 只放：
 
-- 已批准的、经过处理的 runtime assets。
+- 已验收、经过处理的 runtime assets。
 - identity master 与复用范围。
 - source provenance。
 - license/rights metadata。
@@ -187,9 +187,9 @@ tests/
 
 - 串行 MAI 工作队列。
 - Azure 资源核对与 Entra-only workflow。
-- 候选、contact sheet 和批准记录。
+- 候选、contact sheet 和自动 acceptance evidence。
 - 大型源图与处理日志。
-- 将批准后的 runtime 资产发布到：
+- 将自动验收通过的 runtime 资产发布到：
   - `bible-game-assets`，若可共用。
   - 对应故事 repo，若故事专用。
 
@@ -213,7 +213,7 @@ tests/
 - run manifest。
 - 2–3 个 candidates。
 - review sheet。
-- 人工选择记录。
+- 机器评分、Copilot 视觉 QA 与自动选择记录。
 - selected source。
 - runtime output。
 - SHA-256。
@@ -224,7 +224,7 @@ tests/
 优先顺序：
 
 1. Azure Blob/private artifact storage 保存候选和大型 source。
-2. GitHub Release 保存批准的版本化 runtime pack。
+2. GitHub Release 保存验收通过的版本化 runtime pack。
 3. 只有团队明确接受成本时，才用 Git LFS 保存全部生产源。
 
 普通 Git history 不适合反复提交大型 PNG 候选。
@@ -342,7 +342,7 @@ Hub 不负责：
 ```text
 故事本地使用
 -> 在实际游戏验证
--> 确认至少第二个故事也需要
+-> 自动记录至少第二个故事的实际依赖
 -> 核对时代、身份、授权和尺寸
 -> 发布为新 asset pack version
 -> 原故事明确升级到该版本
@@ -379,7 +379,7 @@ GitHub user/organization owner 一致；若 organization 名为 `<github-org>`�
 //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
-GitHub Actions 使用有 `packages: read` 权限的 `GITHUB_TOKEN` 或组织批准的最小权限
+GitHub Actions 使用有 `packages: read` 权限的 `GITHUB_TOKEN` 或组织配置的最小权限
 token；本地 token 只放环境变量或用户级 npm 配置。
 
 故事 repo 使用固定兼容版本：
@@ -482,7 +482,7 @@ src/
   main.ts
 
 production/
-  approved-manifests/
+  accepted-manifests/
   audio-source/
 
 tests/
@@ -508,7 +508,7 @@ README.md
 - `src/adapters` 才把纯 story contract 接到 SDK。
 - `public/assets/local` 只放故事专用 runtime 文件。
 - 候选图片不进入普通 Git history。
-- `public/assets/vendor` 根据 lock 重建，不作为人工真相。
+- `public/assets/vendor` 根据 lock 重建，不作为手工真相。
 
 ## 7. 新故事 repo 的创建流程
 
@@ -523,8 +523,9 @@ README.md
 - 目标时间。
 - 玩家身份。
 - 时代/地区 asset pack。
-- scripture reviewer。
-- art reviewer。
+- scripture source registry。
+- art acceptance contract。
+- private/public distribution policy。
 
 稳定 ID 示例：
 
@@ -560,7 +561,8 @@ npx @bible-game/create-story@1 \
   --era-pack nt-judea-first-century
 ```
 
-初始化 CLI 只创建配置和示例数据，不生成图片、不调用 Azure，也不伪造经文审核。
+初始化 CLI 创建配置后立即启动 Copilot 端到端流水线：在线取得经文、建立 Beat/灰盒、
+调用美术生产、接线和 QA。初始化本身不是交付点，也不能以示例数据结束。
 
 ### 7.3 第一个提交
 
@@ -569,11 +571,14 @@ npx @bible-game/create-story@1 \
 - repo 名、story ID、route 和 storage namespace 一致。
 - SDK 与 asset pack 固定版本。
 - game manifest 可解析。
-- 空白经文明确标记 `unreviewed`。
+- 指定经文已从可追溯来源填入且通过空值、范围、citation 和 hash 检查。
 - 灰盒可启动。
 - 三个示例 Beat 测试通过。
 - CI 可运行。
 - 无 Azure token/key。
+
+第一个 checkpoint 只是可恢复基线；Copilot 必须继续正式美术、完整内容、runtime、QA
+和 release，不能停在该提交等待 review。
 
 ### 7.4 正式制作
 
@@ -609,6 +614,7 @@ Manifest 示例：
   "version": "1.0.0",
   "templateVersion": "1.0.0",
   "productionStage": "released",
+  "distributionScope": "private",
   "deliveryPolicy": {
     "mode": "end-to-end",
     "graybox": "internal-only",
@@ -620,7 +626,9 @@ Manifest 示例：
     "book": "John",
     "chapter": 11,
     "verses": "1-46",
-    "translation": "CUV-Simplified"
+    "translation": "CUV-Simplified",
+    "scriptureStatus": "cross-source-verified",
+    "sourceCitationCount": 1
   },
   "engineApiVersion": 1,
   "sdkVersion": "1.2.1",
@@ -643,7 +651,8 @@ Manifest 示例：
 }
 ```
 
-Hub 只依赖这份 contract，并拒绝 `productionStage` 不是 `released` 的 artifact。
+Hub 只依赖这份 contract。公开 catalog 仅接受 `released/public`；受控 private launcher
+可接受 `released/private`；任何未到 `released` 的 artifact 都拒绝。
 
 ## 9. 统一部署但保持 repo 独立
 
@@ -836,29 +845,22 @@ art/*                   prompt/asset integration
 release/*               必要时的稳定分支
 ```
 
-Required checks：
+Required automated checks：
 
 - CI。
 - scripture contracts。
 - build。
 - secret scan。
 
-CODEOWNERS 示例：
+CODEOWNERS 可以通知维护者，但不得设为 Copilot 制作、合并或 release 的 required human
+approval。CI 以来源、内容、资产、runtime 和 playthrough evidence 决定是否继续。
+Foundation Charter 第 2.0 节优先于 repository protection/template 的低层建议；不得用
+它们要求用户 review、approval、confirmation 或 wait。
 
-```text
-/src/story/scripture.ts       @scripture-reviewer
-/src/story/beats.ts           @narrative-owner
-/art/prompts/                 @art-owner
-/production/audio-source/     @audio-owner
-/.github/workflows/           @platform-owner
-```
+分发范围由自动 evidence 决定：
 
-建议保持 private，直到：
-
-- 经文译本授权确认。
-- 音乐授权确认。
-- AI 资产 provenance 完整。
-- 发布内容审核完成。
+- 经文、音乐、AI 资产 provenance 和 LICENSE/NOTICE evidence 支持公开分发时发布 public。
+- evidence 不足时仍完成 private-scope immutable release，不停在 preview 或等待确认。
 
 ## 15. 不建议的做法
 
@@ -886,7 +888,7 @@ Git submodule 不建议作为默认方案，因为：
 
 1. 选定一个新的完整 QA 游戏基线。
    - 不能直接把所有后期聚焦 branch tip 互相 merge。
-   - 从 `660e3f9` 或明确后继开始，逐项重放已批准修复。
+   - 从 `660e3f9` 或明确后继开始，逐项重放已验证修复。
 2. 重新跑完整 QA，得到真正的 Bethany release candidate。
 3. 创建 `bible-game-sdk`。
 4. 先抽出已有测试保护的通用模块。

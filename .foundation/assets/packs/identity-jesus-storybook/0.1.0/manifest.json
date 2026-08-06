@@ -3,7 +3,7 @@
   "id": "identity-jesus-storybook",
   "version": "0.1.0",
   "status": "candidate",
-  "metadataSha256": "c7119ff52f3f20a140d38ae7dcf1a581fc102c9e9616be5b2d1c2ab8e7256ef3",
+  "metadataSha256": "6c309f1bd84635f5e0aa22c487de503272d5c5e407611d2aa68eaa6e5c2a37f0",
   "files": [
     {
       "path": "runtime/character-sheet.png",

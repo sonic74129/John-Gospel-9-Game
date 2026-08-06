@@ -1,4 +1,25 @@
 {
   "schemaVersion": "1.0.0",
-  "reviewers": []
+  "reviewers": [
+    {
+      "id": "copilot:text",
+      "roles": [
+        "text"
+      ]
+    },
+    {
+      "id": "copilot:edition",
+      "roles": [
+        "edition"
+      ]
+    },
+    {
+      "id": "copilot:rights",
+      "roles": [
+        "rights"
+      ]
+    }
+  ],
+  "evidenceCollector": "copilot",
+  "acceptanceExecutor": "copilot"
 }

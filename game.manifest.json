@@ -3,7 +3,8 @@
   "template": false,
   "id": "john-9-man-born-blind",
   "version": "0.1.0",
-  "productionStage": "art-production",
+  "productionStage": "released",
+  "distributionScope": "private",
   "templateVersion": "0.1.0",
   "title": "生來瞎眼的人",
   "passage": {
@@ -12,7 +13,7 @@
     "verses": "1-41",
     "translation": "CUV-Traditional"
   },
-  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
   "engineApiVersion": 1,
   "sdkVersion": "0.1.0",
   "stylePack": "storybook-realism-v1@0.1.0",

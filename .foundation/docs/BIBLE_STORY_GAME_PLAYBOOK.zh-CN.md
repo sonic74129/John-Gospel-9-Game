@@ -40,6 +40,10 @@
 - 每个故事有自己的代码入口、内容、地图、测试、构建产物和版本。
 - 共用素材必须有稳定 ID、版本、来源、用途、授权和兼容范围。
 - 用户要求制作游戏时默认端到端完成；灰盒只是内部校验，不得作为停止点或最终交付。
+- Copilot 自动完成来源、生成、选定、处理、接线、测试、修复和 release；所有治理结果
+  记录为 evidence，不设置用户 review/approval/wait 步骤。
+- Foundation Charter 第 2.0 节优先于本规范及故事本地 workflow；任何相反的人工作业
+  gate 无效，Copilot 必须继续到正式美术、runtime 和 production-mode 实际游玩通过。
 
 ### 1.2 已否决，不得恢复
 
@@ -106,12 +110,37 @@ games/john-11-bethany/src/story/scripture.ts
 它至少包含：
 
 - 稳定 verse key，例如 `john11:25`。
-- 原文、出处、译本、语言和审核状态。
-- 正式审核者与审核日期。
+- 非空 `exactText`、出处、译本、语言和自动核验状态。
+- 可追溯的来源记录：`sourceUrl`、网站或发布者、页面标题、访问日期、经文范围和页面
+  标示的译本/简繁版本。
+- 核验方法、运行时间、来源 diff 和内容 hash。
 - 游戏中是否完整显示、分句显示或只显示出处。
 
-正式聚会前必须由指定教会审核者逐字核对。代码、字幕、语音和测试都从这里派生，
-不得各自复制一份人工维护的经文。
+用户明确指定和合本（CUV）并要求在线查找时，执行者必须主动检索上述来源、交叉检查
+verse 覆盖并填入 `exactText`。来源、自动核验和分发 evidence 使用独立状态，例如：
+
+```ts
+interface ScriptureSourceCitation {
+  sourceUrl: string;
+  publisherOrSite: string;
+  pageTitle: string;
+  retrievedAt: string;
+  passage: string;
+  translationLabel: string;
+  verifiedBy: "copilot";
+}
+
+type ScriptureVerificationStatus = "sourced" | "cross-source-verified";
+type ScriptureDistributionScope = "private" | "public";
+```
+
+网页可读不等于公开再分发许可，必须保留真实 citation 和 evidence；若公开证据不足，
+自动使用 private distribution scope 并继续完成固定 release。若一个来源缺节、无法访问
+或与另一来源有文字差异，按来源优先级、范围完整度和交叉一致性自动选择，保存 diff，
+不得凭记忆补写或把裁决交回用户。
+
+代码、字幕、语音和测试都从唯一 scripture data 派生；自动测试核对 verse 覆盖、空值、
+hash、来源 citation 和 UI 实际显示，不得各自复制一份维护的经文。
 
 可见内容也必须保留来源标签，例如“经文原文”“经文叙述”“情境重现”“游戏提示”；
 不得让玩家把桥接对白误认为圣经原文。
@@ -255,23 +284,22 @@ mobile/desktop safe framing
 正式生成地图前必须短暂完成以下内部校验：
 
 1. 画出区域、路线、清场、门口、互动点和镜头范围。
-2. 放入真实批准角色测试 2–3 个尺寸。
+2. 放入通过 identity/scale 验收的真实角色测试 2–3 个尺寸。
 3. 验证道路可同时容纳 2–3 人与姓名牌。
 4. 验证建筑、门、床、井、桌、树、墓穴与人物比例可信。
 5. 验证正常路线、跳过路线和重进场景都不会卡住。
 6. 锁定地图尺寸、光向、人物高度和地标坐标后，才写最终 MAI prompt。
 
-第 6 项完成即代表 MAI 生产的开始条件已经满足，不代表故事完成。除非用户明确要求
-`graybox-only`，不得停在此处、提交玩家版灰盒或使用“完整故事”描述。应立即继续
-第 7 节的 prompt registry、候选生成、视觉审查、runtime 处理与接入，不等待用户再次
-确认“可以生图”。
+第 6 项完成即代表 MAI 生产的开始条件已经满足，不代表故事完成。不得停在此处、提交
+玩家版灰盒或使用“完整故事”描述。流水线立即继续第 7 节的 prompt registry、候选生成、
+自动视觉 QA、runtime 处理与接入。
 
 灰盒 layout、contract tests 和 debug overlay 必须保留为正式图回归基线。正式图造成
 路线、比例、镜头、碰撞或遮挡回归时，只把受影响部分切回灰盒定位并修正，重跑该区域
-QA，再重新生成或处理受影响资产；通过后自动继续，不推翻其他已批准素材。
+QA，再重新生成或处理受影响资产；通过后自动继续，不推翻其他已验收素材。
 
-经文授权或人工审核待定时，继续所有不需要展示未授权逐字文本的地图、美术、人物、
-动作、引擎和 QA 工作，并把最终状态标记为 `release-blocked`，不能误判为生产停止。
+分发 evidence 不足时自动使用 private scope，仍完成经文、地图、美术、人物、动作、
+引擎、QA 和固定 release；不能停在治理 metadata 或临时 preview。
 
 ### 4.5 地图演出连续性
 
@@ -309,7 +337,7 @@ QA，再重新生成或处理受影响资产；通过后自动继续，不推翻
 | 特殊剧情姿态 | 通常否 | 只有动作和身份完全相同时才提升到共用包 |
 | 对话肖像 | 条件共用 | 身份、服装、年龄、情绪和光向必须一致 |
 | 经文语音 | 否 | 与具体译本、verse keys 和 text hash 绑定 |
-| 音乐 | 条件共用 | 必须确认授权、主题和混音适合 |
+| 音乐 | 条件共用 | 自动核验来源 evidence、主题和混音契约 |
 
 ### 5.3 人物连续性
 
@@ -325,6 +353,15 @@ QA，再重新生成或处理受影响资产；通过后自动继续，不推翻
 
 地图角色、特殊姿态和肖像都必须引用同一 identity version。若故事相隔多年、
 地点或服装情境明显不同，应建立明确 variant，不能强行用同一张图。
+
+玩家控制角色另有不可降级的交付契约：
+
+- 正式 runtime mapping 必须分别提供 `player.direction.up`、`player.direction.down`、
+  `player.direction.left`、`player.direction.right`；每个方向至少有 idle 和 movement。
+- 四向必须来自已自动验收、已处理的 runtime asset，并与同一 identity/scale version 绑定。
+- `PlayerController` 必须按实际移动向量切换四向状态，停止后保留最后朝向的 idle。
+- 生成候选、source sheet、contact sheet 或 manifest 声明本身都不是 runtime 接入。
+- 契约测试逐一驱动四向输入并断言状态/animation，浏览器测试确认实际渲染正式像素。
 
 ### 5.4 资产目录与版本
 
@@ -483,7 +520,7 @@ export AZURE_MAI_DEPLOYMENT="mai-image-2-5-pro"
 - 在前端浏览器中直接调用 MAI
 - 把生成端点当作游戏运行时依赖
 
-游戏发布包只能包含已经审核和处理过的静态图片。
+游戏发布包只能包含通过自动验收、处理和 runtime QA 的静态图片。
 
 ### 7.4 Prompt registry
 
@@ -507,7 +544,7 @@ art/prompts/portraits.json
 - 完整可发送 prompt，而不是依赖聊天上下文。
 - 身份、镜头、比例、色板、材质、光向。
 - 必须出现与明确禁止内容。
-- 机器验收与人工视觉验收。
+- 机器验收、Copilot 视觉 QA 与 runtime 验收。
 - 依赖的 style/identity/master 版本。
 
 ### 7.5 正确生成顺序
@@ -516,7 +553,7 @@ art/prompts/portraits.json
 2. 室内、户外、关键地点三类完整美术母版。
 3. 空环境、地面、固定建筑、可复用道具。
 4. 核心人物 identity/base sheets。
-5. 配角与地图特殊姿态。
+5. 玩家角色四向 idle/movement runtime states、配角与地图特殊姿态。
 6. 对话肖像。
 7. 故事专用地图与活动物件。
 
@@ -551,12 +588,12 @@ npm run art:generate -- \
   --asset master.house-interior \
   --mode regenerate
 
-# 人工比较后批准候选
+# 自动评分与 Copilot 视觉 QA 后记录选定候选
 npm run art:generate -- \
   --family master \
   --asset master.house-interior \
   --select 2 \
-  --reason "Best approved scale, route readability, identity and material match."
+  --reason "Best validated scale, route readability, identity and material match."
 ```
 
 每次只运行一个 family。脚本通过 Azure CLI 取得
@@ -567,13 +604,14 @@ POST <custom-endpoint>/mai/v1/images/generations
 model = mai-image-2-5-pro
 ```
 
-### 7.7 候选审查门槛
+### 7.7 候选自动验收门槛
 
 - 每批最多 2–3 张。
-- 看完所有候选后才可生成下一批。
+- Copilot 必须比较全部候选并保存每项 acceptance evidence，再自动继续下一批。
 - 使用最长边不超过 1600 px、目标小于 900 KB 的 contact sheet。
 - 地图候选必须叠加真实角色测试比例、道路、门洞、姓名牌和群体站位。
 - 第一张“没有报错”的图不等于通过。
+- 玩家角色四向候选只有在选定、处理、runtime-wire 并通过移动切换测试后才算交付。
 - 若全部失败，只允许新版本修正一个共同缺陷。
 - `v2+` 必须写明：
   - `Revision target`
@@ -591,7 +629,7 @@ production/art-source/<family>/<asset>/<promptVersion>/
 public/assets/art/<family>/<asset>/<promptVersion>/run-NNN/
 ```
 
-- 原始候选和批准源图不直接打进发布包。
+- 原始候选和选定源图不直接打进发布包。
 - 运行时只使用经过裁切、去背景、缩放和压缩的输出。
 - 高清手绘默认使用 Lanczos；只有明确的像素资产才使用 nearest。
 - 每个 runtime 输出记录源图、prompt version、run、候选、处理参数和 hash。
@@ -600,8 +638,9 @@ public/assets/art/<family>/<asset>/<promptVersion>/run-NNN/
 
 - 先检查订阅、RBAC、资源状态、部署和区域。
 - 对限流使用有限重试与退避。
-- Preview 或部署消失时停止该资产，不得静默换模型。
-- 只有在更新 style bible、registry 和兼容版本并得到批准后，才可更换模型。
+- Preview 或部署消失时，按 prompt registry 中预先声明的兼容 fallback 顺序继续。
+- fallback 自动建立新 model/style compatibility version，保留原因、参数和输出 diff，
+  并重新执行全部验收；不得静默换模型，也不得等待用户放行。
 
 ## 8. Azure Speech 与语音规范
 
@@ -627,7 +666,8 @@ Speech 与 MAI 使用同一个项目资源：
 | 耶稣 | `zh-CN-Bo:MAI-Voice-2` | Preview | 每次先查 voice list；不可用时不得伪装成功 |
 
 `zh-CN-Mei:MAI-Voice-2`、`zh-CN-Lan:MAI-Voice-2` 等旧试听方向尚未成为
-全项目正式默认声音。新角色必须先做少量 A/B 试听并批准。
+全项目正式默认声音。新角色先做少量 A/B 样本，由清晰度、身份匹配、技术指标和
+Copilot 听感 QA 自动选定并记录 evidence。
 
 ### 8.2 语音范围
 
@@ -847,8 +887,8 @@ packs/
   ot-canaan/
 ```
 
-共享包只包含已批准 runtime assets、identity master、manifest、hash、授权和兼容
-范围。完整故事地图、经文语音、坐标、Beat 和未批准候选不进入共享素材库。
+共享包只包含已验收 runtime assets、identity master、manifest、hash、分发 evidence
+和兼容范围。完整故事地图、经文语音、坐标、Beat 和未验收候选不进入共享素材库。
 
 故事以 `assets.lock.json` 锁定 pack 版本；构建时复制到自己的发布包，运行时不依赖
 会变化的远端 `latest`。
@@ -899,6 +939,7 @@ npm run build
   "version": "1.0.0",
   "templateVersion": "1.0.0",
   "productionStage": "released",
+  "distributionScope": "private",
   "deliveryPolicy": {
     "mode": "end-to-end",
     "graybox": "internal-only",
@@ -910,7 +951,9 @@ npm run build
     "book": "John",
     "chapter": 11,
     "verses": "1-46",
-    "translation": "CUV-Simplified"
+    "translation": "CUV-Simplified",
+    "scriptureStatus": "cross-source-verified",
+    "sourceCitationCount": 1
   },
   "engineApiVersion": 1,
   "sdkVersion": "1.2.1",
@@ -934,7 +977,9 @@ npm run build
 ```
 
 Hub、部署工具和目录页只能依赖这个 manifest，不能 import 游戏内部 Beat、Scene 或
-存档类型。Hub 只接收 `productionStage: "released"`；其他阶段不得进入公开 catalog。
+存档类型。公开 catalog 只接收 `productionStage: "released"` 且
+`distributionScope: "public"`；受控 private launcher 可接收 `released/private`，
+其他阶段一律拒绝。
 
 ## 12. 未来统一界面
 
@@ -983,10 +1028,10 @@ bible-games:save:john-11-bethany:v1
 
 ## 13. 新故事标准生产流程
 
-以下 Phase 是连续流水线，不是九个可任意停止的交付点。用户要求制作完整游戏时，
-执行者必须主动从 Phase 0 推进到 Phase 8；Phase 2 灰盒通过后自动进入 Phase 3–4。
-只有用户明确要求阶段性交付，或出现
-[端到端完成政策](../END_TO_END_DELIVERY.zh-CN.md)定义的硬阻塞，才可暂停。
+以下 Phase 是连续自动流水线，不是九个可任意停止的交付点。执行者必须主动从 Phase 0
+推进到 Phase 9；Phase 2 灰盒通过后自动进入 Phase 3–4，失败则按
+[端到端完成政策](../END_TO_END_DELIVERY.zh-CN.md)重试、fallback 或局部回滚，不能把
+review、approval 或等待责任交给用户。
 
 ### Phase 0：立项
 
@@ -996,10 +1041,11 @@ bible-games:save:john-11-bethany:v1
 
 ### Phase 1：经文契约
 
-- 输入正式经文。
+- 用户指定和合本（CUV）在线来源时，检索可追溯页面并输入非空正式经文。
+- 保存 URL、网站或发布者、页面标题、访问日期、范围和译本/简繁标示。
+- 自动执行双来源 diff、verse 覆盖、空值与 hash 检查。
 - 标记 S0/S1/S2。
 - 列出事件顺序、人物和地点。
-- 教会审核关键文本。
 
 ### Phase 2：Beat 与世界灰盒
 
@@ -1020,10 +1066,11 @@ bible-games:save:john-11-bethany:v1
 - 先锁定 style/identity/scale。
 - 核对 MAI Azure/Entra 环境并建立故事 prompt registry。
 - 生成并比较 2–3 个母版或地图候选。
-- 用真实角色叠加验证。
-- 批准后才拆环境、人物、姿态和肖像。
+- 用真实角色叠加并执行机器检查与 Copilot 视觉 QA。
+- 候选达到 acceptance contract 后自动选定、拆分环境、人物、姿态和肖像。
+- 玩家控制角色选定并处理为 up/down/left/right 四向 idle/movement runtime assets。
 - 处理为 runtime assets 后替换所有灰盒；用实际像素重新校准世界契约。
-- 若校准失败，只回滚受影响区域到 Phase 2 修正，再自动返回 Phase 4；不等待用户指示。
+- 若校准失败，只回滚受影响区域到 Phase 2 修正，再自动返回 Phase 4。
 
 ### Phase 5：垂直切片
 
@@ -1034,6 +1081,7 @@ bible-games:save:john-11-bethany:v1
 ### Phase 6：完整内容
 
 - 接入全部 Beat、地图路径、人物动作、问答和结尾。
+- 将玩家四向正式状态接入 `PlayerController`，移动切换且停止保持最后朝向。
 - 只使用数据契约，不在 Scene 内新增散落硬编码。
 
 ### Phase 7：关键语音与音乐
@@ -1049,6 +1097,8 @@ bible-games:save:john-11-bethany:v1
 - 一次正常完整游玩。
 - 一次全部 skip。
 - 桌面和移动宽度。
+- 四向移动状态切换自动测试与正式像素浏览器检查。
+- production bundle/DOM 扫描 DEV 英文、内部 QA metadata、空经文和 placeholder。
 - 音频、网络、console、资源和离线构建。
 
 ### Phase 9：发布
@@ -1056,15 +1106,15 @@ bible-games:save:john-11-bethany:v1
 - 独立 build/deploy。
 - 更新 `catalog/games.json`。
 - Hub 只增加一条 manifest，不改游戏内部代码。
-
-经文、音乐或公开分发审批尚未完成时，可停在 `release-blocked`，但此前仍应完成所有
-不受限制的 MAI、美术、runtime 集成和 QA。`release-blocked` 不能称为“已发布”。
+- 自动生成 provenance manifest，并按 evidence 设置 private/public `distributionScope`。
+- 即使 public evidence 不足，也必须生成不可变、完整、可运行的 private release artifact；
+  private preview 不是 release，不能作为停止点。
 
 ## 14. 每个游戏的完成定义
 
 ### 经文
 
-- 正式文本、出处、译本和审核状态齐全。
+- 正式文本非空，出处、译本、可追溯在线来源和自动核验状态齐全。
 - 所有 Beat 的经文支持动作可追溯。
 - 游戏桥接内容有显式标记。
 - 未出现改变经文结果的互动。
@@ -1073,6 +1123,7 @@ bible-games:save:john-11-bethany:v1
 
 - 从开始页不使用开发捷径可走到结尾。
 - 键盘、鼠标/触控、互动、暂停、重开可用。
+- 玩家正式角色的 up/down/left/right 状态均由移动触发，停止后保留最后朝向。
 - 不会卡在障碍、触发器或输入锁。
 - normal 与 all-skip 最终状态一致。
 
@@ -1089,8 +1140,9 @@ bible-games:save:john-11-bethany:v1
 - 地图与肖像是同一人物。
 - 无文字、水印、现代物件、奇幻光效和恐怖内容。
 - 所有资产有 source、manifest、版本与 runtime mapping。
-- 玩家版使用批准的正式资产，不含灰盒色块、placeholder、debug overlay、region ID、
+- 玩家版使用自动验收通过的正式资产，不含灰盒色块、placeholder、debug overlay、region ID、
   Beat/segment ID、候选说明或内部 final-state 状态。
+- 玩家控制角色不是候选 sheet 或单向 fallback，四向 runtime mapping 与实际渲染一致。
 
 ### 音频
 
@@ -1105,6 +1157,7 @@ bible-games:save:john-11-bethany:v1
 - 对话、肖像、目标、经文出处和按钮不互相遮挡。
 - 目标不泄露身份或答案。
 - Blocking UI 不允许背景点击误跳过多段。
+- 玩家可见内容是目标语言正式内容；DEV 英文和内部 QA metadata 不作为成品显示。
 
 ### 工程
 
@@ -1113,11 +1166,15 @@ bible-games:save:john-11-bethany:v1
 - 无 token、key、个人帐号、未授权素材或生产候选进入发布包。
 - Console、page error、unhandled rejection 与关键资源 404 为 0。
 - manifest 阶段为 `released`；`internal-graybox`、`art-production`、`integration`、
-  `release-candidate` 与 `release-blocked` 都不得宣称完成。
+  `release-candidate` 与 `recovering` 都不得宣称完成。
+- manifest 包含 private/public `distributionScope` 和固定 artifact SHA-256；分发范围
+  不改变产品完成标准。
+- `private-preview` 和 `art-integrated` 不是完成阶段；经文正文缺失时必须保持
+  `in production`/`integration`。
 
 ## 15. 建议实施顺序
 
-1. 先从完整 QA 基线逐项重放后期批准修复，得到真正稳定的《伯大尼见证者》版本。
+1. 先从完整 QA 基线逐项重放后期已验证修复，得到真正稳定的《伯大尼见证者》版本。
 2. 创建 `bible-game-sdk`，抽出已有测试保护的引擎、序列、导航、音频和 UI。
 3. 创建 `bible-game-assets`，只提升已证明可复用的 runtime assets。
 4. 将伯大尼迁移为独立 `bible-story-john-11-bethany` repo。

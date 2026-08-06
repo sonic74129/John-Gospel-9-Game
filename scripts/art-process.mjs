@@ -6,10 +6,13 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 const ROOT = process.cwd();
-const FOUNDATION_COMMIT = "6c836d55bfd786b8a55b4e0c7356bf8791505653";
+const FOUNDATION_COMMIT = "b534680100ce4006a7c0bf6a5b50923afaeb6266";
 const KEY = "colorkey=0xF7F0DE:0.24:0.08";
 const actorFootBaselines = Object.freeze({
-  "observer.png": 99,
+  "observer-down.png": 99,
+  "observer-up.png": 99,
+  "observer-right.png": 99,
+  "observer-left.png": 99,
   "man-blind.png": 112,
   "man-clay.png": 114,
   "man-seeing.png": 112,
@@ -133,7 +136,17 @@ async function verifyRuntimeManifest(path) {
       throw new Error(`Reused runtime asset ${output.path} changed dimensions.`);
     }
   }
-  return { ...manifest, reuseStatus: "verified-geometry-independent" };
+  return {
+    ...manifest,
+    foundationCommit: FOUNDATION_COMMIT,
+    reviewStatus: "copilot-accepted-runtime-ready",
+    distributionScope: "private",
+    evidenceCollector: "copilot",
+    acceptanceExecutor: "copilot",
+    reuseStatus: "verified-geometry-independent",
+    releaseEligible: undefined,
+    publicRedistributionApproved: undefined,
+  };
 }
 
 async function processSpec(spec) {
@@ -227,9 +240,10 @@ async function processSpec(spec) {
     selectedCandidate: selection.selectedCandidate,
     selectionReason: selection.reason,
     outputs,
-    reviewStatus: "processed-for-polished-private-preview",
-    releaseEligible: false,
-    publicRedistributionApproved: false,
+    reviewStatus: "copilot-accepted-runtime-ready",
+    distributionScope: "private",
+    evidenceCollector: "copilot",
+    acceptanceExecutor: "copilot",
   };
   await writeFile(
     resolve(outputDirectory, "runtime-manifest.json"),
@@ -270,9 +284,10 @@ async function main() {
     },
     actorFootBaselines,
     assets: [...reused, ...generated],
-    reviewStatus: "polished-private-preview",
-    releaseEligible: false,
-    publicRedistributionApproved: false,
+    reviewStatus: "copilot-accepted-runtime-ready",
+    distributionScope: "private",
+    evidenceCollector: "copilot",
+    acceptanceExecutor: "copilot",
   };
   await mkdir(dirname(globalManifestPath), { recursive: true });
   await writeFile(

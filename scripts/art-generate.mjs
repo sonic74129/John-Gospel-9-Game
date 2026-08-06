@@ -32,7 +32,7 @@ if (
 }
 const DEPLOYMENT = process.env.AZURE_MAI_DEPLOYMENT ?? "mai-image-2-5-pro";
 const TOKEN_RESOURCE = "https://cognitiveservices.azure.com/";
-const FOUNDATION_COMMIT = "6c836d55bfd786b8a55b4e0c7356bf8791505653";
+const FOUNDATION_COMMIT = "b534680100ce4006a7c0bf6a5b50923afaeb6266";
 const EXPECTED_SUBSCRIPTION_ID = "550d1332-62fa-4132-8473-b6af0bc88dfd";
 const EXPECTED_SUBSCRIPTION_NAME = "MCAPS-Hybrid-REQ-132159-2025-sonicchung";
 const REGISTRY_FILES = [
@@ -404,9 +404,10 @@ async function selectCandidate(entry, runName, index, reason) {
       bytes: candidate.bytes,
       sha256: candidate.sha256,
     },
-    reviewStatus: "selected-for-private-preview-processing",
-    releaseEligible: false,
-    publicRedistributionApproved: false,
+    reviewStatus: "copilot-selected-for-runtime-processing",
+    distributionScope: "private",
+    evidenceCollector: "copilot",
+    acceptanceExecutor: "copilot",
     selectedAt: new Date().toISOString(),
   };
   await writeImmutable(join(sourceDirectory, "selection.json"), selection);

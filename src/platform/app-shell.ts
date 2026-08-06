@@ -47,16 +47,13 @@ export function createAppShell(
   handlers: AppShellHandlers,
   options: Readonly<{ hasSave: boolean }> = { hasSave: false },
 ): AppShell {
-  const qaFixtureMarkup = import.meta.env.DEV
+  const debugQaMetadataEnabled =
+    import.meta.env.DEV &&
+    new URLSearchParams(globalThis.location?.search ?? "").has("qa");
+  const qaFixtureMarkup = debugQaMetadataEnabled
     ? '<p class="runtime-badge" data-developer-fixture hidden></p>'
     : "";
-  const qaReviewWarningMarkup = import.meta.env.DEV
-    ? '<p class="review-warning">QA 灰盒：只顯示段落識別與內部審核狀態。</p>'
-    : "";
-  const qaLicenseNoticeMarkup = import.meta.env.DEV
-    ? '<span class="license-notice">QA · 經文待授權／審核</span>'
-    : "";
-  const qaRecallSourceMarkup = import.meta.env.DEV
+  const qaRecallSourceMarkup = debugQaMetadataEnabled
     ? '<p class="dialogue-source">S2 · 遊戲提示 · 不計分</p>'
     : "";
   root.innerHTML = `
@@ -83,7 +80,6 @@ export function createAppShell(
           <p class="start-kicker">約翰福音第九章 · 故事探索</p>
           <h2>以觀察者的身分進入故事</h2>
           <p>使用方向鍵、WASD，或點按地面移動；Space 或點按人物互動。</p>
-          ${qaReviewWarningMarkup}
           <button class="primary-action" type="button" data-continue ${options.hasSave ? "" : "hidden"}>繼續故事</button>
           <button class="primary-action" type="button" data-start ${options.hasSave ? "hidden" : ""}>開始</button>
           <button type="button" data-start-restart ${options.hasSave ? "" : "hidden"}>重新開始</button>
@@ -99,7 +95,6 @@ export function createAppShell(
           <div class="dialogue-placeholder" data-dialogue-placeholder></div>
           <dl class="dialogue-metadata" data-dialogue-metadata></dl>
           <footer>
-            ${qaLicenseNoticeMarkup}
             <button type="button" data-dialogue-next>下一段</button>
           </footer>
         </section>
@@ -383,24 +378,21 @@ export function createAppShell(
       dialogueSpeaker.textContent =
         actorLabelById.get(line.speakerId) ?? "故事人物";
       dialogueProgress.textContent = `${index + 1} / ${lines.length}`;
-      if (import.meta.env.DEV) {
+      dialoguePlaceholder.textContent = line.text;
+      if (import.meta.env.DEV && debugQaMetadataEnabled) {
         dialogue.dataset.speakerId = line.speakerId;
         dialogue.dataset.verseKey = line.verseKey;
         dialogue.dataset.segmentId = line.segmentId;
         dialogue.dataset.sourceLevel = line.sourceLevel;
         dialogueSource.textContent = `${line.sourceLevel} · ${line.sourceLabel}`;
-        dialoguePlaceholder.textContent =
-          `段落識別：${line.segmentId}（逐字內容尚未獲授權／審核）`;
         dialogueMetadata.replaceChildren(
-          metadataRow("Speaker", line.speakerId),
-          metadataRow("Verse key", line.verseKey),
-          metadataRow("Segment ID", line.segmentId),
-          metadataRow("Source", `${line.sourceLevel} / ${line.sourceLabel}`),
+          metadataRow("說話者代碼", line.speakerId),
+          metadataRow("經文索引", line.verseKey),
+          metadataRow("段落索引", line.segmentId),
+          metadataRow("來源", `${line.sourceLevel} / ${line.sourceLabel}`),
         );
       } else {
         dialogueSource.textContent = "";
-        dialoguePlaceholder.textContent =
-          "此段經文內容暫不顯示。請留意人物的行動與回應。";
         dialogueMetadata.replaceChildren();
       }
       dialogueNext.textContent =

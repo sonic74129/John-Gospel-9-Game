@@ -5,6 +5,9 @@ import {
   validateReleaseReadyScripture,
 } from "./scripture.mjs";
 
+const repositoryRoot = new URL("../../", import.meta.url);
+const reviewerRoot = new URL("./", import.meta.url);
+
 function sanitizeErrors(errors, { preserveMessages = false } = {}) {
   if (!Array.isArray(errors)) {
     return [
@@ -66,6 +69,9 @@ export async function runScriptureReleaseCli({
     loaded.scripture,
     loaded.rights,
     {
+      artifactRoot: repositoryRoot,
+      evidenceRoot: repositoryRoot,
+      reviewerRoot,
       ...validationOptions,
       trustedReviewerConfigSha256:
         validationOptions.trustedReviewerConfigSha256 ??

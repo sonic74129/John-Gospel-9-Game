@@ -1058,14 +1058,14 @@ test("B08 formation path moves both the primary actor and canonical participants
   ]);
 });
 
-test("licensed-text fallback keeps QA metadata DEV-only", async () => {
+test("CUV dialogue is player-ready while optional QA metadata stays explicit", async () => {
   const [shell, scripture] = await Promise.all([
     readText("src/platform/app-shell.ts"),
     readJson("src/story/scripture.json"),
   ]);
   assert.match(
     shell,
-    /if \(import\.meta\.env\.DEV\) \{[\s\S]*dialogue\.dataset\.speakerId = line\.speakerId[\s\S]*line\.segmentId[\s\S]*line\.sourceLevel/,
+    /import\.meta\.env\.DEV[\s\S]*URLSearchParams[\s\S]*has\("qa"\)/,
   );
   assert.match(
     shell,
@@ -1073,11 +1073,12 @@ test("licensed-text fallback keeps QA metadata DEV-only", async () => {
   );
   assert.match(
     shell,
-    /此段經文內容暫不顯示。請留意人物的行動與回應。/,
+    /dialoguePlaceholder\.textContent = line\.text/,
   );
-  assert.doesNotMatch(shell, /line\.(?:text|exactText)/);
+  assert.doesNotMatch(shell, /逐字內容尚未獲授權|此段經文內容暫不顯示/);
   for (const verse of scripture.verses) {
-    assert.equal(verse.exactText, null);
+    assert.ok(verse.exactText.length > 0);
+    assert.equal(verse.review.reviewer, "copilot:text");
   }
 });
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
-  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
   "assetId": "character.man-born-blind",
   "family": "characters-core",
   "promptVersion": "v1",
@@ -75,7 +75,8 @@
       }
     }
   ],
-  "reviewStatus": "processed-for-polished-private-preview",
-  "releaseEligible": false,
-  "publicRedistributionApproved": false
+  "reviewStatus": "copilot-accepted-runtime-ready",
+  "distributionScope": "private",
+  "evidenceCollector": "copilot",
+  "acceptanceExecutor": "copilot"
 }

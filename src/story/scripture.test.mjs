@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -595,18 +595,43 @@ test("release CLI never logs loaded scripture when another input fails", async (
   });
 });
 
-test("checked-in draft remains explicitly release-blocked", async () => {
+test("checked-in CUV import is release-ready with automated evidence", async () => {
+  const repositoryRoot = new URL("../../", import.meta.url);
+  const reviewerRoot = new URL("./", import.meta.url);
+  const reviewerBytes = await readFile(
+    new URL("scripture-trusted-reviewers.json", reviewerRoot),
+  );
   const validation = await validateReleaseReadyScripture(
     draft.scripture,
     draft.rights,
+    {
+      artifactRoot: repositoryRoot,
+      evidenceRoot: repositoryRoot,
+      reviewerRoot,
+      trustedReviewerConfigSha256: digest(reviewerBytes),
+    },
   );
-  const errors = errorText(validation);
+  assert.equal(validation.ok, true, errorText(validation));
+  assert.equal(draft.scripture.verses.length, 41);
+  assert.ok(draft.scripture.verses.every(({ exactText }) => exactText.length > 0));
+  assert.equal(draft.rights.release.blocked, false);
+});
 
-  assert.equal(validation.ok, false);
-  assert.match(errors, /contractStatus: must be release-ready/);
-  assert.match(errors, /verses\[0\]\.exactText: is required for release/);
-  assert.match(errors, /rights\.artifact: must be available/);
-  assert.match(errors, /rights\.permissions\.redistribution/);
-  assert.match(errors, /rights\.reviews\.rights/);
-  assert.match(errors, /rights\.release: must be unblocked/);
+test("release CLI resolves checked-in evidence from repository roots", async () => {
+  const reviewerBytes = await readFile(
+    new URL("scripture-trusted-reviewers.json", import.meta.url),
+  );
+  let stdout = "";
+  let stderr = "";
+  const exitCode = await runScriptureReleaseCli({
+    env: {
+      SCRIPTURE_TRUSTED_REVIEWERS_SHA256: digest(reviewerBytes),
+    },
+    stdout: { write: (chunk) => (stdout += chunk) },
+    stderr: { write: (chunk) => (stderr += chunk) },
+  });
+
+  assert.equal(exitCode, 0, stderr);
+  assert.equal(stdout, "John 9 scripture contract is release-ready.\n");
+  assert.equal(stderr, "");
 });

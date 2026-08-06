@@ -25,6 +25,7 @@ export interface CanonicalDialogueLine {
   readonly segmentId: string;
   readonly sourceLevel: "S0";
   readonly sourceLabel: string;
+  readonly text: string;
 }
 
 export interface CanonicalStageGoal {
@@ -156,7 +157,8 @@ function isCanonicalDialogueLine(value: unknown): value is CanonicalDialogueLine
     hasString(value, "verseKey") &&
     hasString(value, "segmentId") &&
     value.sourceLevel === "S0" &&
-    hasString(value, "sourceLabel")
+    hasString(value, "sourceLabel") &&
+    hasString(value, "text")
   );
 }
 

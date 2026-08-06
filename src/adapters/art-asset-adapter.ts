@@ -1,14 +1,15 @@
 import runtimeManifest from "../../public/assets/art/manifest.json" with { type: "json" };
 
 if (
-  runtimeManifest.reviewStatus !== "polished-private-preview" ||
-  runtimeManifest.releaseEligible !== false ||
-  runtimeManifest.publicRedistributionApproved !== false ||
+  runtimeManifest.reviewStatus !== "copilot-accepted-runtime-ready" ||
+  runtimeManifest.distributionScope !== "private" ||
+  runtimeManifest.evidenceCollector !== "copilot" ||
+  runtimeManifest.acceptanceExecutor !== "copilot" ||
   runtimeManifest.worldContract.width !== 2560 ||
   runtimeManifest.worldContract.height !== 1792 ||
   runtimeManifest.worldContract.topology !== "north-south-zig-zag"
 ) {
-  throw new Error("Story-local runtime art is outside the private-preview contract.");
+  throw new Error("Story-local runtime art is outside the release contract.");
 }
 
 interface RuntimeArtAsset {
@@ -66,7 +67,10 @@ export const STORY_ART = Object.freeze({
     waitingStool: runtimeAsset("waiting-stool.png"),
   }),
   actors: Object.freeze({
-    observer: runtimeAsset("observer.png"),
+    observerDown: runtimeAsset("observer-down.png"),
+    observerUp: runtimeAsset("observer-up.png"),
+    observerRight: runtimeAsset("observer-right.png"),
+    observerLeft: runtimeAsset("observer-left.png"),
     manBlind: runtimeAsset("man-blind.png"),
     manClay: runtimeAsset("man-clay.png"),
     manSeeing: runtimeAsset("man-seeing.png"),
@@ -97,7 +101,7 @@ if (STORY_ART_ASSET_LIST.length !== outputs.length) {
 
 export function actorArtForSpawn(actorId: string): Readonly<RuntimeArtAsset> {
   const mapping: Readonly<Record<string, Readonly<RuntimeArtAsset>>> = {
-    "player-observer": STORY_ART.actors.observer,
+    "player-observer": STORY_ART.actors.observerDown,
     "man-born-blind": STORY_ART.actors.manBlind,
     jesus: STORY_ART.actors.jesusIdle,
     "disciple-left": STORY_ART.actors.discipleA,
@@ -114,4 +118,17 @@ export function actorArtForSpawn(actorId: string): Readonly<RuntimeArtAsset> {
     throw new RangeError(`No story-local texture is mapped for ${actorId}.`);
   }
   return art;
+}
+
+export type ObserverDirection = "down" | "up" | "right" | "left";
+
+export function observerArtForDirection(
+  direction: ObserverDirection,
+): Readonly<RuntimeArtAsset> {
+  return {
+    down: STORY_ART.actors.observerDown,
+    up: STORY_ART.actors.observerUp,
+    right: STORY_ART.actors.observerRight,
+    left: STORY_ART.actors.observerLeft,
+  }[direction];
 }

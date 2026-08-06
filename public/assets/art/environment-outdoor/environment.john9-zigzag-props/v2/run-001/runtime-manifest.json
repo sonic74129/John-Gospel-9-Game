@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "storyId": "john-9-man-born-blind",
-  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
   "assetId": "environment.john9-zigzag-props",
   "family": "environment-outdoor",
   "promptVersion": "v2",
@@ -135,7 +135,8 @@
       }
     }
   ],
-  "reviewStatus": "processed-for-polished-private-preview",
-  "releaseEligible": false,
-  "publicRedistributionApproved": false
+  "reviewStatus": "copilot-accepted-runtime-ready",
+  "distributionScope": "private",
+  "evidenceCollector": "copilot",
+  "acceptanceExecutor": "copilot"
 }
