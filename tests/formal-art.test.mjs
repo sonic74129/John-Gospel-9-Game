@@ -61,7 +61,7 @@ test("formal art manifest pins the v2 zig-zag release contract", () => {
     height: 1792,
     topology: "north-south-zig-zag",
   });
-  assert.equal(review.runtimeInventory.files, 28);
+  assert.equal(review.runtimeInventory.files, 35);
   assert.deepEqual(review.runtimeInventory.worldDimensions, {
     width: 2560,
     height: 1792,
@@ -85,15 +85,26 @@ test("formal environment review points to the exact processed selections", () =>
   }
 });
 
-test("all 28 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
+test("all 35 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
   const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
-  assert.equal(outputs.length, 28);
+  assert.equal(outputs.length, 35);
   assert.equal(new Set(outputs.map(({ path }) => path)).size, outputs.length);
   for (const output of outputs) {
     const bytes = await readFile(output.path);
     assert.equal(bytes.byteLength, output.bytes, output.path);
     assert.equal(sha256(bytes), output.sha256, output.path);
     assert.deepEqual(imageDimensions(bytes, output.path), output.dimensions);
+  }
+});
+
+test("dialogue portraits are traceable source-art derivatives, not newly generated imagery", () => {
+  const portraits = manifest.assets.filter(({ family }) => family === "dialogue-portraits");
+  assert.equal(portraits.length, 3);
+  assert.equal(portraits.flatMap(({ outputs }) => outputs).length, 7);
+  for (const portrait of portraits) {
+    assert.equal(portrait.derivation?.kind, "source-crop-upscale");
+    assert.equal(portrait.derivation?.generatedNewImagery, false);
+    assert.match(portrait.selectionReason, /no new image generation/i);
   }
 });
 

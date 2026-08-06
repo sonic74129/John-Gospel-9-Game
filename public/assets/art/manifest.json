@@ -595,6 +595,192 @@
       "distributionScope": "private",
       "evidenceCollector": "copilot",
       "acceptanceExecutor": "copilot"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "storyId": "john-9-man-born-blind",
+      "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
+      "assetId": "portrait.john9-dialogue-jesus",
+      "family": "dialogue-portraits",
+      "promptVersion": "v1",
+      "run": "run-001",
+      "source": {
+        "path": "production/art-source/characters-core/character.jesus-john9/v1/run-001/selected-source.png",
+        "bytes": 1065998,
+        "sha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e"
+      },
+      "selectedCandidate": null,
+      "selectionReason": "Derived non-destructively from character.jesus-john9 selected source art for the dialogue portrait UI; no new image generation or photorealistic claim.",
+      "derivation": {
+        "kind": "source-crop-upscale",
+        "sourceAssetId": "character.jesus-john9",
+        "generatedNewImagery": false
+      },
+      "outputs": [
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-jesus.png",
+          "mediaType": "image/png",
+          "bytes": 270326,
+          "sha256": "6bc34ae1fe51c309d2b6b99c1adb55dd99a993cad05a2cc1464b48cef74fcff5",
+          "dimensions": {
+            "width": 360,
+            "height": 568
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=342:540:682:180,scale=360:568:flags=lanczos"
+          }
+        }
+      ],
+      "reviewStatus": "copilot-accepted-runtime-ready",
+      "distributionScope": "private",
+      "evidenceCollector": "copilot",
+      "acceptanceExecutor": "copilot"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "storyId": "john-9-man-born-blind",
+      "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
+      "assetId": "portrait.john9-dialogue-man",
+      "family": "dialogue-portraits",
+      "promptVersion": "v1",
+      "run": "run-001",
+      "source": {
+        "path": "production/art-source/characters-core/character.man-born-blind/v1/run-001/selected-source.png",
+        "bytes": 890506,
+        "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765"
+      },
+      "selectedCandidate": null,
+      "selectionReason": "Derived non-destructively from character.man-born-blind selected source art for the dialogue portrait UI; no new image generation or photorealistic claim.",
+      "derivation": {
+        "kind": "source-crop-upscale",
+        "sourceAssetId": "character.man-born-blind",
+        "generatedNewImagery": false
+      },
+      "outputs": [
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-man-blind.png",
+          "mediaType": "image/png",
+          "bytes": 228572,
+          "sha256": "ae2e782038d4004670077df9646c84fef9aecb7c1cd8b2b8fc267b4602cd3b79",
+          "dimensions": {
+            "width": 320,
+            "height": 572
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=280:500:0:340,scale=320:572:flags=lanczos"
+          }
+        },
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-man-seeing.png",
+          "mediaType": "image/png",
+          "bytes": 199272,
+          "sha256": "20930a1f335031bc59319b9644959b0e7e7116202726e98227e5343afe3d4171",
+          "dimensions": {
+            "width": 320,
+            "height": 576
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=300:540:500:220,scale=320:576:flags=lanczos"
+          }
+        }
+      ],
+      "reviewStatus": "copilot-accepted-runtime-ready",
+      "distributionScope": "private",
+      "evidenceCollector": "copilot",
+      "acceptanceExecutor": "copilot"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "storyId": "john-9-man-born-blind",
+      "foundationCommit": "b534680100ce4006a7c0bf6a5b50923afaeb6266",
+      "assetId": "portrait.john9-dialogue-supporting",
+      "family": "dialogue-portraits",
+      "promptVersion": "v1",
+      "run": "run-001",
+      "source": {
+        "path": "production/art-source/characters-supporting/character.john9-supporting/v1/run-001/selected-source.png",
+        "bytes": 1180474,
+        "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce"
+      },
+      "selectedCandidate": null,
+      "selectionReason": "Derived non-destructively from character.john9-supporting selected source art for the dialogue portrait UI; no new image generation or photorealistic claim.",
+      "derivation": {
+        "kind": "source-crop-upscale",
+        "sourceAssetId": "character.john9-supporting",
+        "generatedNewImagery": false
+      },
+      "outputs": [
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-disciples.png",
+          "mediaType": "image/png",
+          "bytes": 218486,
+          "sha256": "9172a6ced86f3904c086132deaad450a44edc4ddd013f35b43f0d5ae1ffd7218",
+          "dimensions": {
+            "width": 320,
+            "height": 650
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:520:256:0,scale=320:650:flags=lanczos"
+          }
+        },
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-neighbors.png",
+          "mediaType": "image/png",
+          "bytes": 206909,
+          "sha256": "e7c2a47c4964386e8ec3555e092342d0a6669ef6de58630a01593b54b9c58961",
+          "dimensions": {
+            "width": 320,
+            "height": 650
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:520:512:0,scale=320:650:flags=lanczos"
+          }
+        },
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-authorities.png",
+          "mediaType": "image/png",
+          "bytes": 214462,
+          "sha256": "83e5dbacd6d6dff021ef3d57734f287d7a4ac1caf28cedaf93d86bdfed8434ff",
+          "dimensions": {
+            "width": 320,
+            "height": 650
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:520:0:0,scale=320:650:flags=lanczos"
+          }
+        },
+        {
+          "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-parents.png",
+          "mediaType": "image/png",
+          "bytes": 207194,
+          "sha256": "1109febec04c9c281931f39e5603e91a53eb3905d2acb1ec6902ebedad023ba7",
+          "dimensions": {
+            "width": 320,
+            "height": 650
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:520:768:0,scale=320:650:flags=lanczos"
+          }
+        }
+      ],
+      "reviewStatus": "copilot-accepted-runtime-ready",
+      "distributionScope": "private",
+      "evidenceCollector": "copilot",
+      "acceptanceExecutor": "copilot"
     }
   ],
   "reviewStatus": "copilot-accepted-runtime-ready",

@@ -4,6 +4,7 @@ import type {
   SliceSequenceUi,
 } from "../adapters/sequence-adapter.ts";
 import { ACTORS } from "../adapters/story-contracts.ts";
+import { dialoguePortraitFor } from "../adapters/dialogue-portraits.ts";
 import { APPROVED_STUDY_QUESTIONS } from "./ending-study.ts";
 
 export interface AppShellHandlers {
@@ -79,7 +80,7 @@ export function createAppShell(
         <div class="start-screen" data-start-screen>
           <p class="start-kicker">約翰福音第九章 · 故事探索</p>
           <h2>以觀察者的身分進入故事</h2>
-          <p>使用方向鍵、WASD，或點按地面移動；Space 或點按人物互動。</p>
+          <p>自動演出會帶你進入故事；自由觀察時可使用方向鍵、WASD 或點按地面移動。Space／Enter 會推進對話或互動。</p>
           <button class="primary-action" type="button" data-continue ${options.hasSave ? "" : "hidden"}>繼續故事</button>
           <button class="primary-action" type="button" data-start ${options.hasSave ? "hidden" : ""}>開始</button>
           <button type="button" data-start-restart ${options.hasSave ? "" : "hidden"}>重新開始</button>
@@ -92,8 +93,16 @@ export function createAppShell(
             </div>
             <p class="dialogue-progress" data-dialogue-progress></p>
           </header>
-          <div class="dialogue-placeholder" data-dialogue-placeholder></div>
-          <dl class="dialogue-metadata" data-dialogue-metadata></dl>
+          <div class="dialogue-content">
+            <figure class="dialogue-portrait" data-dialogue-portrait>
+              <img data-dialogue-portrait-image alt="" />
+              <figcaption data-dialogue-portrait-note>選用原始角色畫作裁切</figcaption>
+            </figure>
+            <div class="dialogue-copy">
+              <div class="dialogue-placeholder" data-dialogue-placeholder></div>
+              <dl class="dialogue-metadata" data-dialogue-metadata></dl>
+            </div>
+          </div>
           <footer>
             <button type="button" data-dialogue-next>下一段</button>
           </footer>
@@ -200,6 +209,18 @@ export function createAppShell(
     root,
     "[data-dialogue-placeholder]",
   );
+  const dialoguePortrait = requireElement<HTMLElement>(
+    root,
+    "[data-dialogue-portrait]",
+  );
+  const dialoguePortraitImage = requireElement<HTMLImageElement>(
+    root,
+    "[data-dialogue-portrait-image]",
+  );
+  const dialoguePortraitNote = requireElement<HTMLElement>(
+    root,
+    "[data-dialogue-portrait-note]",
+  );
   const dialogueMetadata = requireElement<HTMLElement>(
     root,
     "[data-dialogue-metadata]",
@@ -252,6 +273,7 @@ export function createAppShell(
   let started = false;
   let resumeAfterRestartCancel = false;
   let restartButtonStates = new Map<HTMLButtonElement, boolean>();
+  let advanceDialogue: (() => void) | null = null;
 
   studyQuestions.replaceChildren(
     ...APPROVED_STUDY_QUESTIONS.map((question) => {
@@ -377,6 +399,11 @@ export function createAppShell(
       }
       dialogueSpeaker.textContent =
         actorLabelById.get(line.speakerId) ?? "故事人物";
+      const portrait = dialoguePortraitFor(line.speakerId, line.beatId);
+      dialoguePortraitImage.src = `${import.meta.env.BASE_URL}${portrait.path}`;
+      dialoguePortraitImage.alt = portrait.alt;
+      dialoguePortrait.dataset.provenance = portrait.provenance;
+      dialoguePortraitNote.textContent = "選用原始角色畫作裁切";
       dialogueProgress.textContent = `${index + 1} / ${lines.length}`;
       dialoguePlaceholder.textContent = line.text;
       if (import.meta.env.DEV && debugQaMetadataEnabled) {
@@ -405,6 +432,7 @@ export function createAppShell(
       const cleanup = (): void => {
         dialogueNext.removeEventListener("click", onNext);
         signal.removeEventListener("abort", onAbort);
+        advanceDialogue = null;
         dialogue.hidden = true;
         delete dialogue.dataset.blocking;
       };
@@ -424,6 +452,7 @@ export function createAppShell(
         cleanup();
         reject(abortError());
       };
+      advanceDialogue = onNext;
       dialogueNext.addEventListener("click", onNext);
       signal.addEventListener("abort", onAbort, { once: true });
     });
@@ -622,6 +651,15 @@ export function createAppShell(
   });
   recallDismiss.addEventListener("click", () => {
     recall.hidden = true;
+  });
+  window.addEventListener("keydown", (event) => {
+    if (
+      (event.code === "Space" || event.code === "Enter") &&
+      advanceDialogue !== null
+    ) {
+      event.preventDefault();
+      advanceDialogue();
+    }
   });
 
   return shell;

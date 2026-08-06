@@ -87,12 +87,22 @@ export const STORY_ART = Object.freeze({
     father: runtimeAsset("father.png"),
     mother: runtimeAsset("mother.png"),
   }),
+  portraits: Object.freeze({
+    jesus: runtimeAsset("portrait-jesus.png"),
+    manBlind: runtimeAsset("portrait-man-blind.png"),
+    manSeeing: runtimeAsset("portrait-man-seeing.png"),
+    disciples: runtimeAsset("portrait-disciples.png"),
+    neighbors: runtimeAsset("portrait-neighbors.png"),
+    authorities: runtimeAsset("portrait-authorities.png"),
+    parents: runtimeAsset("portrait-parents.png"),
+  }),
 });
 
 export const STORY_ART_ASSET_LIST = Object.freeze([
   STORY_ART.worldBase,
   ...Object.values(STORY_ART.props),
   ...Object.values(STORY_ART.actors),
+  ...Object.values(STORY_ART.portraits),
 ]);
 
 if (STORY_ART_ASSET_LIST.length !== outputs.length) {

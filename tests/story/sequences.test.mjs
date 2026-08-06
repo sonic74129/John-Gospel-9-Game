@@ -23,6 +23,7 @@ const CANONICAL_WORLD_ANCHORS = [
   "neighbors.pool-entry",
   "neighbors.center",
   "neighbors.group-left",
+  "neighbors.gathered",
   "inquiry.gate",
   "inquiry.man-center",
   "inquiry.pharisees-left",
@@ -43,6 +44,7 @@ const CANONICAL_WORLD_PATHS = [
   "man-to-pool",
   "pool-wash-to-return",
   "pool-to-neighbors",
+  "neighbors-to-center",
   "group-to-inquiry",
   "parents-entry",
   "parents-exit",
@@ -60,6 +62,7 @@ const ACTORS_BY_PATH_SUBJECT = Object.freeze({
     primaryActorId: "man-born-blind",
     participantActorIds: ["neighbors"],
   },
+  neighbors: { primaryActorId: "neighbors", participantActorIds: [] },
   parents: { primaryActorId: "parents", participantActorIds: [] },
   jesus: { primaryActorId: "jesus", participantActorIds: [] },
   "camera-focus": { primaryActorId: null, participantActorIds: [] },
@@ -226,7 +229,7 @@ test("hidden entrance actors are revealed before movement and dialogue", () => {
       revealedEntranceActors.push(`${sequence.beatId}:${actorId}`);
     }
   }
-  assert.deepEqual(revealedEntranceActors, ["b11:parents", "b18:jesus"]);
+  assert.deepEqual(revealedEntranceActors, ["b06:neighbors", "b11:parents", "b18:jesus"]);
 });
 
 test("sequence contracts use plan vocabulary without embedding coordinates", () => {

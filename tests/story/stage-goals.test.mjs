@@ -15,4 +15,8 @@ test("all beats have short non-spoiling zh-Hant goals", () => {
     assert.ok([...goal.description].length <= 8);
     assert.doesNotMatch(goal.description, /耶穌|神蹟|瞎眼|看見|法利賽/);
   }
+  assert.deepEqual(
+    [...new Set(STAGE_GOALS.map(({ description }) => description))],
+    ["路旁", "西羅亞", "鄰舍", "查問", "重遇"],
+  );
 });

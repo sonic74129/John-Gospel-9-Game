@@ -625,7 +625,7 @@ test("browser cancellation restores scene state and pause gates DOM progression"
     /restoreRuntimeState\(snapshot: GrayboxSceneSnapshot\)[\s\S]*if \(this\.#tearingDown\)/,
   );
   assert.match(scene, /this\.cameras\.main\.resetFX\(\)/);
-  assert.match(scene, /this\.time\.delayedCall\(250/);
+  assert.match(scene, /this\.time\.delayedCall\(140/);
   assert.doesNotMatch(
     scene,
     /followCameraPath[\s\S]*window\.setTimeout/,
@@ -639,68 +639,28 @@ test("browser cancellation restores scene state and pause gates DOM progression"
   assert.match(shell, /skipButton\.disabled = value/);
 });
 
-test("B06 fires exactly once when one movement segment sweeps across neighbors.center", async () => {
-  const neighborsCenter = anchorContract.anchors.find(
-    ({ id }) => id === "neighbors.center",
-  ).position;
-  const traversal = {
-    previousPosition: {
-      x: neighborsCenter.x - ARRIVAL_RADIUS_PIXELS - 58,
-      y: neighborsCenter.y,
-    },
-    currentPosition: {
-      x: neighborsCenter.x + ARRIVAL_RADIUS_PIXELS + 48,
-      y: neighborsCenter.y,
-    },
-  };
-  assert.equal(
-    Math.hypot(
-      traversal.previousPosition.x - neighborsCenter.x,
-      traversal.previousPosition.y - neighborsCenter.y,
-    ) > ARRIVAL_RADIUS_PIXELS,
-    true,
-  );
-  assert.equal(
-    Math.hypot(
-      traversal.currentPosition.x - neighborsCenter.x,
-      traversal.currentPosition.y - neighborsCenter.y,
-    ) > ARRIVAL_RADIUS_PIXELS,
-    true,
-  );
-  assert.equal(
-    segmentIntersectsArrivalRadius(
-      traversal.previousPosition,
-      traversal.currentPosition,
-      neighborsCenter,
-    ),
-    true,
-  );
-  assert.equal(
-    segmentIntersectsArrivalRadius(
-      { ...traversal.previousPosition, y: neighborsCenter.y + 73 },
-      { ...traversal.currentPosition, y: neighborsCenter.y + 73 },
-      neighborsCenter,
-    ),
-    false,
-  );
-
-  const resolver = {
-    anchorPosition: (anchorId) =>
-      anchorContract.anchors.find(({ id }) => id === anchorId).position,
-    storyActorPosition: () => {
-      throw new Error("B06 arrival must not resolve an actor position.");
-    },
-  };
-  const event = worldNavigationEvent(
-    STORY_BEATS[5].trigger,
-    traversal,
-    resolver,
-  );
-  assert.deepEqual(event, {
-    type: "event",
-    name: "arrival:neighbors.center",
-  });
-
+test("opening and neighbor stages hand off automatically while neighbors enter actively", async () => {
+  assert.deepEqual(STORY_BEATS.slice(0, 8).map(({ trigger }) => trigger), [
+    { type: "event", event: "story:start" },
+    { type: "event", event: "beat:b01:completed" },
+    { type: "event", event: "beat:b02:completed" },
+    { type: "event", event: "beat:b03:completed" },
+    { type: "event", event: "beat:b04:completed" },
+    { type: "event", event: "beat:b05:completed" },
+    { type: "event", event: "beat:b06:completed" },
+    { type: "event", event: "beat:b07:completed" },
+  ]);
+  const neighborSteps = STORY_BEATS[5].sequence.steps;
+  assert.deepEqual(neighborSteps.slice(0, 2).map(({ command, payload }) => [command, payload]), [
+    ["set-actor-visible", { actorId: "neighbors", visible: true }],
+    ["actor-follow-path", {
+      pathId: "pool-to-neighbors",
+      subjectId: "man-born-blind",
+      primaryActorId: "man-born-blind",
+      participantActorIds: [],
+    }],
+  ]);
+  assert.equal(neighborSteps[2].payload.pathId, "neighbors-to-center");
   const executed = [];
   const controller = new SliceStoryController({
     runBeat: async (beat) => {
@@ -709,10 +669,11 @@ test("B06 fires exactly once when one movement segment sweeps across neighbors.c
     },
   });
   controller.restoreCompletedBeatIds(["b01", "b02", "b03", "b04", "b05"]);
-  assert.equal((await controller.dispatch(event)).advanced, true);
-  assert.equal((await controller.dispatch(event)).advanced, false);
-  assert.deepEqual(executed, ["b06"]);
-  assert.equal(controller.engine.currentBeat?.id, "b07");
+  for (const event of ["beat:b05:completed", "beat:b06:completed", "beat:b07:completed"]) {
+    assert.equal((await controller.dispatch({ type: "event", name: event })).advanced, true);
+  }
+  assert.deepEqual(executed, ["b06", "b07", "b08"]);
+  assert.equal(controller.engine.currentBeat?.id, "b09");
 });
 
 test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-safe", async () => {
@@ -722,14 +683,9 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
     readText("src/platform/app-shell.ts"),
     readText("src/platform/styles.css"),
   ]);
-  const positions = {
-    "neighbors.center": { x: 1830, y: 820 },
-    "man-born-blind": { x: 1830, y: 820 },
-    neighbors: { x: 1730, y: 900 },
-  };
+  const positions = { "man-born-blind": { x: 1830, y: 820 } };
   const labels = {
     "man-born-blind": "生來瞎眼的人",
-    neighbors: "鄰舍",
   };
   const resolver = {
     anchorPosition: (anchorId) => positions[anchorId],
@@ -737,73 +693,41 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
     storyActorLabel: (actorId) => labels[actorId],
   };
   const playerPosition = { x: 1600, y: 900 };
-  const arrival = resolveWorldNavigationObjective(
-    STORY_BEATS[5].trigger,
-    resolver,
-  );
-  const proximity = resolveWorldNavigationObjective(
-    STORY_BEATS[6].trigger,
-    resolver,
-  );
   const interaction = resolveWorldNavigationObjective(
-    STORY_BEATS[7].trigger,
+    STORY_BEATS[17].trigger,
     resolver,
   );
-  assert.deepEqual(arrival, {
-    kind: "arrival",
-    targetId: "neighbors.center",
-    label: "目標地點",
-    position: positions["neighbors.center"],
-  });
-  assert.equal(proximity.kind, "proximity");
-  assert.equal(proximity.targetId, "man-born-blind");
   assert.equal(interaction.kind, "interaction");
-  assert.equal(interaction.targetId, "neighbors");
-  const arrivalHint = describeWorldNavigationObjective(
-    arrival,
-    playerPosition,
-  );
-  const proximityHint = describeWorldNavigationObjective(
-    proximity,
-    playerPosition,
-  );
+  assert.equal(interaction.targetId, "man-born-blind");
   const interactionHint = describeWorldNavigationObjective(
     interaction,
     playerPosition,
   );
   assert.match(
-    arrivalHint,
-    /前往目標地點.*距離約.*點按標記移動/,
-  );
-  assert.match(
-    proximityHint,
-    /接近生來瞎眼的人.*接近後自動繼續/,
-  );
-  assert.match(
     interactionHint,
-    /與鄰舍互動.*Space 或點按人物/,
+    /與生來瞎眼的人互動.*Space 或點按人物/,
   );
-  for (const playerHint of [arrivalHint, proximityHint, interactionHint]) {
+  for (const playerHint of [interactionHint]) {
     assert.doesNotMatch(
       playerHint,
       /neighbors\.center|man-born-blind|地圖單位|DEV|debug|灰盒/i,
     );
   }
-  const unchangedHint = describeWorldNavigationObjective(arrival, {
+  const unchangedHint = describeWorldNavigationObjective(interaction, {
     x: playerPosition.x + 8,
     y: playerPosition.y,
   });
-  const closerHint = describeWorldNavigationObjective(arrival, {
+  const closerHint = describeWorldNavigationObjective(interaction, {
     x: playerPosition.x + 200,
     y: playerPosition.y,
   });
-  const redirectedHint = describeWorldNavigationObjective(arrival, {
-    x: arrival.position.x,
-    y: arrival.position.y - 160,
+  const redirectedHint = describeWorldNavigationObjective(interaction, {
+    x: interaction.position.x,
+    y: interaction.position.y - 160,
   });
-  assert.equal(unchangedHint, arrivalHint);
-  assert.equal(navigationHintNeedsUpdate(arrivalHint, unchangedHint), false);
-  assert.equal(navigationHintNeedsUpdate(arrivalHint, closerHint), true);
+  assert.equal(unchangedHint, interactionHint);
+  assert.equal(navigationHintNeedsUpdate(interactionHint, unchangedHint), false);
+  assert.equal(navigationHintNeedsUpdate(interactionHint, closerHint), true);
   assert.equal(navigationHintNeedsUpdate(closerHint, redirectedHint), true);
   assert.equal(navigationHintNeedsUpdate(redirectedHint, null), true);
 
@@ -831,6 +755,13 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
     scene,
     /#activateNavigationObjective[\s\S]*this\.#world\.findPath\(/,
   );
+  assert.match(scene, /PLAYER_MOVEMENT_SPEED = 350/);
+  assert.match(scene, /PLAYER_MOVEMENT_SPEED \* delta/);
+  assert.match(scene, /observerFollowsMan[\s\S]*path\.id === "man-to-pool"/);
+  assert.match(scene, /path\.id === "man-to-pool"[\s\S]*"walking-blind"[\s\S]*"walking-seeing"/);
+  assert.match(scene, /"walking-blind": STORY_ART\.actors\.manClay/);
+  assert.match(scene, /"walking-seeing": STORY_ART\.actors\.manSeeing/);
+  assert.doesNotMatch(scene, /pose = "kneeling"/);
   assert.match(
     scene,
     /beginTeardown[\s\S]*setNavigationObjective\(null\)/,
@@ -841,6 +772,10 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
     /if \(!navigationHintNeedsUpdate\(navigationHintMessage, message\)\) \{\s*return;/,
   );
   assert.match(shell, /setCompleted:[\s\S]*setNavigationHint\(null\)/);
+  assert.match(shell, /event\.code === "Space" \|\| event\.code === "Enter"/);
+  assert.match(shell, /event\.preventDefault\(\);[\s\S]*advanceDialogue\(\)/);
+  assert.match(shell, /data-dialogue-portrait-image/);
+  assert.match(styles, /\.dialogue-content \{[\s\S]*grid-template-columns/);
   assert.match(
     styles,
     /@media \(max-width: 640px\)[\s\S]*\.navigation-hint \{[\s\S]*top: 5\.5rem[\s\S]*max-width: calc\(100% - 1rem\)/,
@@ -950,7 +885,7 @@ test("B08-B19 preserve canonical trigger, path, actor, camera, and testimony beh
   assert.deepEqual(
     laterBeats.map(({ id, trigger }) => [id, trigger]),
     [
-      ["b08", { type: "event", event: "interact:neighbors" }],
+      ["b08", { type: "event", event: "beat:b07:completed" }],
       ["b09", { type: "event", event: "beat:b08:completed" }],
       ["b10", { type: "event", event: "beat:b09:completed" }],
       ["b11", { type: "event", event: "beat:b10:completed" }],
@@ -960,7 +895,7 @@ test("B08-B19 preserve canonical trigger, path, actor, camera, and testimony beh
       ["b15", { type: "event", event: "beat:b14:completed" }],
       ["b16", { type: "event", event: "beat:b15:completed" }],
       ["b17", { type: "event", event: "beat:b16:completed" }],
-      ["b18", { type: "event", event: "arrival:outside.expelled" }],
+      ["b18", { type: "event", event: "interact:man-born-blind" }],
       ["b19", { type: "event", event: "beat:b18:completed" }],
     ],
   );

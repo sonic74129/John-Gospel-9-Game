@@ -31,6 +31,7 @@ const COLLISION_COLOR = 0x3c352f;
 const WATER_COLLISION_COLOR = 0x526c73;
 const PORTAL_COLOR = 0xe2d2b2;
 const LANDMARK_COLOR = 0xffe2a6;
+export const PLAYER_MOVEMENT_SPEED = 350;
 
 function drawPolygon(
   graphics: Phaser.GameObjects.Graphics,
@@ -155,6 +156,7 @@ export class GrayboxScene extends Phaser.Scene {
   #clay?: Phaser.GameObjects.Image;
   #cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
   #interactKey?: Phaser.Input.Keyboard.Key;
+  #interactEnterKey?: Phaser.Input.Keyboard.Key;
   #wasd?: Readonly<{
     up: Phaser.Input.Keyboard.Key;
     down: Phaser.Input.Keyboard.Key;
@@ -209,6 +211,9 @@ export class GrayboxScene extends Phaser.Scene {
       .setOrigin(0)
       .setDisplaySize(definition.width, definition.height)
       .setDepth(0);
+    this.add
+      .rectangle(630, 875, 760, 560, 0x21191a, 0.18)
+      .setDepth(1);
 
     const debugEnabled =
       import.meta.env.DEV &&
@@ -326,6 +331,7 @@ export class GrayboxScene extends Phaser.Scene {
           art.key,
         )
         .setOrigin(0.5, art.footBaseline! / art.height)
+        .setScale(actor.state.storyActorId === "man-born-blind" ? 1.45 : 1)
         .setDepth(this.#actorDepth(actor.definition.position.y));
       const label = this.add
         .text(actor.definition.position.x, actor.definition.position.y - 84, actor.state.label, {
@@ -399,6 +405,9 @@ export class GrayboxScene extends Phaser.Scene {
       this.#interactKey = this.input.keyboard.addKey(
         Phaser.Input.Keyboard.KeyCodes.SPACE,
       );
+      this.#interactEnterKey = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.ENTER,
+      );
     }
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       if (this.#player === undefined || this.#tearingDown) {
@@ -442,8 +451,10 @@ export class GrayboxScene extends Phaser.Scene {
     this.#syncOccluderAlpha();
     if (
       this.#interactionAllowed() &&
-      this.#interactKey !== undefined &&
-      Phaser.Input.Keyboard.JustDown(this.#interactKey)
+      ((this.#interactKey !== undefined &&
+        Phaser.Input.Keyboard.JustDown(this.#interactKey)) ||
+        (this.#interactEnterKey !== undefined &&
+          Phaser.Input.Keyboard.JustDown(this.#interactEnterKey)))
     ) {
       const nearby = this.#nearestStoryActor(this.playerPosition(), 110);
       if (nearby !== undefined) {
@@ -460,7 +471,7 @@ export class GrayboxScene extends Phaser.Scene {
       Number(this.#cursorKeys?.down.isDown || this.#wasd?.down.isDown) -
         Number(this.#cursorKeys?.up.isDown || this.#wasd?.up.isDown),
     );
-    const distance = (240 * delta) / 1000;
+    const distance = (PLAYER_MOVEMENT_SPEED * delta) / 1000;
 
     if (direction.lengthSq() > 0) {
       this.#path = [];
@@ -698,7 +709,7 @@ export class GrayboxScene extends Phaser.Scene {
     const anchor = this.#requireAnchor(anchorId);
     this.cameras.main.stopFollow();
     this.#cameraFollowingObserver = false;
-    this.cameras.main.pan(anchor.x, anchor.y, 350, "Sine.easeInOut");
+    this.cameras.main.pan(anchor.x, anchor.y, 180, "Sine.easeInOut");
   }
 
   setActorPose(storyActorId: string, pose: string): void {
@@ -731,9 +742,22 @@ export class GrayboxScene extends Phaser.Scene {
       throw new RangeError(`Unknown canonical path ${pathId}.`);
     }
     const visuals = this.#storyActorVisuals(storyActorId);
+    const observerFollowsMan =
+      path.id === "man-to-pool" && storyActorId === "man-born-blind";
+    const originalPoses = visuals.map(({ pose }) => pose);
+    for (const visual of visuals) {
+      visual.pose =
+        storyActorId === "man-born-blind"
+          ? path.id === "man-to-pool"
+            ? "walking-blind"
+            : "walking-seeing"
+          : "walking";
+    }
+    this.#syncNarrativeTextures();
     for (const point of path.points) {
       await Promise.all(
-        visuals.map((visual) => {
+        [
+          ...visuals.map((visual) => {
           const target = {
             x: point.x + visual.anchorOffset.x,
             y: point.y + visual.anchorOffset.y,
@@ -750,9 +774,31 @@ export class GrayboxScene extends Phaser.Scene {
             (distance / path.movementSpeed) * 1000,
             signal,
           );
-        }),
+          }),
+          ...(observerFollowsMan && this.#player !== undefined
+            ? [
+                this.#tweenVisual(
+                  this.#player,
+                  { x: point.x - 60, y: point.y + 40 },
+                  (Phaser.Math.Distance.Between(
+                    this.#player.body.x,
+                    this.#player.body.y,
+                    point.x - 60,
+                    point.y + 40,
+                  ) /
+                    path.movementSpeed) *
+                    1000,
+                  signal,
+                ),
+              ]
+            : []),
+        ],
       );
     }
+    for (const [index, visual] of visuals.entries()) {
+      visual.pose = originalPoses[index]!;
+    }
+    this.#syncNarrativeTextures();
   }
 
   async followCameraPath(pathId: string, signal: AbortSignal): Promise<void> {
@@ -766,7 +812,7 @@ export class GrayboxScene extends Phaser.Scene {
       if (signal.aborted) {
         throw abortError();
       }
-      this.cameras.main.pan(point.x, point.y, 250, "Sine.easeInOut");
+      this.cameras.main.pan(point.x, point.y, 140, "Sine.easeInOut");
       await new Promise<void>((resolve, reject) => {
         let settled = false;
         let timer: Phaser.Time.TimerEvent;
@@ -782,7 +828,7 @@ export class GrayboxScene extends Phaser.Scene {
           timer.remove(false);
           finish(() => reject(abortError()));
         };
-        timer = this.time.delayedCall(250, () => finish(resolve));
+        timer = this.time.delayedCall(140, () => finish(resolve));
         signal.addEventListener("abort", onAbort, { once: true });
       });
     }
@@ -1212,16 +1258,20 @@ export class GrayboxScene extends Phaser.Scene {
     if (man !== undefined) {
       const artByPose = {
         idle: STORY_ART.actors.manBlind,
+        "seated-blind": STORY_ART.actors.manBlind,
         "clay-on-eyes": STORY_ART.actors.manClay,
+        "walking-blind": STORY_ART.actors.manClay,
+        "walking-seeing": STORY_ART.actors.manSeeing,
         "standing-seeing": STORY_ART.actors.manSeeing,
-        worship: STORY_ART.actors.manWorship,
+        "standing-belief": STORY_ART.actors.manSeeing,
       };
       const art =
         artByPose[man.pose as keyof typeof artByPose] ??
         STORY_ART.actors.manSeeing;
       man.body
         .setTexture(art.key)
-        .setOrigin(0.5, art.footBaseline! / art.height);
+        .setOrigin(0.5, art.footBaseline! / art.height)
+        .setScale(1.45);
     }
 
     const jesus = this.#storyActorVisuals("jesus")[0];

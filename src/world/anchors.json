@@ -166,6 +166,15 @@
       "clearanceRadius": 58
     },
     {
+      "id": "neighbors.gathered",
+      "regionId": "neighbor-gathering",
+      "sourceLevel": "approved-bridge",
+      "kind": "group-staging",
+      "position": { "x": 1400, "y": 820 },
+      "facing": "north-east",
+      "clearanceRadius": 58
+    },
+    {
       "id": "neighbors.group-right",
       "regionId": "neighbor-gathering",
       "sourceLevel": "approved-bridge",

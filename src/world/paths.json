@@ -3,8 +3,8 @@
   "worldId": "john-9-jerusalem-graybox",
   "contractType": "sequence-paths",
   "travelTargetSeconds": {
-    "minimum": 10,
-    "maximum": 20
+    "minimum": 2,
+    "maximum": 5
   },
   "sequencePaths": [
     {
@@ -13,8 +13,8 @@
       "subject": "man-born-blind",
       "startAnchorId": "roadside.blind-man-seat",
       "endAnchorId": "pool.wash-edge",
-      "expectedDurationSeconds": 16,
-      "movementSpeed": 52,
+      "expectedDurationSeconds": 4,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 520, "y": 900 },
@@ -32,8 +32,8 @@
       "subject": "man-born-blind",
       "startAnchorId": "pool.wash-edge",
       "endAnchorId": "pool.return",
-      "expectedDurationSeconds": 10,
-      "movementSpeed": 30,
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 1120, "y": 1440 },
@@ -48,8 +48,8 @@
       "subject": "man-born-blind",
       "startAnchorId": "pool.return",
       "endAnchorId": "neighbors.center",
-      "expectedDurationSeconds": 14,
-      "movementSpeed": 35,
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 1320, "y": 1220 },
@@ -60,13 +60,27 @@
       ]
     },
     {
+      "id": "neighbors-to-center",
+      "sourceLevel": "approved-bridge",
+      "subject": "neighbors",
+      "startAnchorId": "neighbors.group-left",
+      "endAnchorId": "neighbors.gathered",
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 340,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1380, "y": 860 },
+        { "x": 1400, "y": 820 }
+      ]
+    },
+    {
       "id": "group-to-inquiry",
       "sourceLevel": "approved-bridge",
       "subject": "man-and-neighbor-group",
       "startAnchorId": "neighbors.center",
       "endAnchorId": "inquiry.man-center",
-      "expectedDurationSeconds": 14,
-      "movementSpeed": 47,
+      "expectedDurationSeconds": 3,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 1480, "y": 780 },
@@ -83,8 +97,8 @@
       "subject": "parents",
       "startAnchorId": "inquiry.parents-entry",
       "endAnchorId": "inquiry.parents",
-      "expectedDurationSeconds": 12,
-      "movementSpeed": 61,
+      "expectedDurationSeconds": 3,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 2040, "y": 240 },
@@ -101,8 +115,8 @@
       "subject": "parents",
       "startAnchorId": "inquiry.parents",
       "endAnchorId": "inquiry.parents-exit",
-      "expectedDurationSeconds": 13,
-      "movementSpeed": 44,
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 2140, "y": 720 },
@@ -117,8 +131,8 @@
       "subject": "parents",
       "startAnchorId": "inquiry.parents-entry",
       "endAnchorId": "inquiry.parents-exit",
-      "expectedDurationSeconds": 18,
-      "movementSpeed": 72,
+      "expectedDurationSeconds": 4,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 2040, "y": 240 },
@@ -138,8 +152,8 @@
       "subject": "man-born-blind",
       "startAnchorId": "inquiry.man-center",
       "endAnchorId": "outside.expelled",
-      "expectedDurationSeconds": 13,
-      "movementSpeed": 51,
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 2100, "y": 620 },
@@ -155,8 +169,8 @@
       "subject": "jesus",
       "startAnchorId": "outside.jesus-entry",
       "endAnchorId": "outside.belief",
-      "expectedDurationSeconds": 12,
-      "movementSpeed": 16,
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 340,
       "actorRadius": 18,
       "points": [
         { "x": 2420, "y": 1400 },
@@ -171,8 +185,8 @@
       "subject": "camera-focus",
       "startAnchorId": "outside.belief",
       "endAnchorId": "ending.camera",
-      "expectedDurationSeconds": 12,
-      "movementSpeed": 4,
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 40,
       "actorRadius": 0,
       "points": [
         { "x": 2260, "y": 1320 },

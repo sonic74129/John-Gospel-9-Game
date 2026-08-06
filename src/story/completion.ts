@@ -2,7 +2,7 @@ const ACTOR_DEFAULTS = Object.freeze({
   observer: ["roadside.player-start", "idle", "觀察者", true, true],
   jesus: ["roadside.jesus", "idle", "耶穌", true, true],
   disciples: ["roadside.disciples", "idle", "門徒", true, true],
-  "man-born-blind": ["roadside.blind-man-seat", "seated", "那人", true, true],
+  "man-born-blind": ["roadside.blind-man-seat", "seated-blind", "那人", true, true],
   neighbors: ["neighbors.group-left", "idle", "鄰舍與見過他的人", false, false],
   pharisees: ["inquiry.pharisees-left", "idle", "法利賽人", false, false],
   parents: ["inquiry.waiting", "idle", "他的父母", false, false],
@@ -95,7 +95,7 @@ const phaseOverrides = (phase) => {
         jesus: ["roadside.pool-exit", "departed", "耶穌", false, false],
         disciples: ["roadside.pool-exit", "departed", "門徒", false, false],
         "man-born-blind": ["neighbors.center", "standing-seeing", "那人", true, true],
-        neighbors: ["neighbors.group-left", "questioning", "鄰舍與見過他的人", true, true],
+        neighbors: ["neighbors.gathered", "questioning", "鄰舍與見過他的人", true, true],
       };
     case "inquiry":
       return {
@@ -141,7 +141,7 @@ const phaseOverrides = (phase) => {
         ...phaseOverrides("outside"),
         observer: ["outside.east-exit", "idle", "觀察者", true, true],
         jesus: ["outside.belief", "standing", "耶穌", true, true],
-        "man-born-blind": ["outside.expelled", "worship", "那人", true, true],
+        "man-born-blind": ["outside.expelled", "standing-belief", "那人", true, true],
         pharisees: ["outside.inquiry-entry", "listening", "法利賽人", true, true],
       };
     default:

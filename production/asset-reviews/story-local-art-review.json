@@ -20,8 +20,8 @@
   ],
   "runtimeInventory": {
     "manifest": "public/assets/art/manifest.json",
-    "assetFamilies": 6,
-    "files": 28,
+    "assetFamilies": 7,
+    "files": 35,
     "worldDimensions": {
       "width": 2560,
       "height": 1792
@@ -35,13 +35,14 @@
     "poseAndStateClarity": "accepted for blind, clay-applied, seeing, worship, clay action and found-man states",
     "paletteMaterialAndLight": "accepted",
     "theologicalRestraint": "accepted; no halo, glow, beam, fantasy particles or theatrical miracle effect",
-    "embeddedText": "none in selected assets"
+    "embeddedText": "none in selected assets",
+    "dialoguePortraits": "derived source-art crop portraits accepted for responsive dialogue staging; no new photorealistic artwork was generated"
   },
   "limitations": [
     "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
     "The world base is a single painted two-dimensional zig-zag composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
     "The player uses four distinct directional frames; supporting actors use restrained static narrative poses.",
-    "Dialogue portraits were not generated because the current UI has no portrait surface.",
-    "Automated provenance supports a complete private distribution scope; public redistribution is not claimed."
+    "Automated provenance supports a complete private distribution scope; public redistribution is not claimed.",
+    "Dialogue portraits are non-destructive crops/upscales of selected source art, not newly generated or photorealistic portraits."
   ]
 }

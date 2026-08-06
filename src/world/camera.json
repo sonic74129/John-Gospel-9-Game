@@ -11,7 +11,7 @@
       "desktopZoom": 1,
       "mobileZoom": 0.82,
       "deadZone": { "width": 16, "height": 16 },
-      "transitionSeconds": 0.8
+      "transitionSeconds": 0.3
     },
     {
       "id": "camera.siloam",
@@ -21,7 +21,7 @@
       "desktopZoom": 0.95,
       "mobileZoom": 0.76,
       "deadZone": { "width": 16, "height": 16 },
-      "transitionSeconds": 0.8
+      "transitionSeconds": 0.3
     },
     {
       "id": "camera.neighbors",
@@ -31,7 +31,7 @@
       "desktopZoom": 1,
       "mobileZoom": 0.76,
       "deadZone": { "width": 16, "height": 16 },
-      "transitionSeconds": 0.8
+      "transitionSeconds": 0.3
     },
     {
       "id": "camera.inquiry",
@@ -41,7 +41,7 @@
       "desktopZoom": 0.95,
       "mobileZoom": 0.72,
       "deadZone": { "width": 16, "height": 16 },
-      "transitionSeconds": 0.9
+      "transitionSeconds": 0.3
     },
     {
       "id": "camera.outer",
@@ -51,7 +51,7 @@
       "desktopZoom": 1.05,
       "mobileZoom": 0.82,
       "deadZone": { "width": 16, "height": 16 },
-      "transitionSeconds": 1
+      "transitionSeconds": 0.3
     }
   ]
 }

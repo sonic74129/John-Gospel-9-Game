@@ -27,13 +27,13 @@ const BEAT_VERSES = Object.freeze([
 
 const TRIGGERS = Object.freeze([
   { type: "event", event: "story:start" },
-  { type: "proximity", actorId: "observer", targetId: "disciples", radius: 1 },
+  { type: "event", event: "beat:b01:completed" },
   { type: "event", event: "beat:b02:completed" },
   { type: "event", event: "beat:b03:completed" },
-  { type: "event", event: "arrival:pool.wash-edge" },
-  { type: "event", event: "arrival:neighbors.center" },
-  { type: "proximity", actorId: "observer", targetId: "man-born-blind", radius: 1 },
-  { type: "event", event: "interact:neighbors" },
+  { type: "event", event: "beat:b04:completed" },
+  { type: "event", event: "beat:b05:completed" },
+  { type: "event", event: "beat:b06:completed" },
+  { type: "event", event: "beat:b07:completed" },
   { type: "event", event: "beat:b08:completed" },
   { type: "event", event: "beat:b09:completed" },
   { type: "event", event: "beat:b10:completed" },
@@ -43,7 +43,7 @@ const TRIGGERS = Object.freeze([
   { type: "event", event: "beat:b14:completed" },
   { type: "event", event: "beat:b15:completed" },
   { type: "event", event: "beat:b16:completed" },
-  { type: "event", event: "arrival:outside.expelled" },
+  { type: "event", event: "interact:man-born-blind" },
   { type: "event", event: "beat:b18:completed" },
 ]);
 

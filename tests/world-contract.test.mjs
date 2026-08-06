@@ -793,6 +793,7 @@ test("required sequence paths keep every radius-aware segment walkable and colli
     "man-to-pool",
     "pool-wash-to-return",
     "pool-to-neighbors",
+    "neighbors-to-center",
     "group-to-inquiry",
     "parents-entry",
     "parents-exit",
@@ -805,7 +806,7 @@ test("required sequence paths keep every radius-aware segment walkable and colli
     paths.sequencePaths.map((sequencePath) => sequencePath.id),
     requiredPathIds
   );
-  assert.deepEqual(paths.travelTargetSeconds, { minimum: 10, maximum: 20 });
+  assert.deepEqual(paths.travelTargetSeconds, { minimum: 2, maximum: 5 });
   const jesusEntry = paths.sequencePaths.find(
     (sequencePath) => sequencePath.id === "jesus-entry"
   );
@@ -851,6 +852,10 @@ test("required sequence paths keep every radius-aware segment walkable and colli
     );
     assert.ok(sequencePath.actorRadius >= 0, `${sequencePath.id} actor radius`);
     if (sequencePath.subject !== "camera-focus") {
+      assert.ok(
+        sequencePath.movementSpeed >= 340 && sequencePath.movementSpeed <= 360,
+        `${sequencePath.id} should use the redesigned cinematic actor speed`
+      );
       assert.ok(
         sequencePath.actorRadius >= navigation.agent.radius,
         `${sequencePath.id} actor radius must cover the navigation agent`
@@ -917,6 +922,7 @@ test("every moved actor body clears sequence paths, including group offsets", ()
   const storyActorsBySubject = {
     "man-born-blind": ["man-born-blind"],
     "man-and-neighbor-group": ["man-born-blind", "neighbors"],
+    neighbors: ["neighbors"],
     parents: ["parents"],
     jesus: ["jesus"]
   };
