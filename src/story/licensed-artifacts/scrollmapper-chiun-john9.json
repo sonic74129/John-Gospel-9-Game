@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "scrollmapper-chiun-john9-e1b254c",
+  "passage": {
+    "book": "John",
+    "chapter": 9,
+    "verseStart": 1,
+    "verseEnd": 7
+  },
+  "translation": {
+    "id": "CUV-1919-Traditional-Shen",
+    "editionId": "scrollmapper-chiun-3.1",
+    "canonicalName": "1919 Traditional Chinese Union Version (和合本), 神版",
+    "language": "zh-Hant",
+    "divineNameVariant": "神"
+  },
+  "source": {
+    "provider": "Scrollmapper bible_databases",
+    "repository": "scrollmapper/bible_databases",
+    "commit": "e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c",
+    "url": "https://raw.githubusercontent.com/scrollmapper/bible_databases/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/sources/zh-hant/ChiUn/ChiUn.json",
+    "upstreamSha256": "995b8f77e27014eda3e1946c588b34dc418a2e63202698cf2aac07b7391e5743",
+    "metadataUrl": "https://github.com/scrollmapper/bible_databases/blob/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/sources/zh-hant/ChiUn/README.md",
+    "metadataClaim": "ChiUn: 和合本 (繁體字); License: Public Domain",
+    "moduleVersion": "3.1",
+    "moduleDate": "2023-10-28"
+  },
+  "derivation": {
+    "selector": "books[name=John].chapters[chapter=9].verses[1..7]",
+    "normalization": "Unicode NFC; remove source U+0020 separators; punctuation and all other code points unchanged"
+  },
+  "review": {
+    "status": "pending-owner-review",
+    "owner": "repository-owner",
+    "instructions": "Compare all 7 displayed verses with the fixed source URL, then record approval in planning/evidence/owner-review.json."
+  },
+  "verses": [
+    {
+      "key": "john9:1",
+      "reference": "John 9:1",
+      "exactText": "耶穌過去的時候，看見一個人生來是瞎眼的。",
+      "sha256": "9d1dc22e41afb046f74fd84fc35cf51a335e135250266997e203aa3a432e1825"
+    },
+    {
+      "key": "john9:2",
+      "reference": "John 9:2",
+      "exactText": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」",
+      "sha256": "4a14e4a8c77f34038c8ce19f04f40ee9142f131436f588d3fb9388d3b2c891b4"
+    },
+    {
+      "key": "john9:3",
+      "reference": "John 9:3",
+      "exactText": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。",
+      "sha256": "70aa0f47330163d608d27ead0dbcc49e22fc8f7a4b57b10311f41491357e5f1f"
+    },
+    {
+      "key": "john9:4",
+      "reference": "John 9:4",
+      "exactText": "趁著白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。",
+      "sha256": "23226a942beff48366cf06742644efa37e6e54f29b4c41b5d804c648cf4449b2"
+    },
+    {
+      "key": "john9:5",
+      "reference": "John 9:5",
+      "exactText": "我在世上的時候，是世上的光。」",
+      "sha256": "f66e3f13b19c7db728cdb4b88a694d1f6b0d2f83f6178688394b89d840462315"
+    },
+    {
+      "key": "john9:6",
+      "reference": "John 9:6",
+      "exactText": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，",
+      "sha256": "2d57f56c14d4da61d8dd4854d55fc4696cad443dab21a0349ec2464c689595fc"
+    },
+    {
+      "key": "john9:7",
+      "reference": "John 9:7",
+      "exactText": "對他說：「你往西羅亞池子裡去洗。」（西羅亞翻出來就是「奉差遣」。）他去一洗，回頭就看見了。",
+      "sha256": "a9f07e7b576ee077e9660ff5588ab652501f8fb82155e89a4d2bde6ac65a7f53"
+    }
+  ]
+}

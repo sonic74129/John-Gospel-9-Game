@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "world-collisions",
+  "collisionPolygons": [
+    {
+      "id": "collision.courtyard-north-roof",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        { "x": 1120, "y": 280 },
+        { "x": 1660, "y": 280 },
+        { "x": 1680, "y": 320 },
+        { "x": 1160, "y": 350 }
+      ]
+    },
+    {
+      "id": "collision.courtyard-west-awning",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        { "x": 1010, "y": 320 },
+        { "x": 1210, "y": 320 },
+        { "x": 1240, "y": 470 },
+        { "x": 1060, "y": 480 }
+      ]
+    },
+    {
+      "id": "collision.courtyard-planter",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        { "x": 1550, "y": 390 },
+        { "x": 1640, "y": 380 },
+        { "x": 1670, "y": 470 },
+        { "x": 1580, "y": 500 }
+      ]
+    },
+    {
+      "id": "collision.courtyard-front-wall",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        { "x": 1510, "y": 560 },
+        { "x": 1690, "y": 560 },
+        { "x": 1660, "y": 640 },
+        { "x": 1530, "y": 640 }
+      ]
+    },
+    {
+      "id": "collision.pool-basin",
+      "regionId": "siloam-pool",
+      "material": "water-boundary",
+      "polygon": [
+        { "x": 680, "y": 1180 },
+        { "x": 980, "y": 1140 },
+        { "x": 1080, "y": 1210 },
+        { "x": 1020, "y": 1340 },
+        { "x": 740, "y": 1360 },
+        { "x": 640, "y": 1280 }
+      ]
+    },
+    {
+      "id": "collision.pool-south-planting",
+      "regionId": "siloam-pool",
+      "material": "fixed-world-mass",
+      "polygon": [
+        { "x": 820, "y": 1370 },
+        { "x": 940, "y": 1360 },
+        { "x": 980, "y": 1440 },
+        { "x": 860, "y": 1460 }
+      ]
+    }
+  ]
+}

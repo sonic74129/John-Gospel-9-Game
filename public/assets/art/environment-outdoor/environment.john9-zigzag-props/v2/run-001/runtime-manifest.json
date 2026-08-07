@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "assetId": "environment.john9-zigzag-props",
+  "family": "environment-outdoor",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-zigzag-props/v2/run-001/selected-source.png",
+    "bytes": 806458,
+    "sha256": "6094610dd033396801fd3746adb49491bebcc62a31f5f624ce1f496fb74f7c79"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Selected source provides the clay vessel used by the John 9:1-7 courtyard sequence; later-region prop cells are not runtime outputs.",
+  "outputs": [
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/clay-vessel.png",
+      "mediaType": "image/png",
+      "bytes": 4448,
+      "sha256": "61175f931547ea4540d792a30c12a16db0710597cbc3c5b8d7212580870fb6f4",
+      "dimensions": {
+        "width": 54,
+        "height": 72
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=288:384:288:384,colorkey=0xF7F0DE:0.24:0.08,scale=-2:72:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

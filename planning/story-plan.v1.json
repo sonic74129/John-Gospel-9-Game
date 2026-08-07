@@ -1,0 +1,2444 @@
+{
+  "schemaVersion": 1,
+  "requestClassification": {
+    "scope": "story-local",
+    "rationale": "Plan one independent John 9 story in sonic74129/John-Gospel-9-Game without importing another story repository.",
+    "targetRepository": "sonic74129/John-Gospel-9-Game",
+    "targetRepositoryKind": "story"
+  },
+  "foundationInspection": {
+    "lockFile": "foundation.lock.json",
+    "repository": "sonic74129/bible-game-foundation",
+    "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+    "lockSha256": "84894d020a2ee1723bd95d5cae561d6d00365c03baa7b65883a5723919408c20",
+    "guidanceFiles": [
+      {
+        "path": ".foundation/art-direction/storybook-realism-v1/style.json",
+        "sha256": "9b8e6905e0a0dc0926d08818093a6acaa1e42c46ee0e92cacbee6bb8a4579e5a"
+      },
+      {
+        "path": ".foundation/assets/catalog.json",
+        "sha256": "345a5d2f2e0c7fdfad9b297c75a82f61116674a930d0682cdad04afddde12224"
+      },
+      {
+        "path": ".foundation/docs/ASSET_GOVERNANCE.zh-CN.md",
+        "sha256": "3fae5302ecd755a967a0b9bc83fdf505df1e22e2e739968c298d55b90a88211e"
+      },
+      {
+        "path": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
+        "sha256": "f363b37ac1f6bab765af91deef2174803c6f3c102324e1c1c5b4d77026b34b03"
+      },
+      {
+        "path": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md",
+        "sha256": "8a67e66354ddba3d005fac842e163dc69cd051f31bef9ffc7441ca38d447222d"
+      },
+      {
+        "path": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md",
+        "sha256": "9a8990230d4d662044d1a09bddb07cea0ff28b84ff67dce393d38a78f9ef1faa"
+      },
+      {
+        "path": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md",
+        "sha256": "86f400f99c5106465c4091ada543b24c93fbbaf61578b9411b5c8110ff7f56ca"
+      },
+      {
+        "path": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
+        "sha256": "56910ac1ca7a9e551079d27b9f980ca818598b7ec726881ed09a66ed33dfea54"
+      }
+    ],
+    "policyArtifact": {
+      "path": ".foundation/policy/story-planning-policy.v1.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "policyAcceptances": []
+  },
+  "planningGate": {
+    "state": "pending-reviewer-assignment",
+    "reason": "A fixed original 1919 Traditional Chinese Union Version (和合本), 神版 John 9 artifact is captured from Scrollmapper bible_databases at commit e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c with upstream and story-local SHA-256. One transparent repository-owner review remains pending; no approval is claimed.",
+    "recoveryCondition": "The repository owner compares John 9:1-7 with the fixed source, reviews the six-beat plan and runtime order, observer restrictions, final-state parity and contextual wording, then records a dated approval in planning/evidence/owner-review.json. Promotion remains conditional on current contracts, but personal-use candidate implementation and QA may proceed without forging Promotion authority."
+  },
+  "storyCharter": {
+    "id": "john-9-man-born-blind",
+    "title": "生來瞎眼的人",
+    "passage": "John 9:1-7 — original 1919 Traditional Chinese Union Version (和合本), 神版",
+    "audience": "General Bible-study audience; reviewer confirmation required",
+    "targetMinutes": 8,
+    "learningObjective": "Follow John 9:1-7 from the courtyard encounter to washing at Siloam without changing its outcome.",
+    "playerExperience": "Observe, explore, listen, and follow as an unnamed observer who cannot alter scripture events.",
+    "language": "zh-Hant",
+    "deliveryMode": "end-to-end"
+  },
+  "scripture": {
+    "availability": "available",
+    "artifact": {
+      "provider": "Scrollmapper bible_databases",
+      "artifactId": "scrollmapper-chiun-john9-e1b254c",
+      "edition": "ChiUn 3.1; Traditional Chinese Union Version first published 1919; 神 variant confirmed by captured text",
+      "language": "zh-Hant",
+      "translation": "CUV-1919-Traditional-Shen",
+      "rightsStatus": "approved",
+      "rightsScope": "Public Domain source metadata; story candidate restricted to personal/private use pending owner review and asset-release decisions.",
+      "attribution": "和合本（繁體字）ChiUn, Scrollmapper bible_databases, source text credited to FHL.",
+      "sha256": "3d70d5af22db48fcd2fb19ea719a0135e15e109e5a129716fd547d6557e65978",
+      "sourceEvidence": {
+        "repositoryPath": "planning/evidence/scripture-source.json",
+        "sha256": "5158ef5e6c482d342a48795465022d858e9c8e2a8436f9b5a602a1559600ad15"
+      },
+      "rightsEvidence": {
+        "repositoryPath": "planning/evidence/scripture-source.json",
+        "sha256": "5158ef5e6c482d342a48795465022d858e9c8e2a8436f9b5a602a1559600ad15"
+      },
+      "reviewerRegistryEvidence": {
+        "repositoryPath": "planning/evidence/owner-review.json",
+        "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+      }
+    },
+    "reviewers": [
+      {
+        "id": "repository-owner",
+        "name": "Repository owner",
+        "role": "personal-use source and story reviewer"
+      }
+    ],
+    "verses": [
+      {
+        "key": "john9:1",
+        "reference": "John 9:1",
+        "exactText": "耶穌過去的時候，看見一個人生來是瞎眼的。",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      },
+      {
+        "key": "john9:2",
+        "reference": "John 9:2",
+        "exactText": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      },
+      {
+        "key": "john9:3",
+        "reference": "John 9:3",
+        "exactText": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      },
+      {
+        "key": "john9:4",
+        "reference": "John 9:4",
+        "exactText": "趁著白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      },
+      {
+        "key": "john9:5",
+        "reference": "John 9:5",
+        "exactText": "我在世上的時候，是世上的光。」",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      },
+      {
+        "key": "john9:6",
+        "reference": "John 9:6",
+        "exactText": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      },
+      {
+        "key": "john9:7",
+        "reference": "John 9:7",
+        "exactText": "對他說：「你往西羅亞池子裡去洗。」（西羅亞翻出來就是「奉差遣」。）他去一洗，回頭就看見了。",
+        "reviewStatus": "in-review",
+        "reviewAnchors": [
+          {
+            "reviewerId": "repository-owner",
+            "status": "in-review",
+            "anchor": "planning/evidence/owner-review.json#approval",
+            "evidence": {
+              "repositoryPath": "planning/evidence/owner-review.json",
+              "sha256": "405d1207306a13c34bc44811373cd2edb9f23673fad5c15dc98157e77cb9c516"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "contentLedger": {
+    "entries": [
+      {
+        "id": "ledger-s0-john9-1",
+        "sourceLevel": "S0",
+        "content": "耶穌過去的時候，看見一個人生來是瞎眼的。",
+        "verseKeys": [
+          "john9:1"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s0-john9-2",
+        "sourceLevel": "S0",
+        "content": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」",
+        "verseKeys": [
+          "john9:2"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s0-john9-3",
+        "sourceLevel": "S0",
+        "content": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。",
+        "verseKeys": [
+          "john9:3"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s0-john9-4",
+        "sourceLevel": "S0",
+        "content": "趁著白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。",
+        "verseKeys": [
+          "john9:4"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s0-john9-5",
+        "sourceLevel": "S0",
+        "content": "我在世上的時候，是世上的光。」",
+        "verseKeys": [
+          "john9:5"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s0-john9-6",
+        "sourceLevel": "S0",
+        "content": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，",
+        "verseKeys": [
+          "john9:6"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s0-john9-7",
+        "sourceLevel": "S0",
+        "content": "對他說：「你往西羅亞池子裡去洗。」（西羅亞翻出來就是「奉差遣」。）他去一洗，回頭就看見了。",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s1-b01",
+        "sourceLevel": "S1",
+        "content": "耶穌經過時看見一個生來瞎眼的人。",
+        "verseKeys": [
+          "john9:1"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s1-b02",
+        "sourceLevel": "S1",
+        "content": "門徒問這人生來瞎眼是誰犯了罪。",
+        "verseKeys": [
+          "john9:2"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s1-b03",
+        "sourceLevel": "S1",
+        "content": "耶穌回答並說明趁著白日作工與世上之光。",
+        "verseKeys": [
+          "john9:3",
+          "john9:4",
+          "john9:5"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s1-b04",
+        "sourceLevel": "S1",
+        "content": "耶穌和泥抹在那人的眼睛上。",
+        "verseKeys": [
+          "john9:6"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s1-b05",
+        "sourceLevel": "S1",
+        "content": "耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s1-b06",
+        "sourceLevel": "S1",
+        "content": "那人照吩咐去洗，回頭就看見了。",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      },
+      {
+        "id": "ledger-s2-b01",
+        "sourceLevel": "S2",
+        "content": "以非因果移動、鏡頭、目標提示與介面呈現「耶穌經過時看見一個生來瞎眼的人。」；不增加台詞，不改變次序或結果。",
+        "verseKeys": [
+          "john9:1"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Provide spatial and interaction continuity for the personal-use game.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s2-b02",
+        "sourceLevel": "S2",
+        "content": "以非因果移動、鏡頭、目標提示與介面呈現「門徒問這人生來瞎眼是誰犯了罪。」；不增加台詞，不改變次序或結果。",
+        "verseKeys": [
+          "john9:2"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Provide spatial and interaction continuity for the personal-use game.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s2-b03",
+        "sourceLevel": "S2",
+        "content": "以非因果移動、鏡頭、目標提示與介面呈現「耶穌回答並說明趁著白日作工與世上之光。」；不增加台詞，不改變次序或結果。",
+        "verseKeys": [
+          "john9:3",
+          "john9:4",
+          "john9:5"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Provide spatial and interaction continuity for the personal-use game.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s2-b04",
+        "sourceLevel": "S2",
+        "content": "以非因果移動、鏡頭、目標提示與介面呈現「耶穌和泥抹在那人的眼睛上。」；不增加台詞，不改變次序或結果。",
+        "verseKeys": [
+          "john9:6"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Provide spatial and interaction continuity for the personal-use game.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s2-b05",
+        "sourceLevel": "S2",
+        "content": "以非因果移動、鏡頭、目標提示與介面呈現「耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。」；不增加台詞，不改變次序或結果。",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Provide spatial and interaction continuity for the personal-use game.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s2-b06",
+        "sourceLevel": "S2",
+        "content": "以非因果移動、鏡頭、目標提示與介面呈現「那人照吩咐去洗，回頭就看見了。」；不增加台詞，不改變次序或結果。",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Provide spatial and interaction continuity for the personal-use game.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s2-observer-actions",
+        "sourceLevel": "S2",
+        "content": "無名觀察者只可移動、觀察、聆聽、觸發簡單互動及使用不計分的回顧。",
+        "verseKeys": [],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed",
+        "bridgeControls": {
+          "purpose": "Give the player non-causal access to the fixed scripture events.",
+          "removable": true,
+          "changesCause": false,
+          "changesIdentity": false,
+          "changesOrder": false,
+          "changesOutcome": false
+        }
+      },
+      {
+        "id": "ledger-s3-observer-prohibitions",
+        "sourceLevel": "S3",
+        "content": "禁止玩家控制耶穌、造成醫治、代替經文人物回答、重排事件、改寫經文事實或改變結局。",
+        "verseKeys": [
+          "john9:1",
+          "john9:2",
+          "john9:3",
+          "john9:4",
+          "john9:5",
+          "john9:6",
+          "john9:7"
+        ],
+        "policyRuleIds": [],
+        "reviewerId": "repository-owner",
+        "reviewStatus": "unreviewed"
+      }
+    ]
+  },
+  "eventSpine": [
+    {
+      "id": "event-b01",
+      "order": 1,
+      "summary": "耶穌經過時看見一個生來瞎眼的人。",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b01"
+      ],
+      "policyRuleIds": []
+    },
+    {
+      "id": "event-b02",
+      "order": 2,
+      "summary": "門徒問這人生來瞎眼是誰犯了罪。",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b02"
+      ],
+      "policyRuleIds": []
+    },
+    {
+      "id": "event-b03",
+      "order": 3,
+      "summary": "耶穌回答並說明趁著白日作工與世上之光。",
+      "verseKeys": [
+        "john9:3",
+        "john9:4",
+        "john9:5"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b03"
+      ],
+      "policyRuleIds": []
+    },
+    {
+      "id": "event-b04",
+      "order": 4,
+      "summary": "耶穌和泥抹在那人的眼睛上。",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b04"
+      ],
+      "policyRuleIds": []
+    },
+    {
+      "id": "event-b05",
+      "order": 5,
+      "summary": "耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b05"
+      ],
+      "policyRuleIds": []
+    },
+    {
+      "id": "event-b06",
+      "order": 6,
+      "summary": "那人照吩咐去洗，回頭就看見了。",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b06"
+      ],
+      "policyRuleIds": []
+    }
+  ],
+  "playerRoleWarrant": {
+    "role": "unnamed observer-witness",
+    "warrant": "The player observes the fixed John 9:1-7 order without becoming a scripture actor or changing cause, order, or outcome.",
+    "allowedActions": [
+      {
+        "id": "observer-move",
+        "ledgerEntryId": "ledger-s2-observer-actions",
+        "policyRuleIds": []
+      },
+      {
+        "id": "observer-observe",
+        "ledgerEntryId": "ledger-s2-observer-actions",
+        "policyRuleIds": []
+      },
+      {
+        "id": "observer-listen",
+        "ledgerEntryId": "ledger-s2-observer-actions",
+        "policyRuleIds": []
+      },
+      {
+        "id": "observer-interact",
+        "ledgerEntryId": "ledger-s2-observer-actions",
+        "policyRuleIds": []
+      }
+    ],
+    "prohibitedActions": [
+      {
+        "id": "observer-alter-scripture",
+        "ledgerEntryId": "ledger-s3-observer-prohibitions",
+        "policyRuleIds": []
+      }
+    ],
+    "policyRuleIds": []
+  },
+  "beats": [
+    {
+      "id": "b01",
+      "order": 1,
+      "eventIds": [
+        "event-b01"
+      ],
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b01"
+      ],
+      "policyRuleIds": [],
+      "prerequisiteBeatIds": [],
+      "trigger": "耶穌經過時看見一個生來瞎眼的人。",
+      "allowedPlayerActionIds": [
+        "observer-move",
+        "observer-observe",
+        "observer-listen",
+        "observer-interact"
+      ],
+      "prohibitedPlayerActionIds": [
+        "observer-alter-scripture"
+      ],
+      "actionLedgerEntryIds": [
+        "ledger-s2-observer-actions",
+        "ledger-s3-observer-prohibitions"
+      ],
+      "stageGoalId": "goal-b01",
+      "sequenceId": "sequence-b01",
+      "dialogueIds": [
+        "dlg-b01-john9-1-full"
+      ],
+      "finalStateId": "john9-b01-final",
+      "completionEvidence": "耶穌經過時看見一個生來瞎眼的人。",
+      "completionLedgerEntryId": "ledger-s1-b01"
+    },
+    {
+      "id": "b02",
+      "order": 2,
+      "eventIds": [
+        "event-b02"
+      ],
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b02"
+      ],
+      "policyRuleIds": [],
+      "prerequisiteBeatIds": [
+        "b01"
+      ],
+      "trigger": "門徒問這人生來瞎眼是誰犯了罪。",
+      "allowedPlayerActionIds": [
+        "observer-move",
+        "observer-observe",
+        "observer-listen",
+        "observer-interact"
+      ],
+      "prohibitedPlayerActionIds": [
+        "observer-alter-scripture"
+      ],
+      "actionLedgerEntryIds": [
+        "ledger-s2-observer-actions",
+        "ledger-s3-observer-prohibitions"
+      ],
+      "stageGoalId": "goal-b02",
+      "sequenceId": "sequence-b02",
+      "dialogueIds": [
+        "dlg-b02-john9-2-full"
+      ],
+      "finalStateId": "john9-b02-final",
+      "completionEvidence": "門徒問這人生來瞎眼是誰犯了罪。",
+      "completionLedgerEntryId": "ledger-s1-b02"
+    },
+    {
+      "id": "b03",
+      "order": 3,
+      "eventIds": [
+        "event-b03"
+      ],
+      "verseKeys": [
+        "john9:3",
+        "john9:4",
+        "john9:5"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b03"
+      ],
+      "policyRuleIds": [],
+      "prerequisiteBeatIds": [
+        "b02"
+      ],
+      "trigger": "耶穌回答並說明趁著白日作工與世上之光。",
+      "allowedPlayerActionIds": [
+        "observer-move",
+        "observer-observe",
+        "observer-listen",
+        "observer-interact"
+      ],
+      "prohibitedPlayerActionIds": [
+        "observer-alter-scripture"
+      ],
+      "actionLedgerEntryIds": [
+        "ledger-s2-observer-actions",
+        "ledger-s3-observer-prohibitions"
+      ],
+      "stageGoalId": "goal-b03",
+      "sequenceId": "sequence-b03",
+      "dialogueIds": [
+        "dlg-b03-john9-3-full",
+        "dlg-b03-john9-4-full",
+        "dlg-b03-john9-5-full"
+      ],
+      "finalStateId": "john9-b03-final",
+      "completionEvidence": "耶穌回答並說明趁著白日作工與世上之光。",
+      "completionLedgerEntryId": "ledger-s1-b03"
+    },
+    {
+      "id": "b04",
+      "order": 4,
+      "eventIds": [
+        "event-b04"
+      ],
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b04"
+      ],
+      "policyRuleIds": [],
+      "prerequisiteBeatIds": [
+        "b03"
+      ],
+      "trigger": "耶穌和泥抹在那人的眼睛上。",
+      "allowedPlayerActionIds": [
+        "observer-move",
+        "observer-observe",
+        "observer-listen",
+        "observer-interact"
+      ],
+      "prohibitedPlayerActionIds": [
+        "observer-alter-scripture"
+      ],
+      "actionLedgerEntryIds": [
+        "ledger-s2-observer-actions",
+        "ledger-s3-observer-prohibitions"
+      ],
+      "stageGoalId": "goal-b04",
+      "sequenceId": "sequence-b04",
+      "dialogueIds": [
+        "dlg-b04-john9-6-full"
+      ],
+      "finalStateId": "john9-b04-final",
+      "completionEvidence": "耶穌和泥抹在那人的眼睛上。",
+      "completionLedgerEntryId": "ledger-s1-b04"
+    },
+    {
+      "id": "b05",
+      "order": 5,
+      "eventIds": [
+        "event-b05"
+      ],
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b05"
+      ],
+      "policyRuleIds": [],
+      "prerequisiteBeatIds": [
+        "b04"
+      ],
+      "trigger": "耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。",
+      "allowedPlayerActionIds": [
+        "observer-move",
+        "observer-observe",
+        "observer-listen",
+        "observer-interact"
+      ],
+      "prohibitedPlayerActionIds": [
+        "observer-alter-scripture"
+      ],
+      "actionLedgerEntryIds": [
+        "ledger-s2-observer-actions",
+        "ledger-s3-observer-prohibitions"
+      ],
+      "stageGoalId": "goal-b05",
+      "sequenceId": "sequence-b05",
+      "dialogueIds": [
+        "dlg-b05-john9-7-instruction"
+      ],
+      "finalStateId": "john9-b05-final",
+      "completionEvidence": "耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。",
+      "completionLedgerEntryId": "ledger-s1-b05"
+    },
+    {
+      "id": "b06",
+      "order": 6,
+      "eventIds": [
+        "event-b06"
+      ],
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b06"
+      ],
+      "policyRuleIds": [],
+      "prerequisiteBeatIds": [
+        "b05"
+      ],
+      "trigger": "那人照吩咐去洗，回頭就看見了。",
+      "allowedPlayerActionIds": [
+        "observer-move",
+        "observer-observe",
+        "observer-listen",
+        "observer-interact"
+      ],
+      "prohibitedPlayerActionIds": [
+        "observer-alter-scripture"
+      ],
+      "actionLedgerEntryIds": [
+        "ledger-s2-observer-actions",
+        "ledger-s3-observer-prohibitions"
+      ],
+      "stageGoalId": "goal-b06",
+      "sequenceId": "sequence-b06",
+      "dialogueIds": [
+        "dlg-b06-john9-7-outcome"
+      ],
+      "finalStateId": "john9-b06-final",
+      "completionEvidence": "那人照吩咐去洗，回頭就看見了。",
+      "completionLedgerEntryId": "ledger-s1-b06"
+    }
+  ],
+  "actorStateMatrix": [
+    {
+      "actorId": "observer",
+      "beatId": "b01",
+      "entryState": "player-observer:visible at courtyard.player-start; pose=idle; collision=true",
+      "duringState": "sequence-b01 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.observer; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b01",
+        "ledger-s2-b01"
+      ]
+    },
+    {
+      "actorId": "jesus",
+      "beatId": "b01",
+      "entryState": "jesus:visible at courtyard.jesus; pose=idle; collision=true",
+      "duringState": "sequence-b01 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b01",
+        "ledger-s2-b01"
+      ]
+    },
+    {
+      "actorId": "disciples",
+      "beatId": "b01",
+      "entryState": "disciple-left:visible at courtyard.disciples; pose=idle; collision=true | disciple-right:visible at courtyard.disciples; pose=idle; collision=true",
+      "duringState": "sequence-b01 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b01",
+        "ledger-s2-b01"
+      ]
+    },
+    {
+      "actorId": "man-born-blind",
+      "beatId": "b01",
+      "entryState": "man-born-blind:visible at courtyard.man-center; pose=idle; collision=true",
+      "duringState": "sequence-b01 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.man-center; pose=seated; collision=true",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b01",
+        "ledger-s2-b01"
+      ]
+    },
+    {
+      "actorId": "observer",
+      "beatId": "b02",
+      "entryState": "visible at courtyard.observer; pose=idle; collision=true",
+      "duringState": "sequence-b02 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.observer; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b02",
+        "ledger-s2-b02"
+      ]
+    },
+    {
+      "actorId": "jesus",
+      "beatId": "b02",
+      "entryState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "duringState": "sequence-b02 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b02",
+        "ledger-s2-b02"
+      ]
+    },
+    {
+      "actorId": "disciples",
+      "beatId": "b02",
+      "entryState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "duringState": "sequence-b02 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b02",
+        "ledger-s2-b02"
+      ]
+    },
+    {
+      "actorId": "man-born-blind",
+      "beatId": "b02",
+      "entryState": "visible at courtyard.man-center; pose=seated; collision=true",
+      "duringState": "sequence-b02 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.man-center; pose=seated; collision=true",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b02",
+        "ledger-s2-b02"
+      ]
+    },
+    {
+      "actorId": "observer",
+      "beatId": "b03",
+      "entryState": "visible at courtyard.observer; pose=idle; collision=true",
+      "duringState": "sequence-b03 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.observer; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:3",
+        "john9:4",
+        "john9:5"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b03",
+        "ledger-s2-b03"
+      ]
+    },
+    {
+      "actorId": "jesus",
+      "beatId": "b03",
+      "entryState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "duringState": "sequence-b03 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:3",
+        "john9:4",
+        "john9:5"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b03",
+        "ledger-s2-b03"
+      ]
+    },
+    {
+      "actorId": "disciples",
+      "beatId": "b03",
+      "entryState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "duringState": "sequence-b03 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:3",
+        "john9:4",
+        "john9:5"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b03",
+        "ledger-s2-b03"
+      ]
+    },
+    {
+      "actorId": "man-born-blind",
+      "beatId": "b03",
+      "entryState": "visible at courtyard.man-center; pose=seated; collision=true",
+      "duringState": "sequence-b03 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.man-center; pose=seated; collision=true",
+      "verseKeys": [
+        "john9:3",
+        "john9:4",
+        "john9:5"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b03",
+        "ledger-s2-b03"
+      ]
+    },
+    {
+      "actorId": "observer",
+      "beatId": "b04",
+      "entryState": "visible at courtyard.observer; pose=idle; collision=true",
+      "duringState": "sequence-b04 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.observer; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b04",
+        "ledger-s2-b04"
+      ]
+    },
+    {
+      "actorId": "jesus",
+      "beatId": "b04",
+      "entryState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "duringState": "sequence-b04 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b04",
+        "ledger-s2-b04"
+      ]
+    },
+    {
+      "actorId": "disciples",
+      "beatId": "b04",
+      "entryState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "duringState": "sequence-b04 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b04",
+        "ledger-s2-b04"
+      ]
+    },
+    {
+      "actorId": "man-born-blind",
+      "beatId": "b04",
+      "entryState": "visible at courtyard.man-center; pose=seated; collision=true",
+      "duringState": "sequence-b04 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.man-center; pose=clay-on-eyes; collision=true",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b04",
+        "ledger-s2-b04"
+      ]
+    },
+    {
+      "actorId": "observer",
+      "beatId": "b05",
+      "entryState": "visible at courtyard.observer; pose=idle; collision=true",
+      "duringState": "sequence-b05 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at courtyard.observer; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b05",
+        "ledger-s2-b05"
+      ]
+    },
+    {
+      "actorId": "jesus",
+      "beatId": "b05",
+      "entryState": "visible at courtyard.jesus; pose=idle; collision=true",
+      "duringState": "sequence-b05 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "hidden at courtyard.pool-approach; pose=departed; collision=false",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b05",
+        "ledger-s2-b05"
+      ]
+    },
+    {
+      "actorId": "disciples",
+      "beatId": "b05",
+      "entryState": "visible at courtyard.disciples; pose=idle; collision=true",
+      "duringState": "sequence-b05 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "hidden at courtyard.pool-approach; pose=departed; collision=false",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b05",
+        "ledger-s2-b05"
+      ]
+    },
+    {
+      "actorId": "man-born-blind",
+      "beatId": "b05",
+      "entryState": "visible at courtyard.man-center; pose=clay-on-eyes; collision=true",
+      "duringState": "sequence-b05 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at pool.wash-edge; pose=standing; collision=false",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b05",
+        "ledger-s2-b05"
+      ]
+    },
+    {
+      "actorId": "observer",
+      "beatId": "b06",
+      "entryState": "visible at courtyard.observer; pose=idle; collision=true",
+      "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at pool.observer-approach; pose=idle; collision=true",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b06",
+        "ledger-s2-b06"
+      ]
+    },
+    {
+      "actorId": "jesus",
+      "beatId": "b06",
+      "entryState": "hidden at courtyard.pool-approach; pose=departed; collision=false",
+      "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "hidden at courtyard.pool-approach; pose=departed; collision=false",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b06",
+        "ledger-s2-b06"
+      ]
+    },
+    {
+      "actorId": "disciples",
+      "beatId": "b06",
+      "entryState": "hidden at courtyard.pool-approach; pose=departed; collision=false",
+      "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "hidden at courtyard.pool-approach; pose=departed; collision=false",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b06",
+        "ledger-s2-b06"
+      ]
+    },
+    {
+      "actorId": "man-born-blind",
+      "beatId": "b06",
+      "entryState": "visible at pool.wash-edge; pose=standing; collision=false",
+      "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
+      "finalState": "visible at pool.wash-edge; pose=washed-seeing; collision=false",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryIds": [
+        "ledger-s1-b06",
+        "ledger-s2-b06"
+      ]
+    }
+  ],
+  "bridgesAndClues": [],
+  "recallGoalSheet": {
+    "goals": [
+      {
+        "id": "goal-b01",
+        "beatIds": [
+          "b01"
+        ],
+        "prompt": "留心觀看",
+        "verseKeys": [
+          "john9:1"
+        ],
+        "ledgerEntryIds": [
+          "ledger-s2-b01"
+        ],
+        "blocksProgressOnFailure": false,
+        "punitive": false
+      },
+      {
+        "id": "goal-b02",
+        "beatIds": [
+          "b02"
+        ],
+        "prompt": "聆聽提問",
+        "verseKeys": [
+          "john9:2"
+        ],
+        "ledgerEntryIds": [
+          "ledger-s2-b02"
+        ],
+        "blocksProgressOnFailure": false,
+        "punitive": false
+      },
+      {
+        "id": "goal-b03",
+        "beatIds": [
+          "b03"
+        ],
+        "prompt": "留心聆聽",
+        "verseKeys": [
+          "john9:3",
+          "john9:4",
+          "john9:5"
+        ],
+        "ledgerEntryIds": [
+          "ledger-s2-b03"
+        ],
+        "blocksProgressOnFailure": false,
+        "punitive": false
+      },
+      {
+        "id": "goal-b04",
+        "beatIds": [
+          "b04"
+        ],
+        "prompt": "靜候觀看",
+        "verseKeys": [
+          "john9:6"
+        ],
+        "ledgerEntryIds": [
+          "ledger-s2-b04"
+        ],
+        "blocksProgressOnFailure": false,
+        "punitive": false
+      },
+      {
+        "id": "goal-b05",
+        "beatIds": [
+          "b05"
+        ],
+        "prompt": "跟隨前行",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "ledgerEntryIds": [
+          "ledger-s2-b05"
+        ],
+        "blocksProgressOnFailure": false,
+        "punitive": false
+      },
+      {
+        "id": "goal-b06",
+        "beatIds": [
+          "b06"
+        ],
+        "prompt": "留心觀看",
+        "verseKeys": [
+          "john9:7"
+        ],
+        "ledgerEntryIds": [
+          "ledger-s2-b06"
+        ],
+        "blocksProgressOnFailure": false,
+        "punitive": false
+      }
+    ],
+    "recalls": []
+  },
+  "grayboxWorld": {
+    "coordinateSystem": "top-left; x=east; y=south; unit=world-pixel",
+    "world": {
+      "width": 2560,
+      "height": 1792,
+      "tileSize": 32
+    },
+    "routes": [
+      {
+        "id": "man-to-pool",
+        "from": "courtyard.man-center",
+        "to": "pool.wash-edge",
+        "ledgerEntryIds": [
+          "ledger-s2-b05"
+        ],
+        "waypoints": [
+          {
+            "x": 1450,
+            "y": 485
+          },
+          {
+            "x": 1400,
+            "y": 540
+          },
+          {
+            "x": 1340,
+            "y": 610
+          },
+          {
+            "x": 1270,
+            "y": 680
+          },
+          {
+            "x": 1190,
+            "y": 790
+          },
+          {
+            "x": 1120,
+            "y": 900
+          },
+          {
+            "x": 1060,
+            "y": 1020
+          },
+          {
+            "x": 1020,
+            "y": 1080
+          },
+          {
+            "x": 1090,
+            "y": 1140
+          }
+        ]
+      }
+    ],
+    "doors": [
+      {
+        "id": "portal.courtyard-siloam",
+        "fromArea": "courtyard",
+        "toArea": "siloam-pool",
+        "ledgerEntryIds": [
+          "ledger-s2-b01",
+          "ledger-s2-b02",
+          "ledger-s2-b03",
+          "ledger-s2-b04",
+          "ledger-s2-b05",
+          "ledger-s2-b06"
+        ],
+        "anchor": {
+          "x": 1050,
+          "y": 1100
+        }
+      }
+    ],
+    "collisions": [
+      {
+        "id": "collision.courtyard-north-roof",
+        "shape": "polygon:4",
+        "purpose": "fixed-world-mass"
+      },
+      {
+        "id": "collision.courtyard-west-awning",
+        "shape": "polygon:4",
+        "purpose": "fixed-world-mass"
+      },
+      {
+        "id": "collision.courtyard-planter",
+        "shape": "polygon:4",
+        "purpose": "fixed-world-mass"
+      },
+      {
+        "id": "collision.courtyard-front-wall",
+        "shape": "polygon:4",
+        "purpose": "fixed-world-mass"
+      },
+      {
+        "id": "collision.pool-basin",
+        "shape": "polygon:6",
+        "purpose": "water-boundary"
+      },
+      {
+        "id": "collision.pool-south-planting",
+        "shape": "polygon:4",
+        "purpose": "fixed-world-mass"
+      }
+    ],
+    "cameraZones": [
+      {
+        "id": "camera.courtyard",
+        "bounds": "{\"x\":880,\"y\":240,\"width\":920,\"height\":900}",
+        "zoom": 1
+      },
+      {
+        "id": "camera.siloam",
+        "bounds": "{\"x\":600,\"y\":1020,\"width\":620,\"height\":460}",
+        "zoom": 0.95
+      }
+    ],
+    "scale": {
+      "actorHeight": 72,
+      "doorHeight": 96,
+      "interactionDistance": 54
+    },
+    "responsiveViewports": [
+      {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "developmentOnly": true,
+    "preservedAsRegressionBaseline": true
+  },
+  "sequenceFinality": [
+    {
+      "id": "sequence-b01",
+      "beatId": "b01",
+      "steps": [
+        "以非因果移動、鏡頭、目標提示與介面呈現「耶穌經過時看見一個生來瞎眼的人。」；不增加台詞，不改變次序或結果。"
+      ],
+      "cancellable": true,
+      "skippable": true,
+      "reentrant": false,
+      "finalStateId": "john9-b01-final",
+      "finalState": {
+        "id": "john9-b01-final",
+        "beatId": "b01",
+        "actors": {
+          "observer": {
+            "visible": true,
+            "anchorId": "courtyard.observer",
+            "pose": "idle",
+            "label": "觀察者",
+            "collisionEnabled": true,
+            "contentLevel": "S2",
+            "stagingLevel": "S2"
+          },
+          "jesus": {
+            "visible": true,
+            "anchorId": "courtyard.jesus",
+            "pose": "idle",
+            "label": "耶穌",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "disciples": {
+            "visible": true,
+            "anchorId": "courtyard.disciples",
+            "pose": "idle",
+            "label": "門徒",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "man-born-blind": {
+            "visible": true,
+            "anchorId": "courtyard.man-center",
+            "pose": "seated",
+            "label": "那人",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "props": {
+          "clay": {
+            "visible": false,
+            "anchorId": "courtyard.clay-action",
+            "state": "available",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "camera": {
+          "anchorId": "courtyard.camera",
+          "mode": "follow-observer",
+          "transition": "settled",
+          "sourceLevel": "S2"
+        },
+        "controls": {
+          "playerActorId": "observer",
+          "movementEnabled": true,
+          "interactionEnabled": true,
+          "dialogueEnabled": false,
+          "locked": false,
+          "sourceLevel": "S2"
+        },
+        "triggers": {
+          "completedBeatIds": [
+            "b01"
+          ],
+          "nextBeatId": "b02",
+          "sourceLevel": "S2"
+        },
+        "music": {
+          "cueId": "music-john9-map",
+          "playing": true,
+          "ducked": false,
+          "sourceLevel": "S2"
+        }
+      },
+      "parityHashes": {
+        "normal": "1d93f3373292693b16194165b25f938e28d8da3fe57d59028fca858efe4ae939",
+        "skip": "1d93f3373292693b16194165b25f938e28d8da3fe57d59028fca858efe4ae939",
+        "restart": "1d93f3373292693b16194165b25f938e28d8da3fe57d59028fca858efe4ae939",
+        "reentry": "1d93f3373292693b16194165b25f938e28d8da3fe57d59028fca858efe4ae939"
+      }
+    },
+    {
+      "id": "sequence-b02",
+      "beatId": "b02",
+      "steps": [
+        "以非因果移動、鏡頭、目標提示與介面呈現「門徒問這人生來瞎眼是誰犯了罪。」；不增加台詞，不改變次序或結果。"
+      ],
+      "cancellable": true,
+      "skippable": true,
+      "reentrant": false,
+      "finalStateId": "john9-b02-final",
+      "finalState": {
+        "id": "john9-b02-final",
+        "beatId": "b02",
+        "actors": {
+          "observer": {
+            "visible": true,
+            "anchorId": "courtyard.observer",
+            "pose": "idle",
+            "label": "觀察者",
+            "collisionEnabled": true,
+            "contentLevel": "S2",
+            "stagingLevel": "S2"
+          },
+          "jesus": {
+            "visible": true,
+            "anchorId": "courtyard.jesus",
+            "pose": "idle",
+            "label": "耶穌",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "disciples": {
+            "visible": true,
+            "anchorId": "courtyard.disciples",
+            "pose": "idle",
+            "label": "門徒",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "man-born-blind": {
+            "visible": true,
+            "anchorId": "courtyard.man-center",
+            "pose": "seated",
+            "label": "那人",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "props": {
+          "clay": {
+            "visible": false,
+            "anchorId": "courtyard.clay-action",
+            "state": "available",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "camera": {
+          "anchorId": "courtyard.camera",
+          "mode": "follow-observer",
+          "transition": "settled",
+          "sourceLevel": "S2"
+        },
+        "controls": {
+          "playerActorId": "observer",
+          "movementEnabled": true,
+          "interactionEnabled": true,
+          "dialogueEnabled": false,
+          "locked": false,
+          "sourceLevel": "S2"
+        },
+        "triggers": {
+          "completedBeatIds": [
+            "b01",
+            "b02"
+          ],
+          "nextBeatId": "b03",
+          "sourceLevel": "S2"
+        },
+        "music": {
+          "cueId": "music-john9-map",
+          "playing": true,
+          "ducked": false,
+          "sourceLevel": "S2"
+        }
+      },
+      "parityHashes": {
+        "normal": "9df3603ad5f977ed84c499a4120d0a26ab1bb5620717e730a259b1d337b14d16",
+        "skip": "9df3603ad5f977ed84c499a4120d0a26ab1bb5620717e730a259b1d337b14d16",
+        "restart": "9df3603ad5f977ed84c499a4120d0a26ab1bb5620717e730a259b1d337b14d16",
+        "reentry": "9df3603ad5f977ed84c499a4120d0a26ab1bb5620717e730a259b1d337b14d16"
+      }
+    },
+    {
+      "id": "sequence-b03",
+      "beatId": "b03",
+      "steps": [
+        "以非因果移動、鏡頭、目標提示與介面呈現「耶穌回答並說明趁著白日作工與世上之光。」；不增加台詞，不改變次序或結果。"
+      ],
+      "cancellable": true,
+      "skippable": true,
+      "reentrant": false,
+      "finalStateId": "john9-b03-final",
+      "finalState": {
+        "id": "john9-b03-final",
+        "beatId": "b03",
+        "actors": {
+          "observer": {
+            "visible": true,
+            "anchorId": "courtyard.observer",
+            "pose": "idle",
+            "label": "觀察者",
+            "collisionEnabled": true,
+            "contentLevel": "S2",
+            "stagingLevel": "S2"
+          },
+          "jesus": {
+            "visible": true,
+            "anchorId": "courtyard.jesus",
+            "pose": "idle",
+            "label": "耶穌",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "disciples": {
+            "visible": true,
+            "anchorId": "courtyard.disciples",
+            "pose": "idle",
+            "label": "門徒",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "man-born-blind": {
+            "visible": true,
+            "anchorId": "courtyard.man-center",
+            "pose": "seated",
+            "label": "那人",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "props": {
+          "clay": {
+            "visible": false,
+            "anchorId": "courtyard.clay-action",
+            "state": "available",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "camera": {
+          "anchorId": "courtyard.camera",
+          "mode": "follow-observer",
+          "transition": "settled",
+          "sourceLevel": "S2"
+        },
+        "controls": {
+          "playerActorId": "observer",
+          "movementEnabled": true,
+          "interactionEnabled": true,
+          "dialogueEnabled": false,
+          "locked": false,
+          "sourceLevel": "S2"
+        },
+        "triggers": {
+          "completedBeatIds": [
+            "b01",
+            "b02",
+            "b03"
+          ],
+          "nextBeatId": "b04",
+          "sourceLevel": "S2"
+        },
+        "music": {
+          "cueId": "music-john9-map",
+          "playing": true,
+          "ducked": false,
+          "sourceLevel": "S2"
+        }
+      },
+      "parityHashes": {
+        "normal": "db1fcf9f7c2f022020a6b92c96df31f350f89023f5d0043826fb873736ecc691",
+        "skip": "db1fcf9f7c2f022020a6b92c96df31f350f89023f5d0043826fb873736ecc691",
+        "restart": "db1fcf9f7c2f022020a6b92c96df31f350f89023f5d0043826fb873736ecc691",
+        "reentry": "db1fcf9f7c2f022020a6b92c96df31f350f89023f5d0043826fb873736ecc691"
+      }
+    },
+    {
+      "id": "sequence-b04",
+      "beatId": "b04",
+      "steps": [
+        "以非因果移動、鏡頭、目標提示與介面呈現「耶穌和泥抹在那人的眼睛上。」；不增加台詞，不改變次序或結果。"
+      ],
+      "cancellable": true,
+      "skippable": true,
+      "reentrant": false,
+      "finalStateId": "john9-b04-final",
+      "finalState": {
+        "id": "john9-b04-final",
+        "beatId": "b04",
+        "actors": {
+          "observer": {
+            "visible": true,
+            "anchorId": "courtyard.observer",
+            "pose": "idle",
+            "label": "觀察者",
+            "collisionEnabled": true,
+            "contentLevel": "S2",
+            "stagingLevel": "S2"
+          },
+          "jesus": {
+            "visible": true,
+            "anchorId": "courtyard.jesus",
+            "pose": "idle",
+            "label": "耶穌",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "disciples": {
+            "visible": true,
+            "anchorId": "courtyard.disciples",
+            "pose": "idle",
+            "label": "門徒",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "man-born-blind": {
+            "visible": true,
+            "anchorId": "courtyard.man-center",
+            "pose": "clay-on-eyes",
+            "label": "那人",
+            "collisionEnabled": true,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "props": {
+          "clay": {
+            "visible": true,
+            "anchorId": "courtyard.clay-action",
+            "state": "applied",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "camera": {
+          "anchorId": "courtyard.camera",
+          "mode": "follow-observer",
+          "transition": "settled",
+          "sourceLevel": "S2"
+        },
+        "controls": {
+          "playerActorId": "observer",
+          "movementEnabled": true,
+          "interactionEnabled": true,
+          "dialogueEnabled": false,
+          "locked": false,
+          "sourceLevel": "S2"
+        },
+        "triggers": {
+          "completedBeatIds": [
+            "b01",
+            "b02",
+            "b03",
+            "b04"
+          ],
+          "nextBeatId": "b05",
+          "sourceLevel": "S2"
+        },
+        "music": {
+          "cueId": "music-john9-map",
+          "playing": true,
+          "ducked": false,
+          "sourceLevel": "S2"
+        }
+      },
+      "parityHashes": {
+        "normal": "45c6efeadd448dd66fd75683bcede2cdd279769f973f7bbf474369570893226a",
+        "skip": "45c6efeadd448dd66fd75683bcede2cdd279769f973f7bbf474369570893226a",
+        "restart": "45c6efeadd448dd66fd75683bcede2cdd279769f973f7bbf474369570893226a",
+        "reentry": "45c6efeadd448dd66fd75683bcede2cdd279769f973f7bbf474369570893226a"
+      }
+    },
+    {
+      "id": "sequence-b05",
+      "beatId": "b05",
+      "steps": [
+        "以非因果移動、鏡頭、目標提示與介面呈現「耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。」；不增加台詞，不改變次序或結果。"
+      ],
+      "cancellable": true,
+      "skippable": true,
+      "reentrant": false,
+      "finalStateId": "john9-b05-final",
+      "finalState": {
+        "id": "john9-b05-final",
+        "beatId": "b05",
+        "actors": {
+          "observer": {
+            "visible": true,
+            "anchorId": "courtyard.observer",
+            "pose": "idle",
+            "label": "觀察者",
+            "collisionEnabled": true,
+            "contentLevel": "S2",
+            "stagingLevel": "S2"
+          },
+          "jesus": {
+            "visible": false,
+            "anchorId": "courtyard.pool-approach",
+            "pose": "departed",
+            "label": "耶穌",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "disciples": {
+            "visible": false,
+            "anchorId": "courtyard.pool-approach",
+            "pose": "departed",
+            "label": "門徒",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "man-born-blind": {
+            "visible": true,
+            "anchorId": "pool.wash-edge",
+            "pose": "standing",
+            "label": "那人",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "props": {
+          "clay": {
+            "visible": false,
+            "anchorId": "courtyard.clay-action",
+            "state": "cleared",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "camera": {
+          "anchorId": "courtyard.camera",
+          "mode": "follow-observer",
+          "transition": "settled",
+          "sourceLevel": "S2"
+        },
+        "controls": {
+          "playerActorId": "observer",
+          "movementEnabled": true,
+          "interactionEnabled": true,
+          "dialogueEnabled": false,
+          "locked": false,
+          "sourceLevel": "S2"
+        },
+        "triggers": {
+          "completedBeatIds": [
+            "b01",
+            "b02",
+            "b03",
+            "b04",
+            "b05"
+          ],
+          "nextBeatId": "b06",
+          "sourceLevel": "S2"
+        },
+        "music": {
+          "cueId": "music-john9-map",
+          "playing": true,
+          "ducked": false,
+          "sourceLevel": "S2"
+        }
+      },
+      "parityHashes": {
+        "normal": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306",
+        "skip": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306",
+        "restart": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306",
+        "reentry": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306"
+      }
+    },
+    {
+      "id": "sequence-b06",
+      "beatId": "b06",
+      "steps": [
+        "以非因果移動、鏡頭、目標提示與介面呈現「那人照吩咐去洗，回頭就看見了。」；不增加台詞，不改變次序或結果。"
+      ],
+      "cancellable": true,
+      "skippable": true,
+      "reentrant": false,
+      "finalStateId": "john9-b06-final",
+      "finalState": {
+        "id": "john9-b06-final",
+        "beatId": "b06",
+        "actors": {
+          "observer": {
+            "visible": true,
+            "anchorId": "pool.observer-approach",
+            "pose": "idle",
+            "label": "觀察者",
+            "collisionEnabled": true,
+            "contentLevel": "S2",
+            "stagingLevel": "S2"
+          },
+          "jesus": {
+            "visible": false,
+            "anchorId": "courtyard.pool-approach",
+            "pose": "departed",
+            "label": "耶穌",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "disciples": {
+            "visible": false,
+            "anchorId": "courtyard.pool-approach",
+            "pose": "departed",
+            "label": "門徒",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          },
+          "man-born-blind": {
+            "visible": true,
+            "anchorId": "pool.wash-edge",
+            "pose": "washed-seeing",
+            "label": "那人",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "props": {
+          "clay": {
+            "visible": false,
+            "anchorId": "courtyard.clay-action",
+            "state": "cleared",
+            "collisionEnabled": false,
+            "contentLevel": "S1",
+            "stagingLevel": "S2"
+          }
+        },
+        "camera": {
+          "anchorId": "pool.camera",
+          "mode": "follow-observer",
+          "transition": "settled",
+          "sourceLevel": "S2"
+        },
+        "controls": {
+          "playerActorId": "observer",
+          "movementEnabled": false,
+          "interactionEnabled": false,
+          "dialogueEnabled": false,
+          "locked": true,
+          "sourceLevel": "S2"
+        },
+        "triggers": {
+          "completedBeatIds": [
+            "b01",
+            "b02",
+            "b03",
+            "b04",
+            "b05",
+            "b06"
+          ],
+          "nextBeatId": null,
+          "sourceLevel": "S2"
+        },
+        "music": {
+          "cueId": "music-john9-closing",
+          "playing": true,
+          "ducked": false,
+          "sourceLevel": "S2"
+        }
+      },
+      "parityHashes": {
+        "normal": "67e425f8e6ddd37ed7f2076524901c409aafa54824ae49afa6e6ee6391dbddea",
+        "skip": "67e425f8e6ddd37ed7f2076524901c409aafa54824ae49afa6e6ee6391dbddea",
+        "restart": "67e425f8e6ddd37ed7f2076524901c409aafa54824ae49afa6e6ee6391dbddea",
+        "reentry": "67e425f8e6ddd37ed7f2076524901c409aafa54824ae49afa6e6ee6391dbddea"
+      }
+    }
+  ],
+  "dialogueMatrix": [
+    {
+      "id": "dlg-b01-john9-1-full",
+      "beatId": "b01",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "耶穌過去的時候，看見一個人生來是瞎眼的。",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-1",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b01-john9-1-full"
+    },
+    {
+      "id": "dlg-b02-john9-2-full",
+      "beatId": "b02",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-2",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b02-john9-2-full"
+    },
+    {
+      "id": "dlg-b03-john9-3-full",
+      "beatId": "b03",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。",
+      "verseKeys": [
+        "john9:3"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-3",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b03-john9-3-full"
+    },
+    {
+      "id": "dlg-b03-john9-4-full",
+      "beatId": "b03",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "趁著白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。",
+      "verseKeys": [
+        "john9:4"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-4",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b03-john9-4-full"
+    },
+    {
+      "id": "dlg-b03-john9-5-full",
+      "beatId": "b03",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "我在世上的時候，是世上的光。」",
+      "verseKeys": [
+        "john9:5"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-5",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b03-john9-5-full"
+    },
+    {
+      "id": "dlg-b04-john9-6-full",
+      "beatId": "b04",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-6",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b04-john9-6-full"
+    },
+    {
+      "id": "dlg-b05-john9-7-instruction",
+      "beatId": "b05",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "對他說：「你往西羅亞池子裡去洗。」（西羅亞翻出來就是「奉差遣」。）",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-7",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b05-john9-7-instruction"
+    },
+    {
+      "id": "dlg-b06-john9-7-outcome",
+      "beatId": "b06",
+      "actorId": "scripture",
+      "sourceSpeaker": "Scripture",
+      "displaySpeaker": "經文",
+      "text": "他去一洗，回頭就看見了。",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "ledgerEntryId": "ledger-s0-john9-7",
+      "sourceLabel": "1919 和合本（繁體神版）",
+      "portraits": {
+        "primaryActorId": "scripture"
+      },
+      "voiceCueId": "silent-fallback-dlg-b06-john9-7-outcome"
+    }
+  ],
+  "audioSheet": [
+    {
+      "cueId": "silent-fallback-dlg-b01-john9-1-full",
+      "dialogueId": "dlg-b01-john9-1-full",
+      "verseKeys": [
+        "john9:1"
+      ],
+      "scriptureTextSha256": "f43e93edbadec98ae221436e75c4567d416d53e47a885861e402e3ebe2e70b29",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b02-john9-2-full",
+      "dialogueId": "dlg-b02-john9-2-full",
+      "verseKeys": [
+        "john9:2"
+      ],
+      "scriptureTextSha256": "60d194fce1ed91ac4a686220ac251127216b60c8ed40751661ed388b56042b17",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b03-john9-3-full",
+      "dialogueId": "dlg-b03-john9-3-full",
+      "verseKeys": [
+        "john9:3"
+      ],
+      "scriptureTextSha256": "e7ea381f7e707c9d19bb249b12ded2173f36adfdaf85520f89726ab7bcd9b244",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b03-john9-4-full",
+      "dialogueId": "dlg-b03-john9-4-full",
+      "verseKeys": [
+        "john9:4"
+      ],
+      "scriptureTextSha256": "6ae8fd93491def0c6cf90e814a1bbb6e293de6268493ab2d6fa7522ecd9be703",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b03-john9-5-full",
+      "dialogueId": "dlg-b03-john9-5-full",
+      "verseKeys": [
+        "john9:5"
+      ],
+      "scriptureTextSha256": "df3500a9e927bff483871626cd222f3172191e8a8c0d4e97af6845a126f6187d",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b04-john9-6-full",
+      "dialogueId": "dlg-b04-john9-6-full",
+      "verseKeys": [
+        "john9:6"
+      ],
+      "scriptureTextSha256": "9039de5d47d9c3fad78fd87cc118f0c3cf1cce7088695b3e5857e748e97c483a",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b05-john9-7-instruction",
+      "dialogueId": "dlg-b05-john9-7-instruction",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "scriptureTextSha256": "e24d9f4a4e48f2d65126bff23249692957fb7af4371e4c0951e6626f9c3df6ff",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    },
+    {
+      "cueId": "silent-fallback-dlg-b06-john9-7-outcome",
+      "dialogueId": "dlg-b06-john9-7-outcome",
+      "verseKeys": [
+        "john9:7"
+      ],
+      "scriptureTextSha256": "e24d9f4a4e48f2d65126bff23249692957fb7af4371e4c0951e6626f9c3df6ff",
+      "fallback": "full-current-subtitles",
+      "blocksProgress": false,
+      "failureModes": [
+        "stale-hash",
+        "missing",
+        "decode",
+        "autoplay"
+      ]
+    }
+  ],
+  "completionContract": {
+    "condition": "Complete all six ordered John 9:1-7 beats without changing scripture cause, order, or outcome.",
+    "requiredBeatIds": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06"
+    ],
+    "completionStateId": "john9-story-complete",
+    "policyRuleIds": [],
+    "restartBehavior": "Clear committed progress, replay b01-b06 in canonical order, and converge on the same immutable b06 final state.",
+    "reentryBehavior": "Restore only a validated canonical beat prefix, resume at the next beat, and converge on the same immutable b06 final state."
+  },
+  "acceptanceInventory": [
+    {
+      "id": "accept-scripture",
+      "area": "scripture",
+      "category": "One source artifact and one human review",
+      "status": "blocked",
+      "evidence": "planning/evidence/scripture-source.json records the fixed provider, URL, commit, upstream hash, Public Domain metadata and exact story-local artifact hash; planning/evidence/owner-review.json transparently records the one remaining pending owner review."
+    },
+    {
+      "id": "accept-event-spine",
+      "area": "event-spine",
+      "category": "Six ordered scripture beats",
+      "status": "passed",
+      "evidence": "Six ordered event rows bind runtime beats b01-b06 to John 9:1-7 verse keys and S1 ledger entries."
+    },
+    {
+      "id": "accept-player-role",
+      "area": "player-role",
+      "category": "Immutable observer limits",
+      "status": "passed",
+      "evidence": "The canonical warrant and runtime enforce the unnamed observer's non-causal action limits."
+    },
+    {
+      "id": "accept-beats",
+      "area": "beats",
+      "category": "Six implementation-bound Beats",
+      "status": "passed",
+      "evidence": "Six canonical Beat contracts match runtime order, triggers, goals, sequences, dialogue and final states."
+    },
+    {
+      "id": "accept-actor-state",
+      "area": "actor-state",
+      "category": "Immutable scripture final state",
+      "status": "passed",
+      "evidence": "The actor-state matrix records entry and final state for every runtime actor on every beat."
+    },
+    {
+      "id": "accept-bridges-clues",
+      "area": "bridges-clues",
+      "category": "No required invented bridges",
+      "status": "passed",
+      "evidence": "No invented clue is required; all S2 staging is removable and explicitly non-causal."
+    },
+    {
+      "id": "accept-recall-goals",
+      "area": "recall-goals",
+      "category": "Optional non-punitive recall",
+      "status": "passed",
+      "evidence": "Six non-punitive goals are bound to runtime evidence; the short flow has no recall card."
+    },
+    {
+      "id": "accept-graybox-world",
+      "area": "graybox-world",
+      "category": "Implemented evidence-backed world",
+      "status": "passed",
+      "evidence": "The canonical plan binds the tested courtyard-to-Siloam world, route, portal, collisions, camera and responsive targets."
+    },
+    {
+      "id": "accept-sequence-finality",
+      "area": "sequence-finality",
+      "category": "One final state on every path",
+      "status": "passed",
+      "evidence": "All six sequences have identical normal, skip, restart and re-entry parity hashes."
+    },
+    {
+      "id": "accept-dialogue-portraits",
+      "area": "dialogue-portraits",
+      "category": "Exact text before presentation",
+      "status": "passed",
+      "evidence": "John 9:1-7 is bound to dialogue rows; the text-first UI intentionally does not require portraits."
+    },
+    {
+      "id": "accept-audio",
+      "area": "audio",
+      "category": "Text-first optional audio",
+      "status": "passed",
+      "evidence": "Every dialogue row has a full-subtitle fallback; the personal-use candidate intentionally ships without unapproved TTS."
+    },
+    {
+      "id": "accept-completion",
+      "area": "completion",
+      "category": "All six Beats complete",
+      "status": "passed",
+      "evidence": "Completion requires b01-b06 and the immutable john9-story-complete contract ending at john9-b06-final."
+    },
+    {
+      "id": "accept-accessibility-sensitivity",
+      "area": "accessibility-sensitivity",
+      "category": "One contextual human review",
+      "status": "blocked",
+      "evidence": "The single repository-owner review covers disability and Jewish-group contextual wording by default; its pending status is recorded without claiming approval."
+    }
+  ],
+  "accessibilitySensitivity": {
+    "subtitlesAlwaysAvailable": true,
+    "audioNeverBlocksProgress": true,
+    "keyboardSupported": true,
+    "pointerSupported": true,
+    "touchSupported": true,
+    "noColorOnlyMeaning": true,
+    "nonPunitiveRecall": true,
+    "disabilityReview": {
+      "applicable": true,
+      "rationale": "John 9 directly depicts blindness, healing, identity questioning and social treatment; the single designated lightweight reviewer must confirm respectful wording, with specialist escalation only for a concrete dispute or public/commercial risk.",
+      "status": "required",
+      "reviewerId": "repository-owner"
+    },
+    "jewishGroupLanguageReview": {
+      "applicable": true,
+      "rationale": "The passage distinguishes Pharisees and other Jewish participants; the single designated lightweight reviewer must confirm contextual wording, with specialist escalation only for a concrete dispute or public/commercial risk.",
+      "status": "required",
+      "reviewerId": "repository-owner"
+    },
+    "policyRuleIds": []
+  }
+}

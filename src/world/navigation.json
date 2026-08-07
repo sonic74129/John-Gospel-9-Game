@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "world-navigation",
+  "grid": {
+    "origin": { "x": 0, "y": 0 },
+    "cellSize": 32,
+    "columns": 80,
+    "rows": 56,
+    "diagonalMovement": false,
+    "preventCornerCutting": true,
+    "defaultWalkCost": 1
+  },
+  "agent": {
+    "radius": 18,
+    "height": 72,
+    "minimumGroupLaneWidth": 96,
+    "repathDistance": 24
+  },
+  "generation": {
+    "walkableSource": "layout.regions[].walkablePolygon",
+    "blockedSource": "collisions.collisionPolygons[]",
+    "portalSource": "layout.portals[]"
+  },
+  "localCirculation": [],
+  "regionCosts": [
+    { "regionId": "courtyard", "walkCost": 1 },
+    { "regionId": "siloam-pool", "walkCost": 1.05 }
+  ]
+}

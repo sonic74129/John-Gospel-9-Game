@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "status": "captured",
+  "translation": "original 1919 Traditional Chinese Union Version (和合本), 神版",
+  "provider": "Scrollmapper bible_databases",
+  "repository": "scrollmapper/bible_databases",
+  "commit": "e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c",
+  "url": "https://raw.githubusercontent.com/scrollmapper/bible_databases/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/sources/zh-hant/ChiUn/ChiUn.json",
+  "upstreamSha256": "995b8f77e27014eda3e1946c588b34dc418a2e63202698cf2aac07b7391e5743",
+  "metadataUrl": "https://github.com/scrollmapper/bible_databases/blob/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/sources/zh-hant/ChiUn/README.md",
+  "metadataClaim": "ChiUn: 和合本 (繁體字); License: Public Domain",
+  "moduleMetadata": {
+    "description": "和合本 (繁體字)",
+    "about": "The Traditional Chinese Union Version was first published in 1919.",
+    "version": "3.1",
+    "date": "2023-10-28",
+    "distributionLicense": "Public Domain",
+    "textSource": "http://bible.fhl.net"
+  },
+  "artifact": {
+    "path": "src/story/licensed-artifacts/scrollmapper-chiun-john9.json",
+    "sha256": "3d70d5af22db48fcd2fb19ea719a0135e15e109e5a129716fd547d6557e65978",
+    "verseCount": 7,
+    "divineNameVariant": "神",
+    "containsShangdi": false
+  },
+  "derivation": "Select John chapter 9 verses 1-7; normalize to NFC; remove source U+0020 separators; preserve all other code points and punctuation."
+}
