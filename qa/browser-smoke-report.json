@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-07T08:59:27.302Z",
+  "generatedAt": "2026-08-07T11:04:54.222Z",
   "chromium": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  "baseUrl": "http://127.0.0.1:62249/games/john-9-man-born-blind/",
+  "baseUrl": "http://127.0.0.1:61040/games/john-9-man-born-blind/",
   "scenarios": [
     {
       "name": "normal-desktop-with-re-entry",
@@ -16,9 +16,32 @@
         "b06"
       ],
       "screenshots": [
-        "qa/review-screenshots/01-courtyard-opening-desktop.png",
-        "qa/review-screenshots/02-siloam-pool-desktop.png",
-        "qa/review-screenshots/03-ending-desktop.png"
+        "qa/review-screenshots/01-opening-desktop.png",
+        "qa/review-screenshots/02-clay-desktop.png",
+        "qa/review-screenshots/03-follow-desktop.png",
+        "qa/review-screenshots/04-standing-at-pool-desktop.png",
+        "qa/review-screenshots/05-pool-approach-desktop.png",
+        "qa/review-screenshots/06-ending-desktop.png"
+      ]
+    },
+    {
+      "name": "normal-mobile",
+      "viewport": "390x844",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/07-opening-mobile-390x844.png",
+        "qa/review-screenshots/08-clay-mobile-390x844.png",
+        "qa/review-screenshots/09-follow-mobile-390x844.png",
+        "qa/review-screenshots/10-standing-at-pool-mobile-390x844.png",
+        "qa/review-screenshots/11-pool-approach-mobile-390x844.png",
+        "qa/review-screenshots/12-ending-mobile-390x844.png"
       ]
     },
     {
@@ -32,10 +55,7 @@
         "b05",
         "b06"
       ],
-      "screenshots": [
-        "qa/review-screenshots/04-courtyard-opening-mobile.png",
-        "qa/review-screenshots/05-siloam-pool-mobile.png"
-      ]
+      "screenshots": []
     },
     {
       "name": "mixed-skip-desktop",
@@ -67,6 +87,14 @@
       "b05",
       "b06"
     ],
+    "normalMobile": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06"
+    ],
     "allSkip": [
       "b01",
       "b02",
@@ -84,6 +112,13 @@
       "b06"
     ],
     "equivalent": true
+  },
+  "visualBlockers": {
+    "totalMissingFrames": 31,
+    "observerWalk": 8,
+    "disciplesTrueUpDownIdle": 4,
+    "manBornBlindStatesAndDirections": 19,
+    "status": "blocked-imagegen-built-in-unavailable"
   },
   "browserErrors": [],
   "assetOrNetworkFailures": [],
