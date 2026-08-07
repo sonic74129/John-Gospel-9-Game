@@ -20,6 +20,18 @@ const worldSelection = await readJson(
 const propsSelection = await readJson(
   "production/art-source/environment-outdoor/environment.john9-zigzag-props/v2/run-001/selection.json",
 );
+const observerManifest = await readJson(
+  "public/assets/art/characters-core/character.observer/v3/run-001/runtime-manifest.json",
+);
+const manManifest = await readJson(
+  "public/assets/art/characters-core/character.man-born-blind/v1/run-001/runtime-manifest.json",
+);
+const jesusManifest = await readJson(
+  "public/assets/art/characters-core/character.jesus-john9/v1/run-001/runtime-manifest.json",
+);
+const supportingManifest = await readJson(
+  "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/runtime-manifest.json",
+);
 const adapterSource = await readFile(
   "src/adapters/art-asset-adapter.ts",
   "utf8",
@@ -75,7 +87,7 @@ test("formal art manifest pins the cropped courtyard-to-Siloam private-preview c
       bottom: 1504,
     },
   });
-  assert.equal(review.runtimeInventory.files, 14);
+  assert.equal(review.runtimeInventory.files, 15);
   assert.deepEqual(review.runtimeInventory.worldDimensions, {
     width: 1248,
     height: 1280,
@@ -238,9 +250,9 @@ test("formal environment review points to the exact processed selections", () =>
   }
 });
 
-test("all 14 six-beat runtime outputs match recorded bytes, hashes, and dimensions", async () => {
+test("all 15 six-beat runtime outputs match recorded bytes, hashes, and dimensions", async () => {
   const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
-  assert.equal(outputs.length, 14);
+  assert.equal(outputs.length, 15);
   assert.equal(new Set(outputs.map(({ path }) => path)).size, outputs.length);
   for (const output of outputs) {
     const bytes = await readFile(output.path);
@@ -248,6 +260,58 @@ test("all 14 six-beat runtime outputs match recorded bytes, hashes, and dimensio
     assert.equal(sha256(bytes), output.sha256, output.path);
     assert.deepEqual(imageDimensions(bytes, output.path), output.dimensions);
   }
+});
+
+test("Jesus directional runtime sheet is a deterministic vendor extraction", async () => {
+  const output = jesusManifest.outputs.find(({ path }) =>
+    path.endsWith("/jesus-directional.png"),
+  );
+  assert.ok(output);
+  assert.equal(output.processing.tool, "node:fs.copyFile");
+  assert.equal(output.processing.operation, "deterministic-byte-copy");
+  assert.deepEqual(output.dimensions, { width: 288, height: 800 });
+  assert.equal(output.processing.frameWidth, 96);
+  assert.equal(output.processing.frameHeight, 200);
+  assert.equal(output.processing.footBaseline, 193);
+  assert.deepEqual(
+    await readFile(output.path),
+    await readFile(
+      "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+    ),
+  );
+  for (const direction of ["down", "up", "right", "left"]) {
+    const frames = output.processing.directionalAnimation[direction];
+    assert.deepEqual(
+      [frames.idle, ...frames.walk].map(({ width, height }) => ({
+        width,
+        height,
+      })),
+      Array.from({ length: 3 }, () => ({ width: 96, height: 200 })),
+    );
+  }
+});
+
+test("per-actor manifests record complete and blocked animation coverage", () => {
+  assert.equal(observerManifest.animationCoverage.directionalIdle, "complete");
+  assert.equal(
+    observerManifest.animationCoverage.directionalWalk,
+    "blocked-imagegen-built-in-unavailable",
+  );
+  assert.deepEqual(jesusManifest.animationCoverage, {
+    directionalIdle: "complete",
+    directionalWalk: "complete",
+    source:
+      "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+  });
+  assert.deepEqual(supportingManifest.animationCoverage.missing, [
+    "disciple-a.idle.up",
+    "disciple-a.idle.down",
+    "disciple-b.idle.up",
+    "disciple-b.idle.down",
+  ]);
+  assert.ok(manManifest.animationCoverage.missing.includes("seated-blind"));
+  assert.ok(manManifest.animationCoverage.missing.includes("washing"));
+  assert.ok(manManifest.animationCoverage.missing.includes("washed.idle.up"));
 });
 
 test("every runtime output is wired once and obsolete world art is unwired", () => {
@@ -267,14 +331,14 @@ test("actor foot baselines are complete and applied on spawn and pose changes", 
   const actorOutputs = manifest.assets
     .filter(({ family }) => family.startsWith("characters-"))
     .flatMap(({ outputs }) => outputs);
-  assert.equal(actorOutputs.length, 12);
-  assert.equal(Object.keys(manifest.actorFootBaselines).length, 12);
+  assert.equal(actorOutputs.length, 13);
+  assert.equal(Object.keys(manifest.actorFootBaselines).length, 13);
   for (const { path, dimensions } of actorOutputs) {
     const baseline = manifest.actorFootBaselines[basename(path)];
     assert.ok(Number.isInteger(baseline), path);
     assert.ok(baseline > 0 && baseline <= dimensions.height, path);
   }
-  assert.match(sceneSource, /art\.footBaseline! \/ art\.height/g);
+  assert.match(sceneSource, /art\.footBaseline! \/ art\.frameHeight/g);
   assert.match(sceneSource, /#syncNarrativeTextures\(\)/);
 });
 

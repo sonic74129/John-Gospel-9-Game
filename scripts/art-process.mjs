@@ -1,6 +1,13 @@
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  copyFile,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
@@ -17,6 +24,7 @@ const actorFootBaselines = Object.freeze({
   "jesus-idle-look-right.png": 112,
   "jesus-clay-action.png": 104,
   "jesus-clay-action-look-right.png": 104,
+  "jesus-directional.png": 193,
   "disciple-a.png": 118,
   "disciple-a-look-right.png": 118,
   "disciple-b.png": 118,
@@ -43,6 +51,76 @@ const derivedRuntimeOutputs = Object.freeze({
     "disciple-a-look-right.png",
     "disciple-b-look-right.png",
   ],
+});
+
+const pinnedJesusSheet = Object.freeze({
+  source:
+    "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+  output:
+    "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-directional.png",
+  expectedSha256:
+    "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636",
+  dimensions: Object.freeze({ width: 288, height: 800 }),
+  frameWidth: 96,
+  frameHeight: 200,
+  footBaseline: 193,
+});
+
+const animationCoverage = Object.freeze({
+  "character.observer": Object.freeze({
+    directionalIdle: "complete",
+    directionalWalk: "blocked-imagegen-built-in-unavailable",
+    missing: Object.freeze([
+      "walk.up.step-left",
+      "walk.up.step-right",
+      "walk.down.step-left",
+      "walk.down.step-right",
+      "walk.left.step-left",
+      "walk.left.step-right",
+      "walk.right.step-left",
+      "walk.right.step-right",
+    ]),
+  }),
+  "character.jesus-john9": Object.freeze({
+    directionalIdle: "complete",
+    directionalWalk: "complete",
+    source: pinnedJesusSheet.source,
+  }),
+  "character.john9-supporting": Object.freeze({
+    directionalIdle: "partial",
+    directionalWalk: "not-required",
+    missing: Object.freeze([
+      "disciple-a.idle.up",
+      "disciple-a.idle.down",
+      "disciple-b.idle.up",
+      "disciple-b.idle.down",
+    ]),
+  }),
+  "character.man-born-blind": Object.freeze({
+    directionalIdle: "blocked-imagegen-built-in-unavailable",
+    directionalWalk: "blocked-imagegen-built-in-unavailable",
+    missing: Object.freeze([
+      "seated-blind",
+      "clay-still",
+      "pre-wash.idle.up",
+      "pre-wash.idle.down",
+      "pre-wash.idle.left",
+      "pre-wash.idle.right",
+      "pre-wash.walk.up.step-left",
+      "pre-wash.walk.up.step-right",
+      "pre-wash.walk.down.step-left",
+      "pre-wash.walk.down.step-right",
+      "pre-wash.walk.left.step-left",
+      "pre-wash.walk.left.step-right",
+      "pre-wash.walk.right.step-left",
+      "pre-wash.walk.right.step-right",
+      "washing",
+      "washed.idle.up",
+      "washed.idle.down",
+      "washed.idle.left",
+      "washed.idle.right",
+    ]),
+  }),
 });
 
 const generatedSpecs = [
@@ -104,6 +182,85 @@ async function dimensions(path) {
   return { width, height };
 }
 
+function directionalFrameMap() {
+  const directions = ["down", "up", "right", "left"];
+  return Object.fromEntries(
+    directions.map((direction, row) => [
+      direction,
+      {
+        idle: {
+          x: 0,
+          y: row * pinnedJesusSheet.frameHeight,
+          width: pinnedJesusSheet.frameWidth,
+          height: pinnedJesusSheet.frameHeight,
+        },
+        walk: [1, 2].map((column) => ({
+          x: column * pinnedJesusSheet.frameWidth,
+          y: row * pinnedJesusSheet.frameHeight,
+          width: pinnedJesusSheet.frameWidth,
+          height: pinnedJesusSheet.frameHeight,
+        })),
+      },
+    ]),
+  );
+}
+
+async function syncPinnedJesusSheet() {
+  const sourceBytes = await readFile(pinnedJesusSheet.source);
+  if (sha256(sourceBytes) !== pinnedJesusSheet.expectedSha256) {
+    throw new Error("Pinned candidate Jesus sheet failed integrity.");
+  }
+  const observed = await dimensions(pinnedJesusSheet.source);
+  if (
+    observed.width !== pinnedJesusSheet.dimensions.width ||
+    observed.height !== pinnedJesusSheet.dimensions.height
+  ) {
+    throw new Error("Pinned candidate Jesus sheet changed dimensions.");
+  }
+  await mkdir(dirname(resolve(ROOT, pinnedJesusSheet.output)), {
+    recursive: true,
+  });
+  await copyFile(pinnedJesusSheet.source, pinnedJesusSheet.output);
+
+  const manifestPath =
+    "public/assets/art/characters-core/character.jesus-john9/v1/run-001/runtime-manifest.json";
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const directionalOutput = {
+    path: pinnedJesusSheet.output,
+    mediaType: "image/png",
+    bytes: sourceBytes.byteLength,
+    sha256: sha256(sourceBytes),
+    dimensions: pinnedJesusSheet.dimensions,
+    processing: {
+      tool: "node:fs.copyFile",
+      operation: "deterministic-byte-copy",
+      source: pinnedJesusSheet.source,
+      frameWidth: pinnedJesusSheet.frameWidth,
+      frameHeight: pinnedJesusSheet.frameHeight,
+      footBaseline: pinnedJesusSheet.footBaseline,
+      directionalAnimation: directionalFrameMap(),
+    },
+  };
+  const updated = {
+    ...manifest,
+    pinnedDirectionalSource: {
+      assetPack: "identity-jesus-storybook@0.1.0",
+      path: pinnedJesusSheet.source,
+      bytes: sourceBytes.byteLength,
+      sha256: sha256(sourceBytes),
+      dimensions: pinnedJesusSheet.dimensions,
+    },
+    animationCoverage: animationCoverage["character.jesus-john9"],
+    outputs: [
+      ...manifest.outputs.filter(
+        ({ path }) => path !== pinnedJesusSheet.output,
+      ),
+      directionalOutput,
+    ],
+  };
+  await writeFile(manifestPath, `${JSON.stringify(updated, null, 2)}\n`);
+}
+
 async function verifyRuntimeManifest(path, includeReuseStatus = true) {
   const manifest = JSON.parse(await readFile(path, "utf8"));
   for (const output of manifest.outputs) {
@@ -141,6 +298,9 @@ async function verifyRuntimeManifest(path, includeReuseStatus = true) {
   }
   const verified = {
     ...manifest,
+    ...(animationCoverage[manifest.assetId] === undefined
+      ? {}
+      : { animationCoverage: animationCoverage[manifest.assetId] }),
     outputs: [...manifest.outputs, ...derivedOutputs],
   };
   return includeReuseStatus
@@ -351,6 +511,7 @@ async function processSpec(spec) {
 
 async function main() {
   const globalManifestPath = resolve(ROOT, "public/assets/art/manifest.json");
+  await syncPinnedJesusSheet();
   const reused = [];
   for (const path of reusedManifestPaths) {
     reused.push(await verifyRuntimeManifest(path));

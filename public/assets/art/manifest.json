@@ -25,6 +25,7 @@
     "jesus-idle-look-right.png": 112,
     "jesus-clay-action.png": 104,
     "jesus-clay-action-look-right.png": 104,
+    "jesus-directional.png": 193,
     "disciple-a.png": 118,
     "disciple-a-look-right.png": 118,
     "disciple-b.png": 118,
@@ -46,6 +47,20 @@
       },
       "selectedCandidate": 1,
       "selectionReason": "Candidate 1 passes the v3 orientation gate: front, back, right-facing and left-facing profiles are distinct, text is absent, identity and clothing remain continuous, anatomy is non-chibi, the pose is restrained, and the uniform background supports clean runtime extraction.",
+      "animationCoverage": {
+        "directionalIdle": "complete",
+        "directionalWalk": "blocked-imagegen-built-in-unavailable",
+        "missing": [
+          "walk.up.step-left",
+          "walk.up.step-right",
+          "walk.down.step-left",
+          "walk.down.step-right",
+          "walk.left.step-left",
+          "walk.left.step-right",
+          "walk.right.step-left",
+          "walk.right.step-right"
+        ]
+      },
       "outputs": [
         {
           "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer.png",
@@ -109,6 +124,31 @@
       },
       "selectedCandidate": 2,
       "selectionReason": "Selected source preserves the blind, clay-applied, and seeing states used by John 9:1-7 with consistent scale and restrained posture.",
+      "animationCoverage": {
+        "directionalIdle": "blocked-imagegen-built-in-unavailable",
+        "directionalWalk": "blocked-imagegen-built-in-unavailable",
+        "missing": [
+          "seated-blind",
+          "clay-still",
+          "pre-wash.idle.up",
+          "pre-wash.idle.down",
+          "pre-wash.idle.left",
+          "pre-wash.idle.right",
+          "pre-wash.walk.up.step-left",
+          "pre-wash.walk.up.step-right",
+          "pre-wash.walk.down.step-left",
+          "pre-wash.walk.down.step-right",
+          "pre-wash.walk.left.step-left",
+          "pre-wash.walk.left.step-right",
+          "pre-wash.walk.right.step-left",
+          "pre-wash.walk.right.step-right",
+          "washing",
+          "washed.idle.up",
+          "washed.idle.down",
+          "washed.idle.left",
+          "washed.idle.right"
+        ]
+      },
       "outputs": [
         {
           "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-blind.png",
@@ -208,6 +248,114 @@
           }
         },
         {
+          "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-directional.png",
+          "mediaType": "image/png",
+          "bytes": 265705,
+          "sha256": "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636",
+          "dimensions": {
+            "width": 288,
+            "height": 800
+          },
+          "processing": {
+            "tool": "node:fs.copyFile",
+            "operation": "deterministic-byte-copy",
+            "source": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+            "frameWidth": 96,
+            "frameHeight": 200,
+            "footBaseline": 193,
+            "directionalAnimation": {
+              "down": {
+                "idle": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 96,
+                  "height": 200
+                },
+                "walk": [
+                  {
+                    "x": 96,
+                    "y": 0,
+                    "width": 96,
+                    "height": 200
+                  },
+                  {
+                    "x": 192,
+                    "y": 0,
+                    "width": 96,
+                    "height": 200
+                  }
+                ]
+              },
+              "up": {
+                "idle": {
+                  "x": 0,
+                  "y": 200,
+                  "width": 96,
+                  "height": 200
+                },
+                "walk": [
+                  {
+                    "x": 96,
+                    "y": 200,
+                    "width": 96,
+                    "height": 200
+                  },
+                  {
+                    "x": 192,
+                    "y": 200,
+                    "width": 96,
+                    "height": 200
+                  }
+                ]
+              },
+              "right": {
+                "idle": {
+                  "x": 0,
+                  "y": 400,
+                  "width": 96,
+                  "height": 200
+                },
+                "walk": [
+                  {
+                    "x": 96,
+                    "y": 400,
+                    "width": 96,
+                    "height": 200
+                  },
+                  {
+                    "x": 192,
+                    "y": 400,
+                    "width": 96,
+                    "height": 200
+                  }
+                ]
+              },
+              "left": {
+                "idle": {
+                  "x": 0,
+                  "y": 600,
+                  "width": 96,
+                  "height": 200
+                },
+                "walk": [
+                  {
+                    "x": 96,
+                    "y": 600,
+                    "width": 96,
+                    "height": 200
+                  },
+                  {
+                    "x": 192,
+                    "y": 600,
+                    "width": 96,
+                    "height": 200
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
           "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-idle-look-right.png",
           "mediaType": "image/png",
           "bytes": 11942,
@@ -239,6 +387,21 @@
       "reviewStatus": "processed-for-polished-private-preview",
       "releaseEligible": false,
       "publicRedistributionApproved": false,
+      "pinnedDirectionalSource": {
+        "assetPack": "identity-jesus-storybook@0.1.0",
+        "path": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+        "bytes": 265705,
+        "sha256": "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636",
+        "dimensions": {
+          "width": 288,
+          "height": 800
+        }
+      },
+      "animationCoverage": {
+        "directionalIdle": "complete",
+        "directionalWalk": "complete",
+        "source": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png"
+      },
       "reuseStatus": "verified-geometry-independent"
     },
     {
@@ -256,6 +419,16 @@
       },
       "selectedCandidate": 1,
       "selectionReason": "Selected source provides two distinct disciples in the period palette; only those John 9:1-7 cells are processed into the runtime manifest.",
+      "animationCoverage": {
+        "directionalIdle": "partial",
+        "directionalWalk": "not-required",
+        "missing": [
+          "disciple-a.idle.up",
+          "disciple-a.idle.down",
+          "disciple-b.idle.up",
+          "disciple-b.idle.down"
+        ]
+      },
       "outputs": [
         {
           "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-a.png",

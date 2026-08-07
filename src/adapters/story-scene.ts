@@ -6,10 +6,16 @@ import occlusion from "../world/occlusion.json";
 import props from "../world/props.json";
 import {
   actorArtForSpawn,
+  JESUS_DIRECTIONAL_FRAMES,
   STORY_ART,
   STORY_ART_ASSET_LIST,
 } from "./art-asset-adapter.ts";
-import { directionFromDelta, focusDirection } from "./actor-facing.ts";
+import {
+  directionalFrameName,
+  directionFromDelta,
+  focusDirection,
+  walkStepAt,
+} from "./actor-facing.ts";
 import {
   manBornBlindPathTransition,
   type CardinalDirection,
@@ -37,8 +43,11 @@ interface ActorVisual {
   readonly label: Phaser.GameObjects.Text;
   readonly anchorOffset: Point;
   readonly collisionRadius: number;
+  readonly art: ReturnType<typeof actorArtForSpawn>;
   pose: string;
   direction: CardinalDirection;
+  moving: boolean;
+  walkElapsedMs: number;
   collisionEnabled: boolean;
 }
 
@@ -216,7 +225,7 @@ export class StoryScene extends Phaser.Scene {
           actor.definition.position.y,
           art.key,
         )
-        .setOrigin(0.5, art.footBaseline! / art.height)
+        .setOrigin(0.5, art.footBaseline! / art.frameHeight)
         .setDepth(this.#actorDepth(actor.definition.position.y));
       const label = this.add
         .text(actor.definition.position.x, actor.definition.position.y - 84, actor.state.label, {
@@ -235,8 +244,11 @@ export class StoryScene extends Phaser.Scene {
         label,
         anchorOffset: actor.state.anchorOffset,
         collisionRadius: actor.state.collisionRadius,
+        art,
         pose: actor.state.pose,
         direction: "down",
+        moving: false,
+        walkElapsedMs: 0,
         collisionEnabled: actor.state.collisionEnabled,
       };
       this.#visuals.set(actor.definition.id, visual);
@@ -317,6 +329,7 @@ export class StoryScene extends Phaser.Scene {
         return;
       }
       if (!this.#movementAllowed()) {
+        this.#setVisualMotion(this.#player, false, 0);
         return;
       }
       this.#path = this.#world.findPath(this.playerPosition(), target);
@@ -359,16 +372,17 @@ export class StoryScene extends Phaser.Scene {
     if (direction.lengthSq() > 0) {
       this.#path = [];
       direction.normalize().scale(distance);
-      if (!this.#movePlayer(direction.x, direction.y)) {
-        if (!this.#movePlayer(direction.x, 0)) {
-          this.#movePlayer(0, direction.y);
-        }
-      }
+      const moved =
+        this.#movePlayer(direction.x, direction.y) ||
+        this.#movePlayer(direction.x, 0) ||
+        this.#movePlayer(0, direction.y);
+      this.#setVisualMotion(this.#player, moved, delta);
       return;
     }
 
     const next = this.#path[0];
     if (next === undefined) {
+      this.#setVisualMotion(this.#player, false, 0);
       return;
     }
     const toNext = new Phaser.Math.Vector2(
@@ -378,14 +392,19 @@ export class StoryScene extends Phaser.Scene {
     if (toNext.length() <= distance) {
       if (this.#movePlayer(toNext.x, toNext.y)) {
         this.#path = this.#path.slice(1);
+        this.#setVisualMotion(this.#player, true, delta);
       } else {
         this.#path = [];
+        this.#setVisualMotion(this.#player, false, 0);
       }
       return;
     }
     toNext.normalize().scale(distance);
     if (!this.#movePlayer(toNext.x, toNext.y)) {
       this.#path = [];
+      this.#setVisualMotion(this.#player, false, 0);
+    } else {
+      this.#setVisualMotion(this.#player, true, delta);
     }
   }
 
@@ -419,6 +438,9 @@ export class StoryScene extends Phaser.Scene {
     this.#sequenceInputEnabled = enabled;
     if (!enabled) {
       this.#path = [];
+      if (this.#player !== undefined) {
+        this.#setVisualMotion(this.#player, false, 0);
+      }
     }
   }
 
@@ -792,6 +814,7 @@ export class StoryScene extends Phaser.Scene {
       );
     }
     this.#path = [];
+    this.#setVisualMotion(this.#player!, false, 0);
     const cameraAnchorContract = this.#world.anchorById.get(
       state.camera.anchorId,
     );
@@ -1024,17 +1047,99 @@ export class StoryScene extends Phaser.Scene {
   }
 
   #registerDirectionalActorFrames(): void {
-    const texture = this.textures.get(STORY_ART.actors.observer.key);
+    const observerTexture = this.textures.get(STORY_ART.actors.observer.key);
     for (const [direction, x] of Object.entries({
       down: 0,
       up: 36,
       right: 72,
       left: 108,
     }) as readonly [CardinalDirection, number][]) {
-      const frame = `observer-${direction}`;
-      if (!texture.has(frame)) {
-        texture.add(frame, 0, x, 0, 36, 128);
+      const frame = directionalFrameName("observer", direction, "idle");
+      if (!observerTexture.has(frame)) {
+        observerTexture.add(frame, 0, x, 0, 36, 128);
       }
+    }
+
+    const jesusTexture = this.textures.get(
+      STORY_ART.actors.jesusDirectional.key,
+    );
+    for (const [direction, frames] of Object.entries(
+      JESUS_DIRECTIONAL_FRAMES.frames,
+    ) as readonly [
+      CardinalDirection,
+      Readonly<{ idle: number; walk: readonly number[] }>,
+    ][]) {
+      const addFrame = (name: string, frameIndex: number): void => {
+        if (jesusTexture.has(name)) {
+          return;
+        }
+        const column = frameIndex % 3;
+        const row = Math.floor(frameIndex / 3);
+        jesusTexture.add(
+          name,
+          0,
+          column * JESUS_DIRECTIONAL_FRAMES.frameWidth,
+          row * JESUS_DIRECTIONAL_FRAMES.frameHeight,
+          JESUS_DIRECTIONAL_FRAMES.frameWidth,
+          JESUS_DIRECTIONAL_FRAMES.frameHeight,
+        );
+      };
+      addFrame(
+        directionalFrameName("jesus", direction, "idle"),
+        frames.idle,
+      );
+      frames.walk.forEach((frameIndex, index) => {
+        if (index !== 0 && index !== 1) {
+          throw new Error("Jesus walk animation must contain exactly two steps.");
+        }
+        addFrame(
+          directionalFrameName("jesus", direction, "walk", index),
+          frameIndex,
+        );
+      });
+    }
+  }
+
+  #setVisualMotion(
+    visual: ActorVisual,
+    moving: boolean,
+    elapsedDeltaMs: number,
+  ): void {
+    visual.moving = moving;
+    visual.walkElapsedMs = moving
+      ? visual.walkElapsedMs + elapsedDeltaMs
+      : 0;
+    const actorFrameId =
+      visual.storyActorId === "observer"
+        ? "observer"
+        : visual.storyActorId === "jesus"
+          ? "jesus"
+          : null;
+    if (actorFrameId === null) {
+      return;
+    }
+    const motion = moving && actorFrameId === "jesus" ? "walk" : "idle";
+    const frame = directionalFrameName(
+      actorFrameId,
+      visual.direction,
+      motion,
+      walkStepAt(visual.walkElapsedMs),
+    );
+    if (!visual.body.texture.has(frame)) {
+      throw new Error(`Directional runtime frame ${frame} is not registered.`);
+    }
+    visual.body.setFrame(frame);
+  }
+
+  #setVisualArt(
+    visual: ActorVisual,
+    art: ReturnType<typeof actorArtForSpawn>,
+  ): void {
+    visual.body
+      .setTexture(art.key)
+      .setOrigin(0.5, art.footBaseline! / art.frameHeight);
+    if (art === STORY_ART.actors.jesusDirectional) {
+      this.#setVisualMotion(visual, visual.moving, 0);
     }
   }
 
@@ -1043,8 +1148,11 @@ export class StoryScene extends Phaser.Scene {
     direction: CardinalDirection,
   ): void {
     visual.direction = direction;
-    if (visual.storyActorId === "observer") {
-      visual.body.setFrame(`observer-${direction}`);
+    if (
+      visual.storyActorId === "observer" ||
+      visual.storyActorId === "jesus"
+    ) {
+      this.#setVisualMotion(visual, visual.moving, 0);
     }
   }
 
@@ -1060,13 +1168,13 @@ export class StoryScene extends Phaser.Scene {
     this.#syncNarrativeTextures();
   }
 
-  #syncActorFacingToMan(): void {
+  #syncActorFacingToMan(excludedVisual?: ActorVisual): void {
     const man = this.#storyActorVisuals("man-born-blind")[0];
     if (man === undefined) {
       return;
     }
     for (const visual of this.#visuals.values()) {
-      if (visual === man) {
+      if (visual === man || visual === excludedVisual) {
         continue;
       }
       const direction = focusDirection(visual.body.x, man.body.x);
@@ -1083,24 +1191,24 @@ export class StoryScene extends Phaser.Scene {
                 : STORY_ART.actors.discipleB
               : null;
       if (directionalArt !== null) {
-        visual.body
-          .setTexture(directionalArt.key)
-          .setOrigin(0.5, directionalArt.footBaseline! / directionalArt.height);
+        this.#setVisualArt(visual, directionalArt);
+        if (directionalArt === STORY_ART.actors.jesusDirectional) {
+          this.#setVisualDirection(visual, direction);
+        } else {
+          visual.direction = direction;
+        }
       }
     }
   }
 
-  #jesusArt(direction: "left" | "right") {
+  #jesusArt(direction: CardinalDirection) {
     const man = this.#storyActorVisuals("man-born-blind")[0];
-    const suffix = direction === "right" ? "LookRight" : "";
-    const pose = man?.pose === "clay-on-eyes" ? "jesusClayAction" : "jesusIdle";
-    return STORY_ART.actors[
-      `${pose}${suffix}` as
-        | "jesusClayAction"
-        | "jesusClayActionLookRight"
-        | "jesusIdle"
-        | "jesusIdleLookRight"
-    ];
+    if (man?.pose !== "clay-on-eyes") {
+      return STORY_ART.actors.jesusDirectional;
+    }
+    return direction === "right"
+      ? STORY_ART.actors.jesusClayActionLookRight
+      : STORY_ART.actors.jesusClayAction;
   }
 
   #movePlayer(deltaX: number, deltaY: number): boolean {
@@ -1205,6 +1313,7 @@ export class StoryScene extends Phaser.Scene {
         visual.direction,
       ),
     );
+    this.#setVisualMotion(visual, true, 0);
     return new Promise((resolve, reject) => {
       let settled = false;
       const finish = (operation: () => void): void => {
@@ -1223,16 +1332,24 @@ export class StoryScene extends Phaser.Scene {
         ease: "Linear",
         onUpdate: () => {
           if (!this.#tearingDown) {
+            this.#setVisualMotion(visual, true, this.game.loop.delta);
             visual.body.setDepth(this.#actorDepth(visual.body.y));
             this.#syncLabel(visual);
-            this.#syncActorFacingToMan();
+            this.#syncActorFacingToMan(visual);
           }
         },
-        onComplete: () => finish(resolve),
+        onComplete: () =>
+          finish(() => {
+            this.#setVisualMotion(visual, false, 0);
+            resolve();
+          }),
       });
       const onAbort = (): void => {
         tween.stop();
-        finish(() => reject(abortError()));
+        finish(() => {
+          this.#setVisualMotion(visual, false, 0);
+          reject(abortError());
+        });
       };
       signal.addEventListener("abort", onAbort, { once: true });
     });
@@ -1321,14 +1438,12 @@ export class StoryScene extends Phaser.Scene {
         STORY_ART.actors.manSeeing;
       man.body
         .setTexture(art.key)
-        .setOrigin(0.5, art.footBaseline! / art.height);
+        .setOrigin(0.5, art.footBaseline! / art.frameHeight);
     }
     const jesus = this.#storyActorVisuals("jesus")[0];
     if (jesus !== undefined) {
       const art = this.#jesusArt("left");
-      jesus.body
-        .setTexture(art.key)
-        .setOrigin(0.5, art.footBaseline! / art.height);
+      this.#setVisualArt(jesus, art);
     }
   }
 

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "nt-judea-first-century",
+  "version": "0.1.0",
+  "title": "New Testament Judea, First Century",
+  "status": "candidate",
+  "releaseEligible": false,
+  "compatibility": {
+    "period": "first-century",
+    "region": "Judea",
+    "camera": "three-quarter top-down",
+    "artDirection": "storybook-realism-v1"
+  },
+  "source": {
+    "repository": "sonic74129/JohnRPGGame",
+    "commit": "660e3f94655e66be2486f97b7917d151f3add1e3",
+    "provider": "Azure AI Foundry",
+    "deployment": "mai-image-2-5-pro",
+    "model": "MAI-Image-2.5-Pro@2026-06-19"
+  },
+  "rights": {
+    "reviewStatus": "required-before-public-release",
+    "publicRedistributionApproved": false,
+    "details": "../../../../docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
+  },
+  "validation": {
+    "sourceProjectApproved": true,
+    "storiesValidated": 1,
+    "requiredStoriesForStable": 2
+  },
+  "assets": [
+    {
+      "id": "household-props-atlas",
+      "status": "candidate-runtime",
+      "source": "source/household-props-atlas.png",
+      "runtime": "runtime/household-props-atlas.png",
+      "grid": {
+        "columns": 4,
+        "rows": 3,
+        "cellOrderValidatedForSharedUse": false
+      },
+      "contains": [
+        "bed",
+        "table",
+        "two stools",
+        "door",
+        "wall shelf",
+        "oil lamp",
+        "storage jar",
+        "water bowl",
+        "folded linen",
+        "basket",
+        "cup"
+      ]
+    },
+    {
+      "id": "world-ground-atlas",
+      "status": "candidate-runtime",
+      "source": "source/world-ground-atlas.png",
+      "runtime": "runtime/world-ground-atlas.png",
+      "grid": {
+        "columns": 4,
+        "rows": 4,
+        "cellOrderValidatedForSharedUse": false
+      },
+      "contains": [
+        "dry earth",
+        "dusty road",
+        "pale limestone path",
+        "sparse grass",
+        "rocky ground",
+        "straight, corner, junction and transition pieces"
+      ]
+    },
+    {
+      "id": "world-objects-atlas",
+      "status": "approved-source-needs-runtime-processing",
+      "source": "source/world-objects-atlas.png",
+      "runtime": null,
+      "grid": {
+        "columns": 4,
+        "rows": 4,
+        "cellOrder": [
+          "martha-house-base",
+          "martha-house-roof",
+          "village-house-a",
+          "village-house-b",
+          "tomb-entrance",
+          "village-well",
+          "market-canopy",
+          "market-table",
+          "world-wall",
+          "world-wall-corner",
+          "world-wall-end",
+          "world-cliff-edge",
+          "door-threshold",
+          "world-road-marker",
+          "world-rock-ledge",
+          "world-olive-tree"
+        ]
+      },
+      "excludeFromSharedRuntime": [
+        "martha-house-base",
+        "martha-house-roof",
+        "tomb-entrance"
+      ]
+    }
+  ],
+  "promotionRequirements": [
+    "Validate in a second independent story repository.",
+    "Finalize atlas cell mappings and runtime anchors.",
+    "Extract only generic world-object cells.",
+    "Complete rights review and add pack-specific LICENSE/NOTICE.",
+    "Publish an immutable release with artifact SHA-256."
+  ]
+}

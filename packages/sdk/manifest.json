@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Story-local CI fallback for published SDK 0.3.0 packages when the repository GITHUB_TOKEN cannot read cross-repository GitHub Packages.",
+  "originalRegistry": "https://npm.pkg.github.com",
+  "source": "Exact tarball response bytes recovered from the authenticated local npm cache; no SDK source code or package content was edited.",
+  "packages": [
+    {
+      "name": "@sonic74129/audio-runtime",
+      "version": "0.3.0",
+      "file": "sonic74129-audio-runtime-0.3.0.tgz",
+      "sha256": "03914119b4225dd41b38e3a6c3c5beaed9191143da5b65e8e054417113b59c25"
+    },
+    {
+      "name": "@sonic74129/content-schema",
+      "version": "0.3.0",
+      "file": "sonic74129-content-schema-0.3.0.tgz",
+      "sha256": "50d0ab5cd2e2bb3c5ff7cd5b15f743d333512366b5454f78be9a779419234e3f"
+    },
+    {
+      "name": "@sonic74129/engine",
+      "version": "0.3.0",
+      "file": "sonic74129-engine-0.3.0.tgz",
+      "sha256": "5ae7866dfd11f59b6316c6aafe50bb08edfdb7f0140ee153ac171f96a8d71b10"
+    },
+    {
+      "name": "@sonic74129/map-runtime",
+      "version": "0.3.0",
+      "file": "sonic74129-map-runtime-0.3.0.tgz",
+      "sha256": "b8fb05c94ce09786bac9cf1aba46883f6ebf5fe4c26b01a62f96dd5323282a6e"
+    },
+    {
+      "name": "@sonic74129/sequence-runtime",
+      "version": "0.3.0",
+      "file": "sonic74129-sequence-runtime-0.3.0.tgz",
+      "sha256": "b25603f0f45e273e1ce260e372456ecce0d38e4aa0ccf5d00769e9c10738073d"
+    },
+    {
+      "name": "@sonic74129/story-runtime",
+      "version": "0.3.0",
+      "file": "sonic74129-story-runtime-0.3.0.tgz",
+      "sha256": "c5d73ea4a830ee9b491b5bc282527bcf863a810bb872afd533fd07b288f48bd2"
+    },
+    {
+      "name": "@sonic74129/test-kit",
+      "version": "0.3.0",
+      "file": "sonic74129-test-kit-0.3.0.tgz",
+      "sha256": "b7ba445f3049d2e5f1de432903bfa4644d44b0922ecff4858dceea15a1f50390"
+    },
+    {
+      "name": "@sonic74129/ui",
+      "version": "0.3.0",
+      "file": "sonic74129-ui-0.3.0.tgz",
+      "sha256": "12b8263ada6312623f610c9233716156ead8c7e2da9ab9388177f19632422cf7"
+    }
+  ]
+}

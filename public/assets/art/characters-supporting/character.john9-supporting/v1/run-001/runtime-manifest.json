@@ -13,6 +13,16 @@
   },
   "selectedCandidate": 1,
   "selectionReason": "Selected source provides two distinct disciples in the period palette; only those John 9:1-7 cells are processed into the runtime manifest.",
+  "animationCoverage": {
+    "directionalIdle": "partial",
+    "directionalWalk": "not-required",
+    "missing": [
+      "disciple-a.idle.up",
+      "disciple-a.idle.down",
+      "disciple-b.idle.up",
+      "disciple-b.idle.down"
+    ]
+  },
   "outputs": [
     {
       "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-a.png",

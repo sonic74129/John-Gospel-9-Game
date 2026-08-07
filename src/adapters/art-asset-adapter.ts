@@ -11,13 +11,27 @@ if (
   throw new Error("Story-local runtime art is outside the private-preview contract.");
 }
 
-interface RuntimeArtAsset {
+export interface RuntimeArtAsset {
   readonly key: string;
   readonly path: string;
   readonly width: number;
   readonly height: number;
   readonly footBaseline: number | null;
+  readonly frameWidth: number;
+  readonly frameHeight: number;
 }
+
+export const JESUS_DIRECTIONAL_FRAMES = Object.freeze({
+  frameWidth: 96,
+  frameHeight: 200,
+  footBaseline: 193,
+  frames: Object.freeze({
+    down: Object.freeze({ idle: 0, walk: Object.freeze([1, 2]) }),
+    up: Object.freeze({ idle: 3, walk: Object.freeze([4, 5]) }),
+    right: Object.freeze({ idle: 6, walk: Object.freeze([7, 8]) }),
+    left: Object.freeze({ idle: 9, walk: Object.freeze([10, 11]) }),
+  }),
+});
 
 const outputs: Array<
   Readonly<{
@@ -50,6 +64,14 @@ function runtimeAsset(fileName: string): Readonly<RuntimeArtAsset> {
       runtimeManifest.actorFootBaselines[
         fileName as keyof typeof runtimeManifest.actorFootBaselines
       ] ?? null,
+    frameWidth:
+      fileName === "jesus-directional.png"
+        ? JESUS_DIRECTIONAL_FRAMES.frameWidth
+        : output.dimensions.width,
+    frameHeight:
+      fileName === "jesus-directional.png"
+        ? JESUS_DIRECTIONAL_FRAMES.frameHeight
+        : output.dimensions.height,
   });
 }
 
@@ -63,6 +85,7 @@ export const STORY_ART = Object.freeze({
     manBlind: runtimeAsset("man-blind.png"),
     manClay: runtimeAsset("man-clay.png"),
     manSeeing: runtimeAsset("man-seeing.png"),
+    jesusDirectional: runtimeAsset("jesus-directional.png"),
     jesusIdle: runtimeAsset("jesus-idle.png"),
     jesusIdleLookRight: runtimeAsset("jesus-idle-look-right.png"),
     jesusClayAction: runtimeAsset("jesus-clay-action.png"),
@@ -91,7 +114,7 @@ export function actorArtForSpawn(actorId: string): Readonly<RuntimeArtAsset> {
   const mapping: Readonly<Record<string, Readonly<RuntimeArtAsset>>> = {
     "player-observer": STORY_ART.actors.observer,
     "man-born-blind": STORY_ART.actors.manBlind,
-    jesus: STORY_ART.actors.jesusIdle,
+    jesus: STORY_ART.actors.jesusDirectional,
     "disciple-left": STORY_ART.actors.discipleA,
     "disciple-right": STORY_ART.actors.discipleB,
   };

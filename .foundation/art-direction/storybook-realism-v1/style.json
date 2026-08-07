@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "storybook-realism-v1",
+  "version": "0.1.0",
+  "status": "candidate",
+  "name": "Warm gently cartooned storybook realism",
+  "visualLanguage": [
+    "Warm, reverent and human.",
+    "Gently simplified silhouettes without chibi anatomy.",
+    "Believable faces, bodies, materials and restrained gestures.",
+    "Polished hand-painted game art with clean forms and subtle texture.",
+    "Gameplay readability takes priority over cinematic spectacle."
+  ],
+  "mapCamera": {
+    "view": "three-quarter top-down RPG",
+    "requirements": [
+      "Readable walkable floor or ground.",
+      "Consistent verticals, roof planes, doorways and object perspective.",
+      "Base, actor and foreground-occlusion layers remain separable.",
+      "No eye-level cinematic or side-on platformer substitution."
+    ]
+  },
+  "palette": [
+    {
+      "name": "warm limestone",
+      "hex": "#D2B887"
+    },
+    {
+      "name": "terracotta",
+      "hex": "#A85F3E"
+    },
+    {
+      "name": "dusty olive",
+      "hex": "#66704B"
+    },
+    {
+      "name": "muted blue",
+      "hex": "#526C73"
+    },
+    {
+      "name": "sand",
+      "hex": "#C5A16E"
+    },
+    {
+      "name": "natural linen",
+      "hex": "#E2D2B2"
+    },
+    {
+      "name": "deep warm shadow",
+      "hex": "#3C352F"
+    }
+  ],
+  "lighting": {
+    "global": "Natural motivated light with soft readable shadows and restrained contrast.",
+    "forbidden": [
+      "fantasy emission",
+      "miracle glow",
+      "cold blue fantasy grading",
+      "crushed black shadows"
+    ]
+  },
+  "characterRules": [
+    "Preserve face, age, hair, complexion, clothing layers, colors and materials.",
+    "Map sprites, special poses and portraits must depict the same identity.",
+    "Expressions remain readable but emotionally restrained.",
+    "Portraits are detailed close-ups of map identities, not unrelated actors."
+  ],
+  "forbiddenContent": [
+    "modern objects",
+    "halo",
+    "magic beam",
+    "fantasy particles",
+    "horror or decay",
+    "blood or body damage",
+    "hero armor or royal costume",
+    "theatrical pose",
+    "embedded text",
+    "UI or watermark"
+  ],
+  "generationRule": {
+    "candidateCount": "2-3",
+    "reviewBeforeNextBatch": true,
+    "revision": "Each v2+ changes one observed defect and preserves accepted details.",
+    "runtimeOnlyAfterApproval": true
+  }
+}

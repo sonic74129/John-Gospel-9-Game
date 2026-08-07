@@ -43,9 +43,132 @@
         "resizeKernel": "lanczos",
         "filter": "crop=341:900:341:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:132:flags=lanczos,format=rgba"
       }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-directional.png",
+      "mediaType": "image/png",
+      "bytes": 265705,
+      "sha256": "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636",
+      "dimensions": {
+        "width": 288,
+        "height": 800
+      },
+      "processing": {
+        "tool": "node:fs.copyFile",
+        "operation": "deterministic-byte-copy",
+        "source": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+        "frameWidth": 96,
+        "frameHeight": 200,
+        "footBaseline": 193,
+        "directionalAnimation": {
+          "down": {
+            "idle": {
+              "x": 0,
+              "y": 0,
+              "width": 96,
+              "height": 200
+            },
+            "walk": [
+              {
+                "x": 96,
+                "y": 0,
+                "width": 96,
+                "height": 200
+              },
+              {
+                "x": 192,
+                "y": 0,
+                "width": 96,
+                "height": 200
+              }
+            ]
+          },
+          "up": {
+            "idle": {
+              "x": 0,
+              "y": 200,
+              "width": 96,
+              "height": 200
+            },
+            "walk": [
+              {
+                "x": 96,
+                "y": 200,
+                "width": 96,
+                "height": 200
+              },
+              {
+                "x": 192,
+                "y": 200,
+                "width": 96,
+                "height": 200
+              }
+            ]
+          },
+          "right": {
+            "idle": {
+              "x": 0,
+              "y": 400,
+              "width": 96,
+              "height": 200
+            },
+            "walk": [
+              {
+                "x": 96,
+                "y": 400,
+                "width": 96,
+                "height": 200
+              },
+              {
+                "x": 192,
+                "y": 400,
+                "width": 96,
+                "height": 200
+              }
+            ]
+          },
+          "left": {
+            "idle": {
+              "x": 0,
+              "y": 600,
+              "width": 96,
+              "height": 200
+            },
+            "walk": [
+              {
+                "x": 96,
+                "y": 600,
+                "width": 96,
+                "height": 200
+              },
+              {
+                "x": 192,
+                "y": 600,
+                "width": 96,
+                "height": 200
+              }
+            ]
+          }
+        }
+      }
     }
   ],
   "reviewStatus": "processed-for-polished-private-preview",
   "releaseEligible": false,
-  "publicRedistributionApproved": false
+  "publicRedistributionApproved": false,
+  "pinnedDirectionalSource": {
+    "assetPack": "identity-jesus-storybook@0.1.0",
+    "path": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png",
+    "bytes": 265705,
+    "sha256": "5e85b3f197ed29a1dd64082465c06c66cba24e1c9819a874da8ee2861d64c636",
+    "dimensions": {
+      "width": 288,
+      "height": 800
+    }
+  },
+  "animationCoverage": {
+    "directionalIdle": "complete",
+    "directionalWalk": "complete",
+    "source": "public/assets/vendor/identity-jesus-storybook/0.1.0/character-sheet.png"
+  }
 }

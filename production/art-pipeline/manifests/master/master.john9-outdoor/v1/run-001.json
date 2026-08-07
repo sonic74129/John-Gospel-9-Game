@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "family": "master",
+  "assetId": "master.john9-outdoor",
+  "promptVersion": "v1",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1536,
+    "height": 1024
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: historical-scene. Asset type: non-runtime visual master for a three-quarter top-down RPG. Create a polished warm hand-painted storybook-realism reference for a restrained first-century Judean outdoor neighborhood near Jerusalem. Show readable dusty footpaths, warm limestone retaining walls, a modest stepped water basin vocabulary, a neutral open courtyard vocabulary, sparse olive and palm foliage, woven shade cloth, clay jars and simple timber gates. Camera is fixed three-quarter top-down, not eye-level; all verticals, roofs, doorways and ground planes share one projection. Use natural upper-left afternoon light, soft shadows, warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, muted blue #526C73, sand #C5A16E, natural linen #E2D2B2 and deep warm shadow #3C352F. Human scale should support non-chibi adults about one doorway-height divided by 2.2. Keep routes broad and calm, materials believable, detail restrained, no story event and no narrative illustration.",
+  "must": [
+    "Three-quarter top-down RPG camera",
+    "Readable walkable ground and doorway scale",
+    "First-century Judean material vocabulary",
+    "Warm hand-painted storybook realism",
+    "Natural upper-left light"
+  ],
+  "avoid": [
+    "Eye-level cinematic view",
+    "Modern objects or paving",
+    "Characters performing a miracle",
+    "Halos, glow, fantasy particles",
+    "Embedded text, UI, border, watermark",
+    "Tomb, Bethany, Lazarus, Martha, John 11 imagery"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1536,
+    "exactHeight": 1024,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "Perspective remains consistently three-quarter top-down",
+    "A 120 px-tall adult overlay would read at believable scale",
+    "Routes remain visually separable from scenery",
+    "Palette, material and light match storybook-realism-v1",
+    "No forbidden theological or period content"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "pack:nt-judea-first-century@0.1.0"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "startedAt": "2026-08-02T22:11:56.343Z",
+  "status": "machine-rejected",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 2126002,
+      "sha256": "e90d5296b98d06984ff7a37a37ca9d8905e0cd446523148bed2af302cefdf0c0",
+      "generatedAt": "2026-08-02T22:12:36.976Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 1982012,
+      "sha256": "150d317837344dc10e9f8c200af976cd1af7f4377e3855a3903fa214d7d0132e",
+      "generatedAt": "2026-08-02T22:13:12.677Z"
+    }
+  ],
+  "completedAt": "2026-08-02T22:13:13.054Z",
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/master/master.john9-outdoor/v1/run-001/contact-sheet.jpg",
+    "bytes": 262326,
+    "sha256": "99a9e8b10a99c023786875c7a67784a3bf34261f49c4608aaa286dd3b637c021",
+    "maximumLongEdge": 1600
+  }
+}

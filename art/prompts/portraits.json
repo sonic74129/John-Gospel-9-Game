@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "1.0.0",
+  "family": "portraits",
+  "scope": "The current dialogue UI does not consume portraits; none are generated or bundled to avoid unused identity variants.",
+  "entries": []
+}

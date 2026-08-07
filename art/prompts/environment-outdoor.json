@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "1.0.0",
+  "family": "environment-outdoor",
+  "entries": [
+    {
+      "assetId": "environment.john9-zigzag-world",
+      "runtimeUse": "Primary continuous 2560x1792 north-south zig-zag world base behind actors and props",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v2",
+      "dimensions": { "width": 1152, "height": 768 },
+      "candidateCount": 2,
+      "prompt": "Use case: historical-scene. Asset type: primary continuous game-world base for a three-quarter top-down RPG, designed for an exact 2560x1792 runtime canvas and generated as a 1152x768 source whose central 1098x768 area is the safe crop. Create one seamless outdoor world, never panels or a horizontal corridor. Match this north-south zig-zag composition when mapped into 2560x1792 coordinates: roadside occupies x80-1040 y420-1320; the Pool of Siloam occupies x640-1620 y960-1720; a neutral neighbor gathering occupies x1120-1880 y420-1240; a neutral inquiry courtyard occupies x1680-2480 y120-1120; and an outer road occupies x1880-2520 y920-1680. The broad dry walkable route must visibly bend southeast from roadside to Siloam, northeast to the neighbor shade, east and north into the inquiry courtyard, then south through its gate to the outer road. Preserve the four portal centers corresponding approximately to runtime (840,1200), (1420,1140), (1770,690), and (2100,1020), each with generous open clearance. Show the Pool of Siloam as a restrained stepped limestone basin near runtime x980-1380 y1480-1640, with a dry accessible washing edge at x1120 y1440. Show a broad inquiry standing area around x2100 y620, a simple open gate near x1990 y680, and a quiet olive-edged ending space around x2260 y1320. Keep fixed walls, basin water, terraces, shade structures, benches and tree islands outside the canonical route. Actors are separate and about 105-132 runtime pixels tall, so maintain believable doorway, gate, wall, stool and basin scale. Fixed three-quarter top-down RPG projection, coherent verticals and roof planes, polished warm hand-painted storybook realism, clean readable forms, subtle paper-and-gouache texture, upper-left natural afternoon light and soft shadows. Palette: warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, muted blue #526C73, sand #C5A16E, natural linen #E2D2B2, deep warm shadow #3C352F. Empty environment only: no people, no labels and no story event.",
+      "revision": {
+        "target": "Replace the obsolete 3200x1792 horizontal corridor with the verified 2560x1792 north-south zig-zag contract.",
+        "changeOnly": "World topology, route direction, landmark placement, portal placement and output crop contract.",
+        "keepUnchanged": "Three-quarter camera, storybook realism, period materials, palette, restrained theology, empty environment and actor scale.",
+        "acceptance": "All five regions and four portals read in canonical zig-zag order with Siloam, inquiry and outer-road staging unobstructed."
+      },
+      "must": [
+        "One continuous five-region north-south zig-zag outdoor world",
+        "Clear broad dry route through four canonical portal centers",
+        "Siloam basin in the lower middle, inquiry courtyard upper right, outer road lower right",
+        "Three-quarter top-down projection and believable scale",
+        "Empty environment with upper-left natural light"
+      ],
+      "avoid": [
+        "People or baked characters",
+        "Horizontal corridor, disconnected panels, collage seams, inset frames",
+        "Eye-level or side-on camera",
+        "Decorative maze, blocked route, deep water crossing",
+        "Temple identification or unsupported named venue",
+        "Halos, glow, fantasy effects, modern objects",
+        "Embedded text, labels, UI, watermark",
+        "Tomb, Bethany, Lazarus, Martha, John 11 imagery"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1152,
+        "exactHeight": 768,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "Five regions read in canonical zig-zag order without becoming separate panels",
+        "Canonical route and all four portals remain unobstructed",
+        "Pool, gate and outer road are immediately legible at gameplay zoom",
+        "Scale accepts 105-132 px runtime actors without crowding",
+        "Perspective, palette, materials and lighting are coherent",
+        "Theological restraint and period rules pass"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "master:master.john9-outdoor@v1",
+        "world:src/world/layout.json",
+        "world:src/world/collisions.json",
+        "world:src/world/anchors.json",
+        "world:src/world/paths.json"
+      ]
+    },
+    {
+      "assetId": "environment.john9-zigzag-props",
+      "runtimeUse": "Geometry-calibrated foreground occluders, gate, clay vessel, pool marker and stool",
+      "model": "mai-image-2-5-pro",
+      "modelName": "MAI-Image-2.5-Pro",
+      "modelVersion": "2026-06-19",
+      "promptVersion": "v2",
+      "dimensions": { "width": 1152, "height": 768 },
+      "candidateCount": 2,
+      "prompt": "Use case: stylized-concept. Asset type: production game-object atlas calibrated to the 2560x1792 John 9 zig-zag world. On a perfectly flat uniform pale cream #F7F0DE background, present exactly eight isolated first-century Judean objects in a precise 4 columns by 2 rows grid, one centered object per equal 288x384 cell, generous empty margin, no overlap, no dividing lines, no labels and no shadows crossing cell boundaries. Exact order, row 1 left to right: a sparse broad olive canopy for the roadside foreground polygon near runtime x140-400 y980-1220; a short diagonal palm frond for the Siloam foreground near x700-900 y1420-1660; a woven dusty-olive market awning edge for the neighbor foreground near x1620-1800 y800-1060; an irregular quiet olive branch for the outer-road foreground near x1880-2100 y1240-1480. Row 2 left to right: a simple open timber courtyard gate panel sized for the inquiry gate around x1970 y720; a tiny shallow clay vessel suitable for ordinary prepared mud; a low limestone pool-edge marker stone; a simple low wooden waiting stool. All objects use the same fixed three-quarter top-down projection as the world and share polished warm hand-painted storybook realism, clean silhouettes, believable first-century materials, upper-left natural light, soft compact grounding shadows and the palette warm limestone #D2B887, terracotta #A85F3E, dusty olive #66704B, sand #C5A16E and deep warm shadow #3C352F. Each object must be complete and fully inside its cell. No people, text, symbols or narrative action.",
+      "revision": {
+        "target": "Replace the obsolete six-cell corridor prop sheet with eight assets calibrated to the current occlusion and prop contracts.",
+        "changeOnly": "Atlas cell count, order and geometry-specific occluder vocabulary.",
+        "keepUnchanged": "Removable background, period materials, three-quarter projection, palette, lighting and clean isolated silhouettes.",
+        "acceptance": "Eight cells appear in exact 4x2 order and remain legible at their contracted runtime dimensions."
+      },
+      "must": [
+        "Exactly eight isolated objects in 4x2 order",
+        "Uniform #F7F0DE removable background",
+        "Complete clean silhouettes with generous margins",
+        "Three-quarter top-down perspective",
+        "Consistent upper-left light and first-century materials"
+      ],
+      "avoid": [
+        "People, animals, buildings or narrative scene",
+        "Cell borders, labels, text, UI, watermark",
+        "Object overlap or clipped silhouettes",
+        "Modern hinges, steel hardware or furniture",
+        "Glow, particles, icon outlines, sticker style",
+        "Tomb or John 11 objects"
+      ],
+      "machineAcceptance": {
+        "mediaType": "image/png",
+        "exactWidth": 1152,
+        "exactHeight": 768,
+        "maximumBytes": 12000000
+      },
+      "visualAcceptance": [
+        "All eight requested cells are present in exact order",
+        "Background is sufficiently uniform for keyed transparency",
+        "Object silhouettes remain legible at 64-260 runtime pixels",
+        "Perspective, palette, material and light match the world base",
+        "No forbidden or story-extraneous content"
+      ],
+      "dependencies": [
+        "style:storybook-realism-v1@0.1.0",
+        "master:master.john9-outdoor@v1",
+        "environment:environment.john9-zigzag-world@v2",
+        "world:src/world/occlusion.json",
+        "world:src/world/props.json"
+      ]
+    }
+  ]
+}
