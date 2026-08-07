@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { PLAYER_ROLE } from "../../src/story/actors.ts";
+import {
+  manBornBlindPathTransition,
+  PLAYER_ROLE,
+} from "../../src/story/actors.ts";
 import { FINAL_SNAPSHOTS } from "../../src/story/completion.ts";
 import { NARRATIVE_ANCHORS } from "../../src/story/sequences.ts";
 
@@ -25,4 +28,16 @@ test("active final states contain only the John 9:1-7 participants", () => {
       assert.equal("position" in actor, false);
     }
   }
+});
+
+test("the man born blind always stands before path movement", () => {
+  assert.deepEqual(manBornBlindPathTransition("man-to-pool", "clay-on-eyes"), {
+    standPose: "standing",
+    walkingPose: "walking",
+    finalPose: "washing",
+  });
+  assert.throws(
+    () => manBornBlindPathTransition("man-to-pool", "seated"),
+    /must receive clay and stand before walking/,
+  );
 });

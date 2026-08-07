@@ -13,6 +13,31 @@
   },
   "selectedCandidate": 2,
   "selectionReason": "Selected source preserves the blind, clay-applied, and seeing states used by John 9:1-7 with consistent scale and restrained posture.",
+  "animationCoverage": {
+    "directionalIdle": "blocked-imagegen-built-in-unavailable",
+    "directionalWalk": "blocked-imagegen-built-in-unavailable",
+    "missing": [
+      "seated-blind",
+      "clay-still",
+      "pre-wash.idle.up",
+      "pre-wash.idle.down",
+      "pre-wash.idle.left",
+      "pre-wash.idle.right",
+      "pre-wash.walk.up.step-left",
+      "pre-wash.walk.up.step-right",
+      "pre-wash.walk.down.step-left",
+      "pre-wash.walk.down.step-right",
+      "pre-wash.walk.left.step-left",
+      "pre-wash.walk.left.step-right",
+      "pre-wash.walk.right.step-left",
+      "pre-wash.walk.right.step-right",
+      "washing",
+      "washed.idle.up",
+      "washed.idle.down",
+      "washed.idle.left",
+      "washed.idle.right"
+    ]
+  },
   "outputs": [
     {
       "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-blind.png",

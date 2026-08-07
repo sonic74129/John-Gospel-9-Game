@@ -13,6 +13,20 @@
   },
   "selectedCandidate": 1,
   "selectionReason": "Candidate 1 passes the v3 orientation gate: front, back, right-facing and left-facing profiles are distinct, text is absent, identity and clothing remain continuous, anatomy is non-chibi, the pose is restrained, and the uniform background supports clean runtime extraction.",
+  "animationCoverage": {
+    "directionalIdle": "complete",
+    "directionalWalk": "blocked-imagegen-built-in-unavailable",
+    "missing": [
+      "walk.up.step-left",
+      "walk.up.step-right",
+      "walk.down.step-left",
+      "walk.down.step-right",
+      "walk.left.step-left",
+      "walk.left.step-right",
+      "walk.right.step-left",
+      "walk.right.step-right"
+    ]
+  },
   "outputs": [
     {
       "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer.png",

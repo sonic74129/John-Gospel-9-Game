@@ -20,7 +20,7 @@
   "runtimeInventory": {
     "manifest": "public/assets/art/manifest.json",
     "assetFamilies": 6,
-    "files": 14,
+    "files": 15,
     "worldDimensions": {
       "width": 1248,
       "height": 1280
@@ -40,7 +40,8 @@
     "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
     "The runtime world is an audited, unscaled composite of the courtyard and Siloam crops over a neutral fill; unused later-region painting is absent.",
     "The world base is a single painted two-dimensional courtyard-to-Siloam composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
-    "Runtime actors use restrained static poses rather than full directional walk animation.",
+    "The pinned Jesus vendor sheet provides four-direction idle and two-step walk frames through deterministic byte-copy extraction.",
+    "Observer walk frames, true disciple up/down idles, and the required man-born-blind state/directional frames remain blocked because the built-in image-generation tool is unavailable; no CLI fallback or substitute art was used.",
     "Dialogue portraits were not generated because the current UI has no portrait surface.",
     "All generated and pinned packs remain non-release-eligible until rights and public redistribution review."
   ]
