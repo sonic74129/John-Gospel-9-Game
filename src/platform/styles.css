@@ -268,6 +268,12 @@ button:disabled {
   font: 700 clamp(1.25rem, 3vw, 2rem)/1.2 Georgia, serif;
 }
 
+.dialogue-panel button,
+.ending-panel button,
+.restart-confirmation button {
+  color: #3c352f;
+}
+
 .dialogue-reference {
   margin: 0 0 1rem;
   color: #f0dfbd;
@@ -289,6 +295,10 @@ button:disabled {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
+}
+
+.game-controls[hidden] {
+  display: none;
 }
 
 .game-controls button[aria-pressed="true"] {
@@ -314,6 +324,16 @@ button:disabled {
 .restart-confirmation h2 {
   margin-top: 0;
   font-family: Georgia, "Times New Roman", serif;
+}
+
+@media (min-width: 641px) and (max-height: 800px) {
+  .platform-shell {
+    padding: 1rem;
+  }
+
+  .game-frame {
+    width: min(55rem, 100%);
+  }
 }
 
 .restart-confirmation {

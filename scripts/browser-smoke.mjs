@@ -182,7 +182,7 @@ async function save(cdp, sessionId) {
   );
 }
 
-async function pressDirection(cdp, sessionId, hint) {
+async function pressDirection(cdp, sessionId, hint, durationMs = 420) {
   const keys = [];
   if (hint.includes("北")) keys.push(["ArrowUp", "ArrowUp", 38]);
   if (hint.includes("南")) keys.push(["ArrowDown", "ArrowDown", 40]);
@@ -198,7 +198,7 @@ async function pressDirection(cdp, sessionId, hint) {
       sessionId,
     );
   }
-  await delay(420);
+  await delay(durationMs);
   for (const [key, code, windowsVirtualKeyCode] of keys.reverse()) {
     await cdp.send(
       "Input.dispatchKeyEvent",
@@ -255,6 +255,16 @@ async function playToCompletion({
 
   while (Date.now() - started < 360_000) {
     if (await visible(cdp, sessionId, "[data-ending]")) {
+      const endingReference = await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector("[data-ending]")?.textContent ?? ""`,
+      );
+      assert.match(endingReference, /約翰福音 9:1[–-]7/);
+      assert.equal(
+        await visible(cdp, sessionId, "[data-game-controls]"),
+        false,
+      );
       if (screenshots.has(ALL_BEATS.length)) {
         captured.push(
           await screenshot(cdp, sessionId, screenshots.get(ALL_BEATS.length)),
@@ -293,7 +303,7 @@ async function playToCompletion({
     }
 
     if (await visible(cdp, sessionId, "[data-recall]")) {
-      await click(cdp, sessionId, "[data-recall-dismiss]");
+      throw new Error("Obsolete recall UI appeared in the six-beat runtime.");
     }
 
     const hint = await evaluate(
@@ -306,11 +316,23 @@ async function playToCompletion({
       if (
         progress === 5 &&
         hint.includes("距離約 1 段路") &&
-        screenshots.has("pool")
+        (screenshots.has("standing") || screenshots.has("pool"))
       ) {
-        await delay(300);
-        captured.push(await screenshot(cdp, sessionId, screenshots.get("pool")));
-        screenshots.delete("pool");
+        await pressDirection(cdp, sessionId, hint, 320);
+        await delay(150);
+        if (screenshots.has("standing")) {
+          captured.push(
+            await screenshot(cdp, sessionId, screenshots.get("standing")),
+          );
+          screenshots.delete("standing");
+        }
+        if (screenshots.has("pool")) {
+          captured.push(
+            await screenshot(cdp, sessionId, screenshots.get("pool")),
+          );
+          screenshots.delete("pool");
+        }
+        continue;
       }
       await pressDirection(cdp, sessionId, hint);
       continue;
@@ -326,6 +348,22 @@ async function playToCompletion({
     }
 
     if (await visible(cdp, sessionId, "[data-dialogue]")) {
+      if (progress === 3 && screenshots.has("clay")) {
+        await delay(150);
+        captured.push(
+          await screenshot(cdp, sessionId, screenshots.get("clay")),
+        );
+        screenshots.delete("clay");
+      }
+      if (progress === 4 && screenshots.has("follow")) {
+        await click(cdp, sessionId, "[data-dialogue-next]");
+        await delay(1_200);
+        captured.push(
+          await screenshot(cdp, sessionId, screenshots.get("follow")),
+        );
+        screenshots.delete("follow");
+        continue;
+      }
       await click(cdp, sessionId, "[data-dialogue-next]");
       await delay(80);
       continue;
@@ -372,6 +410,32 @@ async function resetAndStart(cdp, sessionId, viewport) {
         "document.querySelector('[data-skip]')?.disabled === false",
       ),
     "enabled game controls",
+  );
+  const frameBounds = await evaluate(
+    cdp,
+    sessionId,
+    `(() => {
+      const frame = document.querySelector(".game-frame")?.getBoundingClientRect();
+      if (!frame) throw new Error("Missing game frame");
+      return {
+        top: frame.top,
+        right: frame.right,
+        bottom: frame.bottom,
+        left: frame.left,
+        viewportWidth: innerWidth,
+        viewportHeight: innerHeight
+      };
+    })()`,
+  );
+  assert.ok(frameBounds.top >= 0, JSON.stringify(frameBounds));
+  assert.ok(frameBounds.left >= 0, JSON.stringify(frameBounds));
+  assert.ok(
+    frameBounds.right <= frameBounds.viewportWidth,
+    JSON.stringify(frameBounds),
+  );
+  assert.ok(
+    frameBounds.bottom <= frameBounds.viewportHeight,
+    JSON.stringify(frameBounds),
   );
 }
 
@@ -484,9 +548,12 @@ async function run() {
       mode: "normal",
       reenterAt: 3,
       screenshots: new Map([
-        [0, "01-courtyard-opening-desktop.png"],
-        ["pool", "02-siloam-pool-desktop.png"],
-        [6, "03-ending-desktop.png"],
+        [0, "01-opening-desktop.png"],
+        ["clay", "02-clay-desktop.png"],
+        ["follow", "03-follow-desktop.png"],
+        ["standing", "04-standing-at-pool-desktop.png"],
+        ["pool", "05-pool-approach-desktop.png"],
+        [6, "06-ending-desktop.png"],
       ]),
     });
     const normalSave = await save(cdp, sessionId);
@@ -499,16 +566,36 @@ async function run() {
       screenshots: normal.captured,
     });
 
+    console.log("Starting normal mobile playthrough");
+    await resetAndStart(cdp, sessionId, { width: 390, height: 844 });
+    const mobileNormal = await playToCompletion({
+      cdp,
+      sessionId,
+      mode: "normal-mobile",
+      screenshots: new Map([
+        [0, "07-opening-mobile-390x844.png"],
+        ["clay", "08-clay-mobile-390x844.png"],
+        ["follow", "09-follow-mobile-390x844.png"],
+        ["standing", "10-standing-at-pool-mobile-390x844.png"],
+        ["pool", "11-pool-approach-mobile-390x844.png"],
+        [6, "12-ending-mobile-390x844.png"],
+      ]),
+    });
+    const mobileNormalSave = await save(cdp, sessionId);
+    assert.deepEqual(mobileNormalSave.completedBeatIds, ALL_BEATS);
+    scenarios.push({
+      name: "normal-mobile",
+      viewport: "390x844",
+      completedBeatIds: mobileNormalSave.completedBeatIds,
+      screenshots: mobileNormal.captured,
+    });
+
     console.log("Starting all-skip mobile playthrough");
     await resetAndStart(cdp, sessionId, { width: 390, height: 844 });
     const mobileSkip = await playToCompletion({
       cdp,
       sessionId,
       mode: "all-skip",
-      screenshots: new Map([
-        [0, "04-courtyard-opening-mobile.png"],
-        ["pool", "05-siloam-pool-mobile.png"],
-      ]),
     });
     const skipSave = await save(cdp, sessionId);
     assert.deepEqual(skipSave.completedBeatIds, ALL_BEATS);
@@ -574,7 +661,8 @@ async function run() {
       `(() => {
         const html = document.documentElement.outerHTML;
         const tokens = ["graybox", "debugOverlay", "dialogue-placeholder",
-          "data-goal-id", "data-segment-id", "data-source-level"];
+          "data-goal-id", "data-segment-id", "data-source-level", "data-recall",
+          "見證紀錄", "回想卡"];
         return tokens.filter((token) => html.includes(token));
       })()`,
     );
@@ -590,9 +678,17 @@ async function run() {
       scenarios,
       finalStateParity: {
         normal: normalSave.completedBeatIds,
+        normalMobile: mobileNormalSave.completedBeatIds,
         allSkip: skipSave.completedBeatIds,
         mixedSkip: mixedSave.completedBeatIds,
         equivalent: true,
+      },
+      visualBlockers: {
+        totalMissingFrames: 31,
+        observerWalk: 8,
+        disciplesTrueUpDownIdle: 4,
+        manBornBlindStatesAndDirections: 19,
+        status: "blocked-imagegen-built-in-unavailable",
       },
       browserErrors,
       assetOrNetworkFailures: networkFailures,

@@ -327,6 +327,7 @@ export function createAppShell(
     setStarted: () => {
       started = true;
       startScreen.hidden = true;
+      gameControls.hidden = false;
       for (const button of [
         pauseButton,
         muteButton,
@@ -359,6 +360,7 @@ export function createAppShell(
       dialogue.hidden = true;
       ending.hidden = false;
       ending.dataset.blocking = "true";
+      gameControls.hidden = true;
       pauseButton.disabled = true;
       skipButton.disabled = true;
       restartButton.disabled = false;
