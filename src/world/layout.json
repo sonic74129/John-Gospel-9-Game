@@ -16,7 +16,7 @@
     "yAxis": "south",
     "unit": "world-pixel"
   },
-  "worldBounds": { "x": 0, "y": 0, "width": 2560, "height": 1792 },
+  "worldBounds": { "x": 0, "y": 0, "width": 1248, "height": 1280 },
   "sourcePolicy": {
     "scriptureNamedRegionIds": ["siloam-pool"],
     "neutralStagingSourceLevel": "approved-bridge",
@@ -33,20 +33,20 @@
       "label": "Courtyard",
       "sourceLevel": "approved-bridge",
       "purpose": "Open central-right stone paving for the opening encounter and the clear departure toward Siloam.",
-      "bounds": { "x": 880, "y": 240, "width": 920, "height": 900 },
+      "bounds": { "x": 304, "y": 16, "width": 920, "height": 900 },
       "walkablePolygon": [
-        { "x": 960, "y": 240 },
-        { "x": 1800, "y": 240 },
-        { "x": 1800, "y": 660 },
-        { "x": 1500, "y": 700 },
-        { "x": 1320, "y": 820 },
-        { "x": 1160, "y": 1040 },
-        { "x": 1100, "y": 1140 },
-        { "x": 880, "y": 1140 },
-        { "x": 840, "y": 1040 },
-        { "x": 1020, "y": 780 },
-        { "x": 1120, "y": 620 },
-        { "x": 960, "y": 500 }
+        { "x": 384, "y": 16 },
+        { "x": 1224, "y": 16 },
+        { "x": 1224, "y": 436 },
+        { "x": 924, "y": 476 },
+        { "x": 744, "y": 596 },
+        { "x": 584, "y": 816 },
+        { "x": 524, "y": 916 },
+        { "x": 304, "y": 916 },
+        { "x": 264, "y": 816 },
+        { "x": 444, "y": 556 },
+        { "x": 544, "y": 396 },
+        { "x": 384, "y": 276 }
       ]
     },
     {
@@ -55,18 +55,18 @@
       "sourceLevel": "scripture",
       "scriptureLocationName": "Siloam",
       "purpose": "The named washing destination, approached from the courtyard by the short south-west path.",
-      "bounds": { "x": 600, "y": 1020, "width": 620, "height": 460 },
+      "bounds": { "x": 24, "y": 796, "width": 620, "height": 460 },
       "walkablePolygon": [
-        { "x": 860, "y": 1040 },
-        { "x": 1120, "y": 1020 },
-        { "x": 1220, "y": 1100 },
-        { "x": 1180, "y": 1220 },
-        { "x": 1160, "y": 1400 },
-        { "x": 1080, "y": 1480 },
-        { "x": 820, "y": 1440 },
-        { "x": 700, "y": 1360 },
-        { "x": 680, "y": 1220 },
-        { "x": 760, "y": 1120 }
+        { "x": 284, "y": 816 },
+        { "x": 544, "y": 796 },
+        { "x": 644, "y": 876 },
+        { "x": 604, "y": 996 },
+        { "x": 584, "y": 1176 },
+        { "x": 504, "y": 1256 },
+        { "x": 244, "y": 1216 },
+        { "x": 124, "y": 1136 },
+        { "x": 104, "y": 996 },
+        { "x": 184, "y": 896 }
       ]
     }
   ],
@@ -77,8 +77,8 @@
       "fromRegionId": "courtyard",
       "toRegionId": "siloam-pool",
       "segment": [
-        { "x": 1000, "y": 1070 },
-        { "x": 1100, "y": 1130 }
+        { "x": 424, "y": 846 },
+        { "x": 524, "y": 906 }
       ],
       "clearance": 96
     }

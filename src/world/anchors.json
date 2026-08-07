@@ -8,7 +8,7 @@
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
       "kind": "player-spawn",
-      "position": { "x": 1580, "y": 530 },
+      "position": { "x": 1004, "y": 306 },
       "facing": "north-west",
       "clearanceRadius": 32
     },
@@ -17,7 +17,7 @@
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
       "kind": "actor-staging",
-      "position": { "x": 1580, "y": 530 },
+      "position": { "x": 1004, "y": 306 },
       "facing": "north-west",
       "lookAtAnchorId": "courtyard.man-center",
       "clearanceRadius": 34
@@ -27,7 +27,7 @@
       "regionId": "courtyard",
       "sourceLevel": "scripture",
       "kind": "actor-staging",
-      "position": { "x": 1450, "y": 485 },
+      "position": { "x": 874, "y": 261 },
       "facing": "north",
       "clearanceRadius": 38
     },
@@ -36,7 +36,7 @@
       "regionId": "courtyard",
       "sourceLevel": "scripture",
       "kind": "actor-staging",
-      "position": { "x": 1370, "y": 430 },
+      "position": { "x": 794, "y": 206 },
       "facing": "south-east",
       "lookAtAnchorId": "courtyard.man-center",
       "clearanceRadius": 34
@@ -46,7 +46,7 @@
       "regionId": "courtyard",
       "sourceLevel": "scripture",
       "kind": "group-staging",
-      "position": { "x": 1465, "y": 390 },
+      "position": { "x": 889, "y": 166 },
       "facing": "south",
       "lookAtAnchorId": "courtyard.man-center",
       "clearanceRadius": 62
@@ -56,7 +56,7 @@
       "regionId": "courtyard",
       "sourceLevel": "scripture",
       "kind": "action",
-      "position": { "x": 1410, "y": 455 },
+      "position": { "x": 834, "y": 231 },
       "facing": "south-east",
       "clearanceRadius": 40
     },
@@ -65,7 +65,7 @@
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
       "kind": "camera-focus",
-      "position": { "x": 1470, "y": 480 },
+      "position": { "x": 894, "y": 256 },
       "facing": "north",
       "clearanceRadius": 0
     },
@@ -74,7 +74,7 @@
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
       "kind": "route",
-      "position": { "x": 1020, "y": 1080 },
+      "position": { "x": 444, "y": 856 },
       "facing": "south-west",
       "clearanceRadius": 42
     },
@@ -83,7 +83,7 @@
       "regionId": "siloam-pool",
       "sourceLevel": "scripture",
       "kind": "action",
-      "position": { "x": 1090, "y": 1140 },
+      "position": { "x": 514, "y": 916 },
       "facing": "south-west",
       "clearanceRadius": 42
     },
@@ -92,7 +92,7 @@
       "regionId": "siloam-pool",
       "sourceLevel": "approved-bridge",
       "kind": "route",
-      "position": { "x": 1160, "y": 1170 },
+      "position": { "x": 584, "y": 946 },
       "facing": "west",
       "clearanceRadius": 34
     },
@@ -101,7 +101,7 @@
       "regionId": "siloam-pool",
       "sourceLevel": "approved-bridge",
       "kind": "camera-focus",
-      "position": { "x": 1090, "y": 1140 },
+      "position": { "x": 514, "y": 916 },
       "facing": "south",
       "clearanceRadius": 0
     }

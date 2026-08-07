@@ -9,7 +9,7 @@
       "anchorId": "courtyard.player-start",
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
-      "position": { "x": 1580, "y": 530 },
+      "position": { "x": 1004, "y": 306 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -19,7 +19,7 @@
       "anchorId": "courtyard.man-center",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 1450, "y": 485 },
+      "position": { "x": 874, "y": 261 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -29,7 +29,7 @@
       "anchorId": "courtyard.jesus",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 1370, "y": 430 },
+      "position": { "x": 794, "y": 206 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -39,7 +39,7 @@
       "anchorId": "courtyard.disciples",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 1425, "y": 390 },
+      "position": { "x": 849, "y": 166 },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -49,7 +49,7 @@
       "anchorId": "courtyard.disciples",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 1500, "y": 395 },
+      "position": { "x": 924, "y": 171 },
       "collisionRadius": 18,
       "initiallyVisible": true
     }

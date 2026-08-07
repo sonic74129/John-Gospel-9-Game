@@ -255,11 +255,11 @@ async function playToCompletion({
 
   while (Date.now() - started < 360_000) {
     if (await visible(cdp, sessionId, "[data-ending]")) {
-      if (screenshots.has(19)) {
+      if (screenshots.has(ALL_BEATS.length)) {
         captured.push(
-          await screenshot(cdp, sessionId, screenshots.get(19)),
+          await screenshot(cdp, sessionId, screenshots.get(ALL_BEATS.length)),
         );
-        screenshots.delete(19);
+        screenshots.delete(ALL_BEATS.length);
       }
       return { captured, reentered };
     }
@@ -268,7 +268,7 @@ async function playToCompletion({
     const progress = currentSave?.completedBeatIds.length ?? 0;
     if (progress !== lastProgress) {
       lastProgress = progress;
-      console.log(`${mode}: completed ${progress}/19`);
+      console.log(`${mode}: completed ${progress}/${ALL_BEATS.length}`);
       if (screenshots.has(progress)) {
         await delay(300);
         captured.push(
@@ -303,6 +303,15 @@ async function playToCompletion({
         ' return element && !element.hidden ? element.textContent ?? "" : ""; })()',
     );
     if (hint !== "") {
+      if (
+        progress === 5 &&
+        hint.includes("距離約 1 段路") &&
+        screenshots.has("pool")
+      ) {
+        await delay(300);
+        captured.push(await screenshot(cdp, sessionId, screenshots.get("pool")));
+        screenshots.delete("pool");
+      }
       await pressDirection(cdp, sessionId, hint);
       continue;
     }
@@ -476,7 +485,7 @@ async function run() {
       reenterAt: 3,
       screenshots: new Map([
         [0, "01-courtyard-opening-desktop.png"],
-        [5, "02-siloam-pool-desktop.png"],
+        ["pool", "02-siloam-pool-desktop.png"],
         [6, "03-ending-desktop.png"],
       ]),
     });
@@ -496,7 +505,10 @@ async function run() {
       cdp,
       sessionId,
       mode: "all-skip",
-      screenshots: new Map([[0, "04-courtyard-opening-mobile.png"]]),
+      screenshots: new Map([
+        [0, "04-courtyard-opening-mobile.png"],
+        ["pool", "05-siloam-pool-mobile.png"],
+      ]),
     });
     const skipSave = await save(cdp, sessionId);
     assert.deepEqual(skipSave.completedBeatIds, ALL_BEATS);

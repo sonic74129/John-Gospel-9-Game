@@ -74,9 +74,9 @@ test("all active courtyard and Siloam anchors are radius-safe", () => {
     }
   }
   for (const point of [
-    { x: 1400, y: 310 },
-    { x: 1600, y: 440 },
-    { x: 820, y: 1260 },
+    { x: 824, y: 86 },
+    { x: 1024, y: 216 },
+    { x: 244, y: 1036 },
     { x: 10, y: 10 }
   ]) {
     assert.equal(isWalkable(point), false, JSON.stringify(point));
@@ -113,9 +113,9 @@ test("the actor route cannot cut through roofs, planter, wall, or pool water", (
     );
   }
   for (const target of [
-    { x: 1400, y: 310 },
-    { x: 1600, y: 440 },
-    { x: 820, y: 1260 }
+    { x: 824, y: 86 },
+    { x: 1024, y: 216 },
+    { x: 244, y: 1036 }
   ]) {
     assert.deepEqual(findWalkablePath(navigation, playerStart, target, isWalkable), []);
   }

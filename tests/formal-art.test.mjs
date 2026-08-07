@@ -47,26 +47,180 @@ function imageDimensions(bytes, path) {
         height: bytes.readUInt16LE(28) & 0x3fff,
       };
     }
+    if (chunk === "VP8L" && bytes[20] === 0x2f) {
+      const bits = bytes.readUInt32LE(21);
+      return {
+        width: (bits & 0x3fff) + 1,
+        height: ((bits >>> 14) & 0x3fff) + 1,
+      };
+    }
   }
   throw new Error(`Unsupported runtime image format: ${path}`);
 }
 
-test("formal art manifest pins the v2 zig-zag private-preview contract", () => {
+test("formal art manifest pins the cropped courtyard-to-Siloam private-preview contract", () => {
   assert.equal(manifest.reviewStatus, "polished-private-preview");
   assert.equal(manifest.releaseEligible, false);
   assert.equal(manifest.publicRedistributionApproved, false);
   assert.deepEqual(manifest.worldContract, {
-    width: 2560,
-    height: 1792,
-    topology: "north-south-zig-zag",
+    width: 1248,
+    height: 1280,
+    topology: "courtyard-to-siloam-crop",
+    sourceWidth: 2560,
+    sourceHeight: 1792,
+    retainedSourceBounds: {
+      left: 576,
+      top: 224,
+      right: 1824,
+      bottom: 1504,
+    },
   });
   assert.equal(review.runtimeInventory.files, 14);
   assert.deepEqual(review.runtimeInventory.worldDimensions, {
-    width: 2560,
-    height: 1792,
+    width: 1248,
+    height: 1280,
   });
   assert.ok(review.selectedAssets.some((id) => id.includes("zigzag-world@v2")));
   assert.ok(review.selectedAssets.every((id) => !id.includes("world-base@v1")));
+});
+
+test("world processing records two unscaled direct-paste crops over neutral fill", () => {
+    const world = manifest.assets.find(
+      ({ assetId }) => assetId === "environment.john9-zigzag-world",
+    );
+    assert.ok(world);
+    const [output] = world.outputs;
+    assert.deepEqual(output.dimensions, { width: 1248, height: 1280 });
+    assert.equal(output.processing.tool, "ffmpeg");
+    assert.deepEqual(output.processing.canvas, {
+      width: 1248,
+      height: 1280,
+      color: "#ead9b7",
+    });
+    assert.deepEqual(output.processing.placements, [
+      {
+        sourceCrop: [840, 240, 1800, 1140],
+        destination: [264, 16],
+        scale: "none",
+        blend: "none",
+      },
+      {
+        sourceCrop: [600, 1020, 1220, 1480],
+        destination: [24, 796],
+        scale: "none",
+        blend: "none",
+      },
+    ]);
+    assert.equal(output.processing.lossless, true);
+});
+
+test("world crop rebuild is deterministic and preserves exact retained pixels", async () => {
+    const worldPath =
+      "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp";
+    const before = await readFile(worldPath);
+    const rebuild = spawnSync(process.execPath, ["scripts/art-process.mjs"], {
+      encoding: "utf8",
+    });
+    assert.equal(rebuild.status, 0, rebuild.stderr);
+    assert.deepEqual(await readFile(worldPath), before);
+
+    const directory = await mkdtemp(`${tmpdir()}/john9-world-crop-test-`);
+    try {
+      const canonicalPath = `${directory}/canonical.webp`;
+      const canonical = spawnSync(
+        "python3",
+        [
+          "scripts/art-process-image.py",
+          "--input",
+          worldSelection.source.path,
+          "--output",
+          canonicalPath,
+          "--crop",
+          "27,0,1125,768",
+          "--size",
+          "2560x1792",
+          "--quality",
+          "90",
+        ],
+        { encoding: "utf8" },
+      );
+      assert.equal(canonical.status, 0, canonical.stderr);
+      const canonicalPngPath = `${directory}/canonical.png`;
+      const decode = spawnSync(
+        "ffmpeg",
+        [
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-i",
+          canonicalPath,
+          "-frames:v",
+          "1",
+          canonicalPngPath,
+        ],
+        { encoding: "utf8" },
+      );
+      assert.equal(decode.status, 0, decode.stderr);
+      const expectedCrop = (name, crop) => {
+        const path = `${directory}/${name}.png`;
+        const result = spawnSync(
+          "ffmpeg",
+          [
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-i",
+            canonicalPngPath,
+            "-vf",
+            `crop=${crop}`,
+            "-frames:v",
+            "1",
+            path,
+          ],
+          { encoding: "utf8" },
+        );
+        assert.equal(result.status, 0, result.stderr);
+        return path;
+      };
+      const courtyardPath = expectedCrop("courtyard", "960:900:840:240");
+      const poolPath = expectedCrop("pool", "620:460:600:1020");
+
+      const pillowCropHash = (path, box) => {
+        const result = spawnSync(
+          "python3",
+          [
+            "-c",
+            "from PIL import Image; import hashlib,sys; image=Image.open(sys.argv[1]).convert('RGBA'); print(hashlib.sha256(image.crop(tuple(map(int,sys.argv[2].split(',')))).tobytes()).hexdigest())",
+            path,
+            box,
+          ],
+          { encoding: "utf8" },
+        );
+        assert.equal(result.status, 0, result.stderr);
+        return result.stdout.trim();
+      };
+      assert.equal(
+        pillowCropHash(worldPath, "264,16,1224,916"),
+        pillowCropHash(courtyardPath, "0,0,960,900"),
+      );
+      assert.equal(
+        pillowCropHash(worldPath, "24,796,644,1256"),
+        pillowCropHash(poolPath, "0,0,620,460"),
+      );
+      const neutralPixel = spawnSync(
+        "python3",
+        [
+          "-c",
+          "from PIL import Image; import sys; print(','.join(map(str,Image.open(sys.argv[1]).convert('RGBA').getpixel((0,0)))))",
+          worldPath,
+        ],
+        { encoding: "utf8" },
+      );
+      assert.equal(neutralPixel.status, 0, neutralPixel.stderr);
+      assert.equal(neutralPixel.stdout.trim(), "234,217,183,255");
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
 });
 
 test("formal environment review points to the exact processed selections", () => {
@@ -128,8 +282,8 @@ test("formal art wiring excludes deleted regions and later-story actors", () => 
   assert.match(adapterSource, /runtimeAsset\("clay-vessel\.png"\)/);
   assert.match(sceneSource, /STORY_ART\.props\.clayVessel/);
   assert.doesNotMatch(
-    `${adapterSource}\n${sceneSource}`,
-    /neighbor-|inquiry-|outside-|pharisee|parent-|worship|found-man/i,
+    `${adapterSource}\n${sceneSource}\n${JSON.stringify(manifest)}`,
+    /neighbor-|inquiry-|outside-|outer-road|pharisee|parent-|worship|found-man/i,
   );
 });
 

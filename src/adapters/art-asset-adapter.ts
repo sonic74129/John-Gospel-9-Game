@@ -4,9 +4,9 @@ if (
   runtimeManifest.reviewStatus !== "polished-private-preview" ||
   runtimeManifest.releaseEligible !== false ||
   runtimeManifest.publicRedistributionApproved !== false ||
-  runtimeManifest.worldContract.width !== 2560 ||
-  runtimeManifest.worldContract.height !== 1792 ||
-  runtimeManifest.worldContract.topology !== "north-south-zig-zag"
+  runtimeManifest.worldContract.width !== 1248 ||
+  runtimeManifest.worldContract.height !== 1280 ||
+  runtimeManifest.worldContract.topology !== "courtyard-to-siloam-crop"
 ) {
   throw new Error("Story-local runtime art is outside the private-preview contract.");
 }
