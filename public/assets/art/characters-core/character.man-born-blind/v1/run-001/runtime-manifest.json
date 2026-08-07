@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "character.man-born-blind",
+  "family": "characters-core",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/characters-core/character.man-born-blind/v1/run-001/selected-source.png",
+    "bytes": 890506,
+    "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765"
+  },
+  "selectedCandidate": 2,
+  "selectionReason": "Selected source preserves the blind, clay-applied, and seeing states used by John 9:1-7 with consistent scale and restrained posture.",
+  "outputs": [
+    {
+      "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-blind.png",
+      "mediaType": "image/png",
+      "bytes": 7484,
+      "sha256": "ee1c1f882012b7ff5f48aedd2ce898a2b3d2a401ed16c5cd05193971d0881fcb",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:0:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-clay.png",
+      "mediaType": "image/png",
+      "bytes": 7791,
+      "sha256": "2a39f34fda711e53b4f4c2cc3920e67874ec650aeda4f97d869d8593ee4dcbe3",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:256:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-seeing.png",
+      "mediaType": "image/png",
+      "bytes": 8105,
+      "sha256": "f67e9e8e294af7803aa1cae85b736e82bdea51c79e6db03687e61b5636c5aa55",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:512:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

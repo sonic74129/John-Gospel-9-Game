@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "sequence-paths",
+  "travelTargetSeconds": {
+    "minimum": 10,
+    "maximum": 16
+  },
+  "sequencePaths": [
+    {
+      "id": "man-to-pool",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "courtyard.man-center",
+      "endAnchorId": "pool.wash-edge",
+      "expectedDurationSeconds": 14,
+      "movementSpeed": 60,
+      "actorRadius": 18,
+      "points": [
+        { "x": 1450, "y": 485 },
+        { "x": 1400, "y": 540 },
+        { "x": 1340, "y": 610 },
+        { "x": 1270, "y": 680 },
+        { "x": 1190, "y": 790 },
+        { "x": 1120, "y": 900 },
+        { "x": 1060, "y": 1020 },
+        { "x": 1020, "y": 1080 },
+        { "x": 1090, "y": 1140 }
+      ]
+    }
+  ]
+}

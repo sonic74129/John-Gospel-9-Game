@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "character.observer",
+  "family": "characters-core",
+  "promptVersion": "v3",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/characters-core/character.observer/v3/run-001/selected-source.png",
+    "bytes": 892764,
+    "sha256": "a5475a9cd42605f03bd0bf864fa224cb15541282da45b3e4f4e77c1e2932a0e3"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Candidate 1 passes the v3 orientation gate: front, back, right-facing and left-facing profiles are distinct, text is absent, identity and clothing remain continuous, anatomy is non-chibi, the pose is restrained, and the uniform background supports clean runtime extraction.",
+  "outputs": [
+    {
+      "path": "public/assets/art/characters-core/character.observer/v3/run-001/observer.png",
+      "mediaType": "image/png",
+      "bytes": 27487,
+      "sha256": "52484cfc7834460830675b3c968d0bd605511b585c7ebf3b6075efe6c0b1fe37",
+      "dimensions": {
+        "width": 144,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "[crop=256:900:0:62,256:62,512:62,768:62] -> colorkey=0xF7F0DE:0.24:0.08 -> scale=-2:128:flags=lanczos -> hstack=4 -> format=rgba",
+        "directionalFrames": {
+          "down": {
+            "x": 0,
+            "y": 0,
+            "width": 36,
+            "height": 128
+          },
+          "up": {
+            "x": 36,
+            "y": 0,
+            "width": 36,
+            "height": 128
+          },
+          "right": {
+            "x": 72,
+            "y": 0,
+            "width": 36,
+            "height": 128
+          },
+          "left": {
+            "x": 108,
+            "y": 0,
+            "width": 36,
+            "height": 128
+          }
+        }
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

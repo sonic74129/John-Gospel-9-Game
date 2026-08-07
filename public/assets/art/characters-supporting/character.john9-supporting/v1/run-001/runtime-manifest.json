@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "character.john9-supporting",
+  "family": "characters-supporting",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/characters-supporting/character.john9-supporting/v1/run-001/selected-source.png",
+    "bytes": 1180474,
+    "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Selected source provides two distinct disciples in the period palette; only those John 9:1-7 cells are processed into the runtime manifest.",
+  "outputs": [
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-a.png",
+      "mediaType": "image/png",
+      "bytes": 13069,
+      "sha256": "5230b31b76a0064130dbe5358fba6736fc185202c13e2dffcf3f0ac7db321937",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:0:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-b.png",
+      "mediaType": "image/png",
+      "bytes": 13353,
+      "sha256": "55d5957d76d191715f2c926fd62d9450ce5a777cf78cfcb1f35db1009235baa6",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:256:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

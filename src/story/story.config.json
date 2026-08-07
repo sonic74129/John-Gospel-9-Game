@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "template": false,
+  "id": "john-9-man-born-blind",
+  "title": "生來瞎眼的人",
+  "language": "zh-Hant",
+  "passage": {
+    "book": "John",
+    "chapter": 9,
+    "verses": "1-7",
+    "translation": "CUV-Traditional"
+  },
+  "setting": {
+    "period": "first-century",
+    "region": "Judea"
+  },
+  "playerRole": {
+    "type": "observer",
+    "description": "不被寫入經文事件的無名觀察者，只能移動、聆聽、觀察與觸發既定流程。",
+    "acknowledgedByScriptureCharacters": false,
+    "hasDialogue": false,
+    "mayChangeScriptureOutcome": false,
+    "mayControlJesus": false,
+    "mayCauseMiracle": false
+  },
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653"
+}
