@@ -5,8 +5,8 @@
   "grid": {
     "origin": { "x": 0, "y": 0 },
     "cellSize": 32,
-    "columns": 80,
-    "rows": 56,
+    "columns": 39,
+    "rows": 40,
     "diagonalMovement": false,
     "preventCornerCutting": true,
     "defaultWalkCost": 1

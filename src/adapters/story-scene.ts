@@ -186,6 +186,7 @@ export class StoryScene extends Phaser.Scene {
   create(): void {
     const { definition } = this.#world;
     this.cameras.main.setBounds(0, 0, definition.width, definition.height);
+    this.cameras.main.setBackgroundColor("#ead9b7");
     this.add
       .image(0, 0, STORY_ART.worldBase.key)
       .setOrigin(0)

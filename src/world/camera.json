@@ -6,20 +6,20 @@
     {
       "id": "camera.courtyard",
       "regionId": "courtyard",
-      "bounds": { "x": 880, "y": 240, "width": 920, "height": 900 },
+      "bounds": { "x": 304, "y": 16, "width": 920, "height": 900 },
       "focusAnchorId": "courtyard.camera",
-      "desktopZoom": 1,
-      "mobileZoom": 0.72,
+      "desktopZoom": 0.9,
+      "mobileZoom": 0.78,
       "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 0.7
     },
     {
       "id": "camera.siloam",
       "regionId": "siloam-pool",
-      "bounds": { "x": 600, "y": 1020, "width": 620, "height": 460 },
+      "bounds": { "x": 24, "y": 796, "width": 620, "height": 460 },
       "focusAnchorId": "pool.camera",
       "desktopZoom": 0.95,
-      "mobileZoom": 0.72,
+      "mobileZoom": 0.78,
       "deadZone": { "width": 16, "height": 16 },
       "transitionSeconds": 0.7
     }

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-07T08:59:27.302Z",
+  "chromium": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "baseUrl": "http://127.0.0.1:62249/games/john-9-man-born-blind/",
+  "scenarios": [
+    {
+      "name": "normal-desktop-with-re-entry",
+      "viewport": "1280x720",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/01-courtyard-opening-desktop.png",
+        "qa/review-screenshots/02-siloam-pool-desktop.png",
+        "qa/review-screenshots/03-ending-desktop.png"
+      ]
+    },
+    {
+      "name": "all-skip-mobile",
+      "viewport": "390x844",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/04-courtyard-opening-mobile.png",
+        "qa/review-screenshots/05-siloam-pool-mobile.png"
+      ]
+    },
+    {
+      "name": "mixed-skip-desktop",
+      "viewport": "1280x720",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06"
+      ]
+    },
+    {
+      "name": "restart-mobile",
+      "viewport": "390x844",
+      "cancelledProgressPreserved": [
+        "b01"
+      ],
+      "confirmedReset": true
+    }
+  ],
+  "finalStateParity": {
+    "normal": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06"
+    ],
+    "allSkip": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06"
+    ],
+    "mixedSkip": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06"
+    ],
+    "equivalent": true
+  },
+  "browserErrors": [],
+  "assetOrNetworkFailures": [],
+  "productionDomResidue": []
+}

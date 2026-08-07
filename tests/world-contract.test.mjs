@@ -141,8 +141,34 @@ test("courtyard-to-Siloam contracts are complete, pinned, and retire later-story
   );
   assert.deepEqual(layout.topology.canonicalRegionOrder, ["courtyard", "siloam-pool"]);
   assert.deepEqual(layout.sourcePolicy.scriptureNamedRegionIds, ["siloam-pool"]);
+  assert.deepEqual(layout.worldBounds, { x: 0, y: 0, width: 1248, height: 1280 });
+  assert.deepEqual(regionById.get("courtyard").bounds, {
+    x: 304,
+    y: 16,
+    width: 920,
+    height: 900
+  });
+  assert.deepEqual(regionById.get("siloam-pool").bounds, {
+    x: 24,
+    y: 796,
+    width: 620,
+    height: 460
+  });
+  assert.deepEqual(navigation.grid, {
+    origin: { x: 0, y: 0 },
+    cellSize: 32,
+    columns: 39,
+    rows: 40,
+    diagonalMovement: false,
+    preventCornerCutting: true,
+    defaultWalkCost: 1
+  });
   assert.equal(layout.portals.length, 1);
   assert.equal(layout.portals[0].id, "portal.courtyard-siloam");
+  assert.deepEqual(layout.portals[0].segment, [
+    { x: 424, y: 846 },
+    { x: 524, y: 906 }
+  ]);
   assert.equal(paths.sequencePaths.length, 1);
   assert.equal(paths.sequencePaths[0].id, "man-to-pool");
   assert.equal(navigation.localCirculation.length, 0);
@@ -153,6 +179,15 @@ test("courtyard-to-Siloam contracts are complete, pinned, and retire later-story
     null,
     "John 9:8-41 regions, NPC routes, and spatial triggers must be absent"
   );
+});
+
+test("camera bounds and focal anchors match the cropped world", () => {
+  assert.deepEqual(anchorById.get("courtyard.camera").position, { x: 894, y: 256 });
+  assert.deepEqual(anchorById.get("pool.camera").position, { x: 514, y: 916 });
+  assert.deepEqual(camera.cameraZones.map(({ bounds }) => bounds), [
+    { x: 304, y: 16, width: 920, height: 900 },
+    { x: 24, y: 796, width: 620, height: 460 }
+  ]);
 });
 
 test("all anchors, actors, props, and obstacles use safe walkable ground", () => {

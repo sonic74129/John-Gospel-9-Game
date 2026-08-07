@@ -22,13 +22,13 @@
     "assetFamilies": 6,
     "files": 14,
     "worldDimensions": {
-      "width": 2560,
-      "height": 1792
+      "width": 1248,
+      "height": 1280
     }
   },
   "visualAcceptance": {
     "cameraAndPerspective": "accepted",
-    "routeReadability": "accepted for the courtyard-to-Siloam contract; final world-image crop remains pending visual QA",
+    "routeReadability": "accepted for the courtyard-to-Siloam crop; the retained route is continuous and excludes later-story space",
     "actorAndDoorScale": "accepted for 96-132 px actor frames",
     "identityContinuity": "accepted for private preview; pinned Jesus clothing and face vocabulary retained",
     "poseAndStateClarity": "accepted for the blind, clay-applied, seeing, and clay-action states used by John 9:1-7",
@@ -38,8 +38,8 @@
   },
   "limitations": [
     "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
-    "The selected world source still contains unused later-region painting outside the six-beat logical contract; crop and final visual QA remain pending.",
-    "The world base is a single painted two-dimensional zig-zag composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
+    "The runtime world is an audited, unscaled composite of the courtyard and Siloam crops over a neutral fill; unused later-region painting is absent.",
+    "The world base is a single painted two-dimensional courtyard-to-Siloam composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
     "Runtime actors use restrained static poses rather than full directional walk animation.",
     "Dialogue portraits were not generated because the current UI has no portrait surface.",
     "All generated and pinned packs remain non-release-eligible until rights and public redistribution review."

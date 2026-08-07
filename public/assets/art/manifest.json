@@ -4,9 +4,17 @@
   "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
   "generatedBy": "scripts/art-process.mjs",
   "worldContract": {
-    "width": 2560,
-    "height": 1792,
-    "topology": "north-south-zig-zag"
+    "width": 1248,
+    "height": 1280,
+    "topology": "courtyard-to-siloam-crop",
+    "sourceWidth": 2560,
+    "sourceHeight": 1792,
+    "retainedSourceBounds": {
+      "left": 576,
+      "top": 224,
+      "right": 1824,
+      "bottom": 1504
+    }
   },
   "actorFootBaselines": {
     "observer.png": 99,
@@ -210,7 +218,6 @@
           },
           "processing": {
             "tool": "ffmpeg",
-            "resizeKernel": "lanczos",
             "filter": "hflip"
           }
         },
@@ -225,7 +232,6 @@
           },
           "processing": {
             "tool": "ffmpeg",
-            "resizeKernel": "lanczos",
             "filter": "hflip"
           }
         }
@@ -292,7 +298,6 @@
           },
           "processing": {
             "tool": "ffmpeg",
-            "resizeKernel": "lanczos",
             "filter": "hflip"
           }
         },
@@ -307,7 +312,6 @@
           },
           "processing": {
             "tool": "ffmpeg",
-            "resizeKernel": "lanczos",
             "filter": "hflip"
           }
         }
@@ -331,32 +335,76 @@
         "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0"
       },
       "selectedCandidate": 2,
-      "selectionReason": "Selected private-preview world source; the six-beat runtime uses only the courtyard and Siloam route pending final visual crop QA.",
+      "selectionReason": "Candidate 2 is retained as immutable provenance for the audited courtyard and Siloam source crops; no other painted region is copied into the runtime world.",
       "outputs": [
         {
           "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp",
           "mediaType": "image/webp",
-          "bytes": 689654,
-          "sha256": "f2e250ca357a1949c807952ea674c0f5cb9b4b13d18a6e44693fc4426a9fb5ca",
+          "bytes": 1070762,
+          "sha256": "f1e869f4a016c343bc39bd828b4c30723ac262b820ba9c272b59f5352ccf524c",
           "dimensions": {
-            "width": 2560,
-            "height": 1792
+            "width": 1248,
+            "height": 1280
           },
           "processing": {
-            "tool": "Pillow",
-            "resizeKernel": "lanczos",
-            "crop": [
-              27,
-              0,
-              1125,
-              768
-            ],
-            "outputSize": [
-              2560,
-              1792
+            "tool": "ffmpeg",
+            "canonicalSource": {
+              "tool": "Pillow",
+              "crop": [
+                27,
+                0,
+                1125,
+                768
+              ],
+              "outputSize": [
+                2560,
+                1792
+              ],
+              "format": "webp",
+              "quality": 90
+            },
+            "canonicalRasterization": {
+              "tool": "ffmpeg",
+              "format": "png"
+            },
+            "canvas": {
+              "width": 1248,
+              "height": 1280,
+              "color": "#ead9b7"
+            },
+            "placements": [
+              {
+                "sourceCrop": [
+                  840,
+                  240,
+                  1800,
+                  1140
+                ],
+                "destination": [
+                  264,
+                  16
+                ],
+                "scale": "none",
+                "blend": "none"
+              },
+              {
+                "sourceCrop": [
+                  600,
+                  1020,
+                  1220,
+                  1480
+                ],
+                "destination": [
+                  24,
+                  796
+                ],
+                "scale": "none",
+                "blend": "none"
+              }
             ],
             "format": "webp",
-            "quality": 90
+            "lossless": true,
+            "compositor": "Pillow direct paste without mask"
           }
         }
       ],
