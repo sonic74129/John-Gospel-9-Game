@@ -1106,7 +1106,7 @@
       "beatId": "b05",
       "entryState": "visible at courtyard.observer; pose=idle; collision=true",
       "duringState": "sequence-b05 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.observer; pose=idle; collision=true",
+      "finalState": "visible at pool.observer-approach; pose=idle; collision=true",
       "verseKeys": [
         "john9:7"
       ],
@@ -1160,7 +1160,7 @@
     {
       "actorId": "observer",
       "beatId": "b06",
-      "entryState": "visible at courtyard.observer; pose=idle; collision=true",
+      "entryState": "visible at pool.observer-approach; pose=idle; collision=true",
       "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
       "finalState": "visible at pool.observer-approach; pose=idle; collision=true",
       "verseKeys": [
@@ -1857,7 +1857,7 @@
         "actors": {
           "observer": {
             "visible": true,
-            "anchorId": "courtyard.observer",
+            "anchorId": "pool.observer-approach",
             "pose": "idle",
             "label": "觀察者",
             "collisionEnabled": true,
@@ -1903,7 +1903,7 @@
           }
         },
         "camera": {
-          "anchorId": "courtyard.camera",
+          "anchorId": "pool.camera",
           "mode": "follow-observer",
           "transition": "settled",
           "sourceLevel": "S2"
@@ -1935,10 +1935,10 @@
         }
       },
       "parityHashes": {
-        "normal": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306",
-        "skip": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306",
-        "restart": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306",
-        "reentry": "fa2bf2d123955b4dccec639da4bc7914bc34bfe9630e22d9a5aa96dceb5c1306"
+        "normal": "b52577d4c0fe3f41b8813852f11592ca25ec1cdd268b23e3409d51d082ffd37c",
+        "skip": "b52577d4c0fe3f41b8813852f11592ca25ec1cdd268b23e3409d51d082ffd37c",
+        "restart": "b52577d4c0fe3f41b8813852f11592ca25ec1cdd268b23e3409d51d082ffd37c",
+        "reentry": "b52577d4c0fe3f41b8813852f11592ca25ec1cdd268b23e3409d51d082ffd37c"
       }
     },
     {

@@ -17,6 +17,7 @@ export type SliceDialogueLine = CanonicalDialogueLine;
 
 export interface SliceSequenceScene {
   setMovementEnabled(enabled: boolean): void;
+  setSequencePlayerMovementEnabled(enabled: boolean): void;
   focusAnchor(anchorId: string): void;
   setActorPose(actorId: string, pose: string): void;
   setActorVisible(actorId: string, visible: boolean): void;
@@ -24,6 +25,7 @@ export interface SliceSequenceScene {
     pathId: string,
     actorId: string,
     signal: AbortSignal,
+    frameWithPlayer?: boolean,
   ): Promise<void>;
   followCameraPath(pathId: string, signal: AbortSignal): Promise<void>;
   applyFinalState(state: SliceFinalState, signal: AbortSignal): Promise<void>;
@@ -146,24 +148,41 @@ export function createSliceSequenceAdapter(
             requireBoolean(command, record, "visible"),
           );
           return;
-        case "actor-follow-path":
-          await Promise.all(
-            [
-              requireString(command, record, "primaryActorId"),
-              ...requireStringArray(
-                command,
-                record,
-                "participantActorIds",
-              ),
-            ].map((actorId) =>
-              target.scene.followActorPath(
-                requireString(command, record, "pathId"),
-                actorId,
-                signal,
-              ),
-            ),
+        case "actor-follow-path": {
+          const pathId = requireString(command, record, "pathId");
+          const primaryActorId = requireString(
+            command,
+            record,
+            "primaryActorId",
           );
+          const participantActorIds = requireStringArray(
+            command,
+            record,
+            "participantActorIds",
+          );
+          const allowPlayerMovement = requireBoolean(
+            command,
+            record,
+            "allowPlayerMovement",
+          );
+          target.scene.setSequencePlayerMovementEnabled(allowPlayerMovement);
+          try {
+            await Promise.all([
+              target.scene.followActorPath(
+                pathId,
+                primaryActorId,
+                signal,
+                allowPlayerMovement,
+              ),
+              ...participantActorIds.map((actorId) =>
+                target.scene.followActorPath(pathId, actorId, signal),
+              ),
+            ]);
+          } finally {
+            target.scene.setSequencePlayerMovementEnabled(false);
+          }
           return;
+        }
         case "camera-follow-path":
           await target.scene.followCameraPath(
             requireString(command, record, "pathId"),
@@ -196,9 +215,10 @@ export function createSliceSequenceAdapter(
       if (signal.aborted) {
         throw abortError();
       }
-      const goal = STAGE_GOAL_BY_BEAT[state.beatId];
+      const goalBeatId = state.triggers.nextBeatId ?? state.beatId;
+      const goal = STAGE_GOAL_BY_BEAT[goalBeatId];
       if (goal === undefined) {
-        throw new RangeError(`No stage goal exists for ${state.beatId}.`);
+        throw new RangeError(`No stage goal exists for ${goalBeatId}.`);
       }
       target.ui.applyFinalState(state, goal);
       await target.applyLogicalFinalState?.(state, signal);

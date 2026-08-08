@@ -183,11 +183,24 @@ test("courtyard-to-Siloam contracts are complete, pinned, and retire later-story
 
 test("camera bounds and focal anchors match the cropped world", () => {
   assert.deepEqual(anchorById.get("courtyard.camera").position, { x: 894, y: 256 });
-  assert.deepEqual(anchorById.get("pool.camera").position, { x: 514, y: 916 });
+  assert.deepEqual(anchorById.get("pool.camera").position, { x: 382, y: 862 });
   assert.deepEqual(camera.cameraZones.map(({ bounds }) => bounds), [
     { x: 304, y: 16, width: 920, height: 900 },
     { x: 24, y: 796, width: 620, height: 460 }
   ]);
+});
+
+test("the mobile pool camera stays inside the painted Siloam width", () => {
+  const anchor = anchorById.get("pool.camera").position;
+  const zone = camera.cameraZones.find(({ id }) => id === "camera.siloam");
+  const mobile = framing.profiles.find(
+    ({ viewport }) => viewport.width === 390,
+  );
+  const halfVisibleWidth = mobile.viewport.width / zone.mobileZoom / 2;
+  assert.ok(anchor.x - halfVisibleWidth >= zone.bounds.x);
+  assert.ok(
+    anchor.x + halfVisibleWidth <= zone.bounds.x + zone.bounds.width,
+  );
 });
 
 test("all anchors, actors, props, and obstacles use safe walkable ground", () => {

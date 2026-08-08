@@ -37,7 +37,7 @@
       "id": "frame.pool-wash",
       "cameraZoneId": "camera.siloam",
       "focusAnchorIds": ["pool.wash-edge", "pool.observer-approach"],
-      "horizontalPadding": 64,
+      "horizontalPadding": 50,
       "verticalPadding": 72
     }
   ]

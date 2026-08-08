@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-07T11:04:54.222Z",
+  "generatedAt": "2026-08-08T14:48:58.055Z",
   "chromium": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  "baseUrl": "http://127.0.0.1:61040/games/john-9-man-born-blind/",
+  "baseUrl": "http://127.0.0.1:52542/games/john-9-man-born-blind/",
   "scenarios": [
     {
       "name": "normal-desktop-with-re-entry",
@@ -121,6 +121,7 @@
     "status": "blocked-imagegen-built-in-unavailable"
   },
   "browserErrors": [],
+  "ignoredBrowserErrors": [],
   "assetOrNetworkFailures": [],
   "productionDomResidue": []
 }

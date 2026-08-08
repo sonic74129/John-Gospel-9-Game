@@ -17,7 +17,7 @@ const PHASE_BY_BEAT = Object.freeze({
 const CAMERA_ANCHOR_BY_PHASE = Object.freeze({
   courtyard: "courtyard.camera",
   clay: "courtyard.camera",
-  "pool-awaiting": "courtyard.camera",
+  "pool-awaiting": "pool.camera",
   washed: "pool.camera",
 });
 
@@ -29,6 +29,7 @@ const phaseOverrides = (phase) => {
       };
     case "pool-awaiting":
       return {
+        observer: ["pool.observer-approach", "idle", "觀察者", true, true],
         jesus: ["courtyard.pool-approach", "departed", "耶穌", false, false],
         disciples: ["courtyard.pool-approach", "departed", "門徒", false, false],
         "man-born-blind": ["pool.wash-edge", "standing", "那人", true, false],

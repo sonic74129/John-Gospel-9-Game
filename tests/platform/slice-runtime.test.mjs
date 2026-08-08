@@ -29,6 +29,7 @@ import {
   DIALOGUE_BY_BEAT,
   FINAL_SNAPSHOTS,
   PROPS,
+  STAGE_GOAL_BY_BEAT,
   STORY_BEATS,
 } from "../../src/adapters/story-contracts.ts";
 import {
@@ -195,6 +196,13 @@ test("real sequence adapter exposes deep-equal canonical and actual camera state
     assert.deepEqual(completed.scene, definition.finalState, definition.id);
     assert.deepEqual(completed.ui, definition.finalState, definition.id);
     assert.deepEqual(completed.logical, definition.finalState, definition.id);
+    const expectedGoalBeatId =
+      definition.finalState.triggers.nextBeatId ?? definition.beatId;
+    assert.deepEqual(
+      completed.goal,
+      STAGE_GOAL_BY_BEAT[expectedGoalBeatId],
+      definition.id,
+    );
     assert.deepEqual(completed.camera, skipped.camera, definition.id);
     assert.deepEqual(
       completed.camera.applied.canonical,
@@ -256,6 +264,20 @@ test("real sequence adapter exposes deep-equal canonical and actual camera state
     assert.ok(completed.camera.port.followTarget, definition.id);
     assert.equal(completed.inputLocks, 0, definition.id);
     assert.equal(skipped.inputLocks, 0, definition.id);
+    if (definition.beatId === "b05") {
+      assert.deepEqual(
+        completed.sequenceMovementOverrides,
+        [true, false],
+        definition.id,
+      );
+      assert.deepEqual(completed.followedPaths, [
+        {
+          pathId: "man-to-pool",
+          actorId: "man-born-blind",
+          frameWithPlayer: true,
+        },
+      ]);
+    }
   }
 });
 
@@ -1135,14 +1157,26 @@ async function runRealAdapter(
   let uiState = null;
   let logicalState = null;
   let cameraState = null;
+  let uiGoal = null;
+  const sequenceMovementOverrides = [];
+  const followedPaths = [];
   const adapter = createSliceSequenceAdapter(
     {
       scene: {
         setMovementEnabled: () => {},
+        setSequencePlayerMovementEnabled: (enabled) => {
+          sequenceMovementOverrides.push(enabled);
+        },
         focusAnchor: () => {},
         setActorPose: () => {},
         setActorVisible: () => {},
-        followActorPath: async () => {},
+        followActorPath: async (pathId, actorId, _signal, frameWithPlayer) => {
+          followedPaths.push({
+            pathId,
+            actorId,
+            frameWithPlayer: Boolean(frameWithPlayer),
+          });
+        },
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
           const viewport = resolveInitialProductionViewport(profile.viewport);
@@ -1202,8 +1236,9 @@ async function runRealAdapter(
       ui: {
         setOverlay: () => {},
         presentDialogue: async () => {},
-        applyFinalState: (state) => {
+        applyFinalState: (state, goal) => {
           uiState = structuredClone(state);
+          uiGoal = structuredClone(goal);
         },
         setHandoff: () => {},
       },
@@ -1234,6 +1269,9 @@ async function runRealAdapter(
     ui: uiState,
     logical: logicalState,
     camera: cameraState,
+    goal: uiGoal,
+    sequenceMovementOverrides,
+    followedPaths,
     inputLocks,
   };
 }

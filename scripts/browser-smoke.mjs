@@ -13,6 +13,10 @@ const CHROME =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 let baseUrl;
 const SAVE_KEY = "bible-games:save:john-9-man-born-blind:v1";
+const isIgnorableBrowserError = (message) =>
+  /The AudioContext encountered an error from the audio device or the WebAudio renderer\./.test(
+    message,
+  );
 const ALL_BEATS = Array.from(
   { length: 6 },
   (_, index) => `b${String(index + 1).padStart(2, "0")}`,
@@ -357,7 +361,8 @@ async function playToCompletion({
       }
       if (progress === 4 && screenshots.has("follow")) {
         await click(cdp, sessionId, "[data-dialogue-next]");
-        await delay(1_200);
+        await pressDirection(cdp, sessionId, "南西", 900);
+        await delay(300);
         captured.push(
           await screenshot(cdp, sessionId, screenshots.get("follow")),
         );
@@ -468,6 +473,7 @@ async function run() {
       "--disable-component-update",
       "--disable-sync",
       "--hide-scrollbars",
+      "--mute-audio",
       "about:blank",
     ],
     { cwd: ROOT, stdio: ["ignore", "pipe", "pipe"] },
@@ -667,7 +673,10 @@ async function run() {
       })()`,
     );
     assert.deepEqual(productionResidue, []);
-    assert.deepEqual(browserErrors, []);
+    const browserErrorsFiltered = browserErrors.filter(
+      (error) => !isIgnorableBrowserError(error),
+    );
+    assert.deepEqual(browserErrorsFiltered, []);
     assert.deepEqual(networkFailures, []);
 
     const report = {
@@ -690,7 +699,8 @@ async function run() {
         manBornBlindStatesAndDirections: 19,
         status: "blocked-imagegen-built-in-unavailable",
       },
-      browserErrors,
+      browserErrors: browserErrorsFiltered,
+      ignoredBrowserErrors: browserErrors.filter(isIgnorableBrowserError),
       assetOrNetworkFailures: networkFailures,
       productionDomResidue: productionResidue,
     };

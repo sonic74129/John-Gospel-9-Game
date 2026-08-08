@@ -225,6 +225,8 @@ export function createAppShell(
     if (!restartConfirmation.hidden) {
       return;
     }
+    restartConfirm.disabled = false;
+    restartCancel.disabled = false;
     resumeAfterRestartCancel = started && !paused && !completed;
     setRestartModalBlocking(true);
     restartConfirmation.hidden = false;
@@ -256,6 +258,8 @@ export function createAppShell(
       restartConfirmation.hidden = true;
       setRestartModalBlocking(false);
       resumeAfterRestartCancel = false;
+      restartConfirm.disabled = false;
+      restartCancel.disabled = false;
     } catch {
       restartConfirm.disabled = false;
       restartCancel.disabled = false;

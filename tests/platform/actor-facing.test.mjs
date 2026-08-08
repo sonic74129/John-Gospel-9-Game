@@ -7,6 +7,7 @@ import {
   focusDirection,
   walkStepAt,
 } from "../../src/adapters/actor-facing.ts";
+import { actorPresentationFor } from "../../src/adapters/actor-presentation.ts";
 import { CANDIDATE_JESUS_SHEET } from "../../src/adapters/candidate-asset-adapter.ts";
 
 test("actors select an explicit gaze direction toward the central man", async () => {
@@ -52,6 +53,50 @@ test("pinned Jesus sheet maps four rows to idle and two walk cells", () => {
   });
 });
 
+test("actor presentation keeps narrative poses at a stable visual scale with clear labels", () => {
+  assert.deepEqual(
+    actorPresentationFor({
+      actorId: "jesus",
+      storyActorId: "jesus",
+      pose: "idle",
+      artKey: "john9-art-jesus-directional",
+      frameHeight: 200,
+    }),
+    { displayHeight: 132, labelOffset: 114, scale: 0.66 },
+  );
+  assert.deepEqual(
+    actorPresentationFor({
+      actorId: "jesus",
+      storyActorId: "jesus",
+      pose: "idle",
+      artKey: "john9-art-jesus-clay-action",
+      frameHeight: 132,
+    }),
+    { displayHeight: 132, labelOffset: 71, scale: 1 },
+  );
+  assert.deepEqual(
+    actorPresentationFor({
+      actorId: "man-born-blind",
+      storyActorId: "man-born-blind",
+      pose: "standing",
+      artKey: "john9-art-man-seeing",
+      frameHeight: 128,
+    }),
+    { displayHeight: 160, labelOffset: 107, scale: 1.25 },
+  );
+  assert.throws(
+    () =>
+      actorPresentationFor({
+        actorId: "observer",
+        storyActorId: "observer",
+        pose: "idle",
+        artKey: "observer",
+        frameHeight: 0,
+      }),
+    /positive/,
+  );
+});
+
 test("the scene registers actual observer atlas frames and never puts pose text in labels", async () => {
   const scene = await import("node:fs/promises").then(({ readFile }) =>
     readFile("src/adapters/story-scene.ts", "utf8"),
@@ -65,6 +110,8 @@ test("the scene registers actual observer atlas frames and never puts pose text 
   }
   assert.match(scene, /#setVisualMotion\(this\.#player, false, 0\)/);
   assert.match(scene, /#syncActorFacingToMan\(visual\)/);
+  assert.match(scene, /#framePathActors\(\)/);
+  assert.match(scene, /#sequenceMovementOverride/);
   assert.doesNotMatch(scene, /\$\{runtimeActor\.state\.label\} · \$\{pose\}/);
   assert.doesNotMatch(scene, /\$\{actorState\.label\} · \$\{actorState\.pose\}/);
 });

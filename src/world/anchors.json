@@ -92,8 +92,8 @@
       "regionId": "siloam-pool",
       "sourceLevel": "approved-bridge",
       "kind": "route",
-      "position": { "x": 584, "y": 946 },
-      "facing": "west",
+      "position": { "x": 414, "y": 876 },
+      "facing": "east",
       "clearanceRadius": 34
     },
     {
@@ -101,7 +101,7 @@
       "regionId": "siloam-pool",
       "sourceLevel": "approved-bridge",
       "kind": "camera-focus",
-      "position": { "x": 514, "y": 916 },
+      "position": { "x": 382, "y": 862 },
       "facing": "south",
       "clearanceRadius": 0
     }

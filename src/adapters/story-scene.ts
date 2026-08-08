@@ -16,6 +16,7 @@ import {
   focusDirection,
   walkStepAt,
 } from "./actor-facing.ts";
+import { actorPresentationFor } from "./actor-presentation.ts";
 import {
   manBornBlindPathTransition,
   type CardinalDirection,
@@ -43,7 +44,7 @@ interface ActorVisual {
   readonly label: Phaser.GameObjects.Text;
   readonly anchorOffset: Point;
   readonly collisionRadius: number;
-  readonly art: ReturnType<typeof actorArtForSpawn>;
+  art: ReturnType<typeof actorArtForSpawn>;
   pose: string;
   direction: CardinalDirection;
   moving: boolean;
@@ -154,6 +155,8 @@ export class StoryScene extends Phaser.Scene {
   }>;
   #path: readonly Point[] = [];
   #sequenceInputEnabled = true;
+  #sequenceMovementOverride = false;
+  #pathCameraSubject: ActorVisual | undefined = undefined;
   #canonicalControls: SliceFinalState["controls"] = {
     playerActorId: "observer",
     movementEnabled: true,
@@ -252,6 +255,7 @@ export class StoryScene extends Phaser.Scene {
         collisionEnabled: actor.state.collisionEnabled,
       };
       this.#visuals.set(actor.definition.id, visual);
+      this.#setVisualArt(visual, art);
       this.#setVisualVisible(visual, actor.state.visible);
       this.#setVisualDirection(visual, "down");
       if (isPlayer) {
@@ -444,6 +448,16 @@ export class StoryScene extends Phaser.Scene {
     }
   }
 
+  setSequencePlayerMovementEnabled(enabled: boolean): void {
+    this.#sequenceMovementOverride = enabled;
+    if (!enabled) {
+      this.#path = [];
+      if (this.#player !== undefined) {
+        this.#setVisualMotion(this.#player, false, 0);
+      }
+    }
+  }
+
   resizeViewport(width: number, height: number): void {
     this.#viewportResize.queue({ width, height });
   }
@@ -454,7 +468,9 @@ export class StoryScene extends Phaser.Scene {
 
   #applyViewportResize(width: number, height: number): void {
     this.cameras.main.setSize(width, height);
-    if (this.#transientCameraFocus !== null) {
+    if (this.#pathCameraSubject !== undefined) {
+      this.#framePathActors();
+    } else if (this.#transientCameraFocus !== null) {
       this.#applyTransientCameraFocus(this.#transientCameraFocus);
     } else if (this.#appliedFinalState !== null) {
       const camera = this.#applyCanonicalCamera(
@@ -557,6 +573,8 @@ export class StoryScene extends Phaser.Scene {
         ? null
         : structuredClone(snapshot.transientCameraFocus);
     this.#path = [];
+    this.#sequenceMovementOverride = false;
+    this.#pathCameraSubject = undefined;
     const viewportChanged =
       this.cameras.main.width !== snapshot.camera.width ||
       this.cameras.main.height !== snapshot.camera.height;
@@ -685,6 +703,7 @@ export class StoryScene extends Phaser.Scene {
     pathId: string,
     storyActorId: string,
     signal: AbortSignal,
+    frameWithPlayer = false,
   ): Promise<void> {
     const path = this.#world.pathById.get(pathId);
     if (path === undefined) {
@@ -699,30 +718,43 @@ export class StoryScene extends Phaser.Scene {
       this.#setManBornBlindPose(manTransition.standPose);
       this.#setManBornBlindPose(manTransition.walkingPose);
     }
-    for (const point of path.points) {
-      await Promise.all(
-        visuals.map((visual) => {
-          const target = {
-            x: point.x + visual.anchorOffset.x,
-            y: point.y + visual.anchorOffset.y,
-          };
-          const distance = Phaser.Math.Distance.Between(
-            visual.body.x,
-            visual.body.y,
-            target.x,
-            target.y,
-          );
-          return this.#tweenVisual(
-            visual,
-            target,
-            (distance / path.movementSpeed) * 1000,
-            signal,
-          );
-        }),
-      );
+    if (frameWithPlayer) {
+      this.#pathCameraSubject = visuals[0];
+      this.#transientCameraFocus = null;
+      this.cameras.main.stopFollow();
+      this.#cameraFollowingObserver = false;
+      this.#framePathActors();
     }
-    if (manTransition !== undefined) {
-      this.#setManBornBlindPose(manTransition.finalPose);
+    try {
+      for (const point of path.points) {
+        await Promise.all(
+          visuals.map((visual) => {
+            const target = {
+              x: point.x + visual.anchorOffset.x,
+              y: point.y + visual.anchorOffset.y,
+            };
+            const distance = Phaser.Math.Distance.Between(
+              visual.body.x,
+              visual.body.y,
+              target.x,
+              target.y,
+            );
+            return this.#tweenVisual(
+              visual,
+              target,
+              (distance / path.movementSpeed) * 1000,
+              signal,
+            );
+          }),
+        );
+      }
+      if (manTransition !== undefined) {
+        this.#setManBornBlindPose(manTransition.finalPose);
+      }
+    } finally {
+      if (frameWithPlayer) {
+        this.#pathCameraSubject = undefined;
+      }
     }
   }
 
@@ -778,10 +810,6 @@ export class StoryScene extends Phaser.Scene {
           anchor.y + visual.anchorOffset.y,
         );
         visual.body.setDepth(this.#actorDepth(visual.body.y));
-        visual.label.setPosition(
-          visual.body.x,
-          visual.body.y - this.#labelOffset(visual),
-        );
         visual.pose = actorState.pose;
         visual.collisionEnabled = actorState.collisionEnabled;
         const runtimeActor = this.#runtimeActor(visual.actorId);
@@ -806,6 +834,9 @@ export class StoryScene extends Phaser.Scene {
     this.#canonicalControls = structuredClone(state.controls);
     this.#syncNarrativeTextures();
     this.#syncActorFacingToMan();
+    for (const visual of this.#visuals.values()) {
+      this.#syncLabel(visual);
+    }
     this.#syncOccluderAlpha();
     const playerVisuals = this.#storyActorVisuals(state.controls.playerActorId);
     if (!playerVisuals.includes(this.#player!)) {
@@ -876,6 +907,8 @@ export class StoryScene extends Phaser.Scene {
     this.#viewportResize.cancel();
     this.#handlers = undefined;
     this.#path = [];
+    this.#sequenceMovementOverride = false;
+    this.#pathCameraSubject = undefined;
   }
 
   get tearingDown(): boolean {
@@ -933,19 +966,73 @@ export class StoryScene extends Phaser.Scene {
   }
 
   #regionIdForPoint(point: Point): string {
-    const region = this.#world.regionContracts.find(
-      ({ bounds }) =>
-        point.x >= bounds.x &&
-        point.x <= bounds.x + bounds.width &&
-        point.y >= bounds.y &&
-        point.y <= bounds.y + bounds.height,
-    );
+    const region = this.#world.regionContracts
+      .filter(
+        ({ bounds }) =>
+          point.x >= bounds.x &&
+          point.x <= bounds.x + bounds.width &&
+          point.y >= bounds.y &&
+          point.y <= bounds.y + bounds.height,
+      )
+      .sort(
+        (left, right) =>
+          left.bounds.width * left.bounds.height -
+          right.bounds.width * right.bounds.height,
+      )[0];
     if (region === undefined) {
       throw new RangeError(
         `Camera path point (${point.x}, ${point.y}) is outside every region.`,
       );
     }
     return region.id;
+  }
+
+  #framePathActors(): void {
+    if (this.#pathCameraSubject === undefined || this.#player === undefined) {
+      return;
+    }
+    const subject = this.#pathCameraSubject.body;
+    const player = this.#player.body;
+    const regionId = this.#regionIdForPoint({ x: subject.x, y: subject.y });
+    const zone = this.#world.cameraZoneByRegionId.get(regionId);
+    if (zone === undefined) {
+      throw new RangeError(`No canonical camera zone exists for ${regionId}.`);
+    }
+
+    const camera = this.cameras.main;
+    const mobile = Math.min(camera.width, camera.height) <= 640;
+    const baseZoom = mobile ? zone.mobileZoom : zone.desktopZoom;
+    const requiredWidth = Math.abs(subject.x - player.x) + 180;
+    const requiredHeight = Math.abs(subject.y - player.y) + 180;
+    const zoom = Math.min(
+      baseZoom,
+      camera.width / requiredWidth,
+      camera.height / requiredHeight,
+    );
+    const center = {
+      x: (subject.x + player.x) / 2,
+      y: (subject.y + player.y) / 2,
+    };
+    const halfWidth = camera.width / (2 * zoom);
+    const halfHeight = camera.height / (2 * zoom);
+    if (halfWidth * 2 <= zone.bounds.width) {
+      center.x = Phaser.Math.Clamp(
+        center.x,
+        zone.bounds.x + halfWidth,
+        zone.bounds.x + zone.bounds.width - halfWidth,
+      );
+    }
+    if (halfHeight * 2 <= zone.bounds.height) {
+      center.y = Phaser.Math.Clamp(
+        center.y,
+        zone.bounds.y + halfHeight,
+        zone.bounds.y + zone.bounds.height - halfHeight,
+      );
+    }
+
+    camera.setZoom(zoom);
+    camera.setDeadzone(zone.deadZone.width, zone.deadZone.height);
+    camera.centerOn(center.x, center.y);
   }
 
   #applyInitialCourtyardCamera(): void {
@@ -1036,7 +1123,13 @@ export class StoryScene extends Phaser.Scene {
   }
 
   #labelOffset(visual: ActorVisual): number {
-    return Math.max(74, visual.body.displayHeight * 0.76);
+    return actorPresentationFor({
+      actorId: visual.actorId,
+      storyActorId: visual.storyActorId,
+      pose: visual.pose,
+      artKey: visual.art.key,
+      frameHeight: visual.art.frameHeight,
+    }).labelOffset;
   }
 
   #syncLabel(visual: ActorVisual): void {
@@ -1137,10 +1230,21 @@ export class StoryScene extends Phaser.Scene {
   ): void {
     visual.body
       .setTexture(art.key)
-      .setOrigin(0.5, art.footBaseline! / art.frameHeight);
+      .setOrigin(0.5, art.footBaseline! / art.frameHeight)
+      .setScale(
+        actorPresentationFor({
+          actorId: visual.actorId,
+          storyActorId: visual.storyActorId,
+          pose: visual.pose,
+          artKey: art.key,
+          frameHeight: art.frameHeight,
+        }).scale,
+      );
+    visual.art = art;
     if (art === STORY_ART.actors.jesusDirectional) {
       this.#setVisualMotion(visual, visual.moving, 0);
     }
+    this.#syncLabel(visual);
   }
 
   #setVisualDirection(
@@ -1262,6 +1366,7 @@ export class StoryScene extends Phaser.Scene {
     this.#syncLabel(this.#player);
     this.#syncActorFacingToMan();
     this.#syncOccluderAlpha();
+    this.#framePathActors();
     this.#handlers?.onWorldUpdate("gameplay", {
       previousPosition: start,
       currentPosition: target,
@@ -1336,6 +1441,7 @@ export class StoryScene extends Phaser.Scene {
             visual.body.setDepth(this.#actorDepth(visual.body.y));
             this.#syncLabel(visual);
             this.#syncActorFacingToMan(visual);
+            this.#framePathActors();
           }
         },
         onComplete: () =>
@@ -1436,9 +1542,7 @@ export class StoryScene extends Phaser.Scene {
       const art =
         artByPose[man.pose as keyof typeof artByPose] ??
         STORY_ART.actors.manSeeing;
-      man.body
-        .setTexture(art.key)
-        .setOrigin(0.5, art.footBaseline! / art.frameHeight);
+      this.#setVisualArt(man, art);
     }
     const jesus = this.#storyActorVisuals("jesus")[0];
     if (jesus !== undefined) {
@@ -1449,7 +1553,7 @@ export class StoryScene extends Phaser.Scene {
 
   #movementAllowed(): boolean {
     return (
-      this.#sequenceInputEnabled &&
+      (this.#sequenceInputEnabled || this.#sequenceMovementOverride) &&
       this.#canonicalControls.movementEnabled &&
       !this.#canonicalControls.locked &&
       !this.#tearingDown

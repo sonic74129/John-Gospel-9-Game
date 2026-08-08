@@ -33,6 +33,7 @@ const manToPool = () =>
     subjectId: "man-born-blind",
     primaryActorId: "man-born-blind",
     participantActorIds: Object.freeze([]),
+    allowPlayerMovement: true,
   });
 
 const STEPS_BY_BEAT = Object.freeze({
@@ -58,7 +59,7 @@ const STEPS_BY_BEAT = Object.freeze({
       "S1",
     ),
     manToPool(),
-    command("focus-camera", { anchorId: "pool.wash-edge" }),
+    command("focus-camera", { anchorId: "pool.camera" }),
   ],
   b06: [
     dialogueStep("b06"),

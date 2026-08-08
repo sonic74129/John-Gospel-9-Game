@@ -54,7 +54,9 @@ test("only the man travels on the one route before the observer follows to the p
     subjectId: "man-born-blind",
     primaryActorId: "man-born-blind",
     participantActorIds: [],
+    allowPlayerMovement: true,
   });
+  assert.equal(SEQUENCES[4].steps.at(-1).payload.anchorId, "pool.camera");
   assert.equal(SEQUENCES[5].steps.some(({ payload }) => payload.pathId), false);
 });
 

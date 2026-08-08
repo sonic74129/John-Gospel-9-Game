@@ -33,6 +33,7 @@ test("every John 9:1-7 beat has a deterministic, later-content-free final state"
     assert.ok(anchors.has(snapshot.camera.anchorId));
   }
   assert.equal(FINAL_SNAPSHOTS.b05.controls.movementEnabled, true);
+  assert.equal(FINAL_SNAPSHOTS.b05.camera.anchorId, "pool.camera");
   assert.equal(FINAL_SNAPSHOTS.b06.controls.movementEnabled, false);
   assert.equal(FINAL_SNAPSHOTS.b06.actors["man-born-blind"].pose, "washed-seeing");
 });
