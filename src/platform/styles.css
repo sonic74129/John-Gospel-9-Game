@@ -12,6 +12,22 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none;
+}
+
+button[hidden],
+.start-screen[hidden],
+.dialogue-panel[hidden],
+.recall-card[hidden],
+.persistence-warning[hidden],
+.runtime-badge[hidden],
+.ending-panel[hidden],
+.restart-confirmation[hidden],
+.navigation-hint[hidden] {
+  display: none;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -44,12 +60,15 @@ button:disabled {
 
 .platform-shell {
   width: min(100%, 92rem);
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
   padding: clamp(1rem, 3vw, 2.5rem);
   display: grid;
-  align-content: center;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: stretch;
   gap: 1rem;
+  overflow: hidden;
 }
 
 .platform-header {
@@ -119,7 +138,10 @@ button:disabled {
 .game-frame {
   position: relative;
   overflow: hidden;
-  width: min(1280px, 100vw);
+  width: auto;
+  max-width: min(1280px, 100%);
+  height: 100%;
+  max-height: 720px;
   aspect-ratio: 16 / 9;
   justify-self: center;
   border: 0;
@@ -252,33 +274,38 @@ button:disabled {
 .dialogue-panel {
   position: absolute;
   z-index: 20;
-  left: 50%;
-  bottom: 1rem;
-  transform: translateX(-50%);
-  overflow: auto;
-  width: min(94%, 68rem);
-  max-height: min(78%, 39rem);
-  padding: clamp(0.9rem, 2vw, 1.4rem);
-  border: 2px solid #e2d2b2;
-  border-radius: 1rem;
+  inset: 0;
+  overflow: hidden;
   color: #fffaf1;
-  background: rgb(60 53 47 / 96%);
-  box-shadow: 0 1rem 2.5rem rgb(20 16 13 / 38%);
+  pointer-events: none;
 }
 
-.dialogue-panel[hidden],
-.recall-card[hidden],
-.persistence-warning[hidden],
-.runtime-badge[hidden],
-.ending-panel[hidden],
-.restart-confirmation[hidden] {
-  display: none;
+.dialogue-box {
+  position: absolute;
+  z-index: 2;
+  right: clamp(0.75rem, 2vw, 1.5rem);
+  bottom: clamp(0.65rem, 1.8vw, 1.25rem);
+  left: clamp(13rem, 24vw, 21rem);
+  display: grid;
+  grid-template:
+    "heading heading" auto
+    "copy controls" 1fr /
+    minmax(0, 1fr) auto;
+  gap: 0.55rem 1rem;
+  min-height: 22%;
+  max-height: 25%;
+  padding: clamp(0.8rem, 1.6vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+  border-left: 4px solid rgb(197 161 110 / 88%);
+  background:
+    linear-gradient(90deg, rgb(25 20 19 / 94%), rgb(47 38 34 / 88%)),
+    rgb(38 31 29 / 90%);
+  box-shadow: 0 0.7rem 1.8rem rgb(20 16 13 / 32%);
 }
 
-.dialogue-panel > header,
-.dialogue-panel > footer {
+.dialogue-heading {
+  grid-area: heading;
   display: flex;
-  align-items: start;
+  align-items: end;
   justify-content: space-between;
   gap: 1rem;
 }
@@ -291,7 +318,11 @@ button:disabled {
 }
 
 .dialogue-panel h2 {
-  margin-bottom: 0;
+  display: inline-block;
+  margin-bottom: 0.1rem;
+  padding: 0.2rem 0.75rem 0.25rem;
+  border-left: 3px solid #e2d2b2;
+  background: rgb(90 61 75 / 82%);
   font: 700 clamp(1.25rem, 3vw, 2rem)/1.2 Georgia, serif;
 }
 
@@ -307,51 +338,36 @@ button:disabled {
 
 .dialogue-placeholder {
   margin: 0;
-  padding: 1rem;
-  border-left: 4px solid #c5a16e;
-  border-radius: 0.35rem;
-  background: rgb(255 250 241 / 10%);
+  padding: 0;
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.65;
+  text-shadow: 0 1px 2px rgb(20 16 13 / 90%);
 }
 
-.dialogue-content {
-  display: grid;
-  grid-template-columns: minmax(9rem, 15rem) minmax(0, 1fr);
-  gap: clamp(0.75rem, 2vw, 1.4rem);
-  align-items: stretch;
-  margin: 1rem 0;
+.dialogue-copy {
+  grid-area: copy;
+  align-self: center;
+  overflow: auto;
 }
 
 .dialogue-portrait {
-  position: relative;
-  min-height: 15rem;
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  left: clamp(0.35rem, 1.2vw, 1rem);
+  width: min(28%, 21rem);
+  height: 70%;
   margin: 0;
-  overflow: hidden;
-  border: 2px solid #c5a16e;
-  border-radius: 0.7rem;
-  background: #efe1c4;
+  pointer-events: none;
 }
 
 .dialogue-portrait img {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 15rem;
-  object-fit: cover;
-  object-position: top center;
-}
-
-.dialogue-portrait figcaption {
-  position: absolute;
-  right: 0.4rem;
-  bottom: 0.35rem;
-  left: 0.4rem;
-  color: #fffaf1;
-  font-size: 0.65rem;
-  font-weight: 800;
-  text-align: center;
-  text-shadow: 0 1px 2px #21191a;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 0.7rem 0.7rem rgb(20 16 13 / 42%));
 }
 
 .dialogue-metadata {
@@ -363,15 +379,18 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.dialogue-content {
-  grid-template-columns: minmax(5.8rem, 26vw) minmax(0, 1fr);
-  gap: 0.65rem;
-  margin: 0.7rem 0;
+.dialogue-box > footer {
+  grid-area: controls;
+  align-self: end;
 }
 
-.dialogue-portrait,
-.dialogue-portrait img {
-  min-height: 10rem;
+.dialogue-box > footer button {
+  min-width: 5.5rem;
+  padding: 0.55rem 0.8rem;
+  border-color: rgb(226 210 178 / 55%);
+  color: #fffaf1;
+  background: rgb(90 61 75 / 88%);
+  pointer-events: auto;
 }
 
 .dialogue-metadata dt {
@@ -547,14 +566,14 @@ button:disabled {
   .platform-shell {
     align-content: start;
     width: 100%;
+    height: 100dvh;
     padding: 0;
     gap: 0.75rem;
+    grid-template-rows: minmax(0, 1fr) auto;
   }
 
   .platform-header {
-    align-items: start;
-    flex-direction: column;
-    margin: 0.75rem 0.75rem 0;
+    display: none;
   }
 
   .status-stack {
@@ -563,9 +582,8 @@ button:disabled {
 
   .game-frame {
     width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    min-height: min(480px, 100dvh);
+    height: 100%;
+    min-height: 0;
     aspect-ratio: auto;
     border-radius: 0;
     outline: 0;
@@ -600,21 +618,44 @@ button:disabled {
   }
 
   .dialogue-panel {
+    inset: 0;
+  }
+
+  .dialogue-portrait {
+    left: 0;
+    width: 36%;
+    height: 64%;
+  }
+
+  .dialogue-box {
+    right: 0.5rem;
     bottom: 0.5rem;
-    width: calc(100% - 1rem);
-    max-height: calc(100% - 5.5rem);
-    padding: 0.8rem;
+    left: 0.5rem;
+    grid-template:
+      "heading heading" auto
+      "copy controls" 1fr /
+      minmax(0, 1fr) auto;
+    min-height: 24%;
+    max-height: 28%;
+    padding: 0.65rem 0.65rem 0.65rem max(32vw, 7.5rem);
   }
 
-  .dialogue-panel > header,
-  .dialogue-panel > footer {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.5rem;
+  .dialogue-heading {
+    gap: 0.45rem;
   }
 
-  .dialogue-panel > footer button {
-    width: 100%;
+  .dialogue-panel h2 {
+    font-size: clamp(1rem, 5vw, 1.4rem);
+  }
+
+  .dialogue-placeholder {
+    font-size: clamp(0.9rem, 3.6vw, 1.05rem);
+    line-height: 1.45;
+  }
+
+  .dialogue-box > footer button {
+    min-width: 4.5rem;
+    padding: 0.45rem 0.55rem;
   }
 
   .dialogue-metadata {

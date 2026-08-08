@@ -610,9 +610,9 @@
         "sha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e"
       },
       "selectedCandidate": null,
-      "selectionReason": "Derived non-destructively from character.jesus-john9 selected source art for the dialogue portrait UI; no new image generation or photorealistic claim.",
+      "selectionReason": "Derived non-destructively from selected source art with a transparent keyed background for the dialogue portrait overlay; no new image generation or photorealistic claim.",
       "derivation": {
-        "kind": "source-crop-upscale",
+        "kind": "source-crop-keyed-upscale",
         "sourceAssetId": "character.jesus-john9",
         "generatedNewImagery": false
       },
@@ -620,16 +620,17 @@
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-jesus.png",
           "mediaType": "image/png",
-          "bytes": 270326,
-          "sha256": "6bc34ae1fe51c309d2b6b99c1adb55dd99a993cad05a2cc1464b48cef74fcff5",
+          "bytes": 292237,
+          "sha256": "8a35402179a287bfd55e49f260630e3fd803a191a4fbdbfa57a2a21fc6421b1b",
           "dimensions": {
-            "width": 360,
-            "height": 568
+            "width": 420,
+            "height": 442
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=342:540:682:180,scale=360:568:flags=lanczos"
+            "filter": "crop=342:360:682:180,colorkey=0xF7F0DE:0.14:0.06,scale=420:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         }
       ],
@@ -652,9 +653,9 @@
         "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765"
       },
       "selectedCandidate": null,
-      "selectionReason": "Derived non-destructively from character.man-born-blind selected source art for the dialogue portrait UI; no new image generation or photorealistic claim.",
+      "selectionReason": "Derived non-destructively from selected source art with a transparent keyed background for the dialogue portrait overlay; no new image generation or photorealistic claim.",
       "derivation": {
-        "kind": "source-crop-upscale",
+        "kind": "source-crop-keyed-upscale",
         "sourceAssetId": "character.man-born-blind",
         "generatedNewImagery": false
       },
@@ -662,31 +663,33 @@
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-man-blind.png",
           "mediaType": "image/png",
-          "bytes": 228572,
-          "sha256": "ae2e782038d4004670077df9646c84fef9aecb7c1cd8b2b8fc267b4602cd3b79",
+          "bytes": 205403,
+          "sha256": "470e49a711bae0a05e0f93c47b0d28ae52f4509d9160e9b724fafd2615003b15",
           "dimensions": {
-            "width": 320,
-            "height": 572
+            "width": 400,
+            "height": 472
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=280:500:0:340,scale=320:572:flags=lanczos"
+            "filter": "crop=280:330:0:340,colorkey=0xF7F0DE:0.14:0.06,scale=400:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         },
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-man-seeing.png",
           "mediaType": "image/png",
-          "bytes": 199272,
-          "sha256": "20930a1f335031bc59319b9644959b0e7e7116202726e98227e5343afe3d4171",
+          "bytes": 206788,
+          "sha256": "b7debbaac3c765173e376f45593235386df3ee6f0a3411a415c051b96e326378",
           "dimensions": {
-            "width": 320,
-            "height": 576
+            "width": 400,
+            "height": 480
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=300:540:500:220,scale=320:576:flags=lanczos"
+            "filter": "crop=300:360:500:220,colorkey=0xF7F0DE:0.14:0.06,scale=400:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         }
       ],
@@ -709,9 +712,9 @@
         "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce"
       },
       "selectedCandidate": null,
-      "selectionReason": "Derived non-destructively from character.john9-supporting selected source art for the dialogue portrait UI; no new image generation or photorealistic claim.",
+      "selectionReason": "Derived non-destructively from selected source art with a transparent keyed background for the dialogue portrait overlay; no new image generation or photorealistic claim.",
       "derivation": {
-        "kind": "source-crop-upscale",
+        "kind": "source-crop-keyed-upscale",
         "sourceAssetId": "character.john9-supporting",
         "generatedNewImagery": false
       },
@@ -719,61 +722,65 @@
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-disciples.png",
           "mediaType": "image/png",
-          "bytes": 218486,
-          "sha256": "9172a6ced86f3904c086132deaad450a44edc4ddd013f35b43f0d5ae1ffd7218",
+          "bytes": 209159,
+          "sha256": "9278b5dae3dc4d05daea45f4b7288854bb89f1578bfc8a86eae7f695d69c2423",
           "dimensions": {
-            "width": 320,
-            "height": 650
+            "width": 400,
+            "height": 468
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=256:520:256:0,scale=320:650:flags=lanczos"
+            "filter": "crop=256:300:256:0,colorkey=0xF7F0DE:0.14:0.06,scale=400:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         },
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-neighbors.png",
           "mediaType": "image/png",
-          "bytes": 206909,
-          "sha256": "e7c2a47c4964386e8ec3555e092342d0a6669ef6de58630a01593b54b9c58961",
+          "bytes": 201062,
+          "sha256": "09078d401790b7f53d42241f919434d25c7c29797a1fbfe1f66c0a90245299d9",
           "dimensions": {
-            "width": 320,
-            "height": 650
+            "width": 400,
+            "height": 468
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=256:520:512:0,scale=320:650:flags=lanczos"
+            "filter": "crop=256:300:512:0,colorkey=0xF7F0DE:0.14:0.06,scale=400:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         },
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-authorities.png",
           "mediaType": "image/png",
-          "bytes": 214462,
-          "sha256": "83e5dbacd6d6dff021ef3d57734f287d7a4ac1caf28cedaf93d86bdfed8434ff",
+          "bytes": 201658,
+          "sha256": "1a734e851e20c4e3efe275e622f10bfeb2a3cc6633cdcf34d008e4491feed1c3",
           "dimensions": {
-            "width": 320,
-            "height": 650
+            "width": 400,
+            "height": 468
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=256:520:0:0,scale=320:650:flags=lanczos"
+            "filter": "crop=256:300:0:0,colorkey=0xF7F0DE:0.14:0.06,scale=400:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         },
         {
           "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-parents.png",
           "mediaType": "image/png",
-          "bytes": 207194,
-          "sha256": "1109febec04c9c281931f39e5603e91a53eb3905d2acb1ec6902ebedad023ba7",
+          "bytes": 193342,
+          "sha256": "de9a1a22d6413dd1b07dfcca1bf0d09c7594d9979618f50b085e70b0ec5da6b2",
           "dimensions": {
-            "width": 320,
-            "height": 650
+            "width": 400,
+            "height": 468
           },
           "processing": {
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
-            "filter": "crop=256:520:768:0,scale=320:650:flags=lanczos"
+            "filter": "crop=256:300:768:0,colorkey=0xF7F0DE:0.14:0.06,scale=400:-2:flags=lanczos,format=rgba",
+            "alphaMode": "transparent-background-key"
           }
         }
       ],

@@ -30,6 +30,7 @@ function imageDimensions(bytes, path) {
   if (bytes.subarray(0, 8).toString("hex") === "89504e470d0a1a0a") {
     return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
   }
+
   if (
     bytes.toString("ascii", 0, 4) === "RIFF" &&
     bytes.toString("ascii", 8, 12) === "WEBP"
@@ -49,6 +50,13 @@ function imageDimensions(bytes, path) {
     }
   }
   throw new Error(`Unsupported runtime image format: ${path}`);
+}
+
+function pngColorType(bytes, path) {
+  if (bytes.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a") {
+    throw new Error(`Expected PNG image: ${path}`);
+  }
+  return bytes.readUInt8(25);
 }
 
 test("formal art manifest pins the v2 zig-zag release contract", () => {
@@ -97,14 +105,20 @@ test("all 35 runtime outputs match recorded bytes, hashes, and dimensions", asyn
   }
 });
 
-test("dialogue portraits are traceable source-art derivatives, not newly generated imagery", () => {
+test("dialogue portraits are transparent traceable derivatives, not newly generated imagery", async () => {
   const portraits = manifest.assets.filter(({ family }) => family === "dialogue-portraits");
   assert.equal(portraits.length, 3);
   assert.equal(portraits.flatMap(({ outputs }) => outputs).length, 7);
   for (const portrait of portraits) {
-    assert.equal(portrait.derivation?.kind, "source-crop-upscale");
+    assert.equal(portrait.derivation?.kind, "source-crop-keyed-upscale");
     assert.equal(portrait.derivation?.generatedNewImagery, false);
     assert.match(portrait.selectionReason, /no new image generation/i);
+    for (const output of portrait.outputs) {
+      const bytes = await readFile(output.path);
+      assert.equal(pngColorType(bytes, output.path), 6, output.path);
+      assert.equal(output.processing.alphaMode, "transparent-background-key");
+      assert.match(output.processing.filter, /colorkey=.*format=rgba/);
+    }
   }
 });
 

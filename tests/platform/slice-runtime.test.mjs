@@ -775,7 +775,16 @@ test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-saf
   assert.match(shell, /event\.code === "Space" \|\| event\.code === "Enter"/);
   assert.match(shell, /event\.preventDefault\(\);[\s\S]*advanceDialogue\(\)/);
   assert.match(shell, /data-dialogue-portrait-image/);
-  assert.match(styles, /\.dialogue-content \{[\s\S]*grid-template-columns/);
+  assert.doesNotMatch(shell, /data-dialogue-portrait-note|選用原始角色畫作裁切/);
+  assert.match(styles, /\[hidden\] \{\s*display: none;/);
+  assert.match(
+    styles,
+    /button\[hidden\],[\s\S]*\.recall-card\[hidden\],[\s\S]*\.restart-confirmation\[hidden\][\s\S]*display: none;/,
+  );
+  assert.match(styles, /\.dialogue-panel \{[\s\S]*inset: 0;[\s\S]*pointer-events: none;/);
+  assert.match(styles, /\.dialogue-portrait \{[\s\S]*height: 70%;/);
+  assert.match(styles, /\.dialogue-box \{[\s\S]*max-height: 25%;/);
+  assert.match(styles, /\.dialogue-box > footer button \{[\s\S]*pointer-events: auto;/);
   assert.match(
     styles,
     /@media \(max-width: 640px\)[\s\S]*\.navigation-hint \{[\s\S]*top: 5\.5rem[\s\S]*max-width: calc\(100% - 1rem\)/,

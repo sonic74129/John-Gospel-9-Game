@@ -86,26 +86,25 @@ export function createAppShell(
           <button type="button" data-start-restart ${options.hasSave ? "" : "hidden"}>重新開始</button>
         </div>
         <section class="dialogue-panel" data-dialogue hidden aria-modal="true" role="dialog" aria-labelledby="dialogue-speaker">
-          <header>
-            <div>
-              <p class="dialogue-source" data-dialogue-source></p>
-              <h2 id="dialogue-speaker" data-dialogue-speaker></h2>
-            </div>
-            <p class="dialogue-progress" data-dialogue-progress></p>
-          </header>
-          <div class="dialogue-content">
-            <figure class="dialogue-portrait" data-dialogue-portrait>
-              <img data-dialogue-portrait-image alt="" />
-              <figcaption data-dialogue-portrait-note>選用原始角色畫作裁切</figcaption>
-            </figure>
+          <figure class="dialogue-portrait" data-dialogue-portrait>
+            <img data-dialogue-portrait-image alt="" />
+          </figure>
+          <div class="dialogue-box">
+            <header class="dialogue-heading">
+              <div>
+                <p class="dialogue-source" data-dialogue-source></p>
+                <h2 id="dialogue-speaker" data-dialogue-speaker></h2>
+              </div>
+              <p class="dialogue-progress" data-dialogue-progress></p>
+            </header>
             <div class="dialogue-copy">
               <div class="dialogue-placeholder" data-dialogue-placeholder></div>
               <dl class="dialogue-metadata" data-dialogue-metadata></dl>
             </div>
+            <footer>
+              <button type="button" data-dialogue-next>下一段</button>
+            </footer>
           </div>
-          <footer>
-            <button type="button" data-dialogue-next>下一段</button>
-          </footer>
         </section>
         <aside class="testimony-journal" data-testimony-journal aria-label="見證紀錄">
           <h2>見證紀錄</h2>
@@ -216,10 +215,6 @@ export function createAppShell(
   const dialoguePortraitImage = requireElement<HTMLImageElement>(
     root,
     "[data-dialogue-portrait-image]",
-  );
-  const dialoguePortraitNote = requireElement<HTMLElement>(
-    root,
-    "[data-dialogue-portrait-note]",
   );
   const dialogueMetadata = requireElement<HTMLElement>(
     root,
@@ -403,7 +398,6 @@ export function createAppShell(
       dialoguePortraitImage.src = `${import.meta.env.BASE_URL}${portrait.path}`;
       dialoguePortraitImage.alt = portrait.alt;
       dialoguePortrait.dataset.provenance = portrait.provenance;
-      dialoguePortraitNote.textContent = "選用原始角色畫作裁切";
       dialogueProgress.textContent = `${index + 1} / ${lines.length}`;
       dialoguePlaceholder.textContent = line.text;
       if (import.meta.env.DEV && debugQaMetadataEnabled) {

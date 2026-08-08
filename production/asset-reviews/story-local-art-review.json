@@ -36,13 +36,13 @@
     "paletteMaterialAndLight": "accepted",
     "theologicalRestraint": "accepted; no halo, glow, beam, fantasy particles or theatrical miracle effect",
     "embeddedText": "none in selected assets",
-    "dialoguePortraits": "derived source-art crop portraits accepted for responsive dialogue staging; no new photorealistic artwork was generated"
+    "dialoguePortraits": "transparent source-art crop portraits accepted for non-blocking RPG dialogue staging; no new photorealistic artwork was generated"
   },
   "limitations": [
     "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
     "The world base is a single painted two-dimensional zig-zag composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
     "The player uses four distinct directional frames; supporting actors use restrained static narrative poses.",
     "Automated provenance supports a complete private distribution scope; public redistribution is not claimed.",
-    "Dialogue portraits are non-destructive crops/upscales of selected source art, not newly generated or photorealistic portraits."
+    "Dialogue portraits are transparent non-destructive crops/upscales of selected source art, not newly generated or photorealistic portraits."
   ]
 }
