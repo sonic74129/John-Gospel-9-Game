@@ -225,6 +225,9 @@ const shell = createAppShell(root, {
       }
     }
   },
+  onDirectionalInput: (direction) => {
+    gameScene?.setVirtualDirection(direction);
+  },
   onSkip: () => runtime?.skipCurrent(),
 }, {
   hasSave: playtestRequest === null && loadedSave !== null,

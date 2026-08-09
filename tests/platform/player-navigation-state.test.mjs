@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
@@ -51,4 +52,23 @@ test("directional input immediately cancels a fixed-point path", () => {
     cancelNavigationForDirectionalInput(navigation, { x: 1, y: 0 }),
     null,
   );
+});
+
+test("Space remains local interaction and mobile directions use direct input", async () => {
+  const [scene, shell, main] = await Promise.all([
+    readFile("src/adapters/story-scene.ts", "utf8"),
+    readFile("src/platform/app-shell.ts", "utf8"),
+    readFile("src/main.ts", "utf8"),
+  ]);
+  const spaceStart = scene.indexOf("Phaser.Input.Keyboard.JustDown");
+  const movementStart = scene.indexOf("if (!this.#movementAllowed())", spaceStart);
+  const spaceHandling = scene.slice(spaceStart, movementStart);
+  assert.doesNotMatch(spaceHandling, /#activateNavigationObjective/);
+  assert.match(spaceHandling, /objectiveDistance <= INTERACTION_RADIUS_PIXELS/);
+  for (const direction of ["up", "down", "left", "right"]) {
+    assert.match(shell, new RegExp(`data-move-${direction}`));
+  }
+  assert.match(shell, /pointerdown/);
+  assert.match(shell, /pointerup/);
+  assert.match(main, /gameScene\?\.setVirtualDirection\(direction\)/);
 });

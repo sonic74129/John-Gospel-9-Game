@@ -135,6 +135,10 @@ button:disabled {
   touch-action: none;
 }
 
+.mobile-dpad {
+  display: none;
+}
+
 .slice-hud {
   position: absolute;
   z-index: 7;
@@ -354,6 +358,46 @@ button:disabled {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
+}
+
+@media (max-width: 640px), (max-width: 900px) and (max-height: 640px) {
+  .mobile-dpad {
+    position: absolute;
+    z-index: 8;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    left: 0.75rem;
+    display: grid;
+    grid-template:
+      ". up ." 2.7rem
+      "left down right" 2.7rem /
+      repeat(3, 2.7rem);
+    gap: 0.3rem;
+    touch-action: none;
+  }
+
+  .mobile-dpad button {
+    min-width: 0;
+    padding: 0;
+    border-color: rgb(226 210 178 / 70%);
+    color: #fffaf1;
+    background: rgb(60 53 47 / 82%);
+  }
+
+  .mobile-dpad [data-move-up] {
+    grid-area: up;
+  }
+
+  .mobile-dpad [data-move-left] {
+    grid-area: left;
+  }
+
+  .mobile-dpad [data-move-down] {
+    grid-area: down;
+  }
+
+  .mobile-dpad [data-move-right] {
+    grid-area: right;
+  }
 }
 
 .game-controls[hidden] {

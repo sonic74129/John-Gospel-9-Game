@@ -10,6 +10,9 @@ export interface AppShellHandlers {
   readonly onRestart: () => Promise<void>;
   readonly onPauseChange: (paused: boolean) => Promise<void>;
   readonly onMuteChange: (muted: boolean) => void;
+  readonly onDirectionalInput: (
+    direction: Readonly<{ x: number; y: number }>,
+  ) => void;
   readonly onSkip: () => void;
 }
 
@@ -64,6 +67,12 @@ export function createAppShell(
       </header>
       <section class="game-frame" aria-label="遊戲區域">
         <div class="game-container" data-game-container></div>
+        <nav class="mobile-dpad" data-mobile-dpad aria-label="移動方向">
+          <button type="button" data-move-up aria-label="向上移動">▲</button>
+          <button type="button" data-move-left aria-label="向左移動">◀</button>
+          <button type="button" data-move-down aria-label="向下移動">▼</button>
+          <button type="button" data-move-right aria-label="向右移動">▶</button>
+        </nav>
         <div class="slice-hud" data-slice-hud>
           <p class="stage-goal" data-stage-goal>留心四周</p>
         </div>
@@ -123,6 +132,25 @@ export function createAppShell(
     root,
     "[data-game-controls]",
   );
+  const mobileDpad = requireElement<HTMLElement>(root, "[data-mobile-dpad]");
+  const directionalButtons = [
+    {
+      button: requireElement<HTMLButtonElement>(root, "[data-move-up]"),
+      direction: { x: 0, y: -1 },
+    },
+    {
+      button: requireElement<HTMLButtonElement>(root, "[data-move-left]"),
+      direction: { x: -1, y: 0 },
+    },
+    {
+      button: requireElement<HTMLButtonElement>(root, "[data-move-down]"),
+      direction: { x: 0, y: 1 },
+    },
+    {
+      button: requireElement<HTMLButtonElement>(root, "[data-move-right]"),
+      direction: { x: 1, y: 0 },
+    },
+  ] as const;
   const startScreen = requireElement<HTMLElement>(root, "[data-start-screen]");
   const startButton = requireElement<HTMLButtonElement>(root, "[data-start]");
   const continueButton = requireElement<HTMLButtonElement>(
@@ -207,6 +235,7 @@ export function createAppShell(
     startScreen,
     dialogue,
     ending,
+    mobileDpad,
     gameControls,
   ];
   const restartOutsideButtons = [
@@ -431,6 +460,20 @@ export function createAppShell(
     },
     setHandoff: () => {},
   };
+
+  for (const { button, direction } of directionalButtons) {
+    button.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      button.setPointerCapture(event.pointerId);
+      handlers.onDirectionalInput(direction);
+    });
+    const release = (): void => {
+      handlers.onDirectionalInput({ x: 0, y: 0 });
+    };
+    button.addEventListener("pointerup", release);
+    button.addEventListener("pointercancel", release);
+    button.addEventListener("lostpointercapture", release);
+  }
 
   startButton.addEventListener("click", () => handlers.onStart("new"), {
     once: true,

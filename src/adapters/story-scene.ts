@@ -37,6 +37,11 @@ import {
   createViewportResizeTransaction,
   type ViewportResizeTransaction,
 } from "../platform/viewport-resize-transaction.ts";
+import {
+  beginFixedPointNavigation,
+  cancelNavigationForDirectionalInput,
+  type FixedPointNavigation,
+} from "../platform/player-navigation-state.ts";
 
 interface ActorVisual {
   readonly actorId: string;
@@ -154,7 +159,8 @@ export class StoryScene extends Phaser.Scene {
     left: Phaser.Input.Keyboard.Key;
     right: Phaser.Input.Keyboard.Key;
   }>;
-  #path: readonly Point[] = [];
+  #fixedPointNavigation: FixedPointNavigation | null = null;
+  #virtualDirection: Point = { x: 0, y: 0 };
   #sequenceInputEnabled = true;
   #canonicalControls: SliceFinalState["controls"] = {
     playerActorId: "observer",
@@ -334,7 +340,20 @@ export class StoryScene extends Phaser.Scene {
         }
       }
       const nearby = this.#nearestStoryActor(target, 52);
-      if (nearby !== undefined && this.#interactionAllowed()) {
+      const playerPosition = this.playerPosition();
+      const nearbyPosition =
+        nearby === undefined ? null : this.storyActorPosition(nearby);
+      if (
+        nearby !== undefined &&
+        nearbyPosition !== null &&
+        Phaser.Math.Distance.Between(
+          playerPosition.x,
+          playerPosition.y,
+          nearbyPosition.x,
+          nearbyPosition.y,
+        ) <= INTERACTION_RADIUS_PIXELS &&
+        this.#interactionAllowed()
+      ) {
         this.#handlers?.onInteract(nearby);
         return;
       }
@@ -342,7 +361,7 @@ export class StoryScene extends Phaser.Scene {
         this.#setVisualMotion(this.#player, false, 0);
         return;
       }
-      this.#path = this.#world.findPath(this.playerPosition(), target);
+      this.#beginFixedPointNavigation(target);
     });
     this.#applyInitialCourtyardCamera();
     this.#syncNarrativeTextures();
@@ -379,8 +398,6 @@ export class StoryScene extends Phaser.Scene {
           objectiveDistance <= INTERACTION_RADIUS_PIXELS
         ) {
           this.#handlers?.onInteract(this.#navigationObjective.targetId);
-        } else if (objectiveDistance > INTERACTION_RADIUS_PIXELS) {
-          this.#activateNavigationObjective();
         } else {
           const nearby = this.#nearestStoryActor(playerPosition, 110);
           if (nearby !== undefined) {
@@ -400,14 +417,19 @@ export class StoryScene extends Phaser.Scene {
 
     const direction = new Phaser.Math.Vector2(
       Number(this.#cursorKeys?.right.isDown || this.#wasd?.right.isDown) -
-        Number(this.#cursorKeys?.left.isDown || this.#wasd?.left.isDown),
+        Number(this.#cursorKeys?.left.isDown || this.#wasd?.left.isDown) +
+        this.#virtualDirection.x,
       Number(this.#cursorKeys?.down.isDown || this.#wasd?.down.isDown) -
-        Number(this.#cursorKeys?.up.isDown || this.#wasd?.up.isDown),
+        Number(this.#cursorKeys?.up.isDown || this.#wasd?.up.isDown) +
+        this.#virtualDirection.y,
     );
     const distance = (240 * delta) / 1000;
 
     if (direction.lengthSq() > 0) {
-      this.#path = [];
+      this.#fixedPointNavigation = cancelNavigationForDirectionalInput(
+        this.#fixedPointNavigation,
+        direction,
+      );
       direction.normalize().scale(distance);
       const moved =
         this.#movePlayer(direction.x, direction.y) ||
@@ -417,7 +439,7 @@ export class StoryScene extends Phaser.Scene {
       return;
     }
 
-    const next = this.#path[0];
+    const next = this.#fixedPointNavigation?.waypoints[0];
     if (next === undefined) {
       this.#setVisualMotion(this.#player, false, 0);
       return;
@@ -428,17 +450,22 @@ export class StoryScene extends Phaser.Scene {
     );
     if (toNext.length() <= distance) {
       if (this.#movePlayer(toNext.x, toNext.y)) {
-        this.#path = this.#path.slice(1);
+        this.#fixedPointNavigation = Object.freeze({
+          target: this.#fixedPointNavigation!.target,
+          waypoints: Object.freeze(
+            this.#fixedPointNavigation!.waypoints.slice(1),
+          ),
+        });
         this.#setVisualMotion(this.#player, true, delta);
       } else {
-        this.#path = [];
+        this.#fixedPointNavigation = null;
         this.#setVisualMotion(this.#player, false, 0);
       }
       return;
     }
     toNext.normalize().scale(distance);
     if (!this.#movePlayer(toNext.x, toNext.y)) {
-      this.#path = [];
+      this.#fixedPointNavigation = null;
       this.#setVisualMotion(this.#player, false, 0);
     } else {
       this.#setVisualMotion(this.#player, true, delta);
@@ -461,11 +488,22 @@ export class StoryScene extends Phaser.Scene {
   setMovementEnabled(enabled: boolean): void {
     this.#sequenceInputEnabled = enabled;
     if (!enabled) {
-      this.#path = [];
+      this.#fixedPointNavigation = null;
       if (this.#player !== undefined) {
         this.#setVisualMotion(this.#player, false, 0);
       }
     }
+  }
+
+  setVirtualDirection(direction: Point): void {
+    this.#virtualDirection = {
+      x: Math.sign(direction.x),
+      y: Math.sign(direction.y),
+    };
+    this.#fixedPointNavigation = cancelNavigationForDirectionalInput(
+      this.#fixedPointNavigation,
+      this.#virtualDirection,
+    );
   }
 
   resizeViewport(width: number, height: number): void {
@@ -580,7 +618,7 @@ export class StoryScene extends Phaser.Scene {
       snapshot.transientCameraFocus === null
         ? null
         : structuredClone(snapshot.transientCameraFocus);
-    this.#path = [];
+    this.#fixedPointNavigation = null;
     const viewportChanged =
       this.cameras.main.width !== snapshot.camera.width ||
       this.cameras.main.height !== snapshot.camera.height;
@@ -902,7 +940,7 @@ export class StoryScene extends Phaser.Scene {
         `Canonical player actor ${state.controls.playerActorId} is not the rendered player.`,
       );
     }
-    this.#path = [];
+    this.#fixedPointNavigation = null;
     this.#setVisualMotion(this.#player!, false, 0);
     const cameraAnchorContract = this.#world.anchorById.get(
       state.camera.anchorId,
@@ -965,7 +1003,8 @@ export class StoryScene extends Phaser.Scene {
     this.setNavigationObjective(null);
     this.#viewportResize.cancel();
     this.#handlers = undefined;
-    this.#path = [];
+    this.#fixedPointNavigation = null;
+    this.#virtualDirection = { x: 0, y: 0 };
   }
 
   get tearingDown(): boolean {
@@ -1469,14 +1508,17 @@ export class StoryScene extends Phaser.Scene {
       return;
     }
     const path = this.#objectivePath(this.#navigationObjective, objectivePosition);
-    if (
-      path.length === 0 &&
-      this.#navigationObjective.kind === "interaction"
-    ) {
-      this.#handlers?.onInteract(this.#navigationObjective.targetId);
-      return;
-    }
-    this.#path = path;
+    this.#fixedPointNavigation = beginFixedPointNavigation(
+      objectivePosition,
+      path,
+    );
+  }
+
+  #beginFixedPointNavigation(target: Point): void {
+    this.#fixedPointNavigation = beginFixedPointNavigation(
+      target,
+      this.#world.findPath(this.playerPosition(), target),
+    );
   }
 
   #objectivePath(
