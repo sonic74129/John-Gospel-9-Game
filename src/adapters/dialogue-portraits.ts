@@ -8,16 +8,20 @@ export interface DialoguePortrait {
   readonly framing: Readonly<{
     focusY: number;
     scale: number;
+    offsetY: number;
     mobileFocusY: number;
     mobileScale: number;
+    mobileOffsetY: number;
   }>;
 }
 
 const DEFAULT_FRAMING = Object.freeze({
-  focusY: 42,
+  focusY: 50,
   scale: 0.94,
-  mobileFocusY: 40,
+  offsetY: -8,
+  mobileFocusY: 50,
   mobileScale: 0.92,
+  mobileOffsetY: -6,
 });
 
 const portrait = (
@@ -32,8 +36,10 @@ const portrait = (
     framing: Object.freeze({
       focusY: framing.focusY ?? DEFAULT_FRAMING.focusY,
       scale: framing.scale ?? DEFAULT_FRAMING.scale,
+      offsetY: framing.offsetY ?? DEFAULT_FRAMING.offsetY,
       mobileFocusY: framing.mobileFocusY ?? DEFAULT_FRAMING.mobileFocusY,
       mobileScale: framing.mobileScale ?? DEFAULT_FRAMING.mobileScale,
+      mobileOffsetY: framing.mobileOffsetY ?? DEFAULT_FRAMING.mobileOffsetY,
     }),
   });
 
@@ -43,49 +49,65 @@ export function dialoguePortraitFor(
   switch (line.portraitSubjectId) {
     case "jesus":
       return portrait(STORY_ART.portraits.jesus, "耶穌", {
-        focusY: 36,
+        focusY: 50,
         scale: 0.9,
-        mobileFocusY: 34,
+        offsetY: -12,
+        mobileFocusY: 50,
         mobileScale: 0.88,
+        mobileOffsetY: -10,
       });
     case "disciples":
       return portrait(STORY_ART.portraits.disciples, "門徒", {
-        focusY: 49,
-        mobileFocusY: 47,
+        focusY: 50,
+        scale: 0.93,
+        offsetY: -10,
+        mobileFocusY: 50,
+        mobileScale: 0.91,
+        mobileOffsetY: -8,
       });
     case "man-born-blind":
       if (line.portraitState === "blind") {
         return portrait(STORY_ART.portraits.manBlind, "那人（尚未看見）", {
-          focusY: 34,
+          focusY: 50,
           scale: 0.92,
-          mobileFocusY: 32,
+          offsetY: -22,
+          mobileFocusY: 50,
           mobileScale: 0.9,
+          mobileOffsetY: -18,
         });
       }
       if (line.portraitState === "seeing") {
         return portrait(STORY_ART.portraits.manSeeing, "那人（已能看見）", {
-          focusY: 36,
+          focusY: 50,
           scale: 0.92,
-          mobileFocusY: 34,
+          offsetY: -16,
+          mobileFocusY: 50,
           mobileScale: 0.9,
+          mobileOffsetY: -14,
         });
       }
       return null;
     case "neighbors":
       return portrait(STORY_ART.portraits.neighbors, "鄰舍與見過他的人", {
-        focusY: 40,
-        mobileFocusY: 38,
+        focusY: 50,
+        offsetY: -10,
+        mobileFocusY: 50,
+        mobileOffsetY: -8,
       });
     case "parents":
       return portrait(STORY_ART.portraits.parents, "他的父母", {
-        focusY: 38,
-        mobileFocusY: 36,
+        focusY: 50,
+        offsetY: -12,
+        mobileFocusY: 50,
+        mobileOffsetY: -10,
       });
     case "pharisees":
     case "judean-authorities":
       return portrait(STORY_ART.portraits.authorities, "查問的人", {
-        focusY: 41,
-        mobileFocusY: 39,
+        focusY: 50,
+        offsetY: -9,
+        mobileFocusY: 50,
+        mobileOffsetY: -7,
       });
     default:
       return null;

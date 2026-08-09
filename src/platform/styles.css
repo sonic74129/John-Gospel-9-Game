@@ -319,7 +319,7 @@ button:disabled {
   height: 100%;
   object-fit: contain;
   object-position: center var(--portrait-focus-y, 52%);
-  transform: scale(var(--portrait-scale, 1.08));
+  transform: translateY(var(--portrait-offset-y, 0%)) scale(var(--portrait-scale, 1.08));
   transform-origin: center bottom;
   filter: drop-shadow(0 0.7rem 0.7rem rgb(20 16 13 / 42%));
 }
@@ -563,7 +563,9 @@ button:disabled {
 
   .dialogue-portrait img {
     object-position: center var(--portrait-mobile-focus-y, var(--portrait-focus-y, 50%));
-    transform: scale(var(--portrait-mobile-scale, var(--portrait-scale, 1.07)));
+    transform:
+      translateY(var(--portrait-mobile-offset-y, var(--portrait-offset-y, 0%)))
+      scale(var(--portrait-mobile-scale, var(--portrait-scale, 1.07)));
   }
 
   .dialogue-box {

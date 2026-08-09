@@ -243,7 +243,7 @@ export class StoryScene extends Phaser.Scene {
           art.key,
         )
         .setOrigin(0.5, art.footBaseline! / art.frameHeight)
-        .setScale(renderProfile.targetDisplayHeight / art.frameHeight)
+        .setScale(renderProfile.targetDisplayHeight / art.footBaseline!)
         .setDepth(this.#actorDepth(actor.definition.position.y));
       const label = this.add
         .text(actor.definition.position.x, actor.definition.position.y - 84, actor.state.label, {
@@ -1365,7 +1365,7 @@ export class StoryScene extends Phaser.Scene {
     visual.body
       .setTexture(art.key)
       .setOrigin(0.5, art.footBaseline! / art.frameHeight)
-      .setScale(renderProfile.targetDisplayHeight / art.frameHeight);
+      .setScale(renderProfile.targetDisplayHeight / art.footBaseline!);
     if (art === STORY_ART.actors.jesusDirectional) {
       this.#setVisualMotion(visual, visual.moving, 0);
     }

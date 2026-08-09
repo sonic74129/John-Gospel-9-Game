@@ -75,6 +75,10 @@ test("portrait subjects preserve blind and seeing identity while worship stays p
   assert.equal(DIALOGUE_BY_BEAT.b01[0].portraitState, "blind");
   assert.equal(DIALOGUE_BY_BEAT.b06[0].portraitState, "seeing");
   assert.notEqual(blindPortrait.art.key, seeingPortrait.art.key);
-  assert.notEqual(blindPortrait.framing.focusY, seeingPortrait.framing.focusY);
+  assert.notEqual(blindPortrait.framing.offsetY, seeingPortrait.framing.offsetY);
+  assert.notEqual(
+    blindPortrait.framing.mobileOffsetY,
+    seeingPortrait.framing.mobileOffsetY,
+  );
   assert.equal(dialoguePortraitFor(DIALOGUE_BY_BEAT.b19[0]), null);
 });

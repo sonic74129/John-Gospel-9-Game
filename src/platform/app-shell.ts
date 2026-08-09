@@ -347,8 +347,10 @@ export function createAppShell(
         dialoguePortraitLabel.textContent = "";
         dialoguePortraitImage.style.removeProperty("--portrait-focus-y");
         dialoguePortraitImage.style.removeProperty("--portrait-scale");
+        dialoguePortraitImage.style.removeProperty("--portrait-offset-y");
         dialoguePortraitImage.style.removeProperty("--portrait-mobile-focus-y");
         dialoguePortraitImage.style.removeProperty("--portrait-mobile-scale");
+        dialoguePortraitImage.style.removeProperty("--portrait-mobile-offset-y");
       } else {
         dialoguePortrait.hidden = false;
         dialoguePortraitImage.src = portraitUrl(portrait.art.path);
@@ -363,12 +365,20 @@ export function createAppShell(
           String(portrait.framing.scale),
         );
         dialoguePortraitImage.style.setProperty(
+          "--portrait-offset-y",
+          `${portrait.framing.offsetY}%`,
+        );
+        dialoguePortraitImage.style.setProperty(
           "--portrait-mobile-focus-y",
           `${portrait.framing.mobileFocusY}%`,
         );
         dialoguePortraitImage.style.setProperty(
           "--portrait-mobile-scale",
           String(portrait.framing.mobileScale),
+        );
+        dialoguePortraitImage.style.setProperty(
+          "--portrait-mobile-offset-y",
+          `${portrait.framing.mobileOffsetY}%`,
         );
         dialoguePortraitLabel.textContent = portrait.alt;
       }
