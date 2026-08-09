@@ -76,14 +76,14 @@ const inquiryState = {
     "standing",
     "鄰舍與見過他的人",
     true,
-    true,
+    false,
   ],
   pharisees: [
     "courtyard.pharisees-left",
     "questioning",
     "法利賽人",
     true,
-    true,
+    false,
   ],
   parents: ["courtyard.gate", "idle", "他的父母", false, false],
   "judean-authorities": [
@@ -91,7 +91,7 @@ const inquiryState = {
     "questioning",
     "猶太人",
     true,
-    true,
+    false,
   ],
 };
 
@@ -126,8 +126,8 @@ const phaseOverrides = (phase) => {
           "pool.neighbors",
           "idle",
           "鄰舍與見過他的人",
-          true,
-          true,
+          false,
+          false,
         ],
       };
     case "neighbors":
@@ -166,7 +166,7 @@ const phaseOverrides = (phase) => {
       return {
         ...inquiryState,
         observer: ["courtyard.gate", "idle", "觀察者", true, true],
-        parents: ["courtyard.parents", "standing", "他的父母", true, true],
+        parents: ["courtyard.parents", "standing", "他的父母", true, false],
       };
     case "parents-departed":
       return {
@@ -183,21 +183,21 @@ const phaseOverrides = (phase) => {
           "standing-seeing",
           "那人",
           true,
-          true,
+          false,
         ],
         neighbors: [
           "courtyard.inquiry-man",
           "standing",
           "鄰舍與見過他的人",
           true,
-          true,
+          false,
         ],
         pharisees: [
           "courtyard.pharisees-left",
           "idle",
           "法利賽人",
           true,
-          true,
+          false,
         ],
         parents: ["courtyard.gate", "idle", "他的父母", false, false],
         "judean-authorities": [

@@ -109,6 +109,13 @@ const shell = createAppShell(root, {
           },
         });
         const readyRuntime = runtime;
+        if (import.meta.env.DEV) {
+          void import("./platform/dev-qa-telemetry.ts").then(
+            ({ installDevQaTelemetry }) => {
+              installDevQaTelemetry(readyScene, readyRuntime);
+            },
+          );
+        }
         readyRuntime.start()
           .then(async () => {
             await readyRuntime.unlockAudio();

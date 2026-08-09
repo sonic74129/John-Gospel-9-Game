@@ -1,0 +1,717 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-09T05:24:51.705Z",
+  "chromium": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "baseUrl": "http://127.0.0.1:5173/games/john-9-man-born-blind/",
+  "scenarios": [
+    {
+      "name": "full-normal-real-input-desktop",
+      "viewport": "1280x720",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b08",
+        "b09",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/08-full-normal-ending-desktop.png"
+      ],
+      "transitionMatrix": [
+        {
+          "id": "b01-b02",
+          "start": {
+            "label": "b01-b02-start",
+            "player": {
+              "x": 1644,
+              "y": 530
+            },
+            "currentBeatId": "b02",
+            "completedBeatIds": [
+              "b01"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b01-b02-start.png"
+          },
+          "midway": {
+            "label": "b01-b02-midway",
+            "player": {
+              "x": 1644,
+              "y": 530
+            },
+            "currentBeatId": "b03",
+            "completedBeatIds": [
+              "b01",
+              "b02"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b01-b02-midway.png"
+          },
+          "end": {
+            "label": "b01-b02-end",
+            "player": {
+              "x": 1644,
+              "y": 530
+            },
+            "currentBeatId": "b04",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b01-b02-end.png"
+          }
+        },
+        {
+          "id": "b05",
+          "start": {
+            "label": "b05-start",
+            "player": {
+              "x": 1644,
+              "y": 530
+            },
+            "currentBeatId": "b06",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b05-start.png"
+          },
+          "midway": {
+            "label": "b05-midway",
+            "player": {
+              "x": 1259.1212224771555,
+              "y": 796.6674010115768
+            },
+            "currentBeatId": "b06",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b05-midway.png"
+          },
+          "end": {
+            "label": "b05-end",
+            "player": {
+              "x": 1229.127654531994,
+              "y": 1179.6806972061004
+            },
+            "currentBeatId": "b06",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b05-end.png"
+          }
+        },
+        {
+          "id": "b06-b07",
+          "start": {
+            "label": "b06-b07-start",
+            "player": {
+              "x": 1213.153254531994,
+              "y": 1179.6806972061004
+            },
+            "currentBeatId": "b07",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b06-b07-start.png"
+          },
+          "midway": {
+            "label": "b06-b07-midway",
+            "player": {
+              "x": 1213.153254531994,
+              "y": 1179.6806972061004
+            },
+            "currentBeatId": "b08",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b06-b07-midway.png"
+          },
+          "end": {
+            "label": "b06-b07-end",
+            "player": {
+              "x": 1213.153254531994,
+              "y": 1179.6806972061004
+            },
+            "currentBeatId": "b08",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b06-b07-end.png"
+          }
+        },
+        {
+          "id": "b08-b09",
+          "start": {
+            "label": "b08-b09-start",
+            "player": {
+              "x": 1070.5170197451557,
+              "y": 1099.048462419262
+            },
+            "currentBeatId": "b08",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b08-b09-start.png"
+          },
+          "midway": {
+            "label": "b08-b09-midway",
+            "player": {
+              "x": 1070.5170197451557,
+              "y": 1099.048462419262
+            },
+            "currentBeatId": "b10",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b08-b09-midway.png"
+          },
+          "end": {
+            "label": "b08-b09-end",
+            "player": {
+              "x": 1201.5322993454756,
+              "y": 854.6284555480704
+            },
+            "currentBeatId": "b10",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b08-b09-end.png"
+          }
+        },
+        {
+          "id": "b11-b12",
+          "start": {
+            "label": "b11-b12-start",
+            "player": {
+              "x": 1243.4722993454754,
+              "y": 702.7084555480702
+            },
+            "currentBeatId": "b11",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b11-b12-start.png"
+          },
+          "midway": {
+            "label": "b11-b12-midway",
+            "player": {
+              "x": 1243.4722993454754,
+              "y": 702.7084555480702
+            },
+            "currentBeatId": "b12",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b11-b12-midway.png"
+          },
+          "end": {
+            "label": "b11-b12-end",
+            "player": {
+              "x": 1343.4874993454746,
+              "y": 702.7084555480702
+            },
+            "currentBeatId": "b13",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b11-b12-end.png"
+          }
+        },
+        {
+          "id": "b12-b13",
+          "start": {
+            "label": "b12-b13-start",
+            "player": {
+              "x": 1343.4874993454746,
+              "y": 702.7084555480702
+            },
+            "currentBeatId": "b12",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b12-b13-start.png"
+          },
+          "midway": {
+            "label": "b12-b13-midway",
+            "player": {
+              "x": 1343.4874993454746,
+              "y": 702.7084555480702
+            },
+            "currentBeatId": "b13",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b12-b13-midway.png"
+          },
+          "end": {
+            "label": "b12-b13-end",
+            "player": {
+              "x": 1259.5186993454763,
+              "y": 848.7244555480698
+            },
+            "currentBeatId": "b14",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b12-b13-end.png"
+          }
+        },
+        {
+          "id": "b17-b18",
+          "start": {
+            "label": "b17-b18-start",
+            "player": {
+              "x": 1208.6290728316183,
+              "y": 767.7988290342121
+            },
+            "currentBeatId": "b17",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b17-b18-start.png"
+          },
+          "midway": {
+            "label": "b17-b18-midway",
+            "player": {
+              "x": 1208.6290728316183,
+              "y": 767.7988290342121
+            },
+            "currentBeatId": "b18",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b17-b18-midway.png"
+          },
+          "end": {
+            "label": "b17-b18-end",
+            "player": {
+              "x": 1160.6436989990052,
+              "y": 933.874705053461
+            },
+            "currentBeatId": "b19",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17",
+              "b18"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b17-b18-end.png"
+          }
+        },
+        {
+          "id": "b18-b19",
+          "start": {
+            "label": "b18-b19-start",
+            "player": {
+              "x": 1248.5573577408613,
+              "y": 787.6391139434564
+            },
+            "currentBeatId": "b18",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b18-b19-start.png"
+          },
+          "midway": {
+            "label": "b18-b19-midway",
+            "player": {
+              "x": 1160.6436989990052,
+              "y": 933.874705053461
+            },
+            "currentBeatId": "b19",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17",
+              "b18"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b18-b19-midway.png"
+          },
+          "end": {
+            "label": "b18-b19-end",
+            "player": {
+              "x": 1182.4196898823557,
+              "y": 973.6746959368106
+            },
+            "currentBeatId": null,
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17",
+              "b18",
+              "b19",
+              "b20"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b18-b19-end.png"
+          }
+        },
+        {
+          "id": "b19-b20",
+          "start": {
+            "label": "b19-b20-start",
+            "player": {
+              "x": 1160.6436989990052,
+              "y": 933.874705053461
+            },
+            "currentBeatId": "b19",
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17",
+              "b18"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b19-b20-start.png"
+          },
+          "midway": {
+            "label": "b19-b20-midway",
+            "player": {
+              "x": 1182.4196898823557,
+              "y": 973.6746959368106
+            },
+            "currentBeatId": null,
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17",
+              "b18",
+              "b19",
+              "b20"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b19-b20-midway.png"
+          },
+          "end": {
+            "label": "b19-b20-end",
+            "player": {
+              "x": 1182.4196898823557,
+              "y": 973.6746959368106
+            },
+            "currentBeatId": null,
+            "completedBeatIds": [
+              "b01",
+              "b02",
+              "b03",
+              "b04",
+              "b05",
+              "b06",
+              "b07",
+              "b08",
+              "b09",
+              "b10",
+              "b11",
+              "b12",
+              "b13",
+              "b14",
+              "b15",
+              "b16",
+              "b17",
+              "b18",
+              "b19",
+              "b20"
+            ],
+            "screenshot": "qa/review-screenshots/dev-b19-b20-end.png"
+          }
+        }
+      ],
+      "inputEvidence": {
+        "b05NoInput": {
+          "start": {
+            "x": 1644,
+            "y": 530
+          },
+          "end": {
+            "x": 1644,
+            "y": 530
+          }
+        },
+        "fixedPointDirectionCancellation": {
+          "cancelledAt": {
+            "x": 1651.9824,
+            "y": 530
+          },
+          "settledAfterCancel": {
+            "x": 1651.9824,
+            "y": 530
+          },
+          "screenshot": "qa/review-screenshots/dev-b05-fixed-point-cancelled.png"
+        }
+      }
+    }
+  ],
+  "finalStateParity": {
+    "validatedBy": "contract-and-platform-tests",
+    "beats": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06",
+      "b07",
+      "b08",
+      "b09",
+      "b10",
+      "b11",
+      "b12",
+      "b13",
+      "b14",
+      "b15",
+      "b16",
+      "b17",
+      "b18",
+      "b19",
+      "b20"
+    ],
+    "equivalent": true
+  },
+  "visualBlockers": {
+    "status": "none-for-current-contract"
+  },
+  "browserErrors": [],
+  "assetOrNetworkFailures": [],
+  "productionDomResidue": []
+}

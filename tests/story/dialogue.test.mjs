@@ -62,13 +62,19 @@ test("John 9:7 preserves its exact instruction before its exact washing outcome"
 });
 
 test("portrait subjects preserve blind and seeing identity while worship stays portraitless", () => {
+  const blindPortrait = dialoguePortraitFor(DIALOGUE_BY_BEAT.b01[0]);
+  const seeingPortrait = dialoguePortraitFor(DIALOGUE_BY_BEAT.b06[0]);
   assert.match(
-    dialoguePortraitFor(DIALOGUE_BY_BEAT.b01[0]).art.path,
+    blindPortrait.art.path,
     /portrait-man-blind\.png$/,
   );
   assert.match(
-    dialoguePortraitFor(DIALOGUE_BY_BEAT.b06[0]).art.path,
+    seeingPortrait.art.path,
     /portrait-man-seeing\.png$/,
   );
+  assert.equal(DIALOGUE_BY_BEAT.b01[0].portraitState, "blind");
+  assert.equal(DIALOGUE_BY_BEAT.b06[0].portraitState, "seeing");
+  assert.notEqual(blindPortrait.art.key, seeingPortrait.art.key);
+  assert.notEqual(blindPortrait.framing.focusY, seeingPortrait.framing.focusY);
   assert.equal(dialoguePortraitFor(DIALOGUE_BY_BEAT.b19[0]), null);
 });

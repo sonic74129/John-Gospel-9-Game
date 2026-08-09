@@ -3726,7 +3726,7 @@
       "beatId": "b06",
       "entryState": "hidden at pool.neighbors; pose=idle; collision=false",
       "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at pool.neighbors; pose=idle; collision=true",
+      "finalState": "hidden at pool.neighbors; pose=idle; collision=false",
       "verseKeys": [
         "john9:7"
       ],
@@ -3840,7 +3840,7 @@
     {
       "actorId": "neighbors",
       "beatId": "b07",
-      "entryState": "visible at pool.neighbors; pose=idle; collision=true",
+      "entryState": "hidden at pool.neighbors; pose=idle; collision=false",
       "duringState": "sequence-b07 applies only scripture-bound action and removable S2 staging.",
       "finalState": "visible at pool.neighbors; pose=questioning; collision=true",
       "verseKeys": [
@@ -4105,7 +4105,7 @@
       "beatId": "b09",
       "entryState": "hidden at courtyard.pharisees-left; pose=idle; collision=false",
       "duringState": "sequence-b09 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:13",
         "john9:14"
@@ -4135,7 +4135,7 @@
       "beatId": "b09",
       "entryState": "hidden at courtyard.pharisees-right; pose=idle; collision=false",
       "duringState": "sequence-b09 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:13",
         "john9:14"
@@ -4210,7 +4210,7 @@
       "beatId": "b10",
       "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b10 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:15",
         "john9:16"
@@ -4223,9 +4223,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b10",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b10 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:15",
         "john9:16"
@@ -4253,9 +4253,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b10",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b10 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:15",
         "john9:16"
@@ -4324,9 +4324,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b11",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b11 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:17"
       ],
@@ -4338,9 +4338,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b11",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b11 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:17"
       ],
@@ -4366,9 +4366,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b11",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b11 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:17"
       ],
@@ -4440,9 +4440,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b12",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b12 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:18",
         "john9:19"
@@ -4455,9 +4455,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b12",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b12 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:18",
         "john9:19"
@@ -4472,7 +4472,7 @@
       "beatId": "b12",
       "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b12 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.parents; pose=standing; collision=true",
+      "finalState": "visible at courtyard.parents; pose=standing; collision=false",
       "verseKeys": [
         "john9:18",
         "john9:19"
@@ -4485,9 +4485,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b12",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b12 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:18",
         "john9:19"
@@ -4568,9 +4568,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b13",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b13 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:20",
         "john9:21",
@@ -4585,9 +4585,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b13",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b13 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:20",
         "john9:21",
@@ -4602,7 +4602,7 @@
     {
       "actorId": "parents",
       "beatId": "b13",
-      "entryState": "visible at courtyard.parents; pose=standing; collision=true",
+      "entryState": "visible at courtyard.parents; pose=standing; collision=false",
       "duringState": "sequence-b13 applies only scripture-bound action and removable S2 staging.",
       "finalState": "hidden at courtyard.gate; pose=departed; collision=false",
       "verseKeys": [
@@ -4619,9 +4619,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b13",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b13 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:20",
         "john9:21",
@@ -4692,9 +4692,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b14",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b14 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:24"
       ],
@@ -4706,9 +4706,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b14",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b14 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:24"
       ],
@@ -4734,9 +4734,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b14",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b14 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:24"
       ],
@@ -4804,9 +4804,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b15",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b15 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:25"
       ],
@@ -4818,9 +4818,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b15",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b15 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:25"
       ],
@@ -4846,9 +4846,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b15",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b15 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:25"
       ],
@@ -4920,9 +4920,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b16",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b16 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:26",
         "john9:27"
@@ -4935,9 +4935,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b16",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b16 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:26",
         "john9:27"
@@ -4965,9 +4965,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b16",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b16 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:26",
         "john9:27"
@@ -5040,9 +5040,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b17",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b17 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:28",
         "john9:29"
@@ -5055,9 +5055,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b17",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b17 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "verseKeys": [
         "john9:28",
         "john9:29"
@@ -5085,9 +5085,9 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b17",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b17 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "finalState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "verseKeys": [
         "john9:28",
         "john9:29"
@@ -5156,7 +5156,7 @@
       "beatId": "b18",
       "entryState": "visible at courtyard.inquiry-man; pose=standing-seeing; collision=true",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.expelled; pose=standing-seeing; collision=true",
+      "finalState": "visible at courtyard.expelled; pose=standing-seeing; collision=false",
       "verseKeys": [
         "john9:30",
         "john9:31",
@@ -5172,9 +5172,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b18",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:30",
         "john9:31",
@@ -5190,9 +5190,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b18",
-      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=false",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=idle; collision=false",
       "verseKeys": [
         "john9:30",
         "john9:31",
@@ -5226,7 +5226,7 @@
     {
       "actorId": "judean-authorities",
       "beatId": "b18",
-      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=true",
+      "entryState": "visible at courtyard.pharisees-right; pose=questioning; collision=false",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
       "finalState": "hidden at courtyard.pharisees-right; pose=idle; collision=false",
       "verseKeys": [
@@ -5295,7 +5295,7 @@
     {
       "actorId": "man-born-blind",
       "beatId": "b19",
-      "entryState": "visible at courtyard.expelled; pose=standing-seeing; collision=true",
+      "entryState": "visible at courtyard.expelled; pose=standing-seeing; collision=false",
       "duringState": "sequence-b19 applies only scripture-bound action and removable S2 staging.",
       "finalState": "visible at courtyard.expelled; pose=worship; collision=true",
       "verseKeys": [
@@ -5312,9 +5312,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b19",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b19 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:35",
         "john9:36",
@@ -5329,9 +5329,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b19",
-      "entryState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=idle; collision=false",
       "duringState": "sequence-b19 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
+      "finalState": "visible at courtyard.pharisees-left; pose=idle; collision=false",
       "verseKeys": [
         "john9:35",
         "john9:36",
@@ -5444,9 +5444,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b20",
-      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "duringState": "sequence-b20 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=false",
       "verseKeys": [
         "john9:39",
         "john9:40",
@@ -5460,7 +5460,7 @@
     {
       "actorId": "pharisees",
       "beatId": "b20",
-      "entryState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
+      "entryState": "visible at courtyard.pharisees-left; pose=idle; collision=false",
       "duringState": "sequence-b20 applies only scripture-bound action and removable S2 staging.",
       "finalState": "visible at courtyard.ending-camera; pose=listening; collision=true",
       "verseKeys": [
@@ -6864,11 +6864,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": true,
+            "visible": false,
             "anchorId": "pool.neighbors",
             "pose": "idle",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -6944,10 +6944,10 @@
         }
       },
       "parityHashes": {
-        "normal": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639",
-        "skip": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639",
-        "restart": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639",
-        "reentry": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639"
+        "normal": "23519f1606399bba197460651e7f38a4779aff87a87f4fd2a9506978cedfddff",
+        "skip": "23519f1606399bba197460651e7f38a4779aff87a87f4fd2a9506978cedfddff",
+        "restart": "23519f1606399bba197460651e7f38a4779aff87a87f4fd2a9506978cedfddff",
+        "reentry": "23519f1606399bba197460651e7f38a4779aff87a87f4fd2a9506978cedfddff"
       }
     },
     {
@@ -7291,7 +7291,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7309,7 +7309,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -7361,10 +7361,10 @@
         }
       },
       "parityHashes": {
-        "normal": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df",
-        "skip": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df",
-        "restart": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df",
-        "reentry": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df"
+        "normal": "3906115d183a7518a4b92f9608c03f60d93d12b57b611ad9cd4672db4dbb06dd",
+        "skip": "3906115d183a7518a4b92f9608c03f60d93d12b57b611ad9cd4672db4dbb06dd",
+        "restart": "3906115d183a7518a4b92f9608c03f60d93d12b57b611ad9cd4672db4dbb06dd",
+        "reentry": "3906115d183a7518a4b92f9608c03f60d93d12b57b611ad9cd4672db4dbb06dd"
       }
     },
     {
@@ -7422,7 +7422,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7431,7 +7431,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7449,7 +7449,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -7502,10 +7502,10 @@
         }
       },
       "parityHashes": {
-        "normal": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740",
-        "skip": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740",
-        "restart": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740",
-        "reentry": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740"
+        "normal": "a563aafae5ffe82ad2a5477290374f6959ad86096f6bb9a83a2470366f373fd4",
+        "skip": "a563aafae5ffe82ad2a5477290374f6959ad86096f6bb9a83a2470366f373fd4",
+        "restart": "a563aafae5ffe82ad2a5477290374f6959ad86096f6bb9a83a2470366f373fd4",
+        "reentry": "a563aafae5ffe82ad2a5477290374f6959ad86096f6bb9a83a2470366f373fd4"
       }
     },
     {
@@ -7563,7 +7563,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7572,7 +7572,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7590,7 +7590,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -7644,10 +7644,10 @@
         }
       },
       "parityHashes": {
-        "normal": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea",
-        "skip": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea",
-        "restart": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea",
-        "reentry": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea"
+        "normal": "6f54649b4f40d728b0919f2fdb982feb11deaa288c297558b9e996dbf8a8d440",
+        "skip": "6f54649b4f40d728b0919f2fdb982feb11deaa288c297558b9e996dbf8a8d440",
+        "restart": "6f54649b4f40d728b0919f2fdb982feb11deaa288c297558b9e996dbf8a8d440",
+        "reentry": "6f54649b4f40d728b0919f2fdb982feb11deaa288c297558b9e996dbf8a8d440"
       }
     },
     {
@@ -7705,7 +7705,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7714,7 +7714,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7723,7 +7723,7 @@
             "anchorId": "courtyard.parents",
             "pose": "standing",
             "label": "他的父母",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7732,7 +7732,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -7787,10 +7787,10 @@
         }
       },
       "parityHashes": {
-        "normal": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e",
-        "skip": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e",
-        "restart": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e",
-        "reentry": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e"
+        "normal": "e70ee59c080394761c7d865a146b4435381e62c89b2f5fbef3c34a8cca02530d",
+        "skip": "e70ee59c080394761c7d865a146b4435381e62c89b2f5fbef3c34a8cca02530d",
+        "restart": "e70ee59c080394761c7d865a146b4435381e62c89b2f5fbef3c34a8cca02530d",
+        "reentry": "e70ee59c080394761c7d865a146b4435381e62c89b2f5fbef3c34a8cca02530d"
       }
     },
     {
@@ -7848,7 +7848,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7857,7 +7857,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7875,7 +7875,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -7931,10 +7931,10 @@
         }
       },
       "parityHashes": {
-        "normal": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f",
-        "skip": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f",
-        "restart": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f",
-        "reentry": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f"
+        "normal": "fb14d14b2ce72a8e7bcea756a4fe1fab18797b10ba5b9c0f94d38c2558e2184e",
+        "skip": "fb14d14b2ce72a8e7bcea756a4fe1fab18797b10ba5b9c0f94d38c2558e2184e",
+        "restart": "fb14d14b2ce72a8e7bcea756a4fe1fab18797b10ba5b9c0f94d38c2558e2184e",
+        "reentry": "fb14d14b2ce72a8e7bcea756a4fe1fab18797b10ba5b9c0f94d38c2558e2184e"
       }
     },
     {
@@ -7992,7 +7992,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8001,7 +8001,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8019,7 +8019,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -8076,10 +8076,10 @@
         }
       },
       "parityHashes": {
-        "normal": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04",
-        "skip": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04",
-        "restart": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04",
-        "reentry": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04"
+        "normal": "655d99332a1b7d726e0d5d4da8e77ef867c6b51d56c98a11dd5cc7801f96ed55",
+        "skip": "655d99332a1b7d726e0d5d4da8e77ef867c6b51d56c98a11dd5cc7801f96ed55",
+        "restart": "655d99332a1b7d726e0d5d4da8e77ef867c6b51d56c98a11dd5cc7801f96ed55",
+        "reentry": "655d99332a1b7d726e0d5d4da8e77ef867c6b51d56c98a11dd5cc7801f96ed55"
       }
     },
     {
@@ -8137,7 +8137,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8146,7 +8146,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8164,7 +8164,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -8222,10 +8222,10 @@
         }
       },
       "parityHashes": {
-        "normal": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab",
-        "skip": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab",
-        "restart": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab",
-        "reentry": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab"
+        "normal": "9afdcc69a99fd356e1ba78d276c00d2147a4ae4b75f948229e1f4c8af09d5315",
+        "skip": "9afdcc69a99fd356e1ba78d276c00d2147a4ae4b75f948229e1f4c8af09d5315",
+        "restart": "9afdcc69a99fd356e1ba78d276c00d2147a4ae4b75f948229e1f4c8af09d5315",
+        "reentry": "9afdcc69a99fd356e1ba78d276c00d2147a4ae4b75f948229e1f4c8af09d5315"
       }
     },
     {
@@ -8283,7 +8283,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8292,7 +8292,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8310,7 +8310,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -8369,10 +8369,10 @@
         }
       },
       "parityHashes": {
-        "normal": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf",
-        "skip": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf",
-        "restart": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf",
-        "reentry": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf"
+        "normal": "dccff9545c48cce3c6f547ae633f741b558cf978ca1935a3fd381c091df720ee",
+        "skip": "dccff9545c48cce3c6f547ae633f741b558cf978ca1935a3fd381c091df720ee",
+        "restart": "dccff9545c48cce3c6f547ae633f741b558cf978ca1935a3fd381c091df720ee",
+        "reentry": "dccff9545c48cce3c6f547ae633f741b558cf978ca1935a3fd381c091df720ee"
       }
     },
     {
@@ -8430,7 +8430,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8439,7 +8439,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "questioning",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8457,7 +8457,7 @@
             "anchorId": "courtyard.pharisees-right",
             "pose": "questioning",
             "label": "猶太人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           }
@@ -8517,10 +8517,10 @@
         }
       },
       "parityHashes": {
-        "normal": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0",
-        "skip": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0",
-        "restart": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0",
-        "reentry": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0"
+        "normal": "036cf3a48e62c8fcb9d838874938ab4788cd912d0f1aee386445f0e18679fe0f",
+        "skip": "036cf3a48e62c8fcb9d838874938ab4788cd912d0f1aee386445f0e18679fe0f",
+        "restart": "036cf3a48e62c8fcb9d838874938ab4788cd912d0f1aee386445f0e18679fe0f",
+        "reentry": "036cf3a48e62c8fcb9d838874938ab4788cd912d0f1aee386445f0e18679fe0f"
       }
     },
     {
@@ -8569,7 +8569,7 @@
             "anchorId": "courtyard.expelled",
             "pose": "standing-seeing",
             "label": "那人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8578,7 +8578,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8587,7 +8587,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "idle",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8666,10 +8666,10 @@
         }
       },
       "parityHashes": {
-        "normal": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4",
-        "skip": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4",
-        "restart": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4",
-        "reentry": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4"
+        "normal": "b1d97ad585e38e997a8ef35226f7d92ed506d1a2a069261530c8ddc7f21afdfe",
+        "skip": "b1d97ad585e38e997a8ef35226f7d92ed506d1a2a069261530c8ddc7f21afdfe",
+        "restart": "b1d97ad585e38e997a8ef35226f7d92ed506d1a2a069261530c8ddc7f21afdfe",
+        "reentry": "b1d97ad585e38e997a8ef35226f7d92ed506d1a2a069261530c8ddc7f21afdfe"
       }
     },
     {
@@ -8727,7 +8727,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8736,7 +8736,7 @@
             "anchorId": "courtyard.pharisees-left",
             "pose": "idle",
             "label": "法利賽人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8816,10 +8816,10 @@
         }
       },
       "parityHashes": {
-        "normal": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315",
-        "skip": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315",
-        "restart": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315",
-        "reentry": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315"
+        "normal": "a4f23885db785a654f707bddf95e6a2f1991cf1eda19f504bf500951caac6a84",
+        "skip": "a4f23885db785a654f707bddf95e6a2f1991cf1eda19f504bf500951caac6a84",
+        "restart": "a4f23885db785a654f707bddf95e6a2f1991cf1eda19f504bf500951caac6a84",
+        "reentry": "a4f23885db785a654f707bddf95e6a2f1991cf1eda19f504bf500951caac6a84"
       }
     },
     {
@@ -8877,7 +8877,7 @@
             "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": true,
+            "collisionEnabled": false,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8967,10 +8967,10 @@
         }
       },
       "parityHashes": {
-        "normal": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945",
-        "skip": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945",
-        "restart": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945",
-        "reentry": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945"
+        "normal": "c31b3f087e3a9a9ffdb5c4d1348bea29d1e0001869e5bd8309484cb56cd76670",
+        "skip": "c31b3f087e3a9a9ffdb5c4d1348bea29d1e0001869e5bd8309484cb56cd76670",
+        "restart": "c31b3f087e3a9a9ffdb5c4d1348bea29d1e0001869e5bd8309484cb56cd76670",
+        "reentry": "c31b3f087e3a9a9ffdb5c4d1348bea29d1e0001869e5bd8309484cb56cd76670"
       }
     }
   ],

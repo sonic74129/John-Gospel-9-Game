@@ -46,6 +46,7 @@ const FORBIDDEN = [
   "data-testimony",
   "data-recall",
   "data-study-questions",
+  "__JOHN9_DEV_QA__",
 ];
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".map"]);
 

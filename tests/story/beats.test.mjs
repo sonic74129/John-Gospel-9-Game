@@ -92,7 +92,7 @@ test("beats retain observer limits, RPG finding triggers, and completion handoff
   assert.deepEqual(
     STORY_BEATS.slice(6).map(({ trigger }) => trigger.event),
     [
-      "interact:neighbors",
+      "beat:b06:completed",
       "interact:man-born-blind",
       "interact:neighbors",
       "interact:pharisees",

@@ -337,11 +337,10 @@ test("formal actor wiring is restored without old environment props", () => {
 test("central actor render profiles normalize native frames to adult display scale", () => {
   assert.match(adapterSource, /export const STORY_ACTOR_RENDER_PROFILES/);
   assert.match(adapterSource, /const ADULT_BASELINE_HEIGHT = 132/);
-  assert.match(adapterSource, /const JESUS_HEIGHT_DELTA = 4/);
   assert.match(adapterSource, /export function actorRenderProfileForSpawn/);
   assert.match(
     adapterSource,
-    /jesus: Object\.freeze\(\{\s*targetDisplayHeight: ADULT_BASELINE_HEIGHT \+ JESUS_HEIGHT_DELTA,\s*\}\)/,
+    /jesus: Object\.freeze\(\{ targetDisplayHeight: ADULT_BASELINE_HEIGHT \}\)/,
   );
   assert.match(
     adapterSource,

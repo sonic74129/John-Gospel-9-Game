@@ -328,6 +328,16 @@ export function createAppShell(
       if (line === undefined) {
         return;
       }
+      if (line.portraitSubjectId === undefined) {
+        delete dialogue.dataset.portraitSubject;
+      } else {
+        dialogue.dataset.portraitSubject = line.portraitSubjectId;
+      }
+      if (line.portraitState === undefined) {
+        delete dialogue.dataset.portraitState;
+      } else {
+        dialogue.dataset.portraitState = line.portraitState;
+      }
       const portrait = dialoguePortraitFor(line);
       dialogue.dataset.portraitless = String(portrait === null);
       if (portrait === null) {
@@ -335,11 +345,31 @@ export function createAppShell(
         dialoguePortraitImage.removeAttribute("src");
         dialoguePortraitImage.alt = "";
         dialoguePortraitLabel.textContent = "";
+        dialoguePortraitImage.style.removeProperty("--portrait-focus-y");
+        dialoguePortraitImage.style.removeProperty("--portrait-scale");
+        dialoguePortraitImage.style.removeProperty("--portrait-mobile-focus-y");
+        dialoguePortraitImage.style.removeProperty("--portrait-mobile-scale");
       } else {
         dialoguePortrait.hidden = false;
         dialoguePortraitImage.src = portraitUrl(portrait.art.path);
         dialoguePortraitImage.alt = portrait.alt;
         dialoguePortrait.dataset.provenance = portrait.provenance;
+        dialoguePortraitImage.style.setProperty(
+          "--portrait-focus-y",
+          `${portrait.framing.focusY}%`,
+        );
+        dialoguePortraitImage.style.setProperty(
+          "--portrait-scale",
+          String(portrait.framing.scale),
+        );
+        dialoguePortraitImage.style.setProperty(
+          "--portrait-mobile-focus-y",
+          `${portrait.framing.mobileFocusY}%`,
+        );
+        dialoguePortraitImage.style.setProperty(
+          "--portrait-mobile-scale",
+          String(portrait.framing.mobileScale),
+        );
         dialoguePortraitLabel.textContent = portrait.alt;
       }
       dialogueText.textContent = line.exactText;

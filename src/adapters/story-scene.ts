@@ -824,13 +824,13 @@ export class StoryScene extends Phaser.Scene {
   ): Promise<void> {
     const playerArrival = this.#requireAnchor(playerArrivalAnchorId);
     const sequenceInputWasEnabled = this.#sequenceInputEnabled;
-    const escortedVisuals = actorIds.flatMap((actorId) =>
-      this.#storyActorVisuals(actorId),
+    const traversableVisuals = [...this.#visuals.values()].filter(
+      (visual) => visual !== this.#player,
     );
-    const collisionStates = escortedVisuals.map(
+    const collisionStates = traversableVisuals.map(
       ({ collisionEnabled }) => collisionEnabled,
     );
-    escortedVisuals.forEach((visual) => {
+    traversableVisuals.forEach((visual) => {
       visual.collisionEnabled = false;
       this.#runtimeActor(visual.actorId).state.collisionEnabled = false;
     });
@@ -854,7 +854,7 @@ export class StoryScene extends Phaser.Scene {
       setNavigationHint(null);
       this.setNavigationObjective(null);
       this.setMovementEnabled(sequenceInputWasEnabled);
-      escortedVisuals.forEach((visual, index) => {
+      traversableVisuals.forEach((visual, index) => {
         const collisionEnabled = collisionStates[index] ?? false;
         visual.collisionEnabled = collisionEnabled;
         this.#runtimeActor(visual.actorId).state.collisionEnabled =
@@ -944,11 +944,7 @@ export class StoryScene extends Phaser.Scene {
     if (playerAnchor === undefined) {
       throw new RangeError(`Unknown canonical anchor ${playerActorState.anchorId}.`);
     }
-    const preservePlayerPosition =
-      mode === "normal" ||
-      (this.#playerMovedSinceLastFinalState &&
-        this.#player !== undefined &&
-        this.#regionIdForPoint(this.playerPosition()) === playerAnchor.regionId);
+    const preservePlayerPosition = mode === "normal";
     const preservedPlayerPosition = preservePlayerPosition
       ? this.playerPosition()
       : null;

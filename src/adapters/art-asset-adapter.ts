@@ -26,14 +26,11 @@ export interface ActorRenderProfile {
 }
 
 const ADULT_BASELINE_HEIGHT = 132;
-const JESUS_HEIGHT_DELTA = 4;
 
 export const STORY_ACTOR_RENDER_PROFILES = Object.freeze({
   observer: Object.freeze({ targetDisplayHeight: ADULT_BASELINE_HEIGHT }),
   manBornBlind: Object.freeze({ targetDisplayHeight: ADULT_BASELINE_HEIGHT }),
-  jesus: Object.freeze({
-    targetDisplayHeight: ADULT_BASELINE_HEIGHT + JESUS_HEIGHT_DELTA,
-  }),
+  jesus: Object.freeze({ targetDisplayHeight: ADULT_BASELINE_HEIGHT }),
   supportingAdult: Object.freeze({ targetDisplayHeight: ADULT_BASELINE_HEIGHT }),
 });
 

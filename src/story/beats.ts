@@ -32,7 +32,7 @@ const TRIGGERS = Object.freeze([
   { type: "event", event: "beat:b03:completed" },
   { type: "event", event: "beat:b04:completed" },
   { type: "event", event: "arrival:pool.wash-edge" },
-  { type: "event", event: "interact:neighbors" },
+  { type: "event", event: "beat:b06:completed" },
   { type: "event", event: "interact:man-born-blind" },
   { type: "event", event: "interact:neighbors" },
   { type: "event", event: "interact:pharisees" },

@@ -132,13 +132,7 @@ const STEPS_BY_BEAT = Object.freeze({
     command("set-actor-pose", { actorId: "neighbors", pose: "questioning" }, "S1"),
     dialogueStep("b07"),
   ],
-  b08: [
-    command("player-seeks-anchor", {
-      anchorId: "pool.neighbors",
-      label: "那人與鄰舍",
-    }),
-    dialogueStep("b08"),
-  ],
+  b08: [dialogueStep("b08")],
   b09: [
     command("set-actor-visible", { actorId: "pharisees", visible: true }),
     command("set-actor-visible", {
@@ -154,20 +148,8 @@ const STEPS_BY_BEAT = Object.freeze({
     command("focus-camera", { anchorId: "courtyard.inquiry-man" }),
     dialogueStep("b09"),
   ],
-  b10: [
-    command("player-seeks-anchor", {
-      anchorId: "courtyard.inquiry-man",
-      label: "受查問的那人",
-    }),
-    dialogueStep("b10"),
-  ],
-  b11: [
-    command("player-seeks-anchor", {
-      anchorId: "courtyard.inquiry-man",
-      label: "受查問的那人",
-    }),
-    dialogueStep("b11"),
-  ],
+  b10: [dialogueStep("b10")],
+  b11: [dialogueStep("b11")],
   b12: [
     command("actor-follow-path", {
       pathId: "parents-entry",
@@ -186,34 +168,10 @@ const STEPS_BY_BEAT = Object.freeze({
     }),
     command("set-actor-visible", { actorId: "parents", visible: false }),
   ],
-  b14: [
-    command("player-seeks-anchor", {
-      anchorId: "courtyard.inquiry-man",
-      label: "受查問的那人",
-    }),
-    dialogueStep("b14"),
-  ],
-  b15: [
-    command("player-seeks-anchor", {
-      anchorId: "courtyard.inquiry-man",
-      label: "受查問的那人",
-    }),
-    dialogueStep("b15"),
-  ],
-  b16: [
-    command("player-seeks-anchor", {
-      anchorId: "courtyard.inquiry-man",
-      label: "受查問的那人",
-    }),
-    dialogueStep("b16"),
-  ],
-  b17: [
-    command("player-seeks-anchor", {
-      anchorId: "courtyard.inquiry-man",
-      label: "受查問的那人",
-    }),
-    dialogueStep("b17"),
-  ],
+  b14: [dialogueStep("b14")],
+  b15: [dialogueStep("b15")],
+  b16: [dialogueStep("b16")],
+  b17: [dialogueStep("b17")],
   b18: [
     dialogueStep("b18"),
     command("actor-follow-path", {
