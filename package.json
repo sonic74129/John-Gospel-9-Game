@@ -2,7 +2,7 @@
   "name": "@sonic74129/bible-story-john-9-man-born-blind",
   "version": "0.1.0",
   "private": true,
-  "description": "《生來瞎眼的人》：約翰福音 9:1–7 的地圖故事遊戲。",
+  "description": "《生來瞎眼的人》：約翰福音 9:1–41 的地圖故事遊戲。",
   "type": "module",
   "scripts": {
     "dev": "vite",

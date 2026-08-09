@@ -3,6 +3,16 @@ const ACTOR_DEFAULTS = Object.freeze({
   jesus: ["courtyard.jesus", "idle", "耶穌", true, true],
   disciples: ["courtyard.disciples", "idle", "門徒", true, true],
   "man-born-blind": ["courtyard.man-center", "seated", "那人", true, true],
+  neighbors: ["pool.neighbors", "idle", "鄰舍與見過他的人", false, false],
+  pharisees: ["courtyard.pharisees-left", "idle", "法利賽人", false, false],
+  parents: ["courtyard.waiting", "idle", "他的父母", false, false],
+  "judean-authorities": [
+    "courtyard.pharisees-right",
+    "idle",
+    "猶太人",
+    false,
+    false,
+  ],
 });
 
 const PHASE_BY_BEAT = Object.freeze({
@@ -12,33 +22,203 @@ const PHASE_BY_BEAT = Object.freeze({
   b04: "clay",
   b05: "pool-awaiting",
   b06: "washed",
+  b07: "neighbors",
+  b08: "neighbors",
+  b09: "inquiry-arrival",
+  b10: "inquiry",
+  b11: "inquiry",
+  b12: "parents-called",
+  b13: "parents-departed",
+  b14: "inquiry-after-parents",
+  b15: "inquiry-after-parents",
+  b16: "inquiry-after-parents",
+  b17: "inquiry-after-parents",
+  b18: "expelled",
+  b19: "belief",
+  b20: "ending",
 });
 
 const CAMERA_ANCHOR_BY_PHASE = Object.freeze({
   courtyard: "courtyard.camera",
   clay: "courtyard.camera",
-  "pool-awaiting": "courtyard.camera",
+  "pool-awaiting": "pool.camera",
   washed: "pool.camera",
+  neighbors: "pool.camera",
+  "inquiry-arrival": "courtyard.inquiry-man",
+  inquiry: "courtyard.inquiry-man",
+  "parents-called": "courtyard.parents",
+  "parents-departed": "courtyard.inquiry-man",
+  "inquiry-after-parents": "courtyard.inquiry-man",
+  expelled: "courtyard.expelled",
+  belief: "courtyard.belief",
+  ending: "courtyard.ending-camera",
 });
+
+const poolState = {
+  observer: ["pool.observer-approach", "idle", "觀察者", true, true],
+  jesus: ["courtyard.pool-approach", "departed", "耶穌", false, false],
+  disciples: ["courtyard.pool-approach", "departed", "門徒", false, false],
+};
+
+const inquiryState = {
+  observer: ["courtyard.inquiry-entry", "idle", "觀察者", true, true],
+  jesus: ["courtyard.pool-approach", "departed", "耶穌", false, false],
+  disciples: ["courtyard.pool-approach", "departed", "門徒", false, false],
+  "man-born-blind": [
+    "courtyard.inquiry-man",
+    "standing-seeing",
+    "那人",
+    true,
+    true,
+  ],
+  neighbors: ["courtyard.waiting", "standing", "鄰舍與見過他的人", false, false],
+  pharisees: [
+    "courtyard.pharisees-left",
+    "questioning",
+    "法利賽人",
+    true,
+    true,
+  ],
+  parents: ["courtyard.waiting", "idle", "他的父母", false, false],
+  "judean-authorities": [
+    "courtyard.pharisees-right",
+    "questioning",
+    "猶太人",
+    true,
+    true,
+  ],
+};
 
 const phaseOverrides = (phase) => {
   switch (phase) {
     case "clay":
       return {
-        "man-born-blind": ["courtyard.man-center", "clay-on-eyes", "那人", true, true],
+        "man-born-blind": [
+          "courtyard.man-center",
+          "clay-on-eyes",
+          "那人",
+          true,
+          true,
+        ],
       };
     case "pool-awaiting":
       return {
-        jesus: ["courtyard.pool-approach", "departed", "耶穌", false, false],
-        disciples: ["courtyard.pool-approach", "departed", "門徒", false, false],
+        ...poolState,
         "man-born-blind": ["pool.wash-edge", "standing", "那人", true, false],
       };
     case "washed":
       return {
-        observer: ["pool.observer-approach", "idle", "觀察者", true, true],
-        jesus: ["courtyard.pool-approach", "departed", "耶穌", false, false],
+        ...poolState,
+        "man-born-blind": [
+          "pool.wash-edge",
+          "washed-seeing",
+          "那人",
+          true,
+          false,
+        ],
+        neighbors: [
+          "pool.neighbors",
+          "idle",
+          "鄰舍與見過他的人",
+          true,
+          true,
+        ],
+      };
+    case "neighbors":
+      return {
+        ...phaseOverrides("washed"),
+        "man-born-blind": [
+          "pool.wash-edge",
+          "washed-seeing",
+          "那人",
+          true,
+          true,
+        ],
+        neighbors: [
+          "pool.neighbors",
+          "questioning",
+          "鄰舍與見過他的人",
+          true,
+          true,
+        ],
+      };
+    case "inquiry-arrival":
+      return {
+        ...inquiryState,
+        neighbors: [
+          "courtyard.waiting",
+          "standing",
+          "鄰舍與見過他的人",
+          true,
+          true,
+        ],
+      };
+    case "inquiry":
+    case "inquiry-after-parents":
+      return inquiryState;
+    case "parents-called":
+      return {
+        ...inquiryState,
+        observer: ["courtyard.gate", "idle", "觀察者", true, true],
+        parents: ["courtyard.parents", "standing", "他的父母", true, true],
+      };
+    case "parents-departed":
+      return {
+        ...inquiryState,
+        parents: ["courtyard.waiting", "departed", "他的父母", false, false],
+      };
+    case "expelled":
+      return {
+        observer: ["courtyard.gate", "idle", "觀察者", true, true],
+        jesus: ["courtyard.jesus-entry", "walking", "耶穌", false, false],
         disciples: ["courtyard.pool-approach", "departed", "門徒", false, false],
-        "man-born-blind": ["pool.wash-edge", "washed-seeing", "那人", true, false],
+        "man-born-blind": [
+          "courtyard.expelled",
+          "standing-seeing",
+          "那人",
+          true,
+          true,
+        ],
+        neighbors: ["courtyard.waiting", "idle", "鄰舍與見過他的人", false, false],
+        pharisees: [
+          "courtyard.pharisees-left",
+          "idle",
+          "法利賽人",
+          false,
+          false,
+        ],
+        parents: ["courtyard.waiting", "idle", "他的父母", false, false],
+        "judean-authorities": [
+          "courtyard.pharisees-right",
+          "idle",
+          "猶太人",
+          false,
+          false,
+        ],
+      };
+    case "belief":
+      return {
+        ...phaseOverrides("expelled"),
+        observer: ["courtyard.gate", "idle", "觀察者", true, true],
+        jesus: ["courtyard.belief", "standing", "耶穌", true, true],
+        "man-born-blind": [
+          "courtyard.expelled",
+          "worship",
+          "那人",
+          true,
+          true,
+        ],
+      };
+    case "ending":
+      return {
+        ...phaseOverrides("belief"),
+        pharisees: [
+          "courtyard.gate",
+          "listening",
+          "法利賽人",
+          true,
+          true,
+        ],
       };
     default:
       return {};
@@ -49,18 +229,20 @@ const actorState = (phase) => {
   const state = { ...ACTOR_DEFAULTS, ...phaseOverrides(phase) };
   return Object.freeze(
     Object.fromEntries(
-      Object.entries(state).map(([id, [anchorId, pose, label, visible, collisionEnabled]]) => [
-        id,
-        Object.freeze({
-          visible,
-          anchorId,
-          pose,
-          label,
-          collisionEnabled: visible ? collisionEnabled : false,
-          contentLevel: id === "observer" ? "S2" : "S1",
-          stagingLevel: "S2",
-        }),
-      ]),
+      Object.entries(state).map(
+        ([id, [anchorId, pose, label, visible, collisionEnabled]]) => [
+          id,
+          Object.freeze({
+            visible,
+            anchorId,
+            pose,
+            label,
+            collisionEnabled: visible ? collisionEnabled : false,
+            contentLevel: id === "observer" ? "S2" : "S1",
+            stagingLevel: "S2",
+          }),
+        ],
+      ),
     ),
   );
 };
@@ -85,7 +267,7 @@ const propState = (phase) =>
 const snapshotForBeat = (beatId) => {
   const order = Number(beatId.slice(1));
   const phase = PHASE_BY_BEAT[beatId];
-  const isComplete = beatId === "b06";
+  const isComplete = beatId === "b20";
   return Object.freeze({
     id: `john9-${beatId}-final`,
     beatId,
@@ -107,7 +289,8 @@ const snapshotForBeat = (beatId) => {
     }),
     triggers: Object.freeze({
       completedBeatIds: Object.freeze(
-        Array.from({ length: order }, (_, index) => `b${String(index + 1).padStart(2, "0")}`),
+        Array.from({ length: order }, (_, index) =>
+          `b${String(index + 1).padStart(2, "0")}`),
       ),
       nextBeatId: isComplete ? null : `b${String(order + 1).padStart(2, "0")}`,
       sourceLevel: "S2",
@@ -123,7 +306,7 @@ const snapshotForBeat = (beatId) => {
 
 export const FINAL_SNAPSHOTS = Object.freeze(
   Object.fromEntries(
-    Array.from({ length: 6 }, (_, index) => {
+    Array.from({ length: 20 }, (_, index) => {
       const beatId = `b${String(index + 1).padStart(2, "0")}`;
       return [beatId, snapshotForBeat(beatId)];
     }),
@@ -133,10 +316,11 @@ export const FINAL_SNAPSHOTS = Object.freeze(
 export const STORY_COMPLETION = Object.freeze({
   id: "john9-story-complete",
   requiredBeatIds: Object.freeze(
-    Array.from({ length: 6 }, (_, index) => `b${String(index + 1).padStart(2, "0")}`),
+    Array.from({ length: 20 }, (_, index) =>
+      `b${String(index + 1).padStart(2, "0")}`),
   ),
-  finalBeatId: "b06",
-  finalSnapshotId: FINAL_SNAPSHOTS.b06.id,
+  finalBeatId: "b20",
+  finalSnapshotId: FINAL_SNAPSHOTS.b20.id,
   outcomeMutableByPlayer: false,
   playerDecisionRequired: false,
 });

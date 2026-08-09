@@ -12,7 +12,7 @@
     "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765"
   },
   "selectedCandidate": 2,
-  "selectionReason": "Selected source preserves the blind, clay-applied, and seeing states used by John 9:1-7 with consistent scale and restrained posture.",
+  "selectionReason": "Candidate 2 provides the clearest restrained four-state sequence: seated blind gaze, ordinary clay visible over closed eyes without injury or glow, alert standing seeing state, and quiet kneeling belief pose. Identity, terracotta wrap, adult scale, clean silhouettes and lighting remain continuous; candidate 1 is rejected because clasped prayer hands read more theatrically.",
   "animationCoverage": {
     "directionalIdle": "blocked-imagegen-built-in-unavailable",
     "directionalWalk": "blocked-imagegen-built-in-unavailable",
@@ -82,6 +82,21 @@
         "tool": "ffmpeg",
         "resizeKernel": "lanczos",
         "filter": "crop=256:900:512:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-worship.png",
+      "mediaType": "image/png",
+      "bytes": 7201,
+      "sha256": "8bab033f9f34f9b36076c4c410fd1c08170c1b9a056ba24cbdf195d7340cec0d",
+      "dimensions": {
+        "width": 36,
+        "height": 128
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:900:768:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
       }
     }
   ],

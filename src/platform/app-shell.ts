@@ -24,6 +24,156 @@ export interface AppShell extends SliceSequenceUi {
   snapshotAppliedState(): SliceFinalState | null;
 }
 
+interface DialoguePortraitDefinition {
+  readonly imagePath: string;
+  readonly label: string;
+  readonly focusY: string;
+}
+
+const DIALOGUE_PORTRAIT_BY_BEAT: Readonly<
+  Record<string, DialoguePortraitDefinition>
+> = Object.freeze({
+  b01: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-blind.png",
+    label: "那人（瞎眼）",
+    focusY: "18%",
+  }),
+  b02: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-blind.png",
+    label: "那人（瞎眼）",
+    focusY: "18%",
+  }),
+  b03: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-idle.png",
+    label: "耶穌",
+    focusY: "20%",
+  }),
+  b04: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-clay.png",
+    label: "那人（抹泥）",
+    focusY: "20%",
+  }),
+  b05: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-clay.png",
+    label: "那人（前往洗眼）",
+    focusY: "20%",
+  }),
+  b06: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-seeing.png",
+    label: "那人（洗後看見）",
+    focusY: "20%",
+  }),
+  b07: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/neighbor-a.png",
+    label: "鄰舍與見過他的人",
+    focusY: "20%",
+  }),
+  b08: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/neighbor-b.png",
+    label: "鄰舍與見過他的人",
+    focusY: "20%",
+  }),
+  b09: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/pharisee.png",
+    label: "法利賽人",
+    focusY: "20%",
+  }),
+  b10: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/pharisee.png",
+    label: "法利賽人",
+    focusY: "20%",
+  }),
+  b11: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-seeing.png",
+    label: "那人（看見）",
+    focusY: "20%",
+  }),
+  b12: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/father.png",
+    label: "那人的父母",
+    focusY: "20%",
+  }),
+  b13: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/mother.png",
+    label: "那人的父母",
+    focusY: "20%",
+  }),
+  b14: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/judean-authority.png",
+    label: "猶太人",
+    focusY: "20%",
+  }),
+  b15: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-seeing.png",
+    label: "那人（看見）",
+    focusY: "20%",
+  }),
+  b16: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/pharisee.png",
+    label: "法利賽人",
+    focusY: "20%",
+  }),
+  b17: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-seeing.png",
+    label: "那人（看見）",
+    focusY: "20%",
+  }),
+  b18: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.man-born-blind/v1/run-001/man-seeing.png",
+    label: "那人（被趕出）",
+    focusY: "20%",
+  }),
+  b19: Object.freeze({
+    imagePath:
+      "assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-found-man.png",
+    label: "耶穌再遇見那人",
+    focusY: "20%",
+  }),
+  b20: Object.freeze({
+    imagePath:
+      "assets/art/characters-supporting/character.john9-supporting/v1/run-001/pharisee.png",
+    label: "法利賽人",
+    focusY: "20%",
+  }),
+});
+
+function portraitUrl(path: string): string {
+  const base = import.meta.env.BASE_URL.endsWith("/")
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  return `${base}${path}`;
+}
+
+function preloadDialoguePortraits(): void {
+  const urls = new Set(
+    Object.values(DIALOGUE_PORTRAIT_BY_BEAT).map(({ imagePath }) =>
+      portraitUrl(imagePath),
+    ),
+  );
+  for (const url of urls) {
+    const image = new Image();
+    image.src = url;
+  }
+}
+
 function abortError(): Error {
   const error = new Error("Sequence operation aborted");
   error.name = "AbortError";
@@ -42,11 +192,12 @@ export function createAppShell(
   handlers: AppShellHandlers,
   options: Readonly<{ hasSave: boolean }> = { hasSave: false },
 ): AppShell {
+  preloadDialoguePortraits();
   root.innerHTML = `
     <article class="platform-shell" data-platform-shell>
       <header class="platform-header">
         <div>
-          <p class="eyebrow">約翰福音 9:1–7</p>
+          <p class="eyebrow">約翰福音 9:1–41</p>
           <h1>生來瞎眼的人</h1>
         </div>
         <div class="status-stack">
@@ -61,7 +212,7 @@ export function createAppShell(
         </div>
         <p class="navigation-hint" data-navigation-hint role="status" aria-live="polite" hidden></p>
         <div class="start-screen" data-start-screen>
-          <p class="start-kicker">約翰福音 9:1–7</p>
+          <p class="start-kicker">約翰福音 9:1–41</p>
           <h2>進入故事</h2>
           <p>移動、靠近人物、留心聆聽。</p>
           <button class="primary-action" type="button" data-continue ${options.hasSave ? "" : "hidden"}>繼續故事</button>
@@ -72,6 +223,10 @@ export function createAppShell(
           <header>
             <h2 id="dialogue-title">經文</h2>
           </header>
+          <figure class="dialogue-portrait" data-dialogue-portrait hidden>
+            <img data-dialogue-portrait-image alt="" />
+            <figcaption data-dialogue-portrait-label></figcaption>
+          </figure>
           <div class="dialogue-text" data-dialogue-text></div>
           <p class="dialogue-reference" data-dialogue-reference></p>
           <footer>
@@ -80,8 +235,8 @@ export function createAppShell(
           </footer>
         </section>
         <section class="ending-panel" data-ending hidden aria-modal="true" role="dialog" aria-labelledby="ending-title">
-          <h2 id="ending-title">約翰福音 9:1–7</h2>
-          <p>耶穌看見生來瞎眼的人，顯明神的作為；那人照吩咐往西羅亞池洗，回頭就看見了。</p>
+          <h2 id="ending-title">約翰福音 9:1–41</h2>
+          <p>那人照耶穌的吩咐去洗便看見了；他在查問與被趕出後再次遇見耶穌，並信了他。</p>
           <button type="button" data-ending-restart>重新開始</button>
         </section>
         <section class="restart-confirmation" data-restart-confirmation hidden aria-modal="true" role="dialog" aria-labelledby="restart-title">
@@ -141,6 +296,18 @@ export function createAppShell(
   const dialogueText = requireElement<HTMLElement>(
     root,
     "[data-dialogue-text]",
+  );
+  const dialoguePortrait = requireElement<HTMLElement>(
+    root,
+    "[data-dialogue-portrait]",
+  );
+  const dialoguePortraitImage = requireElement<HTMLImageElement>(
+    root,
+    "[data-dialogue-portrait-image]",
+  );
+  const dialoguePortraitLabel = requireElement<HTMLElement>(
+    root,
+    "[data-dialogue-portrait-label]",
   );
   const dialogueReference = requireElement<HTMLElement>(
     root,
@@ -263,6 +430,7 @@ export function createAppShell(
   };
 
   const presentLines = (
+    beatId: string,
     lines: readonly SliceDialogueLine[],
     signal: AbortSignal,
   ): Promise<void> => {
@@ -278,6 +446,20 @@ export function createAppShell(
       if (line === undefined) {
         return;
       }
+      const portrait = DIALOGUE_PORTRAIT_BY_BEAT[beatId];
+      if (portrait === undefined) {
+        dialoguePortrait.hidden = true;
+        dialoguePortraitImage.removeAttribute("src");
+        dialoguePortraitImage.removeAttribute("style");
+        dialoguePortraitImage.alt = "";
+        dialoguePortraitLabel.textContent = "";
+      } else {
+        dialoguePortrait.hidden = false;
+        dialoguePortraitImage.src = portraitUrl(portrait.imagePath);
+        dialoguePortraitImage.alt = portrait.label;
+        dialoguePortraitImage.style.objectPosition = `center ${portrait.focusY}`;
+        dialoguePortraitLabel.textContent = portrait.label;
+      }
       dialogueText.textContent = line.exactText;
       dialogueReference.textContent = `${formatVerseReference(line.verseKey)} · ${line.sourceLabel}`;
       dialogueNext.disabled = paused;
@@ -289,6 +471,7 @@ export function createAppShell(
       const cleanup = (): void => {
         dialogueNext.removeEventListener("click", onNext);
         dialogueClose.removeEventListener("click", onClose);
+        window.removeEventListener("keydown", onKeydown);
         signal.removeEventListener("abort", onAbort);
         dialogue.hidden = true;
         delete dialogue.dataset.blocking;
@@ -316,8 +499,19 @@ export function createAppShell(
         cleanup();
         resolve();
       };
+      const onKeydown = (event: KeyboardEvent): void => {
+        if (paused || dialogue.hidden || event.repeat) {
+          return;
+        }
+        if (event.key !== " " && event.key !== "Spacebar" && event.key !== "Enter") {
+          return;
+        }
+        event.preventDefault();
+        onNext();
+      };
       dialogueNext.addEventListener("click", onNext);
       dialogueClose.addEventListener("click", onClose);
+      window.addEventListener("keydown", onKeydown);
       signal.addEventListener("abort", onAbort, { once: true });
     });
   };
@@ -387,7 +581,8 @@ export function createAppShell(
     snapshotAppliedState: () =>
       appliedState === null ? null : structuredClone(appliedState),
     setOverlay: () => {},
-    presentDialogue: (_beatId, lines, signal) => presentLines(lines, signal),
+    presentDialogue: (beatId, lines, signal) =>
+      presentLines(beatId, lines, signal),
     applyFinalState: (state, stageGoal) => {
       appliedState = structuredClone(state);
       goal.textContent = stageGoal.description;

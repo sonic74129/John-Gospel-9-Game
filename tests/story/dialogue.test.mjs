@@ -9,26 +9,44 @@ import { DIALOGUE_BY_BEAT, DIALOGUE_SEGMENTS } from "../../src/story/dialogue.ts
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
-test("dialogue uses exact CUV-Traditional text only through John 9:7", () => {
+test("dialogue uses exact CUV-Traditional text through John 9:41", () => {
   const sourceByKey = new Map(
     scriptureArtifact.verses.map((verse) => [verse.key, verse.exactText]),
   );
-  assert.deepEqual(Object.keys(DIALOGUE_BY_BEAT), [
-    "b01",
-    "b02",
-    "b03",
-    "b04",
-    "b05",
-    "b06",
-  ]);
+  assert.equal(Object.keys(DIALOGUE_BY_BEAT).length, 20);
   for (const line of DIALOGUE_SEGMENTS) {
     assert.equal(line.sourceLevel, "S0");
     assert.equal(line.sourceLabel, "1919 和合本（繁體神版）");
-    assert.match(line.verseKey, /^john9:[1-7]$/);
+    assert.match(line.verseKey, /^john9:(?:[1-9]|[1-3][0-9]|4[01])$/);
     assert.ok(sourceByKey.get(line.verseKey).includes(line.exactText));
     assert.equal(sha256(line.exactText), line.textSha256);
     assert.equal(line.speakerId, "scripture");
   }
+});
+
+test("verses 8-41 are shifted intact from the old B06-B19 plan to B07-B20", () => {
+  const expectedVerseKeys = [
+    ["john9:8", "john9:9"],
+    ["john9:10", "john9:11", "john9:12"],
+    ["john9:13", "john9:14"],
+    ["john9:15", "john9:16"],
+    ["john9:17"],
+    ["john9:18", "john9:19"],
+    ["john9:20", "john9:21", "john9:22", "john9:23"],
+    ["john9:24"],
+    ["john9:25"],
+    ["john9:26", "john9:27"],
+    ["john9:28", "john9:29"],
+    ["john9:30", "john9:31", "john9:32", "john9:33", "john9:34"],
+    ["john9:35", "john9:36", "john9:37", "john9:38"],
+    ["john9:39", "john9:40", "john9:41"],
+  ];
+  assert.deepEqual(
+    Object.values(DIALOGUE_BY_BEAT)
+      .slice(6)
+      .map((lines) => lines.map(({ verseKey }) => verseKey)),
+    expectedVerseKeys,
+  );
 });
 
 test("John 9:7 preserves its exact instruction before its exact washing outcome", () => {

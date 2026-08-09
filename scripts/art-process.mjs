@@ -3,12 +3,10 @@ import { execFile } from "node:child_process";
 import {
   copyFile,
   mkdir,
-  mkdtemp,
   readFile,
   rm,
   writeFile,
 } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
 
@@ -20,15 +18,23 @@ const actorFootBaselines = Object.freeze({
   "man-blind.png": 112,
   "man-clay.png": 114,
   "man-seeing.png": 112,
+  "man-worship.png": 112,
   "jesus-idle.png": 112,
   "jesus-idle-look-right.png": 112,
   "jesus-clay-action.png": 104,
   "jesus-clay-action-look-right.png": 104,
+  "jesus-found-man.png": 112,
   "jesus-directional.png": 193,
   "disciple-a.png": 118,
   "disciple-a-look-right.png": 118,
   "disciple-b.png": 118,
   "disciple-b-look-right.png": 118,
+  "neighbor-a.png": 118,
+  "neighbor-b.png": 118,
+  "pharisee.png": 118,
+  "judean-authority.png": 118,
+  "father.png": 118,
+  "mother.png": 118,
 });
 
 const reusedManifestPaths = [
@@ -130,30 +136,14 @@ const generatedSpecs = [
     promptVersion: "v2",
     run: "run-001",
     runtimeSelectionReason:
-      "Candidate 2 is retained as immutable provenance for the audited courtyard and Siloam source crops; no other painted region is copied into the runtime world.",
+      "Candidate 2 remains the pinned provenance source and is retained in full as the single continuous runtime map without crop compositing.",
     outputs: [
       {
         file: "world-base.webp",
-        processor: "ffmpeg-world-composite",
-        canonicalSource: {
-          crop: [27, 0, 1125, 768],
-          size: [2560, 1792],
-          quality: 90,
-        },
-        canvas: {
-          size: [1248, 1280],
-          color: "#ead9b7",
-        },
-        placements: [
-          {
-            sourceCrop: [840, 240, 1800, 1140],
-            destination: [264, 16],
-          },
-          {
-            sourceCrop: [600, 1020, 1220, 1480],
-            destination: [24, 796],
-          },
-        ],
+        processor: "pillow-webp",
+        crop: [0, 0, 1152, 768],
+        size: [2688, 1792],
+        quality: 90,
       },
     ],
   },
@@ -263,6 +253,7 @@ async function syncPinnedJesusSheet() {
 
 async function verifyRuntimeManifest(path, includeReuseStatus = true) {
   const manifest = JSON.parse(await readFile(path, "utf8"));
+  const existingOutputPaths = new Set(manifest.outputs.map(({ path }) => path));
   for (const output of manifest.outputs) {
     const bytes = await readFile(output.path);
     if (
@@ -283,9 +274,13 @@ async function verifyRuntimeManifest(path, includeReuseStatus = true) {
   const derivedOutputs = [];
   for (const file of derivedRuntimeOutputs[manifest.assetId] ?? []) {
     const outputPath = resolve(outputDirectory, file);
+    const runtimePath = outputPath.slice(ROOT.length + 1);
+    if (existingOutputPaths.has(runtimePath)) {
+      continue;
+    }
     const bytes = await readFile(outputPath);
     derivedOutputs.push({
-      path: outputPath.slice(ROOT.length + 1),
+      path: runtimePath,
       mediaType: "image/png",
       bytes: bytes.byteLength,
       sha256: sha256(bytes),
@@ -337,77 +332,8 @@ async function processSpec(spec) {
   const outputs = [];
   for (const output of spec.outputs) {
     const outputPath = resolve(outputDirectory, output.file);
-    if (output.processor === "ffmpeg-world-composite") {
-      const temporaryDirectory = await mkdtemp(`${tmpdir()}/john9-world-composite-`);
-      const canonicalSourcePath = resolve(temporaryDirectory, "canonical-world.webp");
-      const canonicalRasterPath = resolve(temporaryDirectory, "canonical-world.png");
-      const courtyardPath = resolve(temporaryDirectory, "courtyard.png");
-      const poolPath = resolve(temporaryDirectory, "pool.png");
-      const encodedPath = resolve(temporaryDirectory, "world-base.webp");
-      try {
-        await execFileAsync("python3", [
-          resolve(ROOT, "scripts/art-process-image.py"),
-          "--input",
-          sourcePath,
-          "--output",
-          canonicalSourcePath,
-          "--crop",
-          output.canonicalSource.crop.join(","),
-          "--size",
-          output.canonicalSource.size.join("x"),
-          "--quality",
-          String(output.canonicalSource.quality),
-        ]);
-        await execFileAsync("ffmpeg", [
-          "-hide_banner",
-          "-loglevel",
-          "error",
-          "-y",
-          "-i",
-          canonicalSourcePath,
-          "-frames:v",
-          "1",
-          canonicalRasterPath,
-        ]);
-        const [canvasWidth, canvasHeight] = output.canvas.size;
-        const [courtyard, pool] = output.placements;
-        for (const [placement, cropPath] of [
-          [courtyard, courtyardPath],
-          [pool, poolPath],
-        ]) {
-          const [left, top, right, bottom] = placement.sourceCrop;
-          await execFileAsync("ffmpeg", [
-            "-hide_banner",
-            "-loglevel",
-            "error",
-            "-y",
-            "-i",
-            canonicalRasterPath,
-            "-vf",
-            `crop=${right - left}:${bottom - top}:${left}:${top}`,
-            "-frames:v",
-            "1",
-            cropPath,
-          ]);
-        }
-        await execFileAsync("python3", [
-          resolve(ROOT, "scripts/art-compose-image.py"),
-          "--output",
-          encodedPath,
-          "--size",
-          `${canvasWidth}x${canvasHeight}`,
-          "--color",
-          output.canvas.color,
-          "--paste",
-          `${courtyardPath}@${courtyard.destination.join(",")}`,
-          "--paste",
-          `${poolPath}@${pool.destination.join(",")}`,
-        ]);
-        await writeFile(outputPath, await readFile(encodedPath));
-      } finally {
-        await rm(temporaryDirectory, { recursive: true, force: true });
-      }
-    } else if (output.processor === "pillow-webp") {
+    if (output.processor === "pillow-webp") {
+      await rm(outputPath, { force: true });
       await execFileAsync("python3", [
         resolve(ROOT, "scripts/art-process-image.py"),
         "--input",
@@ -445,35 +371,7 @@ async function processSpec(spec) {
       dimensions: await dimensions(outputPath),
       processing: {
         tool: output.processor === "pillow-webp" ? "Pillow" : "ffmpeg",
-        ...(output.processor === "ffmpeg-world-composite"
-          ? {
-              canonicalSource: {
-                tool: "Pillow",
-                crop: output.canonicalSource.crop,
-                outputSize: output.canonicalSource.size,
-                format: "webp",
-                quality: output.canonicalSource.quality,
-              },
-              canonicalRasterization: {
-                tool: "ffmpeg",
-                format: "png",
-              },
-              canvas: {
-                width: output.canvas.size[0],
-                height: output.canvas.size[1],
-                color: output.canvas.color,
-              },
-              placements: output.placements.map(({ sourceCrop, destination }) => ({
-                sourceCrop,
-                destination,
-                scale: "none",
-                blend: "none",
-              })),
-              format: "webp",
-              lossless: true,
-              compositor: "Pillow direct paste without mask",
-            }
-          : output.processor === "pillow-webp"
+        ...(output.processor === "pillow-webp"
           ? {
               resizeKernel: "lanczos",
               crop: output.crop,
@@ -530,16 +428,16 @@ async function main() {
     foundationCommit: FOUNDATION_COMMIT,
     generatedBy: "scripts/art-process.mjs",
     worldContract: {
-      width: 1248,
-      height: 1280,
-      topology: "courtyard-to-siloam-crop",
-      sourceWidth: 2560,
-      sourceHeight: 1792,
+      width: 2688,
+      height: 1792,
+      topology: "complete-single-source",
+      sourceWidth: 1152,
+      sourceHeight: 768,
       retainedSourceBounds: {
-        left: 576,
-        top: 224,
-        right: 1824,
-        bottom: 1504,
+        left: 0,
+        top: 0,
+        right: 1152,
+        bottom: 768,
       },
     },
     actorFootBaselines,

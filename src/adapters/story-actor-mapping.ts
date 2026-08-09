@@ -3,4 +3,8 @@ export const STORY_ACTOR_SPAWN_IDS = Object.freeze({
   jesus: Object.freeze(["jesus"]),
   disciples: Object.freeze(["disciple-left", "disciple-right"]),
   "man-born-blind": Object.freeze(["man-born-blind"]),
+  neighbors: Object.freeze(["neighbor-left", "neighbor-right"]),
+  pharisees: Object.freeze(["pharisee-left"]),
+  parents: Object.freeze(["parent-left", "parent-right"]),
+  "judean-authorities": Object.freeze(["pharisee-right"]),
 });

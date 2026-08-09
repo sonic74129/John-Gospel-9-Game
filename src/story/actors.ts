@@ -25,6 +25,10 @@ export const DIRECTIONAL_IDLE_REQUIREMENTS = Object.freeze({
   jesus: CARDINAL_DIRECTIONS,
   disciples: CARDINAL_DIRECTIONS,
   "man-born-blind": CARDINAL_DIRECTIONS,
+  neighbors: CARDINAL_DIRECTIONS,
+  pharisees: CARDINAL_DIRECTIONS,
+  parents: CARDINAL_DIRECTIONS,
+  "judean-authorities": CARDINAL_DIRECTIONS,
 });
 
 export const DIRECTIONAL_WALK_REQUIREMENTS = Object.freeze({
@@ -40,6 +44,7 @@ export const MAN_BORN_BLIND_POSES = Object.freeze([
   "washing",
   "standing-seeing",
   "washed-seeing",
+  "worship",
 ] as const);
 
 export type ManBornBlindPose = (typeof MAN_BORN_BLIND_POSES)[number];
@@ -106,6 +111,46 @@ export const ACTORS = Object.freeze([
     label: "那人",
     kind: "scripture-character",
     initialAnchorId: "courtyard.man-center",
+    sourceLevel: "S1",
+    stagingLevel: "S2",
+    scriptureCharacter: true,
+    hasDialogue: true,
+  },
+  {
+    id: "neighbors",
+    label: "鄰舍與見過他的人",
+    kind: "scripture-group",
+    initialAnchorId: "pool.neighbors",
+    sourceLevel: "S1",
+    stagingLevel: "S2",
+    scriptureCharacter: true,
+    hasDialogue: true,
+  },
+  {
+    id: "pharisees",
+    label: "法利賽人",
+    kind: "scripture-group",
+    initialAnchorId: "courtyard.pharisees-left",
+    sourceLevel: "S1",
+    stagingLevel: "S2",
+    scriptureCharacter: true,
+    hasDialogue: true,
+  },
+  {
+    id: "parents",
+    label: "他的父母",
+    kind: "scripture-group",
+    initialAnchorId: "courtyard.waiting",
+    sourceLevel: "S1",
+    stagingLevel: "S2",
+    scriptureCharacter: true,
+    hasDialogue: true,
+  },
+  {
+    id: "judean-authorities",
+    label: "猶太人",
+    kind: "scripture-group",
+    initialAnchorId: "courtyard.pharisees-right",
     sourceLevel: "S1",
     stagingLevel: "S2",
     scriptureCharacter: true,

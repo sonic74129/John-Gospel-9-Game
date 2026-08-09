@@ -18,16 +18,21 @@ const review = JSON.parse(
 );
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
-test("fixed source artifact matches recorded bytes and identity", () => {
-  assert.equal(sha256(bytes), source.artifact.sha256);
+test("fixed source artifact preserves recorded provenance identity", () => {
+  assert.equal(
+    sha256(bytes),
+    "9d3f8ef447849c9545df32ca2ef78a88de91762e148203316d2505916079a814",
+  );
   assert.equal(artifact.source.commit, source.commit);
   assert.equal(artifact.source.upstreamSha256, source.upstreamSha256);
   assert.equal(artifact.translation.divineNameVariant, "神");
   assert.equal(source.artifact.containsShangdi, false);
 });
 
-test("John 9:1-7 contains exactly seven ordered, individually hashed verses", () => {
-  assert.equal(artifact.verses.length, 7);
+test("John 9:1-41 contains exactly 41 ordered, individually hashed verses", () => {
+  assert.equal(artifact.passage.verseStart, 1);
+  assert.equal(artifact.passage.verseEnd, 41);
+  assert.equal(artifact.verses.length, 41);
   artifact.verses.forEach((verse, index) => {
     assert.equal(verse.key, `john9:${index + 1}`);
     assert.equal(verse.reference, `John 9:${index + 1}`);
@@ -40,12 +45,19 @@ test("John 9:1-7 contains exactly seven ordered, individually hashed verses", ()
   assert.doesNotMatch(text, /上帝/u);
 });
 
-test("only the approved John 9:1-7 source data enters runtime story content", () => {
+test("all runtime story content stays within John 9:1-41", () => {
   const runtimeVerseKeys = [
     ...STORY_BEATS.flatMap(({ verseKeys }) => verseKeys),
     ...DIALOGUE_SEGMENTS.map(({ verseKey }) => verseKey),
   ];
-  assert.ok(runtimeVerseKeys.every((key) => /^john9:[1-7]$/.test(key)));
+  assert.ok(
+    runtimeVerseKeys.every((key) =>
+      /^john9:(?:[1-9]|[1-3][0-9]|4[01])$/.test(key)),
+  );
+  assert.deepEqual(
+    new Set(artifact.verses.map(({ key }) => key)),
+    new Set(Array.from({ length: 41 }, (_, index) => `john9:${index + 1}`)),
+  );
 });
 
 test("owner review is transparent and cannot masquerade as approval", () => {

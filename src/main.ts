@@ -5,7 +5,10 @@ import {
   createPlatformRuntime,
   type PlatformRuntime,
 } from "./adapters/sdk-platform.ts";
-import { UnsupportedStoryBeatError } from "./adapters/story-adapter.ts";
+import {
+  STORY_BEAT_IDS,
+  UnsupportedStoryBeatError,
+} from "./adapters/story-adapter.ts";
 import { createWorldRuntime } from "./adapters/world-adapter.ts";
 import { createAppShell } from "./platform/app-shell.ts";
 import {
@@ -25,6 +28,13 @@ import {
   type StorySaveLoadResult,
 } from "./platform/story-persistence.ts";
 import "./platform/styles.css";
+
+const playtestRequest = import.meta.env.DEV
+  ? await import("./platform/dev-playtest.ts").then(
+      ({ parseDevPlaytestRequest }) =>
+        parseDevPlaytestRequest(window.location.search, STORY_BEAT_IDS),
+    )
+  : null;
 
 const root = document.querySelector<HTMLElement>("#app");
 if (root === null) {
@@ -53,7 +63,7 @@ const loadedSave =
     ? initialSave.save
     : null;
 const committedProgress = createCommittedProgressTracker(
-  loadedSave?.completedBeatIds,
+  playtestRequest?.completedBeatIds ?? loadedSave?.completedBeatIds,
 );
 let preferences: StoryPreferences =
   loadedSave !== null
@@ -87,7 +97,7 @@ const shell = createAppShell(root, {
         runtime = createPlatformRuntime(readyScene, shell, reportError, {
           onProgress: (completedBeatIds) => {
             committedProgress.settle(completedBeatIds);
-            if (!formalStoryStarted) {
+            if (!formalStoryStarted || playtestRequest !== null) {
               return;
             }
             try {
@@ -105,7 +115,9 @@ const shell = createAppShell(root, {
             shell.setStarted();
             shell.setMuted(preferences.muted);
             readyRuntime.setMuted(preferences.muted);
-            if (mode === "continue" && loadedSave !== null) {
+            if (playtestRequest !== null) {
+              await readyRuntime.restore(playtestRequest.completedBeatIds);
+            } else if (mode === "continue" && loadedSave !== null) {
               await readyRuntime.restore(loadedSave.completedBeatIds);
             } else {
               try {
@@ -115,7 +127,7 @@ const shell = createAppShell(root, {
                 reportError(error);
               }
             }
-            formalStoryStarted = true;
+            formalStoryStarted = playtestRequest === null;
             readyRuntime.begin();
           })
           .catch(reportError);
@@ -215,7 +227,7 @@ const shell = createAppShell(root, {
   },
   onSkip: () => runtime?.skipCurrent(),
 }, {
-  hasSave: loadedSave !== null,
+  hasSave: playtestRequest === null && loadedSave !== null,
 });
 
 shell.setMuted(preferences.muted);
@@ -226,6 +238,11 @@ if (initialSave.status === "cleared") {
   shell.setStatus(initialSave.message, true);
 } else if (initialPersistenceError !== undefined) {
   reportError(initialPersistenceError);
+}
+if (playtestRequest !== null) {
+  queueMicrotask(() => {
+    root.querySelector<HTMLButtonElement>("[data-start]")?.click();
+  });
 }
 
 const pageLifecycle = createPageLifecycleController({

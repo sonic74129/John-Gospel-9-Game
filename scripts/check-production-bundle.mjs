@@ -22,31 +22,10 @@ const FORBIDDEN = [
   "Verse key",
   "Segment ID",
   "S2 · 遊戲提示 · 不計分",
-  "B01–B19",
-  "B07",
-  "B08",
-  "B09",
-  "B10",
-  "B11",
-  "B12",
-  "B13",
-  "B14",
-  "B15",
-  "B16",
-  "B17",
-  "B18",
-  "B19",
-  "鄰舍",
-  "邻舍",
-  "審問",
-  "审问",
   "回想卡",
-  "neighbor-gathering",
-  "inquiry-courtyard",
-  "outer-road",
-  "neighbors-awning.png",
-  "outer-olive-branch.png",
-  "courtyard-gate.png",
+  "Duplicate playtest query parameters are not supported.",
+  "playtest beat ID must not be empty.",
+  "is not a supported playtest beat.",
   "契約以外的故事節點",
   "從 B01 開始",
   "已套用確定最終狀態",
@@ -68,7 +47,6 @@ const FORBIDDEN = [
   "data-recall",
   "data-study-questions",
 ];
-const FORBIDDEN_PATTERNS = [/\bb(?:0[7-9]|1[0-9])\b/];
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".map"]);
 
 async function textFiles(directory) {
@@ -91,13 +69,6 @@ for (const file of await textFiles(DIST)) {
     if (content.includes(token)) {
       throw new Error(
         `Production bundle ${relative(DIST, file)} contains DEV-only token ${token}.`,
-      );
-    }
-  }
-  for (const pattern of FORBIDDEN_PATTERNS) {
-    if (pattern.test(content)) {
-      throw new Error(
-        `Production bundle ${relative(DIST, file)} contains out-of-scope story identifier ${pattern}.`,
       );
     }
   }

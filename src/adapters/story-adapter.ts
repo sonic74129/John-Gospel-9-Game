@@ -17,7 +17,7 @@ import {
 
 export const STORY_BEAT_IDS = Object.freeze(
   Array.from(
-    { length: 6 },
+    { length: 20 },
     (_, index) => `b${String(index + 1).padStart(2, "0")}`,
   ),
 );
@@ -55,7 +55,7 @@ export class UnsupportedStoryBeatError extends Error {
   readonly beatId: string;
 
   constructor(beatId: string) {
-    super(`${beatId} is outside the canonical B01-B06 story contract.`);
+    super(`${beatId} is outside the canonical B01-B20 story contract.`);
     this.name = "UnsupportedStoryBeatError";
     this.beatId = beatId;
   }

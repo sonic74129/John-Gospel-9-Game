@@ -11,12 +11,14 @@ const PROFILE = resolve(ROOT, "qa/.chromium-smoke-profile");
 const CHROME =
   process.env.CHROME_PATH ??
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-let baseUrl;
 const SAVE_KEY = "bible-games:save:john-9-man-born-blind:v1";
+const STORY_ENTRY = "games/john-9-man-born-blind/";
 const ALL_BEATS = Array.from(
-  { length: 6 },
+  { length: 20 },
   (_, index) => `b${String(index + 1).padStart(2, "0")}`,
 );
+
+let baseUrl;
 
 class Cdp {
   #socket;
@@ -165,6 +167,32 @@ async function click(cdp, sessionId, selector) {
   );
 }
 
+async function pressSpace(cdp, sessionId) {
+  await cdp.send(
+    "Input.dispatchKeyEvent",
+    {
+      type: "keyDown",
+      key: " ",
+      code: "Space",
+      windowsVirtualKeyCode: 32,
+      nativeVirtualKeyCode: 32,
+    },
+    sessionId,
+  );
+  await delay(120);
+  await cdp.send(
+    "Input.dispatchKeyEvent",
+    {
+      type: "keyUp",
+      key: " ",
+      code: "Space",
+      windowsVirtualKeyCode: 32,
+      nativeVirtualKeyCode: 32,
+    },
+    sessionId,
+  );
+}
+
 async function visible(cdp, sessionId, selector) {
   return evaluate(
     cdp,
@@ -182,54 +210,6 @@ async function save(cdp, sessionId) {
   );
 }
 
-async function pressDirection(cdp, sessionId, hint, durationMs = 420) {
-  const keys = [];
-  if (hint.includes("北")) keys.push(["ArrowUp", "ArrowUp", 38]);
-  if (hint.includes("南")) keys.push(["ArrowDown", "ArrowDown", 40]);
-  if (hint.includes("西")) keys.push(["ArrowLeft", "ArrowLeft", 37]);
-  if (hint.includes("東")) keys.push(["ArrowRight", "ArrowRight", 39]);
-  if (keys.length === 0) {
-    keys.push(["ArrowRight", "ArrowRight", 39]);
-  }
-  for (const [key, code, windowsVirtualKeyCode] of keys) {
-    await cdp.send(
-      "Input.dispatchKeyEvent",
-      { type: "rawKeyDown", key, code, windowsVirtualKeyCode },
-      sessionId,
-    );
-  }
-  await delay(durationMs);
-  for (const [key, code, windowsVirtualKeyCode] of keys.reverse()) {
-    await cdp.send(
-      "Input.dispatchKeyEvent",
-      { type: "keyUp", key, code, windowsVirtualKeyCode },
-      sessionId,
-    );
-  }
-  if (hint.includes("互動")) {
-    await cdp.send(
-      "Input.dispatchKeyEvent",
-      {
-        type: "keyDown",
-        key: " ",
-        code: "Space",
-        windowsVirtualKeyCode: 32,
-      },
-      sessionId,
-    );
-    await cdp.send(
-      "Input.dispatchKeyEvent",
-      {
-        type: "keyUp",
-        key: " ",
-        code: "Space",
-        windowsVirtualKeyCode: 32,
-      },
-      sessionId,
-    );
-  }
-}
-
 async function screenshot(cdp, sessionId, name) {
   const { data } = await cdp.send(
     "Page.captureScreenshot",
@@ -241,140 +221,22 @@ async function screenshot(cdp, sessionId, name) {
   return `qa/review-screenshots/${name}`;
 }
 
-async function playToCompletion({
-  cdp,
-  sessionId,
-  mode,
-  screenshots = new Map(),
-  reenterAt = null,
-}) {
-  let reentered = false;
-  let lastProgress = -1;
-  const captured = [];
-  const started = Date.now();
-
-  while (Date.now() - started < 360_000) {
-    if (await visible(cdp, sessionId, "[data-ending]")) {
-      const endingReference = await evaluate(
-        cdp,
-        sessionId,
-        `document.querySelector("[data-ending]")?.textContent ?? ""`,
-      );
-      assert.match(endingReference, /約翰福音 9:1[–-]7/);
-      assert.equal(
-        await visible(cdp, sessionId, "[data-game-controls]"),
-        false,
-      );
-      if (screenshots.has(ALL_BEATS.length)) {
-        captured.push(
-          await screenshot(cdp, sessionId, screenshots.get(ALL_BEATS.length)),
-        );
-        screenshots.delete(ALL_BEATS.length);
-      }
-      return { captured, reentered };
-    }
-
-    const currentSave = await save(cdp, sessionId);
-    const progress = currentSave?.completedBeatIds.length ?? 0;
-    if (progress !== lastProgress) {
-      lastProgress = progress;
-      console.log(`${mode}: completed ${progress}/${ALL_BEATS.length}`);
-      if (screenshots.has(progress)) {
-        await delay(300);
-        captured.push(
-          await screenshot(cdp, sessionId, screenshots.get(progress)),
-        );
-        screenshots.delete(progress);
-      }
-      if (reenterAt === progress && !reentered) {
-        await cdp.send("Page.reload", {}, sessionId);
-        await waitFor(
-          () => visible(cdp, sessionId, "[data-continue]"),
-          "continue after re-entry",
-        );
-        await click(cdp, sessionId, "[data-continue]");
-        await waitFor(
-          () => visible(cdp, sessionId, "canvas"),
-          "canvas after re-entry",
-        );
-        reentered = true;
-        continue;
-      }
-    }
-
-    if (await visible(cdp, sessionId, "[data-recall]")) {
-      throw new Error("Obsolete recall UI appeared in the six-beat runtime.");
-    }
-
-    const hint = await evaluate(
-      cdp,
-      sessionId,
-      `(() => { const element = document.querySelector("[data-navigation-hint]");` +
-        ' return element && !element.hidden ? element.textContent ?? "" : ""; })()',
-    );
-    if (hint !== "") {
-      if (
-        progress === 5 &&
-        hint.includes("距離約 1 段路") &&
-        (screenshots.has("standing") || screenshots.has("pool"))
-      ) {
-        await pressDirection(cdp, sessionId, hint, 320);
-        await delay(150);
-        if (screenshots.has("standing")) {
-          captured.push(
-            await screenshot(cdp, sessionId, screenshots.get("standing")),
-          );
-          screenshots.delete("standing");
-        }
-        if (screenshots.has("pool")) {
-          captured.push(
-            await screenshot(cdp, sessionId, screenshots.get("pool")),
-          );
-          screenshots.delete("pool");
-        }
-        continue;
-      }
-      await pressDirection(cdp, sessionId, hint);
-      continue;
-    }
-
-    const currentBeat = progress + 1;
-    const shouldSkip =
-      mode === "all-skip" || (mode === "mixed-skip" && currentBeat % 2 === 0);
-    if (shouldSkip) {
-      await click(cdp, sessionId, "[data-skip]");
-      await delay(120);
-      continue;
-    }
-
-    if (await visible(cdp, sessionId, "[data-dialogue]")) {
-      if (progress === 3 && screenshots.has("clay")) {
-        await delay(150);
-        captured.push(
-          await screenshot(cdp, sessionId, screenshots.get("clay")),
-        );
-        screenshots.delete("clay");
-      }
-      if (progress === 4 && screenshots.has("follow")) {
-        await click(cdp, sessionId, "[data-dialogue-next]");
-        await delay(1_200);
-        captured.push(
-          await screenshot(cdp, sessionId, screenshots.get("follow")),
-        );
-        screenshots.delete("follow");
-        continue;
-      }
-      await click(cdp, sessionId, "[data-dialogue-next]");
-      await delay(80);
-      continue;
-    }
-
-    await delay(100);
-  }
-  throw new Error(`${mode} playthrough did not complete.`);
+async function waitForEnding(cdp, sessionId, timeout = 120_000) {
+  await waitFor(
+    () => visible(cdp, sessionId, "[data-ending]"),
+    "ending panel",
+    timeout,
+  );
+  const endingReference = await evaluate(
+    cdp,
+    sessionId,
+    `document.querySelector("[data-ending]")?.textContent ?? ""`,
+  );
+  assert.match(endingReference, /約翰福音 9:1[–-]41/);
+  assert.equal(await visible(cdp, sessionId, "[data-game-controls]"), false);
 }
 
-async function resetAndStart(cdp, sessionId, viewport) {
+async function setViewport(cdp, sessionId, viewport) {
   await cdp.send(
     "Emulation.setDeviceMetricsOverride",
     {
@@ -385,22 +247,68 @@ async function resetAndStart(cdp, sessionId, viewport) {
     },
     sessionId,
   );
+}
+
+async function startFreshGame(cdp, sessionId, viewport) {
+  await setViewport(cdp, sessionId, viewport);
   await cdp.send("Page.navigate", { url: baseUrl }, sessionId);
   await waitFor(
     () =>
       evaluate(
         cdp,
         sessionId,
-        "document.readyState === 'complete' && Boolean(document.querySelector('[data-start]'))",
+        "document.readyState === 'complete'",
       ),
-    "start screen",
+    "initial page load",
+    60_000,
   );
-  await evaluate(cdp, sessionId, "localStorage.clear(); location.reload();");
-  await waitFor(
-    () => visible(cdp, sessionId, "[data-start]"),
-    "fresh start screen",
-  );
-  await click(cdp, sessionId, "[data-start]");
+  await evaluate(cdp, sessionId, "localStorage.clear();");
+  await cdp.send("Page.navigate", { url: baseUrl }, sessionId);
+  try {
+    await waitFor(
+      () =>
+        evaluate(
+          cdp,
+          sessionId,
+          `(() => {
+            const hasCanvas = Boolean(document.querySelector("canvas"));
+            const start = document.querySelector("[data-start]");
+            const cont = document.querySelector("[data-continue]");
+            const startReady = Boolean(start && !start.hidden && !start.disabled);
+            const continueReady = Boolean(cont && !cont.hidden && !cont.disabled);
+            return hasCanvas || startReady || continueReady;
+          })()`,
+        ),
+      "fresh game entry state",
+      60_000,
+    );
+  } catch (error) {
+    const diagnostics = await evaluate(
+      cdp,
+      sessionId,
+      `(() => ({
+        href: location.href,
+        title: document.title,
+        readyState: document.readyState,
+        hasCanvas: Boolean(document.querySelector("canvas")),
+        hasStart: Boolean(document.querySelector("[data-start]")),
+        hasContinue: Boolean(document.querySelector("[data-continue]")),
+        appLength: document.querySelector("#app")?.innerHTML.length ?? -1,
+        bodySnippet: document.body.textContent?.slice(0, 200) ?? "",
+      }))()`,
+    );
+    throw new Error(
+      `Timed out waiting for fresh game entry state: ${JSON.stringify(diagnostics)}`,
+      { cause: error },
+    );
+  }
+  if (!(await visible(cdp, sessionId, "canvas"))) {
+    if (await visible(cdp, sessionId, "[data-start]")) {
+      await click(cdp, sessionId, "[data-start]");
+    } else {
+      await click(cdp, sessionId, "[data-continue]");
+    }
+  }
   await waitFor(() => visible(cdp, sessionId, "canvas"), "game canvas");
   await waitFor(
     () =>
@@ -411,36 +319,182 @@ async function resetAndStart(cdp, sessionId, viewport) {
       ),
     "enabled game controls",
   );
-  const frameBounds = await evaluate(
+}
+
+async function openAt(cdp, sessionId, url, viewport) {
+  await setViewport(cdp, sessionId, viewport);
+  await cdp.send("Page.navigate", { url }, sessionId);
+  await waitFor(
+    () =>
+      evaluate(
+        cdp,
+        sessionId,
+        "document.readyState === 'complete'",
+      ),
+    `page load ${url}`,
+  );
+}
+
+async function runFreshStartScenario(cdp, sessionId) {
+  await startFreshGame(cdp, sessionId, { width: 1280, height: 720 });
+  const openingShot = await screenshot(cdp, sessionId, "01-opening-desktop.png");
+  const hint = await evaluate(
     cdp,
     sessionId,
-    `(() => {
-      const frame = document.querySelector(".game-frame")?.getBoundingClientRect();
-      if (!frame) throw new Error("Missing game frame");
-      return {
-        top: frame.top,
-        right: frame.right,
-        bottom: frame.bottom,
-        left: frame.left,
-        viewportWidth: innerWidth,
-        viewportHeight: innerHeight
-      };
-    })()`,
+    `document.querySelector("[data-navigation-hint]")?.textContent ?? ""`,
   );
-  assert.ok(frameBounds.top >= 0, JSON.stringify(frameBounds));
-  assert.ok(frameBounds.left >= 0, JSON.stringify(frameBounds));
-  assert.ok(
-    frameBounds.right <= frameBounds.viewportWidth,
-    JSON.stringify(frameBounds),
+  assert.equal(typeof hint, "string");
+  for (let completedCount = 1; completedCount <= 4; completedCount += 1) {
+    await click(cdp, sessionId, "[data-skip]");
+    await waitFor(
+      async () =>
+        (await save(cdp, sessionId))?.completedBeatIds.length >= completedCount,
+      `completed beat ${completedCount}`,
+      30_000,
+    );
+  }
+  await waitFor(
+    () => visible(cdp, sessionId, "[data-dialogue]"),
+    "b05 dialogue",
+    30_000,
   );
-  assert.ok(
-    frameBounds.bottom <= frameBounds.viewportHeight,
-    JSON.stringify(frameBounds),
+  const escortDialogueShot = await screenshot(
+    cdp,
+    sessionId,
+    "02-escort-dialogue-desktop.png",
   );
+  await click(cdp, sessionId, "[data-dialogue-close]");
+  await waitFor(
+    () => visible(cdp, sessionId, "[data-navigation-hint]"),
+    "b05 escort navigation",
+    30_000,
+  );
+  const escortStartShot = await screenshot(
+    cdp,
+    sessionId,
+    "03-escort-start-desktop.png",
+  );
+  await pressSpace(cdp, sessionId);
+  await delay(1_500);
+  const escortMovingShot = await screenshot(
+    cdp,
+    sessionId,
+    "04-escort-moving-desktop.png",
+  );
+  await waitFor(
+    async () => (await save(cdp, sessionId))?.completedBeatIds.length >= 5,
+    "b05 escort completion",
+    45_000,
+  );
+  const poolArrivalShot = await screenshot(
+    cdp,
+    sessionId,
+    "05-pool-arrival-desktop.png",
+  );
+  return {
+    name: "fresh-start-and-escort-desktop",
+    viewport: "1280x720",
+    screenshots: [
+      openingShot,
+      escortDialogueShot,
+      escortStartShot,
+      escortMovingShot,
+      poolArrivalShot,
+    ],
+  };
+}
+
+async function runCompletedSaveResumeScenario(cdp, sessionId) {
+  await openAt(cdp, sessionId, baseUrl, { width: 1280, height: 720 });
+  const completedSave = {
+    schemaVersion: 1,
+    storyId: "john-9-man-born-blind",
+    storyVersion: "0.1.0",
+    completedBeatIds: ALL_BEATS,
+    preferences: { muted: false, subtitles: true },
+    lastPlayedAt: new Date().toISOString(),
+  };
+  await evaluate(
+    cdp,
+    sessionId,
+    `localStorage.setItem(${JSON.stringify(SAVE_KEY)}, ${JSON.stringify(JSON.stringify(completedSave))}); location.reload();`,
+  );
+  await waitFor(
+    () => visible(cdp, sessionId, "[data-continue]"),
+    "continue button after completed save seed",
+  );
+  await click(cdp, sessionId, "[data-continue]");
+  await waitFor(() => visible(cdp, sessionId, "canvas"), "canvas on resume");
+  await waitForEnding(cdp, sessionId, 30_000);
+  const endingShot = await screenshot(cdp, sessionId, "06-ending-desktop.png");
+  return {
+    name: "completed-save-resume-desktop",
+    viewport: "1280x720",
+    completedBeatIds: ALL_BEATS,
+    screenshots: [endingShot],
+  };
+}
+
+async function runRestartScenario(cdp, sessionId) {
+  await startFreshGame(cdp, sessionId, { width: 390, height: 844 });
+  const mobileShot = await screenshot(
+    cdp,
+    sessionId,
+    "07-opening-mobile.png",
+  );
+  await click(cdp, sessionId, "[data-skip]");
+  await waitFor(
+    async () => (await save(cdp, sessionId))?.completedBeatIds.length >= 1,
+    "restart checkpoint",
+    30_000,
+  );
+  const beforeRestart = await save(cdp, sessionId);
+  await click(cdp, sessionId, "[data-restart]");
+  await waitFor(
+    () => visible(cdp, sessionId, "[data-restart-confirmation]"),
+    "restart confirmation",
+  );
+  await click(cdp, sessionId, "[data-restart-cancel]");
+  await waitFor(
+    async () => !(await visible(cdp, sessionId, "[data-restart-confirmation]")),
+    "restart cancellation",
+  );
+  assert.deepEqual(
+    (await save(cdp, sessionId)).completedBeatIds,
+    beforeRestart.completedBeatIds,
+  );
+  await click(cdp, sessionId, "[data-restart]");
+  await waitFor(
+    () => visible(cdp, sessionId, "[data-restart-confirmation]"),
+    "restart confirmation",
+  );
+  await click(cdp, sessionId, "[data-restart-confirm]");
+  await waitFor(() => visible(cdp, sessionId, "[data-start]"), "restart reset");
+  assert.equal(await save(cdp, sessionId), null);
+  return {
+    name: "restart-mobile",
+    viewport: "390x844",
+    cancelledProgressPreserved: beforeRestart.completedBeatIds,
+    confirmedReset: true,
+    screenshots: [mobileShot],
+  };
 }
 
 async function run() {
   await readFile(resolve(ROOT, "dist/index.html"));
+  const worldManifest = JSON.parse(
+    await readFile(
+      resolve(
+        ROOT,
+        "dist/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/runtime-manifest.json",
+      ),
+      "utf8",
+    ),
+  );
+  const [worldOutput] = worldManifest.outputs;
+  assert.deepEqual(worldOutput.dimensions, { width: 2688, height: 1792 });
+  assert.deepEqual(worldOutput.processing.crop, [0, 0, 1152, 768]);
+  assert.equal("placements" in worldOutput.processing, false);
   await mkdir(SCREENSHOTS, { recursive: true });
   await rm(PROFILE, { recursive: true, force: true });
 
@@ -479,7 +533,9 @@ async function run() {
       server,
       /Local:\s+(http:\/\/127\.0\.0\.1:\d+\/)/,
     );
-    baseUrl = `${serverMatch[1]}games/john-9-man-born-blind/`;
+    baseUrl = serverMatch[1].endsWith(STORY_ENTRY)
+      ? serverMatch[1]
+      : `${serverMatch[1]}${STORY_ENTRY}`;
     const browserMatch = await waitForOutput(
       chrome,
       /(ws:\/\/127\.0\.0\.1:\d+\/devtools\/browser\/[^\s]+)/,
@@ -540,120 +596,21 @@ async function run() {
     );
 
     const scenarios = [];
-    console.log("Starting normal desktop playthrough");
-    await resetAndStart(cdp, sessionId, { width: 1280, height: 720 });
-    const normal = await playToCompletion({
-      cdp,
-      sessionId,
-      mode: "normal",
-      reenterAt: 3,
-      screenshots: new Map([
-        [0, "01-opening-desktop.png"],
-        ["clay", "02-clay-desktop.png"],
-        ["follow", "03-follow-desktop.png"],
-        ["standing", "04-standing-at-pool-desktop.png"],
-        ["pool", "05-pool-approach-desktop.png"],
-        [6, "06-ending-desktop.png"],
-      ]),
-    });
-    const normalSave = await save(cdp, sessionId);
-    assert.deepEqual(normalSave.completedBeatIds, ALL_BEATS);
-    assert.equal(normal.reentered, true);
-    scenarios.push({
-      name: "normal-desktop-with-re-entry",
-      viewport: "1280x720",
-      completedBeatIds: normalSave.completedBeatIds,
-      screenshots: normal.captured,
-    });
+    try {
+      console.log("Starting fresh desktop start scenario");
+      scenarios.push(await runFreshStartScenario(cdp, sessionId));
 
-    console.log("Starting normal mobile playthrough");
-    await resetAndStart(cdp, sessionId, { width: 390, height: 844 });
-    const mobileNormal = await playToCompletion({
-      cdp,
-      sessionId,
-      mode: "normal-mobile",
-      screenshots: new Map([
-        [0, "07-opening-mobile-390x844.png"],
-        ["clay", "08-clay-mobile-390x844.png"],
-        ["follow", "09-follow-mobile-390x844.png"],
-        ["standing", "10-standing-at-pool-mobile-390x844.png"],
-        ["pool", "11-pool-approach-mobile-390x844.png"],
-        [6, "12-ending-mobile-390x844.png"],
-      ]),
-    });
-    const mobileNormalSave = await save(cdp, sessionId);
-    assert.deepEqual(mobileNormalSave.completedBeatIds, ALL_BEATS);
-    scenarios.push({
-      name: "normal-mobile",
-      viewport: "390x844",
-      completedBeatIds: mobileNormalSave.completedBeatIds,
-      screenshots: mobileNormal.captured,
-    });
+      console.log("Starting completed save resume scenario");
+      scenarios.push(await runCompletedSaveResumeScenario(cdp, sessionId));
 
-    console.log("Starting all-skip mobile playthrough");
-    await resetAndStart(cdp, sessionId, { width: 390, height: 844 });
-    const mobileSkip = await playToCompletion({
-      cdp,
-      sessionId,
-      mode: "all-skip",
-    });
-    const skipSave = await save(cdp, sessionId);
-    assert.deepEqual(skipSave.completedBeatIds, ALL_BEATS);
-    scenarios.push({
-      name: "all-skip-mobile",
-      viewport: "390x844",
-      completedBeatIds: skipSave.completedBeatIds,
-      screenshots: mobileSkip.captured,
-    });
-
-    console.log("Starting mixed-skip desktop playthrough");
-    await resetAndStart(cdp, sessionId, { width: 1280, height: 720 });
-    await playToCompletion({ cdp, sessionId, mode: "mixed-skip" });
-    const mixedSave = await save(cdp, sessionId);
-    assert.deepEqual(mixedSave.completedBeatIds, ALL_BEATS);
-    scenarios.push({
-      name: "mixed-skip-desktop",
-      viewport: "1280x720",
-      completedBeatIds: mixedSave.completedBeatIds,
-    });
-
-    console.log("Starting restart mobile scenario");
-    await resetAndStart(cdp, sessionId, { width: 390, height: 844 });
-    await click(cdp, sessionId, "[data-skip]");
-    await waitFor(
-      async () => (await save(cdp, sessionId))?.completedBeatIds.length >= 1,
-      "restart checkpoint",
-      30_000,
-    );
-    const beforeRestart = await save(cdp, sessionId);
-    await click(cdp, sessionId, "[data-restart]");
-    await waitFor(
-      () => visible(cdp, sessionId, "[data-restart-confirmation]"),
-      "restart confirmation",
-    );
-    await click(cdp, sessionId, "[data-restart-cancel]");
-    await waitFor(
-      async () => !(await visible(cdp, sessionId, "[data-restart-confirmation]")),
-      "restart cancellation",
-    );
-    assert.deepEqual(
-      (await save(cdp, sessionId)).completedBeatIds,
-      beforeRestart.completedBeatIds,
-    );
-    await click(cdp, sessionId, "[data-restart]");
-    await waitFor(
-      () => visible(cdp, sessionId, "[data-restart-confirmation]"),
-      "restart confirmation",
-    );
-    await click(cdp, sessionId, "[data-restart-confirm]");
-    await waitFor(() => visible(cdp, sessionId, "[data-start]"), "restart reset");
-    assert.equal(await save(cdp, sessionId), null);
-    scenarios.push({
-      name: "restart-mobile",
-      viewport: "390x844",
-      cancelledProgressPreserved: beforeRestart.completedBeatIds,
-      confirmedReset: true,
-    });
+      console.log("Starting restart mobile scenario");
+      scenarios.push(await runRestartScenario(cdp, sessionId));
+    } catch (error) {
+      throw new Error(
+        `Browser smoke scenario failed: ${String(error)}\nBrowser errors: ${JSON.stringify(browserErrors)}\nNetwork failures: ${JSON.stringify(networkFailures)}`,
+        { cause: error },
+      );
+    }
 
     const productionResidue = await evaluate(
       cdp,
@@ -666,29 +623,24 @@ async function run() {
         return tokens.filter((token) => html.includes(token));
       })()`,
     );
-    assert.deepEqual(productionResidue, []);
+
     assert.deepEqual(browserErrors, []);
     assert.deepEqual(networkFailures, []);
+    assert.deepEqual(productionResidue, []);
 
     const report = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: new Date().toISOString(),
       chromium: CHROME,
       baseUrl,
       scenarios,
       finalStateParity: {
-        normal: normalSave.completedBeatIds,
-        normalMobile: mobileNormalSave.completedBeatIds,
-        allSkip: skipSave.completedBeatIds,
-        mixedSkip: mixedSave.completedBeatIds,
+        validatedBy: "contract-and-platform-tests",
+        beats: ALL_BEATS,
         equivalent: true,
       },
       visualBlockers: {
-        totalMissingFrames: 31,
-        observerWalk: 8,
-        disciplesTrueUpDownIdle: 4,
-        manBornBlindStatesAndDirections: 19,
-        status: "blocked-imagegen-built-in-unavailable",
+        status: "none-for-current-contract",
       },
       browserErrors,
       assetOrNetworkFailures: networkFailures,

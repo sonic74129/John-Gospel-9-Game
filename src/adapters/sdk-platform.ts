@@ -94,8 +94,27 @@ export function createPlatformRuntime(
   const skipListeners = new Set<() => void>();
   const scenePauseReasons = new Set<string>();
   let overlayBlocking = false;
+  let sequenceNavigationHint: string | null = null;
   let paused = false;
   let syncNavigationObjective = (): void => {};
+  const playerHintForObjective = (): string | null => {
+    const objective = resolveWorldNavigationObjective(
+      story.engine.currentBeat?.trigger,
+      scene,
+    );
+    if (objective === null) {
+      scene.setNavigationObjective(null);
+      return null;
+    }
+    scene.setNavigationObjective(objective);
+    if (objective.kind !== "arrival") {
+      return null;
+    }
+    return describeWorldNavigationObjective(
+      objective,
+      scene.playerPosition(),
+    );
+  };
   let logicalMusicState: AppliedPlatformFinalState["music"] = {
     requested: {
       cueId: "",
@@ -143,6 +162,10 @@ export function createPlatformRuntime(
           shell.setOverlay(visible, blocking);
           overlayBlocking = visible && blocking === true;
           syncNavigationObjective();
+        },
+        setNavigationHint: (message) => {
+          sequenceNavigationHint = message;
+          shell.setNavigationHint(message);
         },
         presentDialogue: (...arguments_) =>
           shell.presentDialogue(...arguments_),
@@ -297,6 +320,10 @@ export function createPlatformRuntime(
   });
 
   syncNavigationObjective = (): void => {
+    if (story.running && sequenceNavigationHint !== null) {
+      shell.setNavigationHint(sequenceNavigationHint);
+      return;
+    }
     if (
       disposed ||
       paused ||
@@ -310,19 +337,7 @@ export function createPlatformRuntime(
       return;
     }
     try {
-      const objective = resolveWorldNavigationObjective(
-        story.engine.currentBeat?.trigger,
-        scene,
-      );
-      scene.setNavigationObjective(objective);
-      shell.setNavigationHint(
-        objective === null
-          ? null
-          : describeWorldNavigationObjective(
-              objective,
-              scene.playerPosition(),
-            ),
-      );
+      shell.setNavigationHint(playerHintForObjective());
     } catch (error) {
       scene.setNavigationObjective(null);
       shell.setNavigationHint(null);

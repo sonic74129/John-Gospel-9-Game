@@ -16,6 +16,20 @@ const EVENT_SUMMARIES = Object.freeze([
   "耶穌和泥抹在那人的眼睛上。",
   "耶穌吩咐那人往西羅亞池子去洗；那人前往池邊。",
   "那人照吩咐去洗，回頭就看見了。",
+  "鄰舍和從前見過他的人對他的身分有不同看法。",
+  "那人回答眼睛怎樣開了，也說不知道耶穌在哪裡。",
+  "眾人把那人帶到法利賽人那裡；開眼的日子是安息日。",
+  "法利賽人再次詢問，眾人因耶穌的行動而意見分歧。",
+  "那人回答耶穌是個先知。",
+  "猶太人不信他從前是瞎眼的，叫了他的父母來。",
+  "父母確認他是兒子且生來瞎眼，因懼怕而不代他回答如何看見。",
+  "法利賽人第二次叫那人來，要他歸榮耀給神並稱耶穌為罪人。",
+  "那人只陳明一件知道的事：從前眼瞎，如今看見。",
+  "眾人再問耶穌做了甚麼；那人反問他們是否也要作門徒。",
+  "眾人辱罵他，聲稱自己是摩西的門徒。",
+  "那人回答神聽敬奉祂、遵行祂旨意的人，隨後被趕出去。",
+  "耶穌找到那人，問他是否信神的兒子；那人信並拜耶穌。",
+  "耶穌說明審判；在場法利賽人發問，耶穌作出最後回答。",
 ]);
 
 const PATH_BEATS = Object.freeze({
@@ -108,12 +122,12 @@ async function buildPlan() {
   ]);
   const ownerReviewSha256 = sha256Bytes(ownerReviewBytes);
   original.planningGate.recoveryCondition =
-    "The repository owner compares John 9:1-7 with the fixed source, reviews the six-beat plan and runtime order, observer restrictions, final-state parity and contextual wording, then records a dated approval in planning/evidence/owner-review.json. Promotion remains conditional on current contracts, but personal-use candidate implementation and QA may proceed without forging Promotion authority.";
+    "The repository owner compares all 41 displayed verses with the fixed source, reviews the twenty-beat plan and runtime order, observer restrictions, final-state parity and contextual wording, then records a dated approval in planning/evidence/owner-review.json. Promotion remains conditional on current contracts, but personal-use candidate implementation and QA may proceed without forging Promotion authority.";
   original.storyCharter.passage =
-    "John 9:1-7 — original 1919 Traditional Chinese Union Version (和合本), 神版";
-  original.storyCharter.targetMinutes = 8;
+    "John 9:1-41 — original 1919 Traditional Chinese Union Version (和合本), 神版";
+  original.storyCharter.targetMinutes = 20;
   original.storyCharter.learningObjective =
-    "Follow John 9:1-7 from the courtyard encounter to washing at Siloam without changing its outcome.";
+    "Follow John 9:1-41 from the courtyard encounter through the restored sight, questioning, expulsion, and the man's confession of faith without changing its outcome.";
   original.storyCharter.playerExperience =
     "Observe, explore, listen, and follow as an unnamed observer who cannot alter scripture events.";
 
@@ -185,11 +199,10 @@ async function buildPlan() {
   const scriptureEvidenceSha256 = sha256Bytes(scriptureEvidenceBytes);
   original.scripture.artifact.sourceEvidence.sha256 = scriptureEvidenceSha256;
   original.scripture.artifact.rightsEvidence.sha256 = scriptureEvidenceSha256;
-  const scriptureKeys = new Set(scripture.verses.map(({ key }) => key));
-  original.scripture.verses = original.scripture.verses
-    .filter(({ key }) => scriptureKeys.has(key))
-    .map((verse) => ({
-    ...verse,
+  original.scripture.verses = scripture.verses.map((verse) => ({
+    key: verse.key,
+    reference: verse.reference,
+    exactText: verse.exactText,
     reviewStatus: "in-review",
     reviewAnchors: [
       {
@@ -220,7 +233,7 @@ async function buildPlan() {
   }));
   original.playerRoleWarrant = {
     role: "unnamed observer-witness",
-    warrant: "The player observes the fixed John 9:1-7 order without becoming a scripture actor or changing cause, order, or outcome.",
+    warrant: "The player witnesses the fixed John 9 order without becoming a scripture actor or changing cause, testimony, theology, or outcome.",
     allowedActions: PLAYER_ROLE.supportedActions.map((action) => ({
       id: `observer-${action}`,
       ledgerEntryId: observerActionsEntry.id,
@@ -397,31 +410,31 @@ async function buildPlan() {
     failureModes: ["stale-hash", "missing", "decode", "autoplay"],
   }));
   original.completionContract = {
-    condition: "Complete all six ordered John 9:1-7 beats without changing scripture cause, order, or outcome.",
+    condition: "Complete all twenty ordered John 9 beats without changing scripture cause, testimony, order, theology, or outcome.",
     requiredBeatIds: STORY_BEATS.map(({ id }) => id),
     completionStateId: STORY_COMPLETION.id,
     policyRuleIds: [],
-    restartBehavior: "Clear committed progress, replay b01-b06 in canonical order, and converge on the same immutable b06 final state.",
-    reentryBehavior: "Restore only a validated canonical beat prefix, resume at the next beat, and converge on the same immutable b06 final state.",
+    restartBehavior: "Clear committed progress, replay b01-b20 in canonical order, and converge on the same immutable b20 final state.",
+    reentryBehavior: "Restore only a validated canonical beat prefix, resume at the next beat, and converge on the same immutable b20 final state.",
   };
 
   const acceptanceUpdates = {
-    "accept-event-spine": ["passed", "Six ordered event rows bind runtime beats b01-b06 to John 9:1-7 verse keys and S1 ledger entries."],
+    "accept-event-spine": ["passed", "Twenty ordered event rows bind runtime beats b01-b20 to exact John 9:1-41 verse keys and S1 ledger entries."],
     "accept-player-role": ["passed", "The canonical warrant and runtime enforce the unnamed observer's non-causal action limits."],
-    "accept-beats": ["passed", "Six canonical Beat contracts match runtime order, triggers, goals, sequences, dialogue and final states."],
+    "accept-beats": ["passed", "Twenty canonical Beat contracts match runtime order, triggers, goals, sequences, dialogue and final states."],
     "accept-actor-state": ["passed", "The actor-state matrix records entry and final state for every runtime actor on every beat."],
     "accept-bridges-clues": ["passed", "No invented clue is required; all S2 staging is removable and explicitly non-causal."],
-    "accept-recall-goals": ["passed", "Six non-punitive goals are bound to runtime evidence; the short flow has no recall card."],
-    "accept-graybox-world": ["passed", "The canonical plan binds the tested courtyard-to-Siloam world, route, portal, collisions, camera and responsive targets."],
-    "accept-sequence-finality": ["passed", "All six sequences have identical normal, skip, restart and re-entry parity hashes."],
-    "accept-dialogue-portraits": ["passed", "John 9:1-7 is bound to dialogue rows; the text-first UI intentionally does not require portraits."],
+    "accept-recall-goals": ["passed", "Twenty non-punitive goals are bound to runtime evidence; the complete flow has no recall card."],
+    "accept-graybox-world": ["passed", "The canonical plan binds the tested complete single-source map with compact courtyard-to-Siloam gameplay geometry, routes, collisions, camera and responsive targets."],
+    "accept-sequence-finality": ["passed", "All twenty sequences have identical normal, skip, restart and re-entry parity hashes."],
+    "accept-dialogue-portraits": ["passed", "All 41 exact verses are bound to dialogue rows; the text-first UI intentionally does not require portraits."],
     "accept-audio": ["passed", "Every dialogue row has a full-subtitle fallback; the personal-use candidate intentionally ships without unapproved TTS."],
-    "accept-completion": ["passed", `Completion requires b01-b06 and the immutable ${STORY_COMPLETION.id} contract ending at ${STORY_COMPLETION.finalSnapshotId}.`],
+    "accept-completion": ["passed", `Completion requires b01-b20 and the immutable ${STORY_COMPLETION.id} contract ending at ${STORY_COMPLETION.finalSnapshotId}.`],
   };
   const acceptanceCategories = {
-    "accept-event-spine": "Six ordered scripture beats",
-    "accept-beats": "Six implementation-bound Beats",
-    "accept-completion": "All six Beats complete",
+    "accept-event-spine": "Twenty ordered scripture beats",
+    "accept-beats": "Twenty implementation-bound Beats",
+    "accept-completion": "All twenty Beats complete",
   };
   original.acceptanceInventory = original.acceptanceInventory.map((item) => {
     const update = acceptanceUpdates[item.id];
@@ -450,8 +463,8 @@ if (process.argv.includes("--check")) {
       "planning/story-plan.v1.json is stale; run npm run planning:sync.",
     );
   }
-  console.log("Canonical six-beat story plan is synchronized.");
+  console.log("Canonical twenty-beat story plan is synchronized.");
 } else {
   await writeFile(PLAN_PATH, generated);
-  console.log("Synchronized canonical six-beat story plan.");
+  console.log("Synchronized canonical twenty-beat story plan.");
 }

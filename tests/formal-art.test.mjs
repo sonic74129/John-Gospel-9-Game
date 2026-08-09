@@ -36,6 +36,10 @@ const adapterSource = await readFile(
   "src/adapters/art-asset-adapter.ts",
   "utf8",
 );
+const actorMappingSource = await readFile(
+  "src/adapters/story-actor-mapping.ts",
+  "utf8",
+);
 const sceneSource = await readFile("src/adapters/story-scene.ts", "utf8");
 
 function imageDimensions(bytes, path) {
@@ -70,169 +74,86 @@ function imageDimensions(bytes, path) {
   throw new Error(`Unsupported runtime image format: ${path}`);
 }
 
-test("formal art manifest pins the cropped courtyard-to-Siloam private-preview contract", () => {
+test("formal art manifest pins the complete single-source private-preview contract", () => {
   assert.equal(manifest.reviewStatus, "polished-private-preview");
   assert.equal(manifest.releaseEligible, false);
   assert.equal(manifest.publicRedistributionApproved, false);
   assert.deepEqual(manifest.worldContract, {
-    width: 1248,
-    height: 1280,
-    topology: "courtyard-to-siloam-crop",
-    sourceWidth: 2560,
-    sourceHeight: 1792,
+    width: 2688,
+    height: 1792,
+    topology: "complete-single-source",
+    sourceWidth: 1152,
+    sourceHeight: 768,
     retainedSourceBounds: {
-      left: 576,
-      top: 224,
-      right: 1824,
-      bottom: 1504,
+      left: 0,
+      top: 0,
+      right: 1152,
+      bottom: 768,
     },
   });
-  assert.equal(review.runtimeInventory.files, 15);
+  assert.equal(review.runtimeInventory.files, 23);
   assert.deepEqual(review.runtimeInventory.worldDimensions, {
-    width: 1248,
-    height: 1280,
+    width: 2688,
+    height: 1792,
   });
   assert.ok(review.selectedAssets.some((id) => id.includes("zigzag-world@v2")));
   assert.ok(review.selectedAssets.every((id) => !id.includes("world-base@v1")));
 });
 
-test("world processing records two unscaled direct-paste crops over neutral fill", () => {
-    const world = manifest.assets.find(
-      ({ assetId }) => assetId === "environment.john9-zigzag-world",
-    );
-    assert.ok(world);
-    const [output] = world.outputs;
-    assert.deepEqual(output.dimensions, { width: 1248, height: 1280 });
-    assert.equal(output.processing.tool, "ffmpeg");
-    assert.deepEqual(output.processing.canvas, {
-      width: 1248,
-      height: 1280,
-      color: "#ead9b7",
-    });
-    assert.deepEqual(output.processing.placements, [
-      {
-        sourceCrop: [840, 240, 1800, 1140],
-        destination: [264, 16],
-        scale: "none",
-        blend: "none",
-      },
-      {
-        sourceCrop: [600, 1020, 1220, 1480],
-        destination: [24, 796],
-        scale: "none",
-        blend: "none",
-      },
-    ]);
-    assert.equal(output.processing.lossless, true);
+test("world processing proportionally resizes the complete selected source once", () => {
+  const world = manifest.assets.find(
+    ({ assetId }) => assetId === "environment.john9-zigzag-world",
+  );
+  assert.ok(world);
+  const [output] = world.outputs;
+  assert.deepEqual(output.dimensions, { width: 2688, height: 1792 });
+  assert.deepEqual(output.processing, {
+    tool: "Pillow",
+    resizeKernel: "lanczos",
+    crop: [0, 0, 1152, 768],
+    outputSize: [2688, 1792],
+    format: "webp",
+    quality: 90,
+  });
 });
 
-test("world crop rebuild is deterministic and preserves exact retained pixels", async () => {
-    const worldPath =
-      "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp";
-    const before = await readFile(worldPath);
-    const rebuild = spawnSync(process.execPath, ["scripts/art-process.mjs"], {
+test("complete single-source world rebuild is deterministic", async () => {
+  const worldPath =
+    "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp";
+  const before = await readFile(worldPath);
+  const rebuild = spawnSync(process.execPath, ["scripts/art-process.mjs"], {
+    encoding: "utf8",
+  });
+  assert.equal(rebuild.status, 0, rebuild.stderr);
+  assert.deepEqual(await readFile(worldPath), before);
+
+  const directory = await mkdtemp(`${tmpdir()}/john9-world-source-test-`);
+  try {
+    const expectedPath = `${directory}/world-base.webp`;
+    const expected = spawnSync(
+      "python3",
+      [
+      "scripts/art-process-image.py",
+      "--input",
+      worldSelection.source.path,
+      "--output",
+      expectedPath,
+      "--crop",
+      "0,0,1152,768",
+      "--size",
+      "2688x1792",
+      "--quality",
+      "90",
+      ],
+      {
       encoding: "utf8",
-    });
-    assert.equal(rebuild.status, 0, rebuild.stderr);
-    assert.deepEqual(await readFile(worldPath), before);
-
-    const directory = await mkdtemp(`${tmpdir()}/john9-world-crop-test-`);
-    try {
-      const canonicalPath = `${directory}/canonical.webp`;
-      const canonical = spawnSync(
-        "python3",
-        [
-          "scripts/art-process-image.py",
-          "--input",
-          worldSelection.source.path,
-          "--output",
-          canonicalPath,
-          "--crop",
-          "27,0,1125,768",
-          "--size",
-          "2560x1792",
-          "--quality",
-          "90",
-        ],
-        { encoding: "utf8" },
-      );
-      assert.equal(canonical.status, 0, canonical.stderr);
-      const canonicalPngPath = `${directory}/canonical.png`;
-      const decode = spawnSync(
-        "ffmpeg",
-        [
-          "-hide_banner",
-          "-loglevel",
-          "error",
-          "-i",
-          canonicalPath,
-          "-frames:v",
-          "1",
-          canonicalPngPath,
-        ],
-        { encoding: "utf8" },
-      );
-      assert.equal(decode.status, 0, decode.stderr);
-      const expectedCrop = (name, crop) => {
-        const path = `${directory}/${name}.png`;
-        const result = spawnSync(
-          "ffmpeg",
-          [
-            "-hide_banner",
-            "-loglevel",
-            "error",
-            "-i",
-            canonicalPngPath,
-            "-vf",
-            `crop=${crop}`,
-            "-frames:v",
-            "1",
-            path,
-          ],
-          { encoding: "utf8" },
-        );
-        assert.equal(result.status, 0, result.stderr);
-        return path;
-      };
-      const courtyardPath = expectedCrop("courtyard", "960:900:840:240");
-      const poolPath = expectedCrop("pool", "620:460:600:1020");
-
-      const pillowCropHash = (path, box) => {
-        const result = spawnSync(
-          "python3",
-          [
-            "-c",
-            "from PIL import Image; import hashlib,sys; image=Image.open(sys.argv[1]).convert('RGBA'); print(hashlib.sha256(image.crop(tuple(map(int,sys.argv[2].split(',')))).tobytes()).hexdigest())",
-            path,
-            box,
-          ],
-          { encoding: "utf8" },
-        );
-        assert.equal(result.status, 0, result.stderr);
-        return result.stdout.trim();
-      };
-      assert.equal(
-        pillowCropHash(worldPath, "264,16,1224,916"),
-        pillowCropHash(courtyardPath, "0,0,960,900"),
-      );
-      assert.equal(
-        pillowCropHash(worldPath, "24,796,644,1256"),
-        pillowCropHash(poolPath, "0,0,620,460"),
-      );
-      const neutralPixel = spawnSync(
-        "python3",
-        [
-          "-c",
-          "from PIL import Image; import sys; print(','.join(map(str,Image.open(sys.argv[1]).convert('RGBA').getpixel((0,0)))))",
-          worldPath,
-        ],
-        { encoding: "utf8" },
-      );
-      assert.equal(neutralPixel.status, 0, neutralPixel.stderr);
-      assert.equal(neutralPixel.stdout.trim(), "234,217,183,255");
-    } finally {
-      await rm(directory, { recursive: true, force: true });
-    }
+      },
+    );
+    assert.equal(expected.status, 0, expected.stderr);
+    assert.deepEqual(await readFile(worldPath), await readFile(expectedPath));
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test("formal environment review points to the exact processed selections", () => {
@@ -250,9 +171,9 @@ test("formal environment review points to the exact processed selections", () =>
   }
 });
 
-test("all 15 six-beat runtime outputs match recorded bytes, hashes, and dimensions", async () => {
+test("all 23 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
   const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
-  assert.equal(outputs.length, 15);
+  assert.equal(outputs.length, 23);
   assert.equal(new Set(outputs.map(({ path }) => path)).size, outputs.length);
   for (const output of outputs) {
     const bytes = await readFile(output.path);
@@ -314,6 +235,25 @@ test("per-actor manifests record complete and blocked animation coverage", () =>
   assert.ok(manManifest.animationCoverage.missing.includes("washed.idle.up"));
 });
 
+test("per-actor manifests mirror aggregate formal actor metadata", () => {
+  for (const actorManifest of [
+    manManifest,
+    jesusManifest,
+    supportingManifest,
+  ]) {
+    const aggregate = manifest.assets.find(
+      ({ assetId }) => assetId === actorManifest.assetId,
+    );
+    assert.ok(aggregate, actorManifest.assetId);
+    assert.deepEqual(actorManifest.outputs, aggregate.outputs);
+    assert.equal(actorManifest.releaseEligible, false);
+    assert.equal(actorManifest.publicRedistributionApproved, false);
+  }
+  assert.equal(manManifest.outputs.length, 4);
+  assert.equal(jesusManifest.outputs.length, 6);
+  assert.equal(supportingManifest.outputs.length, 10);
+});
+
 test("every runtime output is wired once and obsolete world art is unwired", () => {
   const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
   for (const { path } of outputs) {
@@ -331,8 +271,8 @@ test("actor foot baselines are complete and applied on spawn and pose changes", 
   const actorOutputs = manifest.assets
     .filter(({ family }) => family.startsWith("characters-"))
     .flatMap(({ outputs }) => outputs);
-  assert.equal(actorOutputs.length, 13);
-  assert.equal(Object.keys(manifest.actorFootBaselines).length, 13);
+  assert.equal(actorOutputs.length, 21);
+  assert.equal(Object.keys(manifest.actorFootBaselines).length, 21);
   for (const { path, dimensions } of actorOutputs) {
     const baseline = manifest.actorFootBaselines[basename(path)];
     assert.ok(Number.isInteger(baseline), path);
@@ -342,12 +282,56 @@ test("actor foot baselines are complete and applied on spawn and pose changes", 
   assert.match(sceneSource, /#syncNarrativeTextures\(\)/);
 });
 
-test("formal art wiring excludes deleted regions and later-story actors", () => {
+test("formal actor wiring is restored without old environment props", () => {
   assert.match(adapterSource, /runtimeAsset\("clay-vessel\.png"\)/);
   assert.match(sceneSource, /STORY_ART\.props\.clayVessel/);
+  for (const fileName of [
+    "man-worship.png",
+    "jesus-found-man.png",
+    "neighbor-a.png",
+    "neighbor-b.png",
+    "pharisee.png",
+    "judean-authority.png",
+    "father.png",
+    "mother.png",
+  ]) {
+    assert.match(adapterSource, new RegExp(`runtimeAsset\\("${fileName}"\\)`));
+  }
+  for (const spawnId of [
+    "neighbor-left",
+    "neighbor-right",
+    "pharisee-left",
+    "pharisee-right",
+    "parent-left",
+    "parent-right",
+  ]) {
+    assert.match(adapterSource, new RegExp(`"${spawnId}"`));
+    assert.match(actorMappingSource, new RegExp(`"${spawnId}"`));
+  }
   assert.doesNotMatch(
-    `${adapterSource}\n${sceneSource}\n${JSON.stringify(manifest)}`,
-    /neighbor-|inquiry-|outside-|outer-road|pharisee|parent-|worship|found-man/i,
+    adapterSource,
+    /roadside-canopy|pool-palm-frond|neighbors-awning|outer-olive-branch|courtyard-gate|pool-marker|waiting-stool/,
+  );
+});
+
+test("central actor render profiles normalize native frames to adult display scale", () => {
+  assert.match(adapterSource, /export const STORY_ACTOR_RENDER_PROFILES/);
+  assert.match(adapterSource, /const ADULT_BASELINE_HEIGHT = 132/);
+  assert.match(adapterSource, /const JESUS_HEIGHT_DELTA = 4/);
+  assert.match(adapterSource, /export function actorRenderProfileForSpawn/);
+  assert.match(
+    adapterSource,
+    /jesus: Object\.freeze\(\{\s*targetDisplayHeight: ADULT_BASELINE_HEIGHT \+ JESUS_HEIGHT_DELTA,\s*\}\)/,
+  );
+  assert.match(
+    adapterSource,
+    /supportingAdult: Object\.freeze\(\{ targetDisplayHeight: ADULT_BASELINE_HEIGHT \}\)/,
+  );
+  assert.equal(
+    jesusManifest.outputs.find(({ path }) =>
+      path.endsWith("/jesus-directional.png"),
+    ).processing.frameHeight,
+    200,
   );
 });
 

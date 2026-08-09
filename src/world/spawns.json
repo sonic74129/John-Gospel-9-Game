@@ -9,7 +9,10 @@
       "anchorId": "courtyard.player-start",
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
-      "position": { "x": 1004, "y": 306 },
+      "position": {
+        "x": 1644,
+        "y": 530
+      },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -19,7 +22,10 @@
       "anchorId": "courtyard.man-center",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 874, "y": 261 },
+      "position": {
+        "x": 1514,
+        "y": 485
+      },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -29,7 +35,10 @@
       "anchorId": "courtyard.jesus",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 794, "y": 206 },
+      "position": {
+        "x": 1434,
+        "y": 430
+      },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -39,7 +48,10 @@
       "anchorId": "courtyard.disciples",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 849, "y": 166 },
+      "position": {
+        "x": 1489,
+        "y": 390
+      },
       "collisionRadius": 18,
       "initiallyVisible": true
     },
@@ -49,9 +61,90 @@
       "anchorId": "courtyard.disciples",
       "regionId": "courtyard",
       "sourceLevel": "scripture",
-      "position": { "x": 924, "y": 171 },
+      "position": {
+        "x": 1564,
+        "y": 395
+      },
       "collisionRadius": 18,
       "initiallyVisible": true
+    },
+    {
+      "id": "spawn.neighbor-left",
+      "actorId": "neighbor-left",
+      "anchorId": "pool.neighbors",
+      "regionId": "siloam-pool",
+      "sourceLevel": "scripture",
+      "position": {
+        "x": 934,
+        "y": 1090
+      },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.neighbor-right",
+      "actorId": "neighbor-right",
+      "anchorId": "pool.neighbors",
+      "regionId": "siloam-pool",
+      "sourceLevel": "scripture",
+      "position": {
+        "x": 1034,
+        "y": 1090
+      },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.pharisee-left",
+      "actorId": "pharisee-left",
+      "anchorId": "courtyard.pharisees-left",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "position": {
+        "x": 1220,
+        "y": 664
+      },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.pharisee-right",
+      "actorId": "pharisee-right",
+      "anchorId": "courtyard.pharisees-right",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "position": {
+        "x": 1380,
+        "y": 664
+      },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.parent-left",
+      "actorId": "parent-left",
+      "anchorId": "courtyard.parents",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "position": {
+        "x": 1240,
+        "y": 834
+      },
+      "collisionRadius": 18,
+      "initiallyVisible": false
+    },
+    {
+      "id": "spawn.parent-right",
+      "actorId": "parent-right",
+      "anchorId": "courtyard.parents",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "position": {
+        "x": 1310,
+        "y": 804
+      },
+      "collisionRadius": 18,
+      "initiallyVisible": false
     }
   ]
 }

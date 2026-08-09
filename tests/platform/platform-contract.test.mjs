@@ -137,9 +137,14 @@ test("shell exposes responsive canvas and accessible control structure", async (
     "data-restart",
     "data-ending",
     "data-dialogue-reference",
+    "data-dialogue-portrait",
   ]) {
     assert.match(shell, new RegExp(marker));
   }
+  assert.match(shell, /window\.addEventListener\("keydown", onKeydown\)/);
+  assert.match(shell, /event\.key !== " " && event\.key !== "Spacebar" && event\.key !== "Enter"/);
+  assert.match(shell, /preloadDialoguePortraits\(\)/);
+  assert.match(shell, /b06:\s*Object\.freeze\(\{[\s\S]*label:\s*"那人（洗後看見）"/);
   assert.match(shell, /aria-pressed="false"/);
   assert.match(styles, /aspect-ratio:\s*16\s*\/\s*9/);
   assert.match(styles, /@media\s*\(max-width:\s*640px\)/);
@@ -171,6 +176,9 @@ test("shell exposes responsive canvas and accessible control structure", async (
     /await runtime\?\.resume\("bfcache"\);\s*gameSizeController\?\.resume\(\);\s*gameScene\?\.flushPendingViewportResize\(\)/,
   );
   assert.match(scene, /Math\.min\(camera\.width,\s*camera\.height\)\s*<=\s*640/);
+  assert.match(scene, /if \(visual\.storyActorId === "observer"\) \{\s*continue;\s*\}/);
+  assert.match(scene, /#playerMovedSinceLastFinalState = false/);
+  assert.match(scene, /preservePlayerPosition[\s\S]*this\.#playerMovedSinceLastFinalState/);
   assert.match(scene, /onWorldUpdate\("viewport"\)/);
   assert.match(
     scene,
@@ -208,8 +216,8 @@ test("persistence and ending expose only stable progress and a concise opening s
   );
   assert.match(persistence, /"not-started" \| "in-progress" \| "completed"/);
   assert.doesNotMatch(persistence, /Phaser|setTimeout|Timer/);
-  assert.match(shell, /約翰福音 9:1–7/);
-  assert.match(shell, /耶穌看見生來瞎眼的人/);
+  assert.match(shell, /約翰福音 9:1–41/);
+  assert.match(shell, /再次遇見耶穌/);
   assert.match(shell, /移動、靠近人物、留心聆聽/);
   for (const removedUi of [
     "見證紀錄",

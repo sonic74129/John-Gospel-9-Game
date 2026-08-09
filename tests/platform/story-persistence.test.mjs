@@ -63,7 +63,7 @@ test("save, reload, and continue retain only stable canonical progress and prefe
 test("completion writes the public completed progress namespace", () => {
   const storage = createStorage();
   const persistence = createStoryPersistence(storage, () => NOW);
-  persistence.save(FINAL_SNAPSHOTS.b06.triggers.completedBeatIds, {
+  persistence.save(FINAL_SNAPSHOTS.b20.triggers.completedBeatIds, {
     muted: false,
     subtitles: true,
   });
@@ -82,7 +82,7 @@ test("valid load repairs stale public progress and reports repair failures", () 
     schemaVersion: 1,
     storyId: "john-9-man-born-blind",
     storyVersion: "0.1.0",
-    completedBeatIds: FINAL_SNAPSHOTS.b06.triggers.completedBeatIds,
+    completedBeatIds: FINAL_SNAPSHOTS.b20.triggers.completedBeatIds,
     preferences: { muted: false, subtitles: true },
     lastPlayedAt: NOW.toISOString(),
   };

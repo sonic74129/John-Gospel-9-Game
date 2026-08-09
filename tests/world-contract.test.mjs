@@ -129,7 +129,7 @@ function boundsInBounds(inner, outer) {
   );
 }
 
-test("courtyard-to-Siloam contracts are complete, pinned, and retire later-story space", () => {
+test("compact gameplay contracts align to the complete single-source world", () => {
   assert.deepEqual(fileNames, expectedFiles);
   for (const contract of Object.values(contracts)) {
     assert.equal(contract.schemaVersion, "1.0.0");
@@ -141,24 +141,24 @@ test("courtyard-to-Siloam contracts are complete, pinned, and retire later-story
   );
   assert.deepEqual(layout.topology.canonicalRegionOrder, ["courtyard", "siloam-pool"]);
   assert.deepEqual(layout.sourcePolicy.scriptureNamedRegionIds, ["siloam-pool"]);
-  assert.deepEqual(layout.worldBounds, { x: 0, y: 0, width: 1248, height: 1280 });
+  assert.deepEqual(layout.worldBounds, { x: 0, y: 0, width: 2688, height: 1792 });
   assert.deepEqual(regionById.get("courtyard").bounds, {
-    x: 304,
-    y: 16,
+    x: 944,
+    y: 240,
     width: 920,
     height: 900
   });
   assert.deepEqual(regionById.get("siloam-pool").bounds, {
-    x: 24,
-    y: 796,
+    x: 664,
+    y: 1020,
     width: 620,
     height: 460
   });
   assert.deepEqual(navigation.grid, {
     origin: { x: 0, y: 0 },
     cellSize: 32,
-    columns: 39,
-    rows: 40,
+    columns: 84,
+    rows: 56,
     diagonalMovement: false,
     preventCornerCutting: true,
     defaultWalkCost: 1
@@ -166,27 +166,37 @@ test("courtyard-to-Siloam contracts are complete, pinned, and retire later-story
   assert.equal(layout.portals.length, 1);
   assert.equal(layout.portals[0].id, "portal.courtyard-siloam");
   assert.deepEqual(layout.portals[0].segment, [
-    { x: 424, y: 846 },
-    { x: 524, y: 906 }
+    { x: 1064, y: 1070 },
+    { x: 1164, y: 1130 }
   ]);
-  assert.equal(paths.sequencePaths.length, 1);
-  assert.equal(paths.sequencePaths[0].id, "man-to-pool");
+  assert.deepEqual(
+    paths.sequencePaths.map(({ id }) => id),
+    [
+      "man-to-pool",
+      "pool-to-neighbors",
+      "group-to-inquiry",
+      "parents-entry",
+      "parents-exit",
+      "expulsion",
+      "jesus-entry",
+      "ending"
+    ]
+  );
   assert.equal(navigation.localCirculation.length, 0);
-  assert.equal(
-    JSON.stringify(contracts).match(
-      /neighbor|inquiry|outside|pharisee|parent|expulsion|jesus-entry/i
-    ),
-    null,
-    "John 9:8-41 regions, NPC routes, and spatial triggers must be absent"
+  assert.equal(layout.regions.length, 2);
+  assert.doesNotMatch(
+    JSON.stringify(layout),
+    /"roadside"|"neighbor-gathering"|"inquiry-courtyard"|"outer-road"/,
+    "retired empty regions must remain absent"
   );
 });
 
-test("camera bounds and focal anchors match the cropped world", () => {
-  assert.deepEqual(anchorById.get("courtyard.camera").position, { x: 894, y: 256 });
-  assert.deepEqual(anchorById.get("pool.camera").position, { x: 514, y: 916 });
+test("camera bounds and focal anchors match the complete source world", () => {
+  assert.deepEqual(anchorById.get("courtyard.camera").position, { x: 1534, y: 480 });
+  assert.deepEqual(anchorById.get("pool.camera").position, { x: 1104, y: 1140 });
   assert.deepEqual(camera.cameraZones.map(({ bounds }) => bounds), [
-    { x: 304, y: 16, width: 920, height: 900 },
-    { x: 24, y: 796, width: 620, height: 460 }
+    { x: 944, y: 240, width: 920, height: 900 },
+    { x: 664, y: 1020, width: 620, height: 460 }
   ]);
 });
 
@@ -253,40 +263,146 @@ test("opening tableau keeps the man central, the disciples compact, and labels c
   assert.ok(distance(observer.position, man.position) >= 120, "observer remains on the perimeter");
   assert.ok(tableau.labelClearancePixels >= 72);
   assert.deepEqual(
-    spawns.actorSpawns.map(({ actorId }) => actorId),
+    spawns.actorSpawns.filter(({ initiallyVisible }) => initiallyVisible).map(({ actorId }) => actorId),
     ["player-observer", "man-born-blind", "jesus", "disciple-left", "disciple-right"]
   );
 });
 
-test("the single short man-to-pool path is radius-safe and crosses the only portal", () => {
-  const sequencePath = paths.sequencePaths[0];
+test("full-story anchors and hidden actor spawns stay compact, distinct, and walkable", () => {
+  const requiredAnchorIds = [
+    "pool.neighbors",
+    "courtyard.inquiry-entry",
+    "courtyard.inquiry-man",
+    "courtyard.pharisees-left",
+    "courtyard.pharisees-right",
+    "courtyard.parents",
+    "courtyard.waiting",
+    "courtyard.gate",
+    "courtyard.expelled",
+    "courtyard.jesus-entry",
+    "courtyard.belief",
+    "courtyard.ending-camera"
+  ];
+  for (const anchorId of requiredAnchorIds) {
+    const anchor = anchorById.get(anchorId);
+    assert.ok(anchor, anchorId);
+    assert.equal(isWalkable(anchor.position), true, anchorId);
+  }
+  assert.deepEqual(
+    requiredAnchorIds.map((anchorId) => anchorById.get(anchorId).regionId),
+    ["siloam-pool", ...Array(11).fill("courtyard")]
+  );
+
+  const hiddenSpawns = spawns.actorSpawns.filter(({ initiallyVisible }) => !initiallyVisible);
+  assert.deepEqual(
+    hiddenSpawns.map(({ actorId }) => actorId),
+    [
+      "neighbor-left",
+      "neighbor-right",
+      "pharisee-left",
+      "pharisee-right",
+      "parent-left",
+      "parent-right"
+    ]
+  );
+  assert.deepEqual(
+    hiddenSpawns.map(({ position }) => position),
+    [
+      { x: 934, y: 1090 },
+      { x: 1034, y: 1090 },
+      { x: 1220, y: 664 },
+      { x: 1380, y: 664 },
+      { x: 1240, y: 834 },
+      { x: 1310, y: 804 }
+    ]
+  );
+  for (const spawn of hiddenSpawns) {
+    assert.equal(isWalkable(spawn.position), true, spawn.id);
+    for (const other of spawns.actorSpawns) {
+      if (other.id !== spawn.id) {
+        assert.ok(
+          distance(spawn.position, other.position) >=
+            spawn.collisionRadius + other.collisionRadius,
+          `${spawn.id}/${other.id} must remain visibly distinct`
+        );
+      }
+    }
+  }
+});
+
+test("all sequence paths are radius-safe, reachable, and short without empty corridors", () => {
+  const pathById = new Map(paths.sequencePaths.map((sequencePath) => [sequencePath.id, sequencePath]));
+  const sequencePath = pathById.get("man-to-pool");
   assert.equal(sequencePath.startAnchorId, "courtyard.man-center");
   assert.equal(sequencePath.endAnchorId, "pool.wash-edge");
-  assert.deepEqual(sequencePath.points[0], anchorById.get(sequencePath.startAnchorId).position);
-  assert.deepEqual(sequencePath.points.at(-1), anchorById.get(sequencePath.endAnchorId).position);
   assert.equal(sequencePath.expectedDurationSeconds >= paths.travelTargetSeconds.minimum, true);
   assert.equal(sequencePath.expectedDurationSeconds <= paths.travelTargetSeconds.maximum, true);
-  const length = sequencePath.points.slice(1).reduce(
-    (total, point, index) => total + distance(sequencePath.points[index], point),
-    0
-  );
-  assert.ok(length < 900, "the route remains a short continuous walk");
-  assert.ok(
-    Math.abs(length / sequencePath.movementSpeed - sequencePath.expectedDurationSeconds) <= 1,
-    "route duration matches its pace"
-  );
-  for (let index = 0; index < sequencePath.points.length - 1; index += 1) {
-    assert.equal(
-      isWalkableSegment(
-        sequencePath.points[index],
-        sequencePath.points[index + 1],
-        sequencePath.actorRadius,
-        isWalkable
-      ),
-      true,
-      `path segment ${index}`
+
+  const maximumLengths = new Map([
+    ["man-to-pool", 900],
+    ["pool-to-neighbors", 250],
+    ["group-to-inquiry", 550],
+    ["parents-entry", 200],
+    ["parents-exit", 200],
+    ["expulsion", 350],
+    ["jesus-entry", 250],
+    ["ending", 40]
+  ]);
+  for (const currentPath of paths.sequencePaths) {
+    assert.deepEqual(
+      currentPath.points[0],
+      anchorById.get(currentPath.startAnchorId).position,
+      `${currentPath.id} start`
     );
+    assert.deepEqual(
+      currentPath.points.at(-1),
+      anchorById.get(currentPath.endAnchorId).position,
+      `${currentPath.id} end`
+    );
+    const length = currentPath.points.slice(1).reduce(
+      (total, point, index) => total + distance(currentPath.points[index], point),
+      0
+    );
+    assert.ok(length < maximumLengths.get(currentPath.id), `${currentPath.id} is compact`);
+    assert.ok(
+      Math.abs(length / currentPath.movementSpeed - currentPath.expectedDurationSeconds) <= 1,
+      `${currentPath.id} duration matches its pace`
+    );
+    for (const point of currentPath.points) {
+      assert.equal(isWalkable(point), true, `${currentPath.id} point is reachable`);
+    }
+    for (let index = 0; index < currentPath.points.length - 1; index += 1) {
+      assert.equal(
+        isWalkableSegment(
+          currentPath.points[index],
+          currentPath.points[index + 1],
+          currentPath.actorRadius,
+          isWalkable
+        ),
+        true,
+        `${currentPath.id} segment ${index}`
+      );
+    }
   }
+
+  assert.ok(
+    pathById
+      .get("group-to-inquiry")
+      .points.some(
+        (point) =>
+          distance(point, anchorById.get("courtyard.inquiry-entry").position) === 0
+      ),
+    "group enters through the compact inquiry anchor"
+  );
+  assert.ok(
+    pathById
+      .get("expulsion")
+      .points.some(
+        (point) => distance(point, anchorById.get("courtyard.gate").position) === 0
+      ),
+    "expulsion reaches the compact gate"
+  );
+
   const portal = layout.portals[0];
   assert.equal(
     sequencePath.points.some((point) => pointInPolygon(point, regionById.get("siloam-pool").walkablePolygon)),

@@ -4,16 +4,16 @@
   "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
   "generatedBy": "scripts/art-process.mjs",
   "worldContract": {
-    "width": 1248,
-    "height": 1280,
-    "topology": "courtyard-to-siloam-crop",
-    "sourceWidth": 2560,
-    "sourceHeight": 1792,
+    "width": 2688,
+    "height": 1792,
+    "topology": "complete-single-source",
+    "sourceWidth": 1152,
+    "sourceHeight": 768,
     "retainedSourceBounds": {
-      "left": 576,
-      "top": 224,
-      "right": 1824,
-      "bottom": 1504
+      "left": 0,
+      "top": 0,
+      "right": 1152,
+      "bottom": 768
     }
   },
   "actorFootBaselines": {
@@ -21,15 +21,23 @@
     "man-blind.png": 112,
     "man-clay.png": 114,
     "man-seeing.png": 112,
+    "man-worship.png": 112,
     "jesus-idle.png": 112,
     "jesus-idle-look-right.png": 112,
     "jesus-clay-action.png": 104,
     "jesus-clay-action-look-right.png": 104,
+    "jesus-found-man.png": 112,
     "jesus-directional.png": 193,
     "disciple-a.png": 118,
     "disciple-a-look-right.png": 118,
     "disciple-b.png": 118,
-    "disciple-b-look-right.png": 118
+    "disciple-b-look-right.png": 118,
+    "neighbor-a.png": 118,
+    "neighbor-b.png": 118,
+    "pharisee.png": 118,
+    "judean-authority.png": 118,
+    "father.png": 118,
+    "mother.png": 118
   },
   "assets": [
     {
@@ -123,7 +131,7 @@
         "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765"
       },
       "selectedCandidate": 2,
-      "selectionReason": "Selected source preserves the blind, clay-applied, and seeing states used by John 9:1-7 with consistent scale and restrained posture.",
+      "selectionReason": "Candidate 2 provides the clearest restrained four-state sequence: seated blind gaze, ordinary clay visible over closed eyes without injury or glow, alert standing seeing state, and quiet kneeling belief pose. Identity, terracotta wrap, adult scale, clean silhouettes and lighting remain continuous; candidate 1 is rejected because clasped prayer hands read more theatrically.",
       "animationCoverage": {
         "directionalIdle": "blocked-imagegen-built-in-unavailable",
         "directionalWalk": "blocked-imagegen-built-in-unavailable",
@@ -194,6 +202,21 @@
             "resizeKernel": "lanczos",
             "filter": "crop=256:900:512:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
           }
+        },
+        {
+          "path": "public/assets/art/characters-core/character.man-born-blind/v1/run-001/man-worship.png",
+          "mediaType": "image/png",
+          "bytes": 7201,
+          "sha256": "8bab033f9f34f9b36076c4c410fd1c08170c1b9a056ba24cbdf195d7340cec0d",
+          "dimensions": {
+            "width": 36,
+            "height": 128
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:900:768:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:128:flags=lanczos,format=rgba"
+          }
         }
       ],
       "reviewStatus": "processed-for-polished-private-preview",
@@ -215,7 +238,7 @@
         "sha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e"
       },
       "selectedCandidate": 1,
-      "selectionReason": "Selected source preserves the idle and clay-action states used by John 9:1-7 with consistent identity, clothing, and restrained posture.",
+      "selectionReason": "Candidate 1 best preserves the pinned identity vocabulary: warm Middle Eastern face, wavy dark hair, short full beard, undyed long tunic and layered gray-green/dusty-olive mantle. Its idle, low ordinary-clay action and waist-height conversation poses are clearly separated, text-free and restrained; candidate 2 lacks a visible clay action.",
       "outputs": [
         {
           "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-idle.png",
@@ -245,6 +268,49 @@
             "tool": "ffmpeg",
             "resizeKernel": "lanczos",
             "filter": "crop=341:900:341:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:132:flags=lanczos,format=rgba"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-idle-look-right.png",
+          "mediaType": "image/png",
+          "bytes": 11942,
+          "sha256": "0d4217cee8c139d0d657028460c6fa6248c6a266dd50e6eda2f9e32af9391edc",
+          "dimensions": {
+            "width": 50,
+            "height": 132
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "filter": "hflip"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-clay-action-look-right.png",
+          "mediaType": "image/png",
+          "bytes": 11403,
+          "sha256": "32865c4c7cfd0ea7e12e09bf281d9773c482508e857d0628328b2634182239bb",
+          "dimensions": {
+            "width": 50,
+            "height": 132
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "filter": "hflip"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-found-man.png",
+          "mediaType": "image/png",
+          "bytes": 12450,
+          "sha256": "3078de8d8b06e8b8df2dfb50c04fb923560ca7f67d079ae7e612d4c6861c11f0",
+          "dimensions": {
+            "width": 50,
+            "height": 132
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=342:900:682:62,colorkey=0xF7F0DE:0.24:0.08,scale=-2:132:flags=lanczos,format=rgba"
           }
         },
         {
@@ -354,34 +420,6 @@
               }
             }
           }
-        },
-        {
-          "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-idle-look-right.png",
-          "mediaType": "image/png",
-          "bytes": 11942,
-          "sha256": "0d4217cee8c139d0d657028460c6fa6248c6a266dd50e6eda2f9e32af9391edc",
-          "dimensions": {
-            "width": 50,
-            "height": 132
-          },
-          "processing": {
-            "tool": "ffmpeg",
-            "filter": "hflip"
-          }
-        },
-        {
-          "path": "public/assets/art/characters-core/character.jesus-john9/v1/run-001/jesus-clay-action-look-right.png",
-          "mediaType": "image/png",
-          "bytes": 11403,
-          "sha256": "32865c4c7cfd0ea7e12e09bf281d9773c482508e857d0628328b2634182239bb",
-          "dimensions": {
-            "width": 50,
-            "height": 132
-          },
-          "processing": {
-            "tool": "ffmpeg",
-            "filter": "hflip"
-          }
         }
       ],
       "reviewStatus": "processed-for-polished-private-preview",
@@ -418,7 +456,7 @@
         "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce"
       },
       "selectedCandidate": 1,
-      "selectionReason": "Selected source provides two distinct disciples in the period palette; only those John 9:1-7 cells are processed into the runtime manifest.",
+      "selectionReason": "Candidate 1 preserves all eight cells in exact order with distinct disciples, male and female neighbors, two restrained inquiry figures, father and mother. It has stronger role separation, period materials, clean full-body silhouettes, adult scale, text-free background and no villain caricature; candidate 2 makes the first disciple too visually close to the pinned Jesus identity.",
       "animationCoverage": {
         "directionalIdle": "partial",
         "directionalWalk": "not-required",
@@ -487,6 +525,96 @@
             "tool": "ffmpeg",
             "filter": "hflip"
           }
+        },
+        {
+          "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/neighbor-a.png",
+          "mediaType": "image/png",
+          "bytes": 13660,
+          "sha256": "823d62884434f150fcb37e7264a8a21c3d892276d4db007632ddc7d7b518bc08",
+          "dimensions": {
+            "width": 60,
+            "height": 120
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:512:512:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/neighbor-b.png",
+          "mediaType": "image/png",
+          "bytes": 12639,
+          "sha256": "1cd8aa4c1de1bafeed2e82fe379802615728dfeba196b53f90e8e20e3070f5cf",
+          "dimensions": {
+            "width": 60,
+            "height": 120
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:512:768:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/pharisee.png",
+          "mediaType": "image/png",
+          "bytes": 14024,
+          "sha256": "083ac76e3fb2bad982b17b4e38668c417acdb7010d9a81f3a20297ce2aa2a109",
+          "dimensions": {
+            "width": 60,
+            "height": 120
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:512:0:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/judean-authority.png",
+          "mediaType": "image/png",
+          "bytes": 13454,
+          "sha256": "1e9f56416bb324c24aed5102c5564e3a530b036e39119b5d65e6c7276173f0fb",
+          "dimensions": {
+            "width": 60,
+            "height": 120
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:512:256:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/father.png",
+          "mediaType": "image/png",
+          "bytes": 13806,
+          "sha256": "d8fe8f549233a17aefd2bc52c9a3f35699c9fe2c6b4ad2c2d74ec90c01463c1f",
+          "dimensions": {
+            "width": 60,
+            "height": 120
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:512:512:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+          }
+        },
+        {
+          "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/mother.png",
+          "mediaType": "image/png",
+          "bytes": 13198,
+          "sha256": "bdbe60e8eb9ed130c7fa1553e152ba4aebfe889f04b21165a6a0ff35af2d233b",
+          "dimensions": {
+            "width": 60,
+            "height": 120
+          },
+          "processing": {
+            "tool": "ffmpeg",
+            "resizeKernel": "lanczos",
+            "filter": "crop=256:512:768:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+          }
         }
       ],
       "reviewStatus": "processed-for-polished-private-preview",
@@ -508,76 +636,32 @@
         "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0"
       },
       "selectedCandidate": 2,
-      "selectionReason": "Candidate 2 is retained as immutable provenance for the audited courtyard and Siloam source crops; no other painted region is copied into the runtime world.",
+      "selectionReason": "Candidate 2 remains the pinned provenance source and is retained in full as the single continuous runtime map without crop compositing.",
       "outputs": [
         {
           "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp",
           "mediaType": "image/webp",
-          "bytes": 1070762,
-          "sha256": "f1e869f4a016c343bc39bd828b4c30723ac262b820ba9c272b59f5352ccf524c",
+          "bytes": 702620,
+          "sha256": "eaf18e61778ef8634b2d5635b6308589802e92928ab70658355428af21b2ae6c",
           "dimensions": {
-            "width": 1248,
-            "height": 1280
+            "width": 2688,
+            "height": 1792
           },
           "processing": {
-            "tool": "ffmpeg",
-            "canonicalSource": {
-              "tool": "Pillow",
-              "crop": [
-                27,
-                0,
-                1125,
-                768
-              ],
-              "outputSize": [
-                2560,
-                1792
-              ],
-              "format": "webp",
-              "quality": 90
-            },
-            "canonicalRasterization": {
-              "tool": "ffmpeg",
-              "format": "png"
-            },
-            "canvas": {
-              "width": 1248,
-              "height": 1280,
-              "color": "#ead9b7"
-            },
-            "placements": [
-              {
-                "sourceCrop": [
-                  840,
-                  240,
-                  1800,
-                  1140
-                ],
-                "destination": [
-                  264,
-                  16
-                ],
-                "scale": "none",
-                "blend": "none"
-              },
-              {
-                "sourceCrop": [
-                  600,
-                  1020,
-                  1220,
-                  1480
-                ],
-                "destination": [
-                  24,
-                  796
-                ],
-                "scale": "none",
-                "blend": "none"
-              }
+            "tool": "Pillow",
+            "resizeKernel": "lanczos",
+            "crop": [
+              0,
+              0,
+              1152,
+              768
+            ],
+            "outputSize": [
+              2688,
+              1792
             ],
             "format": "webp",
-            "lossless": true,
-            "compositor": "Pillow direct paste without mask"
+            "quality": 90
           }
         }
       ],

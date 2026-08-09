@@ -12,76 +12,32 @@
     "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0"
   },
   "selectedCandidate": 2,
-  "selectionReason": "Candidate 2 is retained as immutable provenance for the audited courtyard and Siloam source crops; no other painted region is copied into the runtime world.",
+  "selectionReason": "Candidate 2 remains the pinned provenance source and is retained in full as the single continuous runtime map without crop compositing.",
   "outputs": [
     {
       "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp",
       "mediaType": "image/webp",
-      "bytes": 1070762,
-      "sha256": "f1e869f4a016c343bc39bd828b4c30723ac262b820ba9c272b59f5352ccf524c",
+      "bytes": 702620,
+      "sha256": "eaf18e61778ef8634b2d5635b6308589802e92928ab70658355428af21b2ae6c",
       "dimensions": {
-        "width": 1248,
-        "height": 1280
+        "width": 2688,
+        "height": 1792
       },
       "processing": {
-        "tool": "ffmpeg",
-        "canonicalSource": {
-          "tool": "Pillow",
-          "crop": [
-            27,
-            0,
-            1125,
-            768
-          ],
-          "outputSize": [
-            2560,
-            1792
-          ],
-          "format": "webp",
-          "quality": 90
-        },
-        "canonicalRasterization": {
-          "tool": "ffmpeg",
-          "format": "png"
-        },
-        "canvas": {
-          "width": 1248,
-          "height": 1280,
-          "color": "#ead9b7"
-        },
-        "placements": [
-          {
-            "sourceCrop": [
-              840,
-              240,
-              1800,
-              1140
-            ],
-            "destination": [
-              264,
-              16
-            ],
-            "scale": "none",
-            "blend": "none"
-          },
-          {
-            "sourceCrop": [
-              600,
-              1020,
-              1220,
-              1480
-            ],
-            "destination": [
-              24,
-              796
-            ],
-            "scale": "none",
-            "blend": "none"
-          }
+        "tool": "Pillow",
+        "resizeKernel": "lanczos",
+        "crop": [
+          0,
+          0,
+          1152,
+          768
+        ],
+        "outputSize": [
+          2688,
+          1792
         ],
         "format": "webp",
-        "lossless": true,
-        "compositor": "Pillow direct paste without mask"
+        "quality": 90
       }
     }
   ],

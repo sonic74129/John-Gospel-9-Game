@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  ACTOR_IDS,
   manBornBlindPathTransition,
   PLAYER_ROLE,
 } from "../../src/story/actors.ts";
@@ -18,11 +19,21 @@ test("the player remains a silent unnamed observer", () => {
   assert.equal(PLAYER_ROLE.mayChangeScriptureOutcome, false);
 });
 
-test("active final states contain only the John 9:1-7 participants", () => {
+test("final states include all John 9 participants on compact-map anchors", () => {
   const anchors = new Set(NARRATIVE_ANCHORS);
-  const activeIds = new Set(["observer", "jesus", "disciples", "man-born-blind"]);
+  const actorIds = new Set([
+    "observer",
+    "jesus",
+    "disciples",
+    "man-born-blind",
+    "neighbors",
+    "pharisees",
+    "parents",
+    "judean-authorities",
+  ]);
+  assert.deepEqual(new Set(ACTOR_IDS), actorIds);
   for (const snapshot of Object.values(FINAL_SNAPSHOTS)) {
-    assert.deepEqual(new Set(Object.keys(snapshot.actors)), activeIds);
+    assert.deepEqual(new Set(Object.keys(snapshot.actors)), actorIds);
     for (const actor of Object.values(snapshot.actors)) {
       assert.ok(anchors.has(actor.anchorId));
       assert.equal("position" in actor, false);

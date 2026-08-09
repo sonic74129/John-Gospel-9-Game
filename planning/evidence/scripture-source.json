@@ -19,10 +19,10 @@
   },
   "artifact": {
     "path": "src/story/licensed-artifacts/scrollmapper-chiun-john9.json",
-    "sha256": "3d70d5af22db48fcd2fb19ea719a0135e15e109e5a129716fd547d6557e65978",
-    "verseCount": 7,
+    "sha256": "9d3f8ef447849c9545df32ca2ef78a88de91762e148203316d2505916079a814",
+    "verseCount": 41,
     "divineNameVariant": "神",
     "containsShangdi": false
   },
-  "derivation": "Select John chapter 9 verses 1-7; normalize to NFC; remove source U+0020 separators; preserve all other code points and punctuation."
+  "derivation": "Select John chapter 9 verses 1-41; normalize to NFC; remove source U+0020 separators; preserve all other code points and punctuation."
 }

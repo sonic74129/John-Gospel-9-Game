@@ -4,6 +4,7 @@ import type { SliceStoryEvent } from "./story-adapter.ts";
 
 export const STORY_DISTANCE_UNIT_PIXELS = 96;
 export const ARRIVAL_RADIUS_PIXELS = 72;
+export const INTERACTION_RADIUS_PIXELS = 132;
 export const OBJECTIVE_DISTANCE_BUCKET_PIXELS =
   STORY_DISTANCE_UNIT_PIXELS * 3;
 

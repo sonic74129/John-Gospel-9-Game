@@ -105,7 +105,7 @@ const progressionEvents = storyBeats.map(({ trigger }) =>
     : { type: "event", name: trigger.event ?? "manual" },
 );
 
-test("full B01-B06 normal, all-skip, and mixed playthroughs follow canonical order", async () => {
+test("full B01-B20 normal, all-skip, and mixed playthroughs follow canonical order", async () => {
   for (const mode of ["normal", "all-skip", "mixed"]) {
     const executed = [];
     const statuses = [];
@@ -137,7 +137,7 @@ test("full B01-B06 normal, all-skip, and mixed playthroughs follow canonical ord
     );
     assert.equal(
       statuses.filter((status) => status === "skipped").length,
-      mode === "normal" ? 0 : mode === "all-skip" ? 6 : 3,
+      mode === "normal" ? 0 : mode === "all-skip" ? 20 : 10,
       mode,
     );
     assert.deepEqual(controller.snapshot().state.completedBeatIds, executed);
@@ -147,7 +147,7 @@ test("full B01-B06 normal, all-skip, and mixed playthroughs follow canonical ord
   }
 });
 
-test("each B01-B06 normal and skip run applies the same canonical final state", async () => {
+test("each B01-B20 normal and skip run applies the same canonical final state", async () => {
   for (const beat of storyBeats) {
     const completedHost = createSequenceHost("completed");
     const completedSequence = new MapSequence(completedHost.host);
@@ -175,7 +175,7 @@ test("each B01-B06 normal and skip run applies the same canonical final state", 
     assert.equal(skippedHost.inputLocks, 0, beat.id);
   }
   assert.deepEqual(
-    FINAL_SNAPSHOTS.b06,
+    FINAL_SNAPSHOTS.b20,
     storyBeats.at(-1).finalState,
   );
 });
@@ -417,6 +417,12 @@ test("Phaser follow delay keeps valid keyboard and pointer movement inside every
         assert.equal(result.status, skip ? "skipped" : "completed");
         const finalState = result.scene;
         for (const frameRate of frameRates) {
+          if (
+            !finalState.controls.movementEnabled ||
+            finalState.controls.locked
+          ) {
+            continue;
+          }
           for (const direction of directions) {
             const simulation = createFinalStateCameraSimulation(
               finalState,
@@ -698,8 +704,8 @@ test("B06 fires exactly once when one movement segment sweeps across pool.wash-e
   assert.equal((await controller.dispatch(event)).advanced, true);
   assert.equal((await controller.dispatch(event)).advanced, false);
   assert.deepEqual(executed, ["b06"]);
-  assert.equal(controller.storyComplete, true);
-  assert.equal(controller.engine.currentBeat, undefined);
+  assert.equal(controller.storyComplete, false);
+  assert.equal(controller.engine.currentBeat?.id, "b07");
 });
 
 test("objective waypoint lifecycle is accessible, pointer-driven, and mobile-safe", async () => {
@@ -891,7 +897,7 @@ test("licensed scripture is displayed in a simple card without QA metadata", asy
     /Text SHA-256|dialogue-metadata|sourceLevel|speakerId|segmentId/,
   );
   assert.doesNotMatch(shell, /此段經文內容暫不顯示/);
-  assert.equal(scripture.verses.length, 7);
+  assert.equal(scripture.verses.length, 41);
   for (const verse of scripture.verses) {
     assert.equal(typeof verse.exactText, "string");
     assert.ok(verse.exactText.length > 0);
@@ -918,10 +924,9 @@ test("production bundle gate covers Foundation player-version QA residue", async
     "Verse key",
     "Segment ID",
     "S2 · 遊戲提示 · 不計分",
-    "B07",
-    "B19",
-    "鄰舍",
-    "審問",
+    "Duplicate playtest query parameters are not supported.",
+    "playtest beat ID must not be empty.",
+    "is not a supported playtest beat.",
     "契約以外的故事節點",
     "從 B01 開始",
     "已套用確定最終狀態",
@@ -971,6 +976,8 @@ test("development graybox baseline stays explicit and production-gated", async (
   );
   assert.match(overlay, /worldId: "john-9-jerusalem-story-world"/);
   assert.match(overlay, /width: 1280, height: 720/);
+  assert.match(overlay, /width: 2688/);
+  assert.match(overlay, /height: 1792/);
   assert.match(overlay, /width: 390, height: 844/);
   assert.match(overlay, /Development graybox baseline/);
 });
@@ -985,8 +992,8 @@ test("unsupported story progress errors use generic player-facing copy", async (
     /error instanceof UnsupportedStoryBeatError[\s\S]*故事進度發生錯誤，流程已安全停止。/,
   );
   assert.doesNotMatch(main, /B0[7-9]|B1[0-9]|契約以外的故事節點/);
-  assert.match(checker, /"B07"/);
-  assert.match(checker, /"B19"/);
+  assert.doesNotMatch(checker, /"B07"|"B19"/);
+  assert.match(checker, /playtest beat ID must not be empty/);
 });
 
 test("scene applies and exposes every canonical final-state surface", async () => {
@@ -1064,7 +1071,7 @@ test("out-of-order restored progress fails explicitly outside the canonical cont
   assert.equal(controller.engine.currentBeat?.id, "b01");
 });
 
-test("saved B01-B06 progress restores deterministically to the next beat or completion", () => {
+test("saved B01-B20 progress restores deterministically to the next beat or completion", () => {
   const controller = new SliceStoryController({
     runBeat: async () => ({ status: "completed" }),
   });
@@ -1079,7 +1086,7 @@ test("saved B01-B06 progress restores deterministically to the next beat or comp
   assert.equal(controller.storyComplete, false);
 
   controller.restoreCompletedBeatIds(
-    FINAL_SNAPSHOTS.b06.triggers.completedBeatIds,
+    FINAL_SNAPSHOTS.b20.triggers.completedBeatIds,
   );
   assert.equal(controller.storyComplete, true);
   assert.equal(controller.engine.currentBeat, undefined);
@@ -1143,6 +1150,7 @@ async function runRealAdapter(
         setActorPose: () => {},
         setActorVisible: () => {},
         followActorPath: async () => {},
+        escortActorToAnchor: async () => {},
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
           const viewport = resolveInitialProductionViewport(profile.viewport);
@@ -1201,6 +1209,7 @@ async function runRealAdapter(
       },
       ui: {
         setOverlay: () => {},
+        setNavigationHint: () => {},
         presentDialogue: async () => {},
         applyFinalState: (state) => {
           uiState = structuredClone(state);

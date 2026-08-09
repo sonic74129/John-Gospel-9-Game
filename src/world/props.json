@@ -7,11 +7,18 @@
       "id": "prop.clay-container",
       "regionId": "courtyard",
       "sourceLevel": "approved-bridge",
-      "position": { "x": 724, "y": 276 },
+      "position": {
+        "x": 1364,
+        "y": 500
+      },
       "interactionAnchorId": "courtyard.clay-action",
       "isBakedIntoMap": false,
       "initialState": "present",
-      "states": ["present", "handled", "restored"]
+      "states": [
+        "present",
+        "handled",
+        "restored"
+      ]
     }
   ]
 }

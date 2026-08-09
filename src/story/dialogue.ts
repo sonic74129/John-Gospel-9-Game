@@ -28,6 +28,28 @@ const DIALOGUE_SEGMENT_PLAN = Object.freeze([
         "ee78785f3b9202814ec088d6f002b00459cdc20438cef208fa75fa8a544629ff",
     },
   ]),
+  ...[
+    ["john9:8", "john9:9"],
+    ["john9:10", "john9:11", "john9:12"],
+    ["john9:13", "john9:14"],
+    ["john9:15", "john9:16"],
+    ["john9:17"],
+    ["john9:18", "john9:19"],
+    ["john9:20", "john9:21", "john9:22", "john9:23"],
+    ["john9:24"],
+    ["john9:25"],
+    ["john9:26", "john9:27"],
+    ["john9:28", "john9:29"],
+    ["john9:30", "john9:31", "john9:32", "john9:33", "john9:34"],
+    ["john9:35", "john9:36", "john9:37", "john9:38"],
+    ["john9:39", "john9:40", "john9:41"],
+  ].map((verseKeys) =>
+    Object.freeze(
+      verseKeys.map((verseKey) =>
+        Object.freeze({ verseKey, segmentId: `${verseKey}:full` }),
+      ),
+    ),
+  ),
 ]);
 
 const verseByKey = new Map(

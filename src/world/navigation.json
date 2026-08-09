@@ -3,10 +3,13 @@
   "worldId": "john-9-jerusalem-story-world",
   "contractType": "world-navigation",
   "grid": {
-    "origin": { "x": 0, "y": 0 },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
     "cellSize": 32,
-    "columns": 39,
-    "rows": 40,
+    "columns": 84,
+    "rows": 56,
     "diagonalMovement": false,
     "preventCornerCutting": true,
     "defaultWalkCost": 1
@@ -24,7 +27,13 @@
   },
   "localCirculation": [],
   "regionCosts": [
-    { "regionId": "courtyard", "walkCost": 1 },
-    { "regionId": "siloam-pool", "walkCost": 1.05 }
+    {
+      "regionId": "courtyard",
+      "walkCost": 1
+    },
+    {
+      "regionId": "siloam-pool",
+      "walkCost": 1.05
+    }
   ]
 }

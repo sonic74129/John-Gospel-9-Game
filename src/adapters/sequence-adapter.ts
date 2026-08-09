@@ -25,12 +25,20 @@ export interface SliceSequenceScene {
     actorId: string,
     signal: AbortSignal,
   ): Promise<void>;
+  escortActorToAnchor(
+    pathId: string,
+    actorId: string,
+    playerArrivalAnchorId: string,
+    signal: AbortSignal,
+    setNavigationHint: (message: string | null) => void,
+  ): Promise<void>;
   followCameraPath(pathId: string, signal: AbortSignal): Promise<void>;
   applyFinalState(state: SliceFinalState, signal: AbortSignal): Promise<void>;
 }
 
 export interface SliceSequenceUi {
   setOverlay(visible: boolean, blocking?: boolean): void;
+  setNavigationHint(message: string | null): void;
   presentDialogue(
     beatId: string,
     lines: readonly SliceDialogueLine[],
@@ -163,6 +171,19 @@ export function createSliceSequenceAdapter(
               ),
             ),
           );
+          return;
+        case "escort-actor-to-anchor":
+          try {
+            await target.scene.escortActorToAnchor(
+              requireString(command, record, "pathId"),
+              requireString(command, record, "actorId"),
+              requireString(command, record, "playerArrivalAnchorId"),
+              signal,
+              (message) => target.ui.setNavigationHint(message),
+            );
+          } finally {
+            target.ui.setNavigationHint(null);
+          }
           return;
         case "camera-follow-path":
           await target.scene.followCameraPath(

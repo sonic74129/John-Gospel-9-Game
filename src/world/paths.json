@@ -17,15 +17,226 @@
       "movementSpeed": 60,
       "actorRadius": 18,
       "points": [
-        { "x": 874, "y": 261 },
-        { "x": 824, "y": 316 },
-        { "x": 764, "y": 386 },
-        { "x": 694, "y": 456 },
-        { "x": 614, "y": 566 },
-        { "x": 544, "y": 676 },
-        { "x": 484, "y": 796 },
-        { "x": 444, "y": 856 },
-        { "x": 514, "y": 916 }
+        {
+          "x": 1514,
+          "y": 485
+        },
+        {
+          "x": 1464,
+          "y": 540
+        },
+        {
+          "x": 1404,
+          "y": 610
+        },
+        {
+          "x": 1334,
+          "y": 680
+        },
+        {
+          "x": 1254,
+          "y": 790
+        },
+        {
+          "x": 1184,
+          "y": 900
+        },
+        {
+          "x": 1124,
+          "y": 1020
+        },
+        {
+          "x": 1084,
+          "y": 1080
+        },
+        {
+          "x": 1154,
+          "y": 1140
+        }
+      ]
+    },
+    {
+      "id": "pool-to-neighbors",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "pool.wash-edge",
+      "endAnchorId": "pool.neighbors",
+      "expectedDurationSeconds": 3,
+      "movementSpeed": 60,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1154,
+          "y": 1140
+        },
+        {
+          "x": 1084,
+          "y": 1090
+        },
+        {
+          "x": 984,
+          "y": 1090
+        }
+      ]
+    },
+    {
+      "id": "group-to-inquiry",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-and-neighbor-group",
+      "startAnchorId": "pool.neighbors",
+      "endAnchorId": "courtyard.inquiry-man",
+      "expectedDurationSeconds": 8,
+      "movementSpeed": 60,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 984,
+          "y": 1090
+        },
+        {
+          "x": 1084,
+          "y": 1080
+        },
+        {
+          "x": 1124,
+          "y": 1020
+        },
+        {
+          "x": 1160,
+          "y": 904
+        },
+        {
+          "x": 1200,
+          "y": 844
+        },
+        {
+          "x": 1300,
+          "y": 744
+        }
+      ]
+    },
+    {
+      "id": "parents-entry",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "courtyard.gate",
+      "endAnchorId": "courtyard.parents",
+      "expectedDurationSeconds": 3,
+      "movementSpeed": 48,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1160,
+          "y": 904
+        },
+        {
+          "x": 1200,
+          "y": 864
+        },
+        {
+          "x": 1280,
+          "y": 824
+        }
+      ]
+    },
+    {
+      "id": "parents-exit",
+      "sourceLevel": "approved-bridge",
+      "subject": "parents",
+      "startAnchorId": "courtyard.parents",
+      "endAnchorId": "courtyard.gate",
+      "expectedDurationSeconds": 3,
+      "movementSpeed": 48,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1280,
+          "y": 824
+        },
+        {
+          "x": 1200,
+          "y": 864
+        },
+        {
+          "x": 1160,
+          "y": 904
+        }
+      ]
+    },
+    {
+      "id": "expulsion",
+      "sourceLevel": "approved-bridge",
+      "subject": "man-born-blind",
+      "startAnchorId": "courtyard.inquiry-man",
+      "endAnchorId": "courtyard.expelled",
+      "expectedDurationSeconds": 6,
+      "movementSpeed": 48,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1300,
+          "y": 744
+        },
+        {
+          "x": 1240,
+          "y": 824
+        },
+        {
+          "x": 1160,
+          "y": 904
+        },
+        {
+          "x": 1200,
+          "y": 964
+        }
+      ]
+    },
+    {
+      "id": "jesus-entry",
+      "sourceLevel": "approved-bridge",
+      "subject": "jesus",
+      "startAnchorId": "courtyard.jesus-entry",
+      "endAnchorId": "courtyard.belief",
+      "expectedDurationSeconds": 4,
+      "movementSpeed": 48,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1084,
+          "y": 1040
+        },
+        {
+          "x": 1140,
+          "y": 1004
+        },
+        {
+          "x": 1200,
+          "y": 964
+        },
+        {
+          "x": 1240,
+          "y": 924
+        }
+      ]
+    },
+    {
+      "id": "ending",
+      "sourceLevel": "approved-bridge",
+      "subject": "camera-focus",
+      "startAnchorId": "courtyard.belief",
+      "endAnchorId": "courtyard.ending-camera",
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 12,
+      "actorRadius": 0,
+      "points": [
+        {
+          "x": 1240,
+          "y": 924
+        },
+        {
+          "x": 1220,
+          "y": 914
+        }
       ]
     }
   ]

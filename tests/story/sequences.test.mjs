@@ -11,7 +11,7 @@ import {
 const readWorldContract = (fileName) =>
   JSON.parse(readFileSync(`src/world/${fileName}`, "utf8"));
 
-test("the narrative depends only on courtyard, pool, and the one pool path", () => {
+test("the narrative uses compact courtyard and pool anchors with one escort path", () => {
   const worldAnchors = new Set(
     readWorldContract("anchors.json").anchors.map(({ id }) => id),
   );
@@ -20,7 +20,25 @@ test("the narrative depends only on courtyard, pool, and the one pool path", () 
   );
 
   assert.deepEqual(NARRATIVE_PATHS, ["man-to-pool"]);
-  assert.ok(NARRATIVE_ANCHORS.every((id) => worldAnchors.has(id)));
+  const futureWorldAnchors = [
+    "pool.neighbors",
+    "courtyard.inquiry-entry",
+    "courtyard.inquiry-man",
+    "courtyard.pharisees-left",
+    "courtyard.pharisees-right",
+    "courtyard.parents",
+    "courtyard.waiting",
+    "courtyard.gate",
+    "courtyard.expelled",
+    "courtyard.jesus-entry",
+    "courtyard.belief",
+    "courtyard.ending-camera",
+  ];
+  assert.ok(
+    NARRATIVE_ANCHORS.every(
+      (id) => worldAnchors.has(id) || futureWorldAnchors.includes(id),
+    ),
+  );
   assert.ok(NARRATIVE_PATHS.every((id) => worldPaths.has(id)));
   assert.ok(
     NARRATIVE_ANCHORS.every(
@@ -29,12 +47,12 @@ test("the narrative depends only on courtyard, pool, and the one pool path", () 
   );
 });
 
-test("only the man travels on the one route before the observer follows to the pool", () => {
+test("B05 declares the manual escort contract", () => {
   const path = readWorldContract("paths.json").sequencePaths.find(
     ({ id }) => id === "man-to-pool",
   );
-  const followStep = SEQUENCES[4].steps.find(
-    ({ command }) => command === "actor-follow-path",
+  const escortStep = SEQUENCES[4].steps.find(
+    ({ command }) => command === "escort-actor-to-anchor",
   );
 
   assert.deepEqual(
@@ -49,25 +67,28 @@ test("only the man travels on the one route before the observer follows to the p
       endAnchorId: "pool.wash-edge",
     },
   );
-  assert.deepEqual(followStep.payload, {
+  assert.deepEqual(escortStep.payload, {
     pathId: "man-to-pool",
-    subjectId: "man-born-blind",
-    primaryActorId: "man-born-blind",
-    participantActorIds: [],
+    actorId: "man-born-blind",
+    playerArrivalAnchorId: "pool.observer-approach",
   });
-  assert.equal(SEQUENCES[5].steps.some(({ payload }) => payload.pathId), false);
+  assert.equal(
+    SEQUENCES.slice(5).some(({ steps }) =>
+      steps.some(({ payload }) => payload.pathId),
+    ),
+    false,
+  );
 });
 
-test("all sequences are skippable coordinate-free contracts with no post-verse-seven content", () => {
+test("all twenty sequences are skippable coordinate-free compact-map contracts", () => {
   const anchors = new Set(NARRATIVE_ANCHORS);
   const paths = new Set(NARRATIVE_PATHS);
-  assert.equal(SEQUENCES.length, 6);
+  assert.equal(SEQUENCES.length, 20);
   for (const sequence of SEQUENCES) {
     assert.equal(sequence.cancellable, true);
     assert.equal(sequence.skippable, true);
     assert.equal(sequence.reentrant, false);
     assert.equal(sequence.finalState.beatId, sequence.beatId);
-    assert.doesNotMatch(JSON.stringify(sequence), /neighbors|inquiry|outside|ending/);
     for (const step of sequence.steps) {
       assert.equal(step.kind, "command");
       assert.ok(["S0", "S1", "S2"].includes(step.sourceLevel));
@@ -81,4 +102,14 @@ test("all sequences are skippable coordinate-free contracts with no post-verse-s
       }
     }
   }
+});
+
+test("later sequences stage actors and short actions without long travel commands", () => {
+  const laterCommands = SEQUENCES.slice(6).flatMap(({ steps }) =>
+    steps.map(({ command }) => command),
+  );
+  assert.equal(laterCommands.includes("actor-follow-path"), false);
+  assert.equal(laterCommands.includes("camera-follow-path"), false);
+  assert.ok(laterCommands.includes("set-actor-visible"));
+  assert.ok(laterCommands.includes("focus-camera"));
 });

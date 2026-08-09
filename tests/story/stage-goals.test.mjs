@@ -3,10 +3,13 @@ import test from "node:test";
 
 import { STAGE_GOALS } from "../../src/story/stage-goals.ts";
 
-test("the six concise goals cover the courtyard through the pool only", () => {
+test("twenty concise goals cover the complete chapter", () => {
   assert.deepEqual(
     STAGE_GOALS.map(({ beatId }) => beatId),
-    ["b01", "b02", "b03", "b04", "b05", "b06"],
+    Array.from(
+      { length: 20 },
+      (_, index) => `b${String(index + 1).padStart(2, "0")}`,
+    ),
   );
   assert.equal(STAGE_GOALS[4].description, "跟隨前行");
   for (const goal of STAGE_GOALS) {

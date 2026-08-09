@@ -268,6 +268,36 @@ button:disabled {
   font: 700 clamp(1.25rem, 3vw, 2rem)/1.2 Georgia, serif;
 }
 
+.dialogue-portrait {
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  width: min(100%, 16rem);
+  margin: 0.8rem auto 0.25rem;
+}
+
+.dialogue-portrait[hidden] {
+  display: none;
+}
+
+.dialogue-portrait img {
+  width: min(100%, 10rem);
+  height: auto;
+  max-height: 12.5rem;
+  object-fit: contain;
+  border: 1px solid rgb(240 223 189 / 52%);
+  border-radius: 0.65rem;
+  background: linear-gradient(180deg, #f7f0de 0%, #ead9b7 100%);
+}
+
+.dialogue-portrait figcaption {
+  margin: 0;
+  color: #f0dfbd;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
 .dialogue-panel button,
 .ending-panel button,
 .restart-confirmation button {
@@ -408,6 +438,15 @@ button:disabled {
     width: calc(100% - 1rem);
     max-height: calc(100% - 5.5rem);
     padding: 0.8rem;
+  }
+
+  .dialogue-portrait {
+    width: min(100%, 12rem);
+    margin-top: 0.4rem;
+  }
+
+  .dialogue-portrait img {
+    max-height: 9.5rem;
   }
 
   .dialogue-panel > header,

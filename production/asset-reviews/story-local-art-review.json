@@ -20,28 +20,28 @@
   "runtimeInventory": {
     "manifest": "public/assets/art/manifest.json",
     "assetFamilies": 6,
-    "files": 15,
+    "files": 23,
     "worldDimensions": {
-      "width": 1248,
-      "height": 1280
+      "width": 2688,
+      "height": 1792
     }
   },
   "visualAcceptance": {
     "cameraAndPerspective": "accepted",
-    "routeReadability": "accepted for the courtyard-to-Siloam crop; the retained route is continuous and excludes later-story space",
-    "actorAndDoorScale": "accepted for 96-132 px actor frames",
+    "routeReadability": "accepted for the complete single-source map; the current courtyard-to-Siloam route remains continuous while the full painted context stays visible",
+    "actorAndDoorScale": "accepted for centralized 128-132 px target display heights, including the native 200 px Jesus directional frames",
     "identityContinuity": "accepted for private preview; pinned Jesus clothing and face vocabulary retained",
-    "poseAndStateClarity": "accepted for the blind, clay-applied, seeing, and clay-action states used by John 9:1-7",
+    "poseAndStateClarity": "accepted for blind, clay-applied, seeing, worship, clay-action, found-man, neighbor, inquiry, and parent states used by John 9:1-41",
     "paletteMaterialAndLight": "accepted",
     "theologicalRestraint": "accepted; no halo, glow, beam, fantasy particles or theatrical miracle effect",
     "embeddedText": "none in selected assets"
   },
   "limitations": [
     "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
-    "The runtime world is an audited, unscaled composite of the courtyard and Siloam crops over a neutral fill; unused later-region painting is absent.",
-    "The world base is a single painted two-dimensional courtyard-to-Siloam composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
+    "The runtime world retains the selected source image in full through one proportional resize; no crop compositing or neutral-fill patching is used.",
+    "The world base is a single painted two-dimensional composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
     "The pinned Jesus vendor sheet provides four-direction idle and two-step walk frames through deterministic byte-copy extraction.",
-    "Observer walk frames, true disciple up/down idles, and the required man-born-blind state/directional frames remain blocked because the built-in image-generation tool is unavailable; no CLI fallback or substitute art was used.",
+    "Observer walk frames, full man-born-blind directional animation, and supporting-actor up/down or walk frames remain blocked because the built-in image-generation tool is unavailable; restored formal static poses and current directional/look-right assets are used without CLI fallback or substitute art.",
     "Dialogue portraits were not generated because the current UI has no portrait surface.",
     "All generated and pinned packs remain non-release-eligible until rights and public redistribution review."
   ]

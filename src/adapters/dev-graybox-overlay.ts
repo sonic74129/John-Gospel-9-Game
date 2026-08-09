@@ -6,8 +6,8 @@ import type { WorldRuntime } from "./world-adapter.ts";
 
 const BASELINE = Object.freeze({
   worldId: "john-9-jerusalem-story-world",
-  width: 1248,
-  height: 1280,
+  width: 2688,
+  height: 1792,
   regionIds: Object.freeze(["courtyard", "siloam-pool"]),
   viewports: Object.freeze([
     Object.freeze({ width: 1280, height: 720 }),

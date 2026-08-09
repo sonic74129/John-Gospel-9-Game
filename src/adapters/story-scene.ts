@@ -6,6 +6,7 @@ import occlusion from "../world/occlusion.json";
 import props from "../world/props.json";
 import {
   actorArtForSpawn,
+  actorRenderProfileForSpawn,
   JESUS_DIRECTIONAL_FRAMES,
   STORY_ART,
   STORY_ART_ASSET_LIST,
@@ -31,6 +32,7 @@ import type {
   PlayerTraversal,
   WorldNavigationObjective,
 } from "./world-navigation.ts";
+import { INTERACTION_RADIUS_PIXELS } from "./world-navigation.ts";
 import {
   createViewportResizeTransaction,
   type ViewportResizeTransaction,
@@ -170,7 +172,10 @@ export class StoryScene extends Phaser.Scene {
   #handlers: SceneInteractionHandlers | undefined;
   #navigationObjective: WorldNavigationObjective | null = null;
   #objectiveMarker?: Phaser.GameObjects.Container;
+  #objectiveRing?: Phaser.GameObjects.Arc;
+  #objectiveArrow?: Phaser.GameObjects.Triangle;
   #objectiveLabel?: Phaser.GameObjects.Text;
+  #playerMovedSinceLastFinalState = false;
 
   constructor(world: WorldRuntime, onReady: (scene: StoryScene) => void) {
     super({ key: "john-9-story" });
@@ -219,6 +224,7 @@ export class StoryScene extends Phaser.Scene {
     for (const actor of this.#world.actors) {
       const isPlayer = actor.state.role === "player";
       const art = actorArtForSpawn(actor.definition.id);
+      const renderProfile = actorRenderProfileForSpawn(actor.definition.id);
       const body = this.add
         .image(
           actor.definition.position.x,
@@ -226,6 +232,7 @@ export class StoryScene extends Phaser.Scene {
           art.key,
         )
         .setOrigin(0.5, art.footBaseline! / art.frameHeight)
+        .setScale(renderProfile.targetDisplayHeight / art.frameHeight)
         .setDepth(this.#actorDepth(actor.definition.position.y));
       const label = this.add
         .text(actor.definition.position.x, actor.definition.position.y - 84, actor.state.label, {
@@ -252,6 +259,7 @@ export class StoryScene extends Phaser.Scene {
         collisionEnabled: actor.state.collisionEnabled,
       };
       this.#visuals.set(actor.definition.id, visual);
+      this.#syncLabel(visual);
       this.#setVisualVisible(visual, actor.state.visible);
       this.#setVisualDirection(visual, "down");
       if (isPlayer) {
@@ -270,25 +278,25 @@ export class StoryScene extends Phaser.Scene {
       .setOrigin(0.5, 0.82)
       .setDepth(this.#actorDepth(clayAnchor.y) - 0.01)
       .setVisible(false);
-    const objectiveRing = this.add
+    this.#objectiveRing = this.add
       .circle(0, 0, 30, 0xf0dfbd, 0.22)
       .setStrokeStyle(5, 0xfff4d6, 0.96);
-    const objectiveArrow = this.add
+    this.#objectiveArrow = this.add
       .triangle(0, -48, -12, -10, 12, -10, 0, 8, 0xfff4d6, 0.96)
       .setStrokeStyle(2, 0x3c352f, 0.8);
     this.#objectiveLabel = this.add
-      .text(0, -68, "目標", {
+      .text(0, -68, "前往", {
         color: "#3c352f",
         backgroundColor: "#fff4d6f2",
         fontFamily: "system-ui, sans-serif",
-        fontSize: "16px",
+        fontSize: "14px",
         fontStyle: "bold",
-        padding: { x: 8, y: 5 },
+        padding: { x: 7, y: 4 },
       })
       .setOrigin(0.5, 1);
     this.#objectiveMarker = this.add
-      .container(0, 0, [objectiveRing, objectiveArrow, this.#objectiveLabel])
-      .setDepth(40)
+      .container(0, 0, [this.#objectiveRing, this.#objectiveArrow, this.#objectiveLabel])
+      .setDepth(42)
       .setVisible(false);
 
     const cursorKeys = this.input.keyboard?.createCursorKeys();
@@ -311,17 +319,19 @@ export class StoryScene extends Phaser.Scene {
         return;
       }
       const target = { x: pointer.worldX, y: pointer.worldY };
-      if (
-        this.#navigationObjective !== null &&
-        Phaser.Math.Distance.Between(
-          target.x,
-          target.y,
-          this.#navigationObjective.position.x,
-          this.#navigationObjective.position.y,
-        ) <= 64
-      ) {
-        this.#activateNavigationObjective();
-        return;
+      if (this.#navigationObjective !== null) {
+        const markerPosition = this.#objectiveMarkerPosition(this.#navigationObjective);
+        if (
+          Phaser.Math.Distance.Between(
+            target.x,
+            target.y,
+            markerPosition.x,
+            markerPosition.y,
+          ) <= this.#objectiveTapRadius(this.#navigationObjective.kind)
+        ) {
+          this.#activateNavigationObjective();
+          return;
+        }
       }
       const nearby = this.#nearestStoryActor(target, 52);
       if (nearby !== undefined && this.#interactionAllowed()) {
@@ -347,14 +357,41 @@ export class StoryScene extends Phaser.Scene {
     }
     this.#syncOccluderAlpha();
     this.#syncActorFacingToMan();
+    this.#syncNavigationObjectiveMarker();
     if (
       this.#interactionAllowed() &&
       this.#interactKey !== undefined &&
       Phaser.Input.Keyboard.JustDown(this.#interactKey)
     ) {
-      const nearby = this.#nearestStoryActor(this.playerPosition(), 110);
-      if (nearby !== undefined) {
-        this.#handlers?.onInteract(nearby);
+      const playerPosition = this.playerPosition();
+      if (this.#navigationObjective !== null) {
+        const objectivePosition = this.#objectiveTargetPosition(
+          this.#navigationObjective,
+        );
+        const objectiveDistance = Phaser.Math.Distance.Between(
+          playerPosition.x,
+          playerPosition.y,
+          objectivePosition.x,
+          objectivePosition.y,
+        );
+        if (
+          this.#navigationObjective.kind === "interaction" &&
+          objectiveDistance <= INTERACTION_RADIUS_PIXELS
+        ) {
+          this.#handlers?.onInteract(this.#navigationObjective.targetId);
+        } else if (objectiveDistance > INTERACTION_RADIUS_PIXELS) {
+          this.#activateNavigationObjective();
+        } else {
+          const nearby = this.#nearestStoryActor(playerPosition, 110);
+          if (nearby !== undefined) {
+            this.#handlers?.onInteract(nearby);
+          }
+        }
+      } else {
+        const nearby = this.#nearestStoryActor(playerPosition, 110);
+        if (nearby !== undefined) {
+          this.#handlers?.onInteract(nearby);
+        }
       }
     }
     if (!this.#movementAllowed()) {
@@ -418,20 +455,7 @@ export class StoryScene extends Phaser.Scene {
     if (this.#objectiveMarker === undefined) {
       return;
     }
-    if (objective === null || this.#tearingDown) {
-      this.#objectiveMarker.setVisible(false);
-      return;
-    }
-    this.#objectiveMarker
-      .setPosition(objective.position.x, objective.position.y)
-      .setVisible(true);
-    this.#objectiveLabel?.setText(
-      objective.kind === "arrival"
-        ? "前往此處"
-        : objective.kind === "proximity"
-          ? `接近${objective.label}`
-          : `與${objective.label}互動`,
-    );
+    this.#syncNavigationObjectiveMarker();
   }
 
   setMovementEnabled(enabled: boolean): void {
@@ -643,18 +667,9 @@ export class StoryScene extends Phaser.Scene {
   }
 
   focusAnchor(anchorId: string): void {
-    const anchorContract = this.#world.anchorById.get(anchorId);
-    if (anchorContract === undefined) {
+    if (!this.#world.anchorById.has(anchorId)) {
       throw new RangeError(`Unknown canonical anchor ${anchorId}.`);
     }
-    const anchor = anchorContract.position;
-    this.#transientCameraFocus = {
-      position: structuredClone(anchor),
-      regionId: anchorContract.regionId,
-    };
-    this.cameras.main.stopFollow();
-    this.#cameraFollowingObserver = false;
-    this.cameras.main.pan(anchor.x, anchor.y, 350, "Sine.easeInOut");
   }
 
   setActorPose(storyActorId: string, pose: string): void {
@@ -726,6 +741,50 @@ export class StoryScene extends Phaser.Scene {
     }
   }
 
+  async escortActorToAnchor(
+    pathId: string,
+    actorId: string,
+    playerArrivalAnchorId: string,
+    signal: AbortSignal,
+    setNavigationHint: (message: string | null) => void,
+  ): Promise<void> {
+    const playerArrival = this.#requireAnchor(playerArrivalAnchorId);
+    const sequenceInputWasEnabled = this.#sequenceInputEnabled;
+    const escortedVisuals = this.#storyActorVisuals(actorId);
+    const collisionStates = escortedVisuals.map(
+      ({ collisionEnabled }) => collisionEnabled,
+    );
+    escortedVisuals.forEach((visual) => {
+      visual.collisionEnabled = false;
+      this.#runtimeActor(visual.actorId).state.collisionEnabled = false;
+    });
+    this.setMovementEnabled(true);
+    this.setNavigationObjective({
+      kind: "arrival",
+      targetId: playerArrivalAnchorId,
+      label: "那人",
+      position: playerArrival,
+    });
+    try {
+      await Promise.all([
+        this.followActorPath(pathId, actorId, signal),
+        this.#waitForPlayerArrival(playerArrival, 48, signal, () => {
+          setNavigationHint(this.#escortNavigationHint(playerArrival));
+        }),
+      ]);
+    } finally {
+      setNavigationHint(null);
+      this.setNavigationObjective(null);
+      this.setMovementEnabled(sequenceInputWasEnabled);
+      escortedVisuals.forEach((visual, index) => {
+        const collisionEnabled = collisionStates[index] ?? false;
+        visual.collisionEnabled = collisionEnabled;
+        this.#runtimeActor(visual.actorId).state.collisionEnabled =
+          collisionEnabled;
+      });
+    }
+  }
+
   async followCameraPath(pathId: string, signal: AbortSignal): Promise<void> {
     const path = this.#world.pathById.get(pathId);
     if (path === undefined) {
@@ -770,12 +829,42 @@ export class StoryScene extends Phaser.Scene {
     if (signal.aborted || this.#tearingDown) {
       throw abortError();
     }
+    const playerActorState = state.actors[state.controls.playerActorId];
+    if (playerActorState === undefined) {
+      throw new RangeError(
+        `Canonical player actor ${state.controls.playerActorId} has no final-state snapshot.`,
+      );
+    }
+    const playerAnchor = this.#world.anchorById.get(playerActorState.anchorId);
+    if (playerAnchor === undefined) {
+      throw new RangeError(`Unknown canonical anchor ${playerActorState.anchorId}.`);
+    }
+    const preservePlayerPosition =
+      this.#playerMovedSinceLastFinalState &&
+      this.#player !== undefined &&
+      this.#regionIdForPoint(this.playerPosition()) === playerAnchor.regionId;
+    const preservedPlayerPosition = preservePlayerPosition
+      ? this.playerPosition()
+      : null;
+    const preservedCameraFocus = preservePlayerPosition
+      ? {
+          x: this.cameras.main.scrollX + this.cameras.main.width / 2,
+          y: this.cameras.main.scrollY + this.cameras.main.height / 2,
+        }
+      : null;
     for (const [storyActorId, actorState] of Object.entries(state.actors)) {
       const anchor = this.#requireAnchor(actorState.anchorId);
       for (const visual of this.#storyActorVisuals(storyActorId)) {
+        const keepPlayerPosition =
+          preservedPlayerPosition !== null &&
+          storyActorId === state.controls.playerActorId;
         visual.body.setPosition(
-          anchor.x + visual.anchorOffset.x,
-          anchor.y + visual.anchorOffset.y,
+          keepPlayerPosition
+            ? preservedPlayerPosition.x
+            : anchor.x + visual.anchorOffset.x,
+          keepPlayerPosition
+            ? preservedPlayerPosition.y
+            : anchor.y + visual.anchorOffset.y,
         );
         visual.body.setDepth(this.#actorDepth(visual.body.y));
         visual.label.setPosition(
@@ -821,7 +910,7 @@ export class StoryScene extends Phaser.Scene {
     if (cameraAnchorContract === undefined) {
       throw new RangeError(`Unknown canonical anchor ${state.camera.anchorId}.`);
     }
-    const appliedCamera = this.#applyCanonicalCamera(state);
+    const appliedCamera = this.#applyCanonicalCamera(state, preservedCameraFocus);
     this.#appliedFinalState = {
       finalState: structuredClone(state),
       actors: Object.fromEntries(
@@ -852,6 +941,7 @@ export class StoryScene extends Phaser.Scene {
         effectiveInteractionEnabled: this.#interactionAllowed(),
       },
     };
+    this.#playerMovedSinceLastFinalState = false;
     this.#handlers?.onWorldUpdate("gameplay");
   }
 
@@ -882,7 +972,10 @@ export class StoryScene extends Phaser.Scene {
     return this.#tearingDown;
   }
 
-  #applyCanonicalCamera(state: SliceFinalState): AppliedCanonicalCameraState {
+  #applyCanonicalCamera(
+    state: SliceFinalState,
+    anchorOverride: Point | null = null,
+  ): AppliedCanonicalCameraState {
     this.#transientCameraFocus = null;
     const cameraAnchorContract = this.#world.anchorById.get(
       state.camera.anchorId,
@@ -903,7 +996,7 @@ export class StoryScene extends Phaser.Scene {
       camera,
       canonical: state.camera,
       zone,
-      anchorPosition: cameraAnchorContract.position,
+      anchorPosition: anchorOverride ?? cameraAnchorContract.position,
       playerActorId: state.controls.playerActorId,
       playerTarget: this.#player!.body,
       worldWidth: this.#world.definition.width,
@@ -1135,12 +1228,15 @@ export class StoryScene extends Phaser.Scene {
     visual: ActorVisual,
     art: ReturnType<typeof actorArtForSpawn>,
   ): void {
+    const renderProfile = actorRenderProfileForSpawn(visual.actorId);
     visual.body
       .setTexture(art.key)
-      .setOrigin(0.5, art.footBaseline! / art.frameHeight);
+      .setOrigin(0.5, art.footBaseline! / art.frameHeight)
+      .setScale(renderProfile.targetDisplayHeight / art.frameHeight);
     if (art === STORY_ART.actors.jesusDirectional) {
       this.#setVisualMotion(visual, visual.moving, 0);
     }
+    this.#syncLabel(visual);
   }
 
   #setVisualDirection(
@@ -1177,6 +1273,9 @@ export class StoryScene extends Phaser.Scene {
       if (visual === man || visual === excludedVisual) {
         continue;
       }
+      if (visual.storyActorId === "observer") {
+        continue;
+      }
       const direction = focusDirection(visual.body.x, man.body.x);
       const directionalArt =
         visual.storyActorId === "jesus"
@@ -1203,6 +1302,9 @@ export class StoryScene extends Phaser.Scene {
 
   #jesusArt(direction: CardinalDirection) {
     const man = this.#storyActorVisuals("man-born-blind")[0];
+    if (man?.pose === "worship") {
+      return STORY_ART.actors.jesusFoundMan;
+    }
     if (man?.pose !== "clay-on-eyes") {
       return STORY_ART.actors.jesusDirectional;
     }
@@ -1258,6 +1360,7 @@ export class StoryScene extends Phaser.Scene {
       directionFromDelta(deltaX, deltaY, this.#player.direction),
     );
     this.#player.body.setPosition(target.x, target.y);
+    this.#playerMovedSinceLastFinalState = true;
     this.#player.body.setDepth(this.#actorDepth(target.y));
     this.#syncLabel(this.#player);
     this.#syncActorFacingToMan();
@@ -1269,6 +1372,78 @@ export class StoryScene extends Phaser.Scene {
     return true;
   }
 
+  #syncNavigationObjectiveMarker(): void {
+    if (this.#objectiveMarker === undefined) {
+      return;
+    }
+    if (this.#navigationObjective === null || this.#tearingDown) {
+      this.#objectiveMarker.setVisible(false);
+      return;
+    }
+    const objective = this.#navigationObjective;
+    const markerPosition = this.#objectiveMarkerPosition(objective);
+    const arrivalObjective = objective.kind === "arrival";
+    this.#objectiveRing?.setVisible(arrivalObjective);
+    this.#objectiveArrow?.setPosition(0, arrivalObjective ? -48 : -4);
+    this.#objectiveLabel
+      ?.setPosition(0, arrivalObjective ? -68 : -18)
+      .setText(this.#objectivePromptText(objective.kind));
+    this.#objectiveMarker
+      .setPosition(markerPosition.x, markerPosition.y)
+      .setDepth(arrivalObjective ? 40 : 42)
+      .setVisible(true);
+  }
+
+  #objectivePromptText(kind: WorldNavigationObjective["kind"]): string {
+    if (kind === "arrival") {
+      return "前往";
+    }
+    if (kind === "proximity") {
+      return "接近";
+    }
+    return "互動";
+  }
+
+  #objectiveTargetPosition(objective: WorldNavigationObjective): Point {
+    if (objective.kind === "arrival") {
+      return objective.position;
+    }
+    const targetVisual = this.#storyActorVisuals(objective.targetId).find(
+      ({ body }) => body.visible,
+    );
+    if (targetVisual === undefined) {
+      return objective.position;
+    }
+    return {
+      x: targetVisual.body.x,
+      y: targetVisual.body.y,
+    };
+  }
+
+  #objectiveMarkerPosition(objective: WorldNavigationObjective): Point {
+    if (objective.kind === "arrival") {
+      return objective.position;
+    }
+    const targetVisual = this.#storyActorVisuals(objective.targetId).find(
+      ({ body }) => body.visible,
+    );
+    if (targetVisual === undefined) {
+      const fallback = this.#objectiveTargetPosition(objective);
+      return {
+        x: fallback.x,
+        y: fallback.y - 92,
+      };
+    }
+    return {
+      x: targetVisual.label.x,
+      y: targetVisual.label.y - targetVisual.label.height - 8,
+    };
+  }
+
+  #objectiveTapRadius(kind: WorldNavigationObjective["kind"]): number {
+    return kind === "arrival" ? 64 : 56;
+  }
+
   #activateNavigationObjective(): void {
     if (
       this.#navigationObjective === null ||
@@ -1277,23 +1452,78 @@ export class StoryScene extends Phaser.Scene {
     ) {
       return;
     }
+    const objectivePosition = this.#objectiveTargetPosition(
+      this.#navigationObjective,
+    );
     if (
       this.#navigationObjective.kind === "interaction" &&
       Phaser.Math.Distance.Between(
         this.#player.body.x,
         this.#player.body.y,
-        this.#navigationObjective.position.x,
-        this.#navigationObjective.position.y,
-      ) <= 110 &&
+        objectivePosition.x,
+        objectivePosition.y,
+      ) <= INTERACTION_RADIUS_PIXELS &&
       this.#interactionAllowed()
     ) {
       this.#handlers?.onInteract(this.#navigationObjective.targetId);
       return;
     }
-    this.#path = this.#world.findPath(
-      this.playerPosition(),
-      this.#navigationObjective.position,
-    );
+    const path = this.#objectivePath(this.#navigationObjective, objectivePosition);
+    if (
+      path.length === 0 &&
+      this.#navigationObjective.kind === "interaction"
+    ) {
+      this.#handlers?.onInteract(this.#navigationObjective.targetId);
+      return;
+    }
+    this.#path = path;
+  }
+
+  #objectivePath(
+    objective: WorldNavigationObjective,
+    objectivePosition: Point,
+  ): readonly Point[] {
+    const start = this.playerPosition();
+    const direct = this.#world.findPath(start, objectivePosition);
+    if (direct.length > 0) {
+      return direct;
+    }
+    if (objective.kind === "arrival") {
+      return direct;
+    }
+    const candidates = this.#interactionApproachCandidates(objectivePosition);
+    for (const candidate of candidates) {
+      if (!this.#world.isWalkable(candidate)) {
+        continue;
+      }
+      const path = this.#world.findPath(start, candidate);
+      if (path.length > 0) {
+        return path;
+      }
+    }
+    return direct;
+  }
+
+  #interactionApproachCandidates(target: Point): readonly Point[] {
+    const ringRadii = [72, 92, 112, 132];
+    const candidates: Point[] = [];
+    for (const radius of ringRadii) {
+      for (let step = 0; step < 16; step += 1) {
+        const angle = (Math.PI * 2 * step) / 16;
+        candidates.push({
+          x: target.x + Math.cos(angle) * radius,
+          y: target.y + Math.sin(angle) * radius,
+        });
+      }
+    }
+    candidates.sort((left, right) => {
+      const start = this.playerPosition();
+      return (
+        Phaser.Math.Distance.Between(start.x, start.y, left.x, left.y) -
+        Phaser.Math.Distance.Between(start.x, start.y, right.x, right.y)
+      );
+    });
+    return candidates;
   }
 
   #tweenVisual(
@@ -1353,6 +1583,75 @@ export class StoryScene extends Phaser.Scene {
       };
       signal.addEventListener("abort", onAbort, { once: true });
     });
+  }
+
+  #waitForPlayerArrival(
+    anchor: Point,
+    radius: number,
+    signal: AbortSignal,
+    onCheck: () => void,
+  ): Promise<void> {
+    if (signal.aborted) {
+      return Promise.reject(abortError());
+    }
+    return new Promise((resolve, reject) => {
+      let timer: Phaser.Time.TimerEvent | undefined;
+      let settled = false;
+      const finish = (operation: () => void): void => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        timer?.remove(false);
+        signal.removeEventListener("abort", onAbort);
+        operation();
+      };
+      const check = (): void => {
+        onCheck();
+        if (this.#tearingDown) {
+          finish(() => reject(abortError()));
+          return;
+        }
+        const player = this.playerPosition();
+        if (
+          Phaser.Math.Distance.Between(
+            player.x,
+            player.y,
+            anchor.x,
+            anchor.y,
+          ) <= radius
+        ) {
+          finish(resolve);
+        }
+      };
+      const onAbort = (): void => finish(() => reject(abortError()));
+      timer = this.time.addEvent({
+        delay: 50,
+        loop: true,
+        callback: check,
+      });
+      signal.addEventListener("abort", onAbort, { once: true });
+      check();
+    });
+  }
+
+  #escortNavigationHint(target: Point): string {
+    const player = this.playerPosition();
+    const path = this.#world.findPath(player, target);
+    const waypoint =
+      path.find(
+        (point) =>
+          Phaser.Math.Distance.Between(player.x, player.y, point.x, point.y) >
+          18,
+      ) ?? target;
+    const deltaX = waypoint.x - player.x;
+    const deltaY = waypoint.y - player.y;
+    const vertical =
+      Math.abs(deltaY) <= 14 ? "" : deltaY < 0 ? "北" : "南";
+    const horizontal =
+      Math.abs(deltaX) <= 14 ? "" : deltaX < 0 ? "西" : "東";
+    const direction = `${vertical}${horizontal}` || "前方";
+    return `跟隨那人往${direction}前行`;
   }
 
   #actorDepth(y: number): number {
@@ -1432,13 +1731,12 @@ export class StoryScene extends Phaser.Scene {
         washing: STORY_ART.actors.manSeeing,
         "standing-seeing": STORY_ART.actors.manSeeing,
         "washed-seeing": STORY_ART.actors.manSeeing,
+        worship: STORY_ART.actors.manWorship,
       };
       const art =
         artByPose[man.pose as keyof typeof artByPose] ??
         STORY_ART.actors.manSeeing;
-      man.body
-        .setTexture(art.key)
-        .setOrigin(0.5, art.footBaseline! / art.frameHeight);
+      this.#setVisualArt(man, art);
     }
     const jesus = this.#storyActorVisuals("jesus")[0];
     if (jesus !== undefined) {
