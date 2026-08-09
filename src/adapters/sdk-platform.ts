@@ -95,6 +95,7 @@ export function createPlatformRuntime(
   const scenePauseReasons = new Set<string>();
   let overlayBlocking = false;
   let sequenceNavigationHint: string | null = null;
+  let convergenceRequested = false;
   let paused = false;
   let syncNavigationObjective = (): void => {};
   const playerHintForObjective = (): string | null => {
@@ -156,6 +157,8 @@ export function createPlatformRuntime(
   const sequenceAdapter = createSliceSequenceAdapter(
     {
       scene,
+      resolveFinalStateMode: () =>
+        convergenceRequested ? "converge" : "normal",
       ui: {
         setOverlay: (visible, blocking) => {
           ui.setOverlay(visible, blocking);
@@ -457,11 +460,17 @@ export function createPlatformRuntime(
           `No canonical final snapshot exists for ${lastBeatId}.`,
         );
       }
-      const result = await runSequence({
-        id: `restore-${lastBeatId}`,
-        steps: [],
-        finalState,
-      });
+      convergenceRequested = true;
+      let result: SequenceResult;
+      try {
+        result = await runSequence({
+          id: `restore-${lastBeatId}`,
+          steps: [],
+          finalState,
+        });
+      } finally {
+        convergenceRequested = false;
+      }
       if (result.status === "cancelled") {
         throw new Error("Canonical save restoration was cancelled.");
       }

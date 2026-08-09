@@ -5,7 +5,7 @@ const ACTOR_DEFAULTS = Object.freeze({
   "man-born-blind": ["courtyard.man-center", "seated", "那人", true, true],
   neighbors: ["pool.neighbors", "idle", "鄰舍與見過他的人", false, false],
   pharisees: ["courtyard.pharisees-left", "idle", "法利賽人", false, false],
-  parents: ["courtyard.waiting", "idle", "他的父母", false, false],
+  parents: ["courtyard.parents", "idle", "他的父母", false, false],
   "judean-authorities": [
     "courtyard.pharisees-right",
     "idle",
@@ -71,7 +71,13 @@ const inquiryState = {
     true,
     true,
   ],
-  neighbors: ["courtyard.waiting", "standing", "鄰舍與見過他的人", false, false],
+  neighbors: [
+    "courtyard.inquiry-man",
+    "standing",
+    "鄰舍與見過他的人",
+    true,
+    true,
+  ],
   pharisees: [
     "courtyard.pharisees-left",
     "questioning",
@@ -79,7 +85,7 @@ const inquiryState = {
     true,
     true,
   ],
-  parents: ["courtyard.waiting", "idle", "他的父母", false, false],
+  parents: ["courtyard.gate", "idle", "他的父母", false, false],
   "judean-authorities": [
     "courtyard.pharisees-right",
     "questioning",
@@ -128,7 +134,7 @@ const phaseOverrides = (phase) => {
       return {
         ...phaseOverrides("washed"),
         "man-born-blind": [
-          "pool.wash-edge",
+          "pool.neighbors",
           "washed-seeing",
           "那人",
           true,
@@ -146,7 +152,7 @@ const phaseOverrides = (phase) => {
       return {
         ...inquiryState,
         neighbors: [
-          "courtyard.waiting",
+          "courtyard.inquiry-man",
           "standing",
           "鄰舍與見過他的人",
           true,
@@ -165,7 +171,7 @@ const phaseOverrides = (phase) => {
     case "parents-departed":
       return {
         ...inquiryState,
-        parents: ["courtyard.waiting", "departed", "他的父母", false, false],
+        parents: ["courtyard.gate", "departed", "他的父母", false, false],
       };
     case "expelled":
       return {
@@ -179,15 +185,21 @@ const phaseOverrides = (phase) => {
           true,
           true,
         ],
-        neighbors: ["courtyard.waiting", "idle", "鄰舍與見過他的人", false, false],
+        neighbors: [
+          "courtyard.inquiry-man",
+          "standing",
+          "鄰舍與見過他的人",
+          true,
+          true,
+        ],
         pharisees: [
           "courtyard.pharisees-left",
           "idle",
           "法利賽人",
-          false,
-          false,
+          true,
+          true,
         ],
-        parents: ["courtyard.waiting", "idle", "他的父母", false, false],
+        parents: ["courtyard.gate", "idle", "他的父母", false, false],
         "judean-authorities": [
           "courtyard.pharisees-right",
           "idle",
@@ -213,7 +225,7 @@ const phaseOverrides = (phase) => {
       return {
         ...phaseOverrides("belief"),
         pharisees: [
-          "courtyard.gate",
+          "courtyard.ending-camera",
           "listening",
           "法利賽人",
           true,

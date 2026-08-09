@@ -51,7 +51,12 @@ test("every narrative world path is referenced by a beat transition or explicitl
   );
   assert.ok(NARRATIVE_PATHS.every((id) => worldPaths.has(id)));
   const referencedPathIds = new Set(
-    Object.values(BEAT_TRANSITIONS).flatMap(({ pathIds }) => pathIds),
+    [
+      ...Object.values(BEAT_TRANSITIONS).flatMap(({ pathIds }) => pathIds),
+      ...SEQUENCES.flatMap(({ steps }) =>
+        steps.flatMap(({ payload }) => payload.pathId ?? []),
+      ),
+    ],
   );
   for (const path of readWorldContract("paths.json").sequencePaths) {
     assert.ok(
@@ -93,7 +98,7 @@ test("B05 declares the manual escort contract", () => {
   });
   assert.equal(
     SEQUENCES.slice(5).some(({ steps }) =>
-      steps.some(({ payload }) => payload.pathId),
+      steps.some(({ command }) => command === "escort-actor-to-anchor"),
     ),
     false,
   );

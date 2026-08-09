@@ -51,4 +51,15 @@ test("the man born blind always stands before path movement", () => {
     () => manBornBlindPathTransition("man-to-pool", "seated"),
     /must receive clay and stand before walking/,
   );
+  for (const pathId of [
+    "pool-to-neighbors",
+    "group-to-inquiry",
+    "expulsion",
+  ]) {
+    assert.deepEqual(manBornBlindPathTransition(pathId, "standing-seeing"), {
+      standPose: "standing-seeing",
+      walkingPose: "walking",
+      finalPose: "standing-seeing",
+    });
+  }
 });

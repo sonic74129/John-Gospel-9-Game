@@ -42,6 +42,11 @@ import {
   cancelNavigationForDirectionalInput,
   type FixedPointNavigation,
 } from "../platform/player-navigation-state.ts";
+import {
+  assertNormalFinalStateVisualDelta,
+  type FinalStateApplicationMode,
+  type VisualFinalState,
+} from "../platform/final-state-policy.ts";
 
 interface ActorVisual {
   readonly actorId: string;
@@ -744,6 +749,21 @@ export class StoryScene extends Phaser.Scene {
       throw new RangeError(`Unknown canonical path ${pathId}.`);
     }
     const visuals = this.#storyActorVisuals(storyActorId);
+    if (visuals.every(({ body }) => !body.visible)) {
+      const start = path.points[0];
+      if (start === undefined) {
+        throw new Error(`Canonical path ${pathId} has no starting point.`);
+      }
+      for (const visual of visuals) {
+        visual.body.setPosition(
+          start.x + visual.anchorOffset.x,
+          start.y + visual.anchorOffset.y,
+        );
+        visual.body.setDepth(this.#actorDepth(visual.body.y));
+        this.#syncLabel(visual);
+        this.#setVisualVisible(visual, true);
+      }
+    }
     const manTransition =
       storyActorId === "man-born-blind"
         ? manBornBlindPathTransition(pathId, visuals[0]?.pose ?? "")
@@ -786,9 +806,27 @@ export class StoryScene extends Phaser.Scene {
     signal: AbortSignal,
     setNavigationHint: (message: string | null) => void,
   ): Promise<void> {
+    await this.leadActorsAlongPath(
+      pathId,
+      [actorId],
+      playerArrivalAnchorId,
+      signal,
+      setNavigationHint,
+    );
+  }
+
+  async leadActorsAlongPath(
+    pathId: string,
+    actorIds: readonly string[],
+    playerArrivalAnchorId: string,
+    signal: AbortSignal,
+    setNavigationHint: (message: string | null) => void,
+  ): Promise<void> {
     const playerArrival = this.#requireAnchor(playerArrivalAnchorId);
     const sequenceInputWasEnabled = this.#sequenceInputEnabled;
-    const escortedVisuals = this.#storyActorVisuals(actorId);
+    const escortedVisuals = actorIds.flatMap((actorId) =>
+      this.#storyActorVisuals(actorId),
+    );
     const collisionStates = escortedVisuals.map(
       ({ collisionEnabled }) => collisionEnabled,
     );
@@ -805,7 +843,9 @@ export class StoryScene extends Phaser.Scene {
     });
     try {
       await Promise.all([
-        this.followActorPath(pathId, actorId, signal),
+        ...actorIds.map((actorId) =>
+          this.followActorPath(pathId, actorId, signal),
+        ),
         this.#waitForPlayerArrival(playerArrival, 48, signal, () => {
           setNavigationHint(this.#escortNavigationHint(playerArrival));
         }),
@@ -820,6 +860,32 @@ export class StoryScene extends Phaser.Scene {
         this.#runtimeActor(visual.actorId).state.collisionEnabled =
           collisionEnabled;
       });
+    }
+  }
+
+  async waitForPlayerAtAnchor(
+    anchorId: string,
+    label: string,
+    signal: AbortSignal,
+    setNavigationHint: (message: string | null) => void,
+  ): Promise<void> {
+    const target = this.#requireAnchor(anchorId);
+    const sequenceInputWasEnabled = this.#sequenceInputEnabled;
+    this.setMovementEnabled(true);
+    this.setNavigationObjective({
+      kind: "arrival",
+      targetId: anchorId,
+      label,
+      position: target,
+    });
+    try {
+      await this.#waitForPlayerArrival(target, 56, signal, () => {
+        setNavigationHint(`前往${label}所在的位置`);
+      });
+    } finally {
+      setNavigationHint(null);
+      this.setNavigationObjective(null);
+      this.setMovementEnabled(sequenceInputWasEnabled);
     }
   }
 
@@ -863,6 +929,7 @@ export class StoryScene extends Phaser.Scene {
   async applyFinalState(
     state: SliceFinalState,
     signal: AbortSignal,
+    mode: FinalStateApplicationMode,
   ): Promise<void> {
     if (signal.aborted || this.#tearingDown) {
       throw abortError();
@@ -878,9 +945,10 @@ export class StoryScene extends Phaser.Scene {
       throw new RangeError(`Unknown canonical anchor ${playerActorState.anchorId}.`);
     }
     const preservePlayerPosition =
-      this.#playerMovedSinceLastFinalState &&
-      this.#player !== undefined &&
-      this.#regionIdForPoint(this.playerPosition()) === playerAnchor.regionId;
+      mode === "normal" ||
+      (this.#playerMovedSinceLastFinalState &&
+        this.#player !== undefined &&
+        this.#regionIdForPoint(this.playerPosition()) === playerAnchor.regionId);
     const preservedPlayerPosition = preservePlayerPosition
       ? this.playerPosition()
       : null;
@@ -890,20 +958,50 @@ export class StoryScene extends Phaser.Scene {
           y: this.cameras.main.scrollY + this.cameras.main.height / 2,
         }
       : null;
+    if (mode === "normal") {
+      const before: Record<string, VisualFinalState> = {};
+      const expected: Record<string, VisualFinalState> = {};
+      for (const [storyActorId, actorState] of Object.entries(state.actors)) {
+        if (storyActorId === state.controls.playerActorId) {
+          continue;
+        }
+        const anchor = this.#requireAnchor(actorState.anchorId);
+        const visuals = this.#storyActorVisuals(storyActorId);
+        for (const visual of visuals) {
+          const key =
+            visuals.length === 1
+              ? storyActorId
+              : `${storyActorId}:${visual.actorId}`;
+          before[key] = {
+            x: visual.body.x,
+            y: visual.body.y,
+            visible: visual.body.visible,
+          };
+          expected[key] = {
+            x: anchor.x + visual.anchorOffset.x,
+            y: anchor.y + visual.anchorOffset.y,
+            visible: actorState.visible,
+          };
+        }
+      }
+      assertNormalFinalStateVisualDelta(before, expected);
+    }
     for (const [storyActorId, actorState] of Object.entries(state.actors)) {
       const anchor = this.#requireAnchor(actorState.anchorId);
       for (const visual of this.#storyActorVisuals(storyActorId)) {
         const keepPlayerPosition =
           preservedPlayerPosition !== null &&
           storyActorId === state.controls.playerActorId;
-        visual.body.setPosition(
-          keepPlayerPosition
-            ? preservedPlayerPosition.x
-            : anchor.x + visual.anchorOffset.x,
-          keepPlayerPosition
-            ? preservedPlayerPosition.y
-            : anchor.y + visual.anchorOffset.y,
-        );
+        if (mode === "converge" || keepPlayerPosition) {
+          visual.body.setPosition(
+            keepPlayerPosition
+              ? preservedPlayerPosition.x
+              : anchor.x + visual.anchorOffset.x,
+            keepPlayerPosition
+              ? preservedPlayerPosition.y
+              : anchor.y + visual.anchorOffset.y,
+          );
+        }
         visual.body.setDepth(this.#actorDepth(visual.body.y));
         visual.label.setPosition(
           visual.body.x,

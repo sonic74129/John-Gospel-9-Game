@@ -50,7 +50,7 @@ export const MAN_BORN_BLIND_POSES = Object.freeze([
 export type ManBornBlindPose = (typeof MAN_BORN_BLIND_POSES)[number];
 
 export interface ManBornBlindPathTransition {
-  readonly standPose: "standing";
+  readonly standPose: "standing" | "standing-seeing";
   readonly walkingPose: "walking";
   readonly finalPose: "washing" | "standing-seeing";
 }
@@ -69,6 +69,23 @@ export function manBornBlindPathTransition(
       standPose: "standing",
       walkingPose: "walking",
       finalPose: "washing",
+    };
+  }
+
+  if (
+    pathId === "pool-to-neighbors" ||
+    pathId === "group-to-inquiry" ||
+    pathId === "expulsion"
+  ) {
+    if (currentPose !== "washed-seeing" && currentPose !== "standing-seeing") {
+      throw new RangeError(
+        `The healed man must be seeing before walking ${pathId}; received ${currentPose}.`,
+      );
+    }
+    return {
+      standPose: "standing-seeing",
+      walkingPose: "walking",
+      finalPose: "standing-seeing",
     };
   }
 

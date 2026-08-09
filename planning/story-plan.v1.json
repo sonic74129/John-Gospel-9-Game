@@ -3178,7 +3178,7 @@
       "beatId": "b01",
       "entryState": "parent-left:hidden at courtyard.parents; pose=idle; collision=false | parent-right:hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b01 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:1"
       ],
@@ -3288,9 +3288,9 @@
     {
       "actorId": "parents",
       "beatId": "b02",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b02 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:2"
       ],
@@ -3412,9 +3412,9 @@
     {
       "actorId": "parents",
       "beatId": "b03",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b03 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:3",
         "john9:4",
@@ -3528,9 +3528,9 @@
     {
       "actorId": "parents",
       "beatId": "b04",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b04 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:6"
       ],
@@ -3640,9 +3640,9 @@
     {
       "actorId": "parents",
       "beatId": "b05",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b05 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:7"
       ],
@@ -3752,9 +3752,9 @@
     {
       "actorId": "parents",
       "beatId": "b06",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b06 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:7"
       ],
@@ -3827,7 +3827,7 @@
       "beatId": "b07",
       "entryState": "visible at pool.wash-edge; pose=washed-seeing; collision=false",
       "duringState": "sequence-b07 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at pool.wash-edge; pose=washed-seeing; collision=true",
+      "finalState": "visible at pool.neighbors; pose=washed-seeing; collision=true",
       "verseKeys": [
         "john9:8",
         "john9:9"
@@ -3870,9 +3870,9 @@
     {
       "actorId": "parents",
       "beatId": "b07",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b07 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:8",
         "john9:9"
@@ -3948,9 +3948,9 @@
     {
       "actorId": "man-born-blind",
       "beatId": "b08",
-      "entryState": "visible at pool.wash-edge; pose=washed-seeing; collision=true",
+      "entryState": "visible at pool.neighbors; pose=washed-seeing; collision=true",
       "duringState": "sequence-b08 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at pool.wash-edge; pose=washed-seeing; collision=true",
+      "finalState": "visible at pool.neighbors; pose=washed-seeing; collision=true",
       "verseKeys": [
         "john9:10",
         "john9:11",
@@ -3996,9 +3996,9 @@
     {
       "actorId": "parents",
       "beatId": "b08",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b08 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.parents; pose=idle; collision=false",
       "verseKeys": [
         "john9:10",
         "john9:11",
@@ -4073,7 +4073,7 @@
     {
       "actorId": "man-born-blind",
       "beatId": "b09",
-      "entryState": "visible at pool.wash-edge; pose=washed-seeing; collision=true",
+      "entryState": "visible at pool.neighbors; pose=washed-seeing; collision=true",
       "duringState": "sequence-b09 applies only scripture-bound action and removable S2 staging.",
       "finalState": "visible at courtyard.inquiry-man; pose=standing-seeing; collision=true",
       "verseKeys": [
@@ -4090,7 +4090,7 @@
       "beatId": "b09",
       "entryState": "visible at pool.neighbors; pose=questioning; collision=true",
       "duringState": "sequence-b09 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.waiting; pose=standing; collision=true",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:13",
         "john9:14"
@@ -4118,9 +4118,9 @@
     {
       "actorId": "parents",
       "beatId": "b09",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.parents; pose=idle; collision=false",
       "duringState": "sequence-b09 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:13",
         "john9:14"
@@ -4208,9 +4208,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b10",
-      "entryState": "visible at courtyard.waiting; pose=standing; collision=true",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b10 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:15",
         "john9:16"
@@ -4238,9 +4238,9 @@
     {
       "actorId": "parents",
       "beatId": "b10",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b10 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:15",
         "john9:16"
@@ -4324,9 +4324,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b11",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b11 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:17"
       ],
@@ -4352,9 +4352,9 @@
     {
       "actorId": "parents",
       "beatId": "b11",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b11 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:17"
       ],
@@ -4440,9 +4440,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b12",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b12 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:18",
         "john9:19"
@@ -4470,7 +4470,7 @@
     {
       "actorId": "parents",
       "beatId": "b12",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b12 applies only scripture-bound action and removable S2 staging.",
       "finalState": "visible at courtyard.parents; pose=standing; collision=true",
       "verseKeys": [
@@ -4568,9 +4568,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b13",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b13 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:20",
         "john9:21",
@@ -4604,7 +4604,7 @@
       "beatId": "b13",
       "entryState": "visible at courtyard.parents; pose=standing; collision=true",
       "duringState": "sequence-b13 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=departed; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=departed; collision=false",
       "verseKeys": [
         "john9:20",
         "john9:21",
@@ -4692,9 +4692,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b14",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b14 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:24"
       ],
@@ -4720,9 +4720,9 @@
     {
       "actorId": "parents",
       "beatId": "b14",
-      "entryState": "hidden at courtyard.waiting; pose=departed; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=departed; collision=false",
       "duringState": "sequence-b14 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:24"
       ],
@@ -4804,9 +4804,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b15",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b15 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:25"
       ],
@@ -4832,9 +4832,9 @@
     {
       "actorId": "parents",
       "beatId": "b15",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b15 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:25"
       ],
@@ -4920,9 +4920,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b16",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b16 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:26",
         "john9:27"
@@ -4950,9 +4950,9 @@
     {
       "actorId": "parents",
       "beatId": "b16",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b16 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:26",
         "john9:27"
@@ -5040,9 +5040,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b17",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b17 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:28",
         "john9:29"
@@ -5070,9 +5070,9 @@
     {
       "actorId": "parents",
       "beatId": "b17",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b17 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:28",
         "john9:29"
@@ -5172,9 +5172,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b18",
-      "entryState": "hidden at courtyard.waiting; pose=standing; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:30",
         "john9:31",
@@ -5192,7 +5192,7 @@
       "beatId": "b18",
       "entryState": "visible at courtyard.pharisees-left; pose=questioning; collision=true",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.pharisees-left; pose=idle; collision=false",
+      "finalState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
       "verseKeys": [
         "john9:30",
         "john9:31",
@@ -5208,9 +5208,9 @@
     {
       "actorId": "parents",
       "beatId": "b18",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b18 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:30",
         "john9:31",
@@ -5312,9 +5312,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b19",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b19 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:35",
         "john9:36",
@@ -5329,9 +5329,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b19",
-      "entryState": "hidden at courtyard.pharisees-left; pose=idle; collision=false",
+      "entryState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
       "duringState": "sequence-b19 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.pharisees-left; pose=idle; collision=false",
+      "finalState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
       "verseKeys": [
         "john9:35",
         "john9:36",
@@ -5346,9 +5346,9 @@
     {
       "actorId": "parents",
       "beatId": "b19",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b19 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:35",
         "john9:36",
@@ -5444,9 +5444,9 @@
     {
       "actorId": "neighbors",
       "beatId": "b20",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "duringState": "sequence-b20 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "visible at courtyard.inquiry-man; pose=standing; collision=true",
       "verseKeys": [
         "john9:39",
         "john9:40",
@@ -5460,9 +5460,9 @@
     {
       "actorId": "pharisees",
       "beatId": "b20",
-      "entryState": "hidden at courtyard.pharisees-left; pose=idle; collision=false",
+      "entryState": "visible at courtyard.pharisees-left; pose=idle; collision=true",
       "duringState": "sequence-b20 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "visible at courtyard.gate; pose=listening; collision=true",
+      "finalState": "visible at courtyard.ending-camera; pose=listening; collision=true",
       "verseKeys": [
         "john9:39",
         "john9:40",
@@ -5476,9 +5476,9 @@
     {
       "actorId": "parents",
       "beatId": "b20",
-      "entryState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "entryState": "hidden at courtyard.gate; pose=idle; collision=false",
       "duringState": "sequence-b20 applies only scripture-bound action and removable S2 staging.",
-      "finalState": "hidden at courtyard.waiting; pose=idle; collision=false",
+      "finalState": "hidden at courtyard.gate; pose=idle; collision=false",
       "verseKeys": [
         "john9:39",
         "john9:40",
@@ -6213,7 +6213,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -6269,10 +6269,10 @@
         }
       },
       "parityHashes": {
-        "normal": "d70dc09de723240e761e65b988b21daed3bbe67c49de3923a4e57955c14fa333",
-        "skip": "d70dc09de723240e761e65b988b21daed3bbe67c49de3923a4e57955c14fa333",
-        "restart": "d70dc09de723240e761e65b988b21daed3bbe67c49de3923a4e57955c14fa333",
-        "reentry": "d70dc09de723240e761e65b988b21daed3bbe67c49de3923a4e57955c14fa333"
+        "normal": "32e04e346fe7074375571a263a58db88fe1072abb739e7fa2b17dadfcc56da30",
+        "skip": "32e04e346fe7074375571a263a58db88fe1072abb739e7fa2b17dadfcc56da30",
+        "restart": "32e04e346fe7074375571a263a58db88fe1072abb739e7fa2b17dadfcc56da30",
+        "reentry": "32e04e346fe7074375571a263a58db88fe1072abb739e7fa2b17dadfcc56da30"
       }
     },
     {
@@ -6345,7 +6345,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -6402,10 +6402,10 @@
         }
       },
       "parityHashes": {
-        "normal": "73eab1dfd0a09f46b03d4645788517190396d6e9184dfcb1cd2794f6346d5461",
-        "skip": "73eab1dfd0a09f46b03d4645788517190396d6e9184dfcb1cd2794f6346d5461",
-        "restart": "73eab1dfd0a09f46b03d4645788517190396d6e9184dfcb1cd2794f6346d5461",
-        "reentry": "73eab1dfd0a09f46b03d4645788517190396d6e9184dfcb1cd2794f6346d5461"
+        "normal": "4d52696568b97f95b12b1a074f25c46e45dde7204c49fe3b09b7722dc9061344",
+        "skip": "4d52696568b97f95b12b1a074f25c46e45dde7204c49fe3b09b7722dc9061344",
+        "restart": "4d52696568b97f95b12b1a074f25c46e45dde7204c49fe3b09b7722dc9061344",
+        "reentry": "4d52696568b97f95b12b1a074f25c46e45dde7204c49fe3b09b7722dc9061344"
       }
     },
     {
@@ -6478,7 +6478,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -6536,10 +6536,10 @@
         }
       },
       "parityHashes": {
-        "normal": "f119661c738b20016720668246c664e5c9a3258b1e387fbd7e4a1ddaeb2bb101",
-        "skip": "f119661c738b20016720668246c664e5c9a3258b1e387fbd7e4a1ddaeb2bb101",
-        "restart": "f119661c738b20016720668246c664e5c9a3258b1e387fbd7e4a1ddaeb2bb101",
-        "reentry": "f119661c738b20016720668246c664e5c9a3258b1e387fbd7e4a1ddaeb2bb101"
+        "normal": "1c87f707d1ecaa27205990f76e99a849ca4c8532f0eee3a7b3e0417421382c70",
+        "skip": "1c87f707d1ecaa27205990f76e99a849ca4c8532f0eee3a7b3e0417421382c70",
+        "restart": "1c87f707d1ecaa27205990f76e99a849ca4c8532f0eee3a7b3e0417421382c70",
+        "reentry": "1c87f707d1ecaa27205990f76e99a849ca4c8532f0eee3a7b3e0417421382c70"
       }
     },
     {
@@ -6612,7 +6612,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -6671,10 +6671,10 @@
         }
       },
       "parityHashes": {
-        "normal": "6ced116697addd9fcd4e23874fa145def0cb3d63c9cdd19c609c1172912e35f9",
-        "skip": "6ced116697addd9fcd4e23874fa145def0cb3d63c9cdd19c609c1172912e35f9",
-        "restart": "6ced116697addd9fcd4e23874fa145def0cb3d63c9cdd19c609c1172912e35f9",
-        "reentry": "6ced116697addd9fcd4e23874fa145def0cb3d63c9cdd19c609c1172912e35f9"
+        "normal": "2b0f62f302c9a1969fda5f91809677df0be3cb8362a7a303e3b0a573ab596232",
+        "skip": "2b0f62f302c9a1969fda5f91809677df0be3cb8362a7a303e3b0a573ab596232",
+        "restart": "2b0f62f302c9a1969fda5f91809677df0be3cb8362a7a303e3b0a573ab596232",
+        "reentry": "2b0f62f302c9a1969fda5f91809677df0be3cb8362a7a303e3b0a573ab596232"
       }
     },
     {
@@ -6747,7 +6747,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -6807,10 +6807,10 @@
         }
       },
       "parityHashes": {
-        "normal": "ee3ea5c1c2a47b84e70968b2726733319800cfe62b40f82bdff675c0f2815dc4",
-        "skip": "ee3ea5c1c2a47b84e70968b2726733319800cfe62b40f82bdff675c0f2815dc4",
-        "restart": "ee3ea5c1c2a47b84e70968b2726733319800cfe62b40f82bdff675c0f2815dc4",
-        "reentry": "ee3ea5c1c2a47b84e70968b2726733319800cfe62b40f82bdff675c0f2815dc4"
+        "normal": "b5b3af56746f6c504723f937fd982185104d0ef18cd67c85b55559e173ab2c55",
+        "skip": "b5b3af56746f6c504723f937fd982185104d0ef18cd67c85b55559e173ab2c55",
+        "restart": "b5b3af56746f6c504723f937fd982185104d0ef18cd67c85b55559e173ab2c55",
+        "reentry": "b5b3af56746f6c504723f937fd982185104d0ef18cd67c85b55559e173ab2c55"
       }
     },
     {
@@ -6883,7 +6883,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -6944,10 +6944,10 @@
         }
       },
       "parityHashes": {
-        "normal": "1b3b7d66005d8bd9a078e23e82191ce505e44bcb64fc9bf236191594c3802671",
-        "skip": "1b3b7d66005d8bd9a078e23e82191ce505e44bcb64fc9bf236191594c3802671",
-        "restart": "1b3b7d66005d8bd9a078e23e82191ce505e44bcb64fc9bf236191594c3802671",
-        "reentry": "1b3b7d66005d8bd9a078e23e82191ce505e44bcb64fc9bf236191594c3802671"
+        "normal": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639",
+        "skip": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639",
+        "restart": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639",
+        "reentry": "bdbf92599e07b3a62d3d1dba171c875d1e9365a11da2a5b43083b9b02499f639"
       }
     },
     {
@@ -6993,7 +6993,7 @@
           },
           "man-born-blind": {
             "visible": true,
-            "anchorId": "pool.wash-edge",
+            "anchorId": "pool.neighbors",
             "pose": "washed-seeing",
             "label": "那人",
             "collisionEnabled": true,
@@ -7020,7 +7020,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -7082,10 +7082,10 @@
         }
       },
       "parityHashes": {
-        "normal": "d9286c9c51570e29eaa81b83d13c4b499483f75ea22d42ca9236ac378b778b7f",
-        "skip": "d9286c9c51570e29eaa81b83d13c4b499483f75ea22d42ca9236ac378b778b7f",
-        "restart": "d9286c9c51570e29eaa81b83d13c4b499483f75ea22d42ca9236ac378b778b7f",
-        "reentry": "d9286c9c51570e29eaa81b83d13c4b499483f75ea22d42ca9236ac378b778b7f"
+        "normal": "2548c4ed0b10b422ae05e9aed47b1c7b8800ae5a7c68a3a21825653fd306357d",
+        "skip": "2548c4ed0b10b422ae05e9aed47b1c7b8800ae5a7c68a3a21825653fd306357d",
+        "restart": "2548c4ed0b10b422ae05e9aed47b1c7b8800ae5a7c68a3a21825653fd306357d",
+        "reentry": "2548c4ed0b10b422ae05e9aed47b1c7b8800ae5a7c68a3a21825653fd306357d"
       }
     },
     {
@@ -7131,7 +7131,7 @@
           },
           "man-born-blind": {
             "visible": true,
-            "anchorId": "pool.wash-edge",
+            "anchorId": "pool.neighbors",
             "pose": "washed-seeing",
             "label": "那人",
             "collisionEnabled": true,
@@ -7158,7 +7158,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.parents",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -7221,10 +7221,10 @@
         }
       },
       "parityHashes": {
-        "normal": "e861db255d461ca34820374dc82063f493eca9ec8fc40a3f65324f2d538ceee0",
-        "skip": "e861db255d461ca34820374dc82063f493eca9ec8fc40a3f65324f2d538ceee0",
-        "restart": "e861db255d461ca34820374dc82063f493eca9ec8fc40a3f65324f2d538ceee0",
-        "reentry": "e861db255d461ca34820374dc82063f493eca9ec8fc40a3f65324f2d538ceee0"
+        "normal": "4cc1821daba762134dc2943490fdfc2c300121e9df0a79180b57a01a416df152",
+        "skip": "4cc1821daba762134dc2943490fdfc2c300121e9df0a79180b57a01a416df152",
+        "restart": "4cc1821daba762134dc2943490fdfc2c300121e9df0a79180b57a01a416df152",
+        "reentry": "4cc1821daba762134dc2943490fdfc2c300121e9df0a79180b57a01a416df152"
       }
     },
     {
@@ -7279,7 +7279,7 @@
           },
           "neighbors": {
             "visible": true,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
             "collisionEnabled": true,
@@ -7297,7 +7297,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -7361,10 +7361,10 @@
         }
       },
       "parityHashes": {
-        "normal": "9a84d363d1be51d5a053bffd1b3dcf13849cd404b99b763ebbc8fedb98925a5e",
-        "skip": "9a84d363d1be51d5a053bffd1b3dcf13849cd404b99b763ebbc8fedb98925a5e",
-        "restart": "9a84d363d1be51d5a053bffd1b3dcf13849cd404b99b763ebbc8fedb98925a5e",
-        "reentry": "9a84d363d1be51d5a053bffd1b3dcf13849cd404b99b763ebbc8fedb98925a5e"
+        "normal": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df",
+        "skip": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df",
+        "restart": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df",
+        "reentry": "5faf79b7e8698c75d7da1187bc27f958a20a44281f7182bb2940f8495c2cc3df"
       }
     },
     {
@@ -7418,11 +7418,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7437,7 +7437,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -7502,10 +7502,10 @@
         }
       },
       "parityHashes": {
-        "normal": "2f92f6cd4b1e2bba247ae92632053beab2e25607cdae133c3951fd14c9cf8075",
-        "skip": "2f92f6cd4b1e2bba247ae92632053beab2e25607cdae133c3951fd14c9cf8075",
-        "restart": "2f92f6cd4b1e2bba247ae92632053beab2e25607cdae133c3951fd14c9cf8075",
-        "reentry": "2f92f6cd4b1e2bba247ae92632053beab2e25607cdae133c3951fd14c9cf8075"
+        "normal": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740",
+        "skip": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740",
+        "restart": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740",
+        "reentry": "dd4792287425dbb9ed77b4b7c13552e5a7eb0fe0519654b3f74c5c2fdf152740"
       }
     },
     {
@@ -7559,11 +7559,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7578,7 +7578,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -7644,10 +7644,10 @@
         }
       },
       "parityHashes": {
-        "normal": "a21855972ce1172facf7db4dfd110b736f6a3d575f39260e4fd801983f3bfdc9",
-        "skip": "a21855972ce1172facf7db4dfd110b736f6a3d575f39260e4fd801983f3bfdc9",
-        "restart": "a21855972ce1172facf7db4dfd110b736f6a3d575f39260e4fd801983f3bfdc9",
-        "reentry": "a21855972ce1172facf7db4dfd110b736f6a3d575f39260e4fd801983f3bfdc9"
+        "normal": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea",
+        "skip": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea",
+        "restart": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea",
+        "reentry": "d254dc4bc4b6c5972b890e3583f140fe39fbb514d94772b3c3b6388c465091ea"
       }
     },
     {
@@ -7701,11 +7701,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7787,10 +7787,10 @@
         }
       },
       "parityHashes": {
-        "normal": "5a52fe7661d045442ab048c1e2d09dc999ee179c39b6505c19f58dff19143b66",
-        "skip": "5a52fe7661d045442ab048c1e2d09dc999ee179c39b6505c19f58dff19143b66",
-        "restart": "5a52fe7661d045442ab048c1e2d09dc999ee179c39b6505c19f58dff19143b66",
-        "reentry": "5a52fe7661d045442ab048c1e2d09dc999ee179c39b6505c19f58dff19143b66"
+        "normal": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e",
+        "skip": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e",
+        "restart": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e",
+        "reentry": "fa9f1d22f857ad094ca30deecddeab25c8b37b3ff932238556ae4a49f0674a0e"
       }
     },
     {
@@ -7844,11 +7844,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -7863,7 +7863,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "departed",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -7931,10 +7931,10 @@
         }
       },
       "parityHashes": {
-        "normal": "f7b28af4bf6d19685de14c16b841294ca4757d04f3c83e0fce310e355e282248",
-        "skip": "f7b28af4bf6d19685de14c16b841294ca4757d04f3c83e0fce310e355e282248",
-        "restart": "f7b28af4bf6d19685de14c16b841294ca4757d04f3c83e0fce310e355e282248",
-        "reentry": "f7b28af4bf6d19685de14c16b841294ca4757d04f3c83e0fce310e355e282248"
+        "normal": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f",
+        "skip": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f",
+        "restart": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f",
+        "reentry": "42672b3370003e0b88d6588140a98117fa2758a8f8fd572f68624433b6dc3c4f"
       }
     },
     {
@@ -7988,11 +7988,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8007,7 +8007,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8076,10 +8076,10 @@
         }
       },
       "parityHashes": {
-        "normal": "55ebbae77dddcf761a5997fa4af72ab44884b1056cefa139faeb32e683c617bd",
-        "skip": "55ebbae77dddcf761a5997fa4af72ab44884b1056cefa139faeb32e683c617bd",
-        "restart": "55ebbae77dddcf761a5997fa4af72ab44884b1056cefa139faeb32e683c617bd",
-        "reentry": "55ebbae77dddcf761a5997fa4af72ab44884b1056cefa139faeb32e683c617bd"
+        "normal": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04",
+        "skip": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04",
+        "restart": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04",
+        "reentry": "68b8e2a70541830b2f83d8962b7c26d4eca183ab38639cac93a4968782337c04"
       }
     },
     {
@@ -8133,11 +8133,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8152,7 +8152,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8222,10 +8222,10 @@
         }
       },
       "parityHashes": {
-        "normal": "f24bba0c41e055549e02d397c19bcbb095b7c7563585750b2139224e25afe4c0",
-        "skip": "f24bba0c41e055549e02d397c19bcbb095b7c7563585750b2139224e25afe4c0",
-        "restart": "f24bba0c41e055549e02d397c19bcbb095b7c7563585750b2139224e25afe4c0",
-        "reentry": "f24bba0c41e055549e02d397c19bcbb095b7c7563585750b2139224e25afe4c0"
+        "normal": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab",
+        "skip": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab",
+        "restart": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab",
+        "reentry": "0ac03d566d0c9ac22463d90e995ce97bdd19d26e11d03606cfac541c5adbceab"
       }
     },
     {
@@ -8279,11 +8279,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8298,7 +8298,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8369,10 +8369,10 @@
         }
       },
       "parityHashes": {
-        "normal": "1aaaa962609a832095506a3a9af5dd3d46bdb43a41f534b76d11d42242cc2316",
-        "skip": "1aaaa962609a832095506a3a9af5dd3d46bdb43a41f534b76d11d42242cc2316",
-        "restart": "1aaaa962609a832095506a3a9af5dd3d46bdb43a41f534b76d11d42242cc2316",
-        "reentry": "1aaaa962609a832095506a3a9af5dd3d46bdb43a41f534b76d11d42242cc2316"
+        "normal": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf",
+        "skip": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf",
+        "restart": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf",
+        "reentry": "16d2ec4665989763d1477eba228f4bdd0235405c094d0258247378e20973a0bf"
       }
     },
     {
@@ -8426,11 +8426,11 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
             "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
@@ -8445,7 +8445,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8517,10 +8517,10 @@
         }
       },
       "parityHashes": {
-        "normal": "9e538b8a27907044cb306aef3143ca7b1f52926278f916309695fcb7bde0085c",
-        "skip": "9e538b8a27907044cb306aef3143ca7b1f52926278f916309695fcb7bde0085c",
-        "restart": "9e538b8a27907044cb306aef3143ca7b1f52926278f916309695fcb7bde0085c",
-        "reentry": "9e538b8a27907044cb306aef3143ca7b1f52926278f916309695fcb7bde0085c"
+        "normal": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0",
+        "skip": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0",
+        "restart": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0",
+        "reentry": "0749f933ca508e6a7b9e1c315f29d66e4d9bf6bd12172b79d42559aa58d619c0"
       }
     },
     {
@@ -8574,26 +8574,26 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
-            "pose": "idle",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
+            "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
           "pharisees": {
-            "visible": false,
+            "visible": true,
             "anchorId": "courtyard.pharisees-left",
             "pose": "idle",
             "label": "法利賽人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8666,10 +8666,10 @@
         }
       },
       "parityHashes": {
-        "normal": "8eae0d23b493dba11353e219dfb4cc277c71def3283f90ca7e95a85bb0ec7148",
-        "skip": "8eae0d23b493dba11353e219dfb4cc277c71def3283f90ca7e95a85bb0ec7148",
-        "restart": "8eae0d23b493dba11353e219dfb4cc277c71def3283f90ca7e95a85bb0ec7148",
-        "reentry": "8eae0d23b493dba11353e219dfb4cc277c71def3283f90ca7e95a85bb0ec7148"
+        "normal": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4",
+        "skip": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4",
+        "restart": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4",
+        "reentry": "7eda932c1769822497f3c55e11812b0bea51f3510334e62c172bea59c926fbb4"
       }
     },
     {
@@ -8723,26 +8723,26 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
-            "pose": "idle",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
+            "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
           "pharisees": {
-            "visible": false,
+            "visible": true,
             "anchorId": "courtyard.pharisees-left",
             "pose": "idle",
             "label": "法利賽人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8816,10 +8816,10 @@
         }
       },
       "parityHashes": {
-        "normal": "926ba0c4914c4d963f86609d31dab4dac4481ccb1d98a64884938b3421f5501c",
-        "skip": "926ba0c4914c4d963f86609d31dab4dac4481ccb1d98a64884938b3421f5501c",
-        "restart": "926ba0c4914c4d963f86609d31dab4dac4481ccb1d98a64884938b3421f5501c",
-        "reentry": "926ba0c4914c4d963f86609d31dab4dac4481ccb1d98a64884938b3421f5501c"
+        "normal": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315",
+        "skip": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315",
+        "restart": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315",
+        "reentry": "383aa89fd74e9a6dcb0da2532e005eac06a80603efccf379905924e33556e315"
       }
     },
     {
@@ -8873,17 +8873,17 @@
             "stagingLevel": "S2"
           },
           "neighbors": {
-            "visible": false,
-            "anchorId": "courtyard.waiting",
-            "pose": "idle",
+            "visible": true,
+            "anchorId": "courtyard.inquiry-man",
+            "pose": "standing",
             "label": "鄰舍與見過他的人",
-            "collisionEnabled": false,
+            "collisionEnabled": true,
             "contentLevel": "S1",
             "stagingLevel": "S2"
           },
           "pharisees": {
             "visible": true,
-            "anchorId": "courtyard.gate",
+            "anchorId": "courtyard.ending-camera",
             "pose": "listening",
             "label": "法利賽人",
             "collisionEnabled": true,
@@ -8892,7 +8892,7 @@
           },
           "parents": {
             "visible": false,
-            "anchorId": "courtyard.waiting",
+            "anchorId": "courtyard.gate",
             "pose": "idle",
             "label": "他的父母",
             "collisionEnabled": false,
@@ -8967,10 +8967,10 @@
         }
       },
       "parityHashes": {
-        "normal": "5e995cac5868ca43bb0379f2f94e301e467ecd86791da94838d7546ced20940e",
-        "skip": "5e995cac5868ca43bb0379f2f94e301e467ecd86791da94838d7546ced20940e",
-        "restart": "5e995cac5868ca43bb0379f2f94e301e467ecd86791da94838d7546ced20940e",
-        "reentry": "5e995cac5868ca43bb0379f2f94e301e467ecd86791da94838d7546ced20940e"
+        "normal": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945",
+        "skip": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945",
+        "restart": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945",
+        "reentry": "d566e31827617421b17aea7c4a282b9bb8e8dab3237374d9fd6819437c7c6945"
       }
     }
   ],

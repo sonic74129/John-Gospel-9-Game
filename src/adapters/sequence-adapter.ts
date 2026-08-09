@@ -4,6 +4,7 @@ import {
 } from "@sonic74129/sequence-runtime";
 
 import { failUnsupportedOperation } from "./operation-errors.js";
+import type { FinalStateApplicationMode } from "../platform/final-state-policy.ts";
 import {
   DIALOGUE_BY_BEAT,
   STAGE_GOAL_BY_BEAT,
@@ -33,7 +34,24 @@ export interface SliceSequenceScene {
     setNavigationHint: (message: string | null) => void,
   ): Promise<void>;
   followCameraPath(pathId: string, signal: AbortSignal): Promise<void>;
-  applyFinalState(state: SliceFinalState, signal: AbortSignal): Promise<void>;
+  waitForPlayerAtAnchor(
+    anchorId: string,
+    label: string,
+    signal: AbortSignal,
+    setNavigationHint: (message: string | null) => void,
+  ): Promise<void>;
+  leadActorsAlongPath(
+    pathId: string,
+    actorIds: readonly string[],
+    playerArrivalAnchorId: string,
+    signal: AbortSignal,
+    setNavigationHint: (message: string | null) => void,
+  ): Promise<void>;
+  applyFinalState(
+    state: SliceFinalState,
+    signal: AbortSignal,
+    mode: FinalStateApplicationMode,
+  ): Promise<void>;
 }
 
 export interface SliceSequenceUi {
@@ -54,6 +72,7 @@ export interface SliceSequenceUi {
 export interface SliceSequenceContext {
   readonly scene: SliceSequenceScene;
   readonly ui: SliceSequenceUi;
+  readonly resolveFinalStateMode?: () => FinalStateApplicationMode;
   readonly applyLogicalFinalState?: (
     state: SliceFinalState,
     signal: AbortSignal,
@@ -131,6 +150,7 @@ export function createSliceSequenceAdapter(
   controls: SliceSequenceControls,
 ): PhaserSequenceAdapter<SliceSequenceContext, SliceFinalState> {
   let releaseSdkInputLock: (() => void) | undefined;
+  let finalStateMode: FinalStateApplicationMode = "normal";
   return bindStorySequence({
     context,
     executeCommand: async (command, payload, target, signal) => {
@@ -155,22 +175,40 @@ export function createSliceSequenceAdapter(
           );
           return;
         case "actor-follow-path":
-          await Promise.all(
-            [
+          {
+            const actorIds = [
               requireString(command, record, "primaryActorId"),
               ...requireStringArray(
                 command,
                 record,
                 "participantActorIds",
               ),
-            ].map((actorId) =>
-              target.scene.followActorPath(
-                requireString(command, record, "pathId"),
-                actorId,
-                signal,
-              ),
-            ),
-          );
+            ];
+            const playerArrivalAnchorId = record.playerArrivalAnchorId;
+            if (typeof playerArrivalAnchorId === "string") {
+              try {
+                await target.scene.leadActorsAlongPath(
+                  requireString(command, record, "pathId"),
+                  actorIds,
+                  playerArrivalAnchorId,
+                  signal,
+                  (message) => target.ui.setNavigationHint(message),
+                );
+              } finally {
+                target.ui.setNavigationHint(null);
+              }
+            } else {
+              await Promise.all(
+                actorIds.map((actorId) =>
+                  target.scene.followActorPath(
+                    requireString(command, record, "pathId"),
+                    actorId,
+                    signal,
+                  ),
+                ),
+              );
+            }
+          }
           return;
         case "escort-actor-to-anchor":
           try {
@@ -190,6 +228,18 @@ export function createSliceSequenceAdapter(
             requireString(command, record, "pathId"),
             signal,
           );
+          return;
+        case "player-seeks-anchor":
+          try {
+            await target.scene.waitForPlayerAtAnchor(
+              requireString(command, record, "anchorId"),
+              requireString(command, record, "label"),
+              signal,
+              (message) => target.ui.setNavigationHint(message),
+            );
+          } finally {
+            target.ui.setNavigationHint(null);
+          }
           return;
         case "present-scripture-segments": {
           const beatId = requireString(command, record, "beatId");
@@ -213,7 +263,13 @@ export function createSliceSequenceAdapter(
       if (signal.aborted) {
         throw abortError();
       }
-      await target.scene.applyFinalState(state, signal);
+      await target.scene.applyFinalState(
+        state,
+        signal,
+        target.resolveFinalStateMode?.() === "converge"
+          ? "converge"
+          : finalStateMode,
+      );
       if (signal.aborted) {
         throw abortError();
       }
@@ -229,6 +285,7 @@ export function createSliceSequenceAdapter(
         throw abortError();
       }
       target.ui.setHandoff(status);
+      finalStateMode = "normal";
     },
     setInputEnabled: (enabled, target) => {
       if (!enabled && releaseSdkInputLock === undefined) {
@@ -239,7 +296,11 @@ export function createSliceSequenceAdapter(
       }
       target.scene.setMovementEnabled(enabled);
     },
-    subscribeSkip: (listener) => controls.subscribeSkip(listener),
+    subscribeSkip: (listener) =>
+      controls.subscribeSkip(() => {
+        finalStateMode = "converge";
+        listener();
+      }),
     isUiBlocking: () => false,
   });
 }

@@ -1151,6 +1151,8 @@ async function runRealAdapter(
         setActorVisible: () => {},
         followActorPath: async () => {},
         escortActorToAnchor: async () => {},
+        leadActorsAlongPath: async () => {},
+        waitForPlayerAtAnchor: async () => {},
         followCameraPath: async () => {},
         applyFinalState: async (state) => {
           const viewport = resolveInitialProductionViewport(profile.viewport);
