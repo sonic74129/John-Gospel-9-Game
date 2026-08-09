@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "repository": "sonic74129/bible-game-foundation",
+  "commit": "e870049d53bc8da09becd178fd30198b8480a0ca",
+  "guidance": [
+    {
+      "source": "skills/bible-story-game-builder/SKILL.md",
+      "target": ".foundation/skills/bible-story-game-builder/SKILL.md",
+      "sha256": "5fafeb54b571666fd228cd3926b3253cfce4f900e256ae2cb000827efbad8ffa"
+    }
+  ]
+}
