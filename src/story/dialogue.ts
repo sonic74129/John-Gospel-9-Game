@@ -56,6 +56,29 @@ const verseByKey = new Map(
   scriptureArtifact.verses.map((verse) => [verse.key, verse] as const),
 );
 
+const PORTRAIT_BY_BEAT = Object.freeze({
+  b01: { portraitSubjectId: "man-born-blind", portraitState: "blind" },
+  b02: { portraitSubjectId: "disciples", portraitState: "speaking" },
+  b03: { portraitSubjectId: "jesus", portraitState: "speaking" },
+  b04: { portraitSubjectId: "man-born-blind", portraitState: "blind" },
+  b05: { portraitSubjectId: "jesus", portraitState: "speaking" },
+  b06: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b07: { portraitSubjectId: "neighbors", portraitState: "speaking" },
+  b08: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b09: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b10: { portraitSubjectId: "pharisees", portraitState: "speaking" },
+  b11: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b12: { portraitSubjectId: "judean-authorities", portraitState: "speaking" },
+  b13: { portraitSubjectId: "parents", portraitState: "speaking" },
+  b14: { portraitSubjectId: "judean-authorities", portraitState: "speaking" },
+  b15: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b16: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b17: { portraitSubjectId: "pharisees", portraitState: "speaking" },
+  b18: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b19: { portraitSubjectId: "man-born-blind", portraitState: "worship" },
+  b20: { portraitSubjectId: "pharisees", portraitState: "speaking" },
+} as const);
+
 export const DIALOGUE_SEGMENTS = Object.freeze(
   DIALOGUE_SEGMENT_PLAN.flatMap((segments, beatIndex) => {
     const beatId = `b${String(beatIndex + 1).padStart(2, "0")}`;
@@ -68,6 +91,7 @@ export const DIALOGUE_SEGMENTS = Object.freeze(
         id: `dlg-${beatId}-${segment.segmentId.replaceAll(":", "-")}`,
         beatId,
         speakerId: "scripture",
+        ...PORTRAIT_BY_BEAT[beatId as keyof typeof PORTRAIT_BY_BEAT],
         verseKey: segment.verseKey,
         segmentId: segment.segmentId,
         sourceLevel: "S0" as const,

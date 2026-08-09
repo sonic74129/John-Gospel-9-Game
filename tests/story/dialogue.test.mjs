@@ -5,6 +5,7 @@ import test from "node:test";
 import scriptureArtifact from "../../src/story/licensed-artifacts/scrollmapper-chiun-john9.json" with {
   type: "json",
 };
+import { dialoguePortraitFor } from "../../src/adapters/dialogue-portraits.ts";
 import { DIALOGUE_BY_BEAT, DIALOGUE_SEGMENTS } from "../../src/story/dialogue.ts";
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
@@ -58,4 +59,16 @@ test("John 9:7 preserves its exact instruction before its exact washing outcome"
     `${instruction.exactText}${outcome.exactText}`,
     scriptureArtifact.verses[6].exactText,
   );
+});
+
+test("portrait subjects preserve blind and seeing identity while worship stays portraitless", () => {
+  assert.match(
+    dialoguePortraitFor(DIALOGUE_BY_BEAT.b01[0]).art.path,
+    /portrait-man-blind\.png$/,
+  );
+  assert.match(
+    dialoguePortraitFor(DIALOGUE_BY_BEAT.b06[0]).art.path,
+    /portrait-man-seeing\.png$/,
+  );
+  assert.equal(dialoguePortraitFor(DIALOGUE_BY_BEAT.b19[0]), null);
 });

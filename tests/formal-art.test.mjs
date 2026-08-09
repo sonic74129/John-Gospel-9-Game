@@ -94,7 +94,7 @@ test("formal art manifest pins the complete single-source private-preview contra
       bottom: 768,
     },
   });
-  assert.equal(review.runtimeInventory.files, 23);
+  assert.equal(review.runtimeInventory.files, 30);
   assert.deepEqual(review.runtimeInventory.worldDimensions, {
     width: 2688,
     height: 1792,
@@ -174,9 +174,9 @@ test("formal environment review points to the exact processed selections", () =>
   }
 });
 
-test("all 23 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
+test("all 30 runtime outputs match recorded bytes, hashes, and dimensions", async () => {
   const outputs = manifest.assets.flatMap(({ outputs }) => outputs);
-  assert.equal(outputs.length, 23);
+  assert.equal(outputs.length, 30);
   assert.equal(new Set(outputs.map(({ path }) => path)).size, outputs.length);
   for (const output of outputs) {
     const bytes = await readFile(output.path);

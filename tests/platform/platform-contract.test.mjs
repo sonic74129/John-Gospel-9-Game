@@ -143,8 +143,15 @@ test("shell exposes responsive canvas and accessible control structure", async (
   }
   assert.match(shell, /window\.addEventListener\("keydown", onKeydown\)/);
   assert.match(shell, /event\.key !== " " && event\.key !== "Spacebar" && event\.key !== "Enter"/);
-  assert.match(shell, /preloadDialoguePortraits\(\)/);
-  assert.match(shell, /b06:\s*Object\.freeze\(\{[\s\S]*label:\s*"那人（洗後看見）"/);
+  assert.match(shell, /dialoguePortraitFor\(line\)/);
+  assert.match(shell, /dialogue\.dataset\.portraitless = String\(portrait === null\)/);
+  assert.doesNotMatch(
+    shell,
+    /characters-core\/character\.man-born-blind[\s\S]*man-blind\.png/,
+  );
+  assert.match(styles, /\.dialogue-panel\s*\{[^}]*max-height:\s*30%/s);
+  assert.match(styles, /max-height:\s*48%/);
+  assert.match(styles, /\.dialogue-panel\[data-portraitless="true"\]/);
   assert.match(shell, /aria-pressed="false"/);
   assert.match(styles, /aspect-ratio:\s*16\s*\/\s*9/);
   assert.match(styles, /@media\s*\(max-width:\s*640px\)/);

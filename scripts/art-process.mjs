@@ -46,6 +46,7 @@ const reusedManifestPaths = [
 
 const reusedTailManifestPaths = [
   "public/assets/art/environment-outdoor/environment.john9-zigzag-props/v2/run-001/runtime-manifest.json",
+  "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/runtime-manifest.json",
 ];
 
 const derivedRuntimeOutputs = Object.freeze({

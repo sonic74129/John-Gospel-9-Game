@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "portrait.john9-dialogue",
+  "family": "dialogue-portraits",
+  "runtimeRole": "dialogue-portrait",
+  "identityVersion": "john9-dialogue-identities-v1",
+  "sourceCommit": "b53f197",
+  "generatedNewImagery": false,
+  "derivation": "source-crop-keyed-upscale",
+  "reviewStatus": "copilot-accepted-runtime-ready",
+  "distributionScope": "private",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "outputs": [
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-jesus.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "jesus",
+      "identityVersion": "john9-jesus-v1",
+      "portraitState": "speaking",
+      "bytes": 292237,
+      "sha256": "8a35402179a287bfd55e49f260630e3fd803a191a4fbdbfa57a2a21fc6421b1b",
+      "dimensions": { "width": 420, "height": 442 },
+      "provenance": {
+        "sourceAssetId": "character.jesus-john9",
+        "sourceSha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e",
+        "sourceCommit": "b53f197"
+      }
+    },
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-man-blind.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "man-born-blind",
+      "identityVersion": "john9-man-born-blind-v1",
+      "portraitState": "blind",
+      "bytes": 205403,
+      "sha256": "470e49a711bae0a05e0f93c47b0d28ae52f4509d9160e9b724fafd2615003b15",
+      "dimensions": { "width": 400, "height": 472 },
+      "provenance": {
+        "sourceAssetId": "character.man-born-blind",
+        "sourceSha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765",
+        "sourceCommit": "b53f197"
+      }
+    },
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-man-seeing.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "man-born-blind",
+      "identityVersion": "john9-man-born-blind-v1",
+      "portraitState": "seeing",
+      "bytes": 206788,
+      "sha256": "b7debbaac3c765173e376f45593235386df3ee6f0a3411a415c051b96e326378",
+      "dimensions": { "width": 400, "height": 480 },
+      "provenance": {
+        "sourceAssetId": "character.man-born-blind",
+        "sourceSha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765",
+        "sourceCommit": "b53f197"
+      }
+    },
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-disciples.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "disciples",
+      "identityVersion": "john9-supporting-v1",
+      "portraitState": "speaking",
+      "bytes": 209159,
+      "sha256": "9278b5dae3dc4d05daea45f4b7288854bb89f1578bfc8a86eae7f695d69c2423",
+      "dimensions": { "width": 400, "height": 468 },
+      "provenance": {
+        "sourceAssetId": "character.john9-supporting",
+        "sourceSha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce",
+        "sourceCommit": "b53f197"
+      }
+    },
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-neighbors.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "neighbors",
+      "identityVersion": "john9-supporting-v1",
+      "portraitState": "questioning",
+      "bytes": 201062,
+      "sha256": "09078d401790b7f53d42241f919434d25c7c29797a1fbfe1f66c0a90245299d9",
+      "dimensions": { "width": 400, "height": 468 },
+      "provenance": {
+        "sourceAssetId": "character.john9-supporting",
+        "sourceSha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce",
+        "sourceCommit": "b53f197"
+      }
+    },
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-authorities.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "authorities",
+      "identityVersion": "john9-supporting-v1",
+      "portraitState": "questioning",
+      "bytes": 201658,
+      "sha256": "1a734e851e20c4e3efe275e622f10bfeb2a3cc6633cdcf34d008e4491feed1c3",
+      "dimensions": { "width": 400, "height": 468 },
+      "provenance": {
+        "sourceAssetId": "character.john9-supporting",
+        "sourceSha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce",
+        "sourceCommit": "b53f197"
+      }
+    },
+    {
+      "path": "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/portrait-parents.png",
+      "runtimeRole": "dialogue-portrait",
+      "subjectIdentityId": "parents",
+      "identityVersion": "john9-supporting-v1",
+      "portraitState": "speaking",
+      "bytes": 193342,
+      "sha256": "de9a1a22d6413dd1b07dfcca1bf0d09c7594d9979618f50b085e70b0ec5da6b2",
+      "dimensions": { "width": 400, "height": 468 },
+      "provenance": {
+        "sourceAssetId": "character.john9-supporting",
+        "sourceSha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce",
+        "sourceCommit": "b53f197"
+      }
+    }
+  ]
+}

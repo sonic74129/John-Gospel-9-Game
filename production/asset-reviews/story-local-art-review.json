@@ -19,8 +19,8 @@
   ],
   "runtimeInventory": {
     "manifest": "public/assets/art/manifest.json",
-    "assetFamilies": 6,
-    "files": 23,
+    "assetFamilies": 7,
+    "files": 30,
     "worldDimensions": {
       "width": 2688,
       "height": 1792
@@ -42,7 +42,7 @@
     "The world base is a single painted two-dimensional composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
     "The pinned Jesus vendor sheet provides four-direction idle and two-step walk frames through deterministic byte-copy extraction.",
     "Observer walk frames, full man-born-blind directional animation, and supporting-actor up/down or walk frames remain blocked because the built-in image-generation tool is unavailable; restored formal static poses and current directional/look-right assets are used without CLI fallback or substitute art.",
-    "Dialogue portraits were not generated because the current UI has no portrait surface.",
+    "Dialogue portraits are deterministic crops from the already selected story-local character sources; no new imagery was generated, and the worship segment intentionally uses the portraitless layout because no dedicated worship portrait exists.",
     "All generated and pinned packs remain non-release-eligible until rights and public redistribution review."
   ]
 }

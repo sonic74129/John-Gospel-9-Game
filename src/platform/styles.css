@@ -224,18 +224,18 @@ button:disabled {
 .dialogue-panel {
   position: absolute;
   z-index: 20;
-  left: 50%;
-  bottom: 1rem;
-  transform: translateX(-50%);
-  overflow: auto;
-  width: min(92%, 54rem);
-  max-height: min(78%, 39rem);
-  padding: clamp(0.9rem, 2vw, 1.4rem);
-  border: 2px solid #e2d2b2;
-  border-radius: 1rem;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: minmax(10rem, 24%) minmax(0, 1fr);
+  max-height: 30%;
   color: #fffaf1;
-  background: rgb(60 53 47 / 96%);
-  box-shadow: 0 1rem 2.5rem rgb(20 16 13 / 38%);
+  background:
+    linear-gradient(90deg, rgb(25 20 19 / 96%), rgb(47 38 34 / 92%)),
+    rgb(38 31 29 / 94%);
+  box-shadow: 0 -0.7rem 1.8rem rgb(20 16 13 / 32%);
+  overflow: hidden;
 }
 
 .dialogue-panel[hidden],
@@ -245,14 +245,37 @@ button:disabled {
   display: none;
 }
 
-.dialogue-panel > header,
-.dialogue-panel > footer {
+.dialogue-panel[data-portraitless="true"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.dialogue-box {
+  display: grid;
+  grid-template:
+    "heading heading" auto
+    "copy controls" minmax(0, 1fr) /
+    minmax(0, 1fr) auto;
+  gap: 0.45rem 1rem;
+  min-height: 0;
+  padding: clamp(0.75rem, 1.5vw, 1.15rem) clamp(0.9rem, 2vw, 1.5rem);
+  border-left: 4px solid rgb(197 161 110 / 88%);
+}
+
+.dialogue-box > header,
+.dialogue-box > footer {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.dialogue-panel > footer {
+.dialogue-box > header {
+  grid-area: heading;
+  justify-content: space-between;
+}
+
+.dialogue-box > footer {
+  grid-area: controls;
+  align-self: end;
   justify-content: flex-end;
 }
 
@@ -269,11 +292,11 @@ button:disabled {
 }
 
 .dialogue-portrait {
-  display: grid;
-  justify-items: center;
-  gap: 0.45rem;
-  width: min(100%, 16rem);
-  margin: 0.8rem auto 0.25rem;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  pointer-events: none;
 }
 
 .dialogue-portrait[hidden] {
@@ -281,21 +304,27 @@ button:disabled {
 }
 
 .dialogue-portrait img {
-  width: min(100%, 10rem);
-  height: auto;
-  max-height: 12.5rem;
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  border: 1px solid rgb(240 223 189 / 52%);
-  border-radius: 0.65rem;
-  background: linear-gradient(180deg, #f7f0de 0%, #ead9b7 100%);
+  object-position: center bottom;
+  filter: drop-shadow(0 0.7rem 0.7rem rgb(20 16 13 / 42%));
 }
 
 .dialogue-portrait figcaption {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.25rem;
+  left: 0.35rem;
   margin: 0;
+  padding: 0.2rem 0.35rem;
   color: #f0dfbd;
+  background: rgb(60 53 47 / 84%);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.03em;
+  text-align: center;
 }
 
 .dialogue-panel button,
@@ -305,20 +334,20 @@ button:disabled {
 }
 
 .dialogue-reference {
-  margin: 0 0 1rem;
+  margin: 0;
   color: #f0dfbd;
   font-size: 0.82rem;
   line-height: 1.4;
 }
 
 .dialogue-text {
-  margin: 1rem 0;
-  padding: 1rem;
-  border-left: 4px solid #c5a16e;
-  border-radius: 0.35rem;
-  background: rgb(255 250 241 / 10%);
+  grid-area: copy;
+  align-self: center;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
   font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.65;
+  line-height: 1.5;
 }
 
 .game-controls {
@@ -434,29 +463,32 @@ button:disabled {
   }
 
   .dialogue-panel {
-    bottom: 7rem;
-    width: calc(100% - 1rem);
-    max-height: calc(100% - 5.5rem);
-    padding: 0.8rem;
+    grid-template-columns: minmax(6.5rem, 32%) minmax(0, 1fr);
+    max-height: 48%;
   }
 
   .dialogue-portrait {
-    width: min(100%, 12rem);
-    margin-top: 0.4rem;
+    min-height: 0;
   }
 
   .dialogue-portrait img {
-    max-height: 9.5rem;
+    object-position: center bottom;
   }
 
-  .dialogue-panel > header,
-  .dialogue-panel > footer {
+  .dialogue-box {
+    gap: 0.35rem 0.5rem;
+    padding: 0.65rem;
+  }
+
+  .dialogue-box > header,
+  .dialogue-box > footer {
     align-items: center;
     gap: 0.5rem;
   }
 
-  .dialogue-panel > footer button {
-    flex: 1;
+  .dialogue-box > header {
+    align-items: start;
+    flex-direction: column;
   }
 
   .game-controls {
