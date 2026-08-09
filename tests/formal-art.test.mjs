@@ -32,6 +32,9 @@ const jesusManifest = await readJson(
 const supportingManifest = await readJson(
   "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/runtime-manifest.json",
 );
+const portraitManifest = await readJson(
+  "public/assets/art/dialogue-portraits/john9-derived/v1/run-001/runtime-manifest.json",
+);
 const adapterSource = await readFile(
   "src/adapters/art-asset-adapter.ts",
   "utf8",
@@ -180,6 +183,23 @@ test("all 23 runtime outputs match recorded bytes, hashes, and dimensions", asyn
     assert.equal(bytes.byteLength, output.bytes, output.path);
     assert.equal(sha256(bytes), output.sha256, output.path);
     assert.deepEqual(imageDimensions(bytes, output.path), output.dimensions);
+  }
+});
+
+test("dialogue portrait slots reject map sprites and preserve role identity provenance", async () => {
+  assert.equal(portraitManifest.family, "dialogue-portraits");
+  assert.equal(portraitManifest.runtimeRole, "dialogue-portrait");
+  assert.equal(portraitManifest.sourceCommit, "b53f197");
+  assert.ok(portraitManifest.identityVersion);
+  assert.ok(portraitManifest.outputs.length >= 7);
+  for (const output of portraitManifest.outputs) {
+    assert.equal(output.runtimeRole, "dialogue-portrait", output.path);
+    assert.notDeepEqual(output.dimensions, { width: 36, height: 128 }, output.path);
+    assert.ok(output.dimensions.width >= 240, output.path);
+    assert.ok(output.dimensions.height >= 240, output.path);
+    const bytes = await readFile(output.path);
+    assert.equal(bytes.byteLength, output.bytes, output.path);
+    assert.equal(sha256(bytes), output.sha256, output.path);
   }
 });
 
