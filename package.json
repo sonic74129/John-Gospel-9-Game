@@ -1,0 +1,15 @@
+{
+  "name": "@sonic74129/john-gospel-9-game",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate:continuity": "node scripts/validate-context-continuity.mjs",
+    "validate:structure": "node .github/scripts/validate-story-structure.mjs --story-root .",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test": "npm run validate:continuity && npm run validate:structure && npm run test:unit"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
