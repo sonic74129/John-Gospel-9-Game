@@ -28,7 +28,10 @@ export const NARRATIVE_ANCHORS = Object.freeze([
 
 export const NARRATIVE_PATHS = Object.freeze([
   "man-to-pool",
+  "neighbors-to-pool",
   "pool-to-neighbors",
+  "pharisees-to-inquiry",
+  "authorities-to-inquiry",
   "group-to-inquiry",
   "parents-entry",
   "parents-exit",
@@ -125,19 +128,29 @@ const STEPS_BY_BEAT = Object.freeze({
   ],
   b07: [
     command("actor-follow-path", {
+      pathId: "neighbors-to-pool",
+      primaryActorId: "neighbors",
+      participantActorIds: [],
+    }),
+    command("actor-follow-path", {
       pathId: "pool-to-neighbors",
       primaryActorId: "man-born-blind",
-      participantActorIds: ["neighbors"],
+      participantActorIds: [],
     }),
     command("set-actor-pose", { actorId: "neighbors", pose: "questioning" }, "S1"),
     dialogueStep("b07"),
   ],
   b08: [dialogueStep("b08")],
   b09: [
-    command("set-actor-visible", { actorId: "pharisees", visible: true }),
-    command("set-actor-visible", {
-      actorId: "judean-authorities",
-      visible: true,
+    command("actor-follow-path", {
+      pathId: "pharisees-to-inquiry",
+      primaryActorId: "pharisees",
+      participantActorIds: [],
+    }),
+    command("actor-follow-path", {
+      pathId: "authorities-to-inquiry",
+      primaryActorId: "judean-authorities",
+      participantActorIds: [],
     }),
     command("actor-follow-path", {
       pathId: "group-to-inquiry",

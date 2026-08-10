@@ -173,7 +173,10 @@ test("compact gameplay contracts align to the complete single-source world", () 
     paths.sequencePaths.map(({ id }) => id),
     [
       "man-to-pool",
+      "neighbors-to-pool",
       "pool-to-neighbors",
+      "pharisees-to-inquiry",
+      "authorities-to-inquiry",
       "group-to-inquiry",
       "parents-entry",
       "parents-exit",
@@ -340,7 +343,10 @@ test("all sequence paths are radius-safe, reachable, and short without empty cor
 
   const maximumLengths = new Map([
     ["man-to-pool", 900],
+    ["neighbors-to-pool", 300],
     ["pool-to-neighbors", 250],
+    ["pharisees-to-inquiry", 350],
+    ["authorities-to-inquiry", 120],
     ["group-to-inquiry", 550],
     ["parents-entry", 200],
     ["parents-exit", 200],

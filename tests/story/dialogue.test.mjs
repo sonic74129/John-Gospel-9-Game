@@ -61,11 +61,16 @@ test("John 9:7 preserves its exact instruction before its exact washing outcome"
   );
 });
 
-test("portrait subjects preserve blind and seeing identity while worship stays portraitless", () => {
+test("portrait subjects preserve blind-washing-seeing identity while worship stays portraitless", () => {
   const blindPortrait = dialoguePortraitFor(DIALOGUE_BY_BEAT.b01[0]);
-  const seeingPortrait = dialoguePortraitFor(DIALOGUE_BY_BEAT.b06[0]);
+  const washingPortrait = dialoguePortraitFor(DIALOGUE_BY_BEAT.b06[0]);
+  const seeingPortrait = dialoguePortraitFor(DIALOGUE_BY_BEAT.b08[0]);
   assert.match(
     blindPortrait.art.path,
+    /portrait-man-blind\.png$/,
+  );
+  assert.match(
+    washingPortrait.art.path,
     /portrait-man-blind\.png$/,
   );
   assert.match(
@@ -73,12 +78,14 @@ test("portrait subjects preserve blind and seeing identity while worship stays p
     /portrait-man-seeing\.png$/,
   );
   assert.equal(DIALOGUE_BY_BEAT.b01[0].portraitState, "blind");
-  assert.equal(DIALOGUE_BY_BEAT.b06[0].portraitState, "seeing");
+  assert.equal(DIALOGUE_BY_BEAT.b05[0].portraitState, "speaking");
+  assert.equal(DIALOGUE_BY_BEAT.b06[0].portraitState, "washing");
+  assert.equal(DIALOGUE_BY_BEAT.b08[0].portraitState, "seeing");
+  assert.notEqual(blindPortrait.framing.offsetY, washingPortrait.framing.offsetY);
   assert.notEqual(blindPortrait.art.key, seeingPortrait.art.key);
-  assert.notEqual(blindPortrait.framing.offsetY, seeingPortrait.framing.offsetY);
   assert.notEqual(
     blindPortrait.framing.mobileOffsetY,
-    seeingPortrait.framing.mobileOffsetY,
+    washingPortrait.framing.mobileOffsetY,
   );
   assert.equal(dialoguePortraitFor(DIALOGUE_BY_BEAT.b19[0]), null);
 });

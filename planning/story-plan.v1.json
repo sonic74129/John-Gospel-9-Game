@@ -5889,6 +5889,30 @@
         ]
       },
       {
+        "id": "neighbors-to-pool",
+        "from": "pool.observer-approach",
+        "to": "pool.neighbors",
+        "ledgerEntryIds": [],
+        "waypoints": [
+          {
+            "x": 1224,
+            "y": 1170
+          },
+          {
+            "x": 1124,
+            "y": 1120
+          },
+          {
+            "x": 1044,
+            "y": 1100
+          },
+          {
+            "x": 984,
+            "y": 1090
+          }
+        ]
+      },
+      {
         "id": "pool-to-neighbors",
         "from": "pool.wash-edge",
         "to": "pool.neighbors",
@@ -5905,6 +5929,50 @@
           {
             "x": 984,
             "y": 1090
+          }
+        ]
+      },
+      {
+        "id": "pharisees-to-inquiry",
+        "from": "courtyard.gate",
+        "to": "courtyard.pharisees-left",
+        "ledgerEntryIds": [],
+        "waypoints": [
+          {
+            "x": 1160,
+            "y": 904
+          },
+          {
+            "x": 1200,
+            "y": 844
+          },
+          {
+            "x": 1220,
+            "y": 744
+          },
+          {
+            "x": 1220,
+            "y": 664
+          }
+        ]
+      },
+      {
+        "id": "authorities-to-inquiry",
+        "from": "courtyard.waiting",
+        "to": "courtyard.pharisees-right",
+        "ledgerEntryIds": [],
+        "waypoints": [
+          {
+            "x": 1440,
+            "y": 724
+          },
+          {
+            "x": 1420,
+            "y": 684
+          },
+          {
+            "x": 1380,
+            "y": 664
           }
         ]
       },

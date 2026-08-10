@@ -21,6 +21,40 @@
 只共用稳定的引擎、UI、风格规范、时代素材包和生产工具，故事经文、地图布局、
 人物状态、演出、语音和存档彼此隔离，未来再由一个轻量总入口统一发现和启动。
 
+### 0.1 最高产品/交付原则
+
+Foundation 的最高 PRODUCT/DELIVERY 原则，是让 Copilot 快速迭代并自主端到端交付精美、
+可玩、包含最终美术的正式游戏。经文、来源与权利、安全、质量、资产 hash 和仓库独立性
+是 Copilot 自动执行的约束，不是默认转交给用户的阶段工作流；人工复核、等待确认、灰盒、
+候选图和 placeholder 均不得成为默认停止点。确实缺少凭据或法定授权时，不伪造完成，
+只阻塞受影响步骤并继续其余工作。
+
+默认先形成完整资产 inventory，只建立让资产可用的最小地图、身份、比例、镜头和文字
+contract，再完成并接入第一版正式资产，随后逐 Beat/Stage 用 development-only 入口或
+fixture 验证玩法。每个资产第一轮恰好生成一个输出，自动检查、处理并接入；多个候选只
+作为明确例外。
+
+### 0.2 上下文预算与协调
+
+- 连续性是事件驱动的：仅在 phase transition、heavy/binary/media boundary、重工作业后
+  即将等待用户输入，以及 checkpoint/continuation 接管时记录；不得在每轮重复六字段，
+  也不得依赖 token 70%/80% 阈值防止请求过大。
+- 记录恰好包含 `objective`、`status`、`anchors`（repository/branch/commit）、
+  `decisions`（confirmed/hypothesis）、`next_actions`（最多 3 项且含 validation）和
+  `risks_blockers`。
+- coordinator 绝不直接接收截图、binary 或 base64。媒体检查由范围有界的 child/session
+  完成，只回传 durable path、SHA-256、status 和 findings，不回传媒体、完整 transcript、
+  重复通知或大型 diff/log。非媒体代码 child 沿用 commit、files、validation、assets 和
+  blockers 的精简 handoff。
+- token utilization 与 serialized request payload bytes 是独立预算，必须分别在发送前
+  控制。重工作业后若必须 `ask_user`，先保存 compact decision brief/checkpoint，再从 clean
+  continuation 发问。
+- request-size failure 后禁止在 poisoned session 重试；保留六字段、父子 session/任务关系、
+  最后已完成边界、durable asset metadata 和 validation 状态，从 clean continuation 接管。
+- 这些内容只写入既有 handoff/checkpoint，不新增 planning artifact、production stage、
+  runtime manifest、readiness flag 或 alternate plan schema。所有 child/continuation
+  继承完整约束和完成定义。
+
 这套游戏不是传统打怪升级 RPG。核心体验是：
 
 > 阅读或听见经文线索 -> 在地图中探索 -> 观察人物与物件 -> 互动或回想 ->
@@ -40,6 +74,8 @@
 - 每个故事有自己的代码入口、内容、地图、测试、构建产物和版本。
 - 共用素材必须有稳定 ID、版本、来源、用途、授权和兼容范围。
 - 用户要求制作游戏时默认端到端完成；灰盒只是内部校验，不得作为停止点或最终交付。
+- 用户睡觉、外出或无法参与时，不建立固定 nightly schedule；用 checkpoint 继续所有
+  不需要真正受限用户决定的工作，单个资产阻塞只阻塞该资产。
 
 ### 1.2 已否决，不得恢复
 
@@ -52,8 +88,8 @@
 - 不用重复明显的地面格纹，也不把不同光线、透视的贴纸物件硬拼成世界。
 - 不继续以像素风为强制规范。最终权威风格是高清手绘绘本写实感。
 - 不让对话肖像变成与地图角色不同脸、不同服装、不同年龄的写实演员。
-- 不在灰盒、比例和路线未通过前批量生成最终美术。
-- 不自动采用第一张成功生成的图片。
+- 不要求先完成全故事灰盒才开始正式美术；只先锁定当前资产所需的最小可用 contract。
+- 不把“生成成功”当成验收；默认单输出必须自动检查、处理并接入真实游戏。
 - 不在一个巨大 Scene 文件中硬编码所有坐标、对白、剧情和资源路径。
 - 不复制整个旧游戏来开始新故事，再各自修改一份共用逻辑。
 - 不让不同故事直接读取彼此的内部状态或本地存档。
@@ -128,7 +164,10 @@ games/john-11-bethany/src/story/scripture.ts
 ### 3.2 核心互动
 
 - `移动`：键盘方向键/WASD；鼠标或触控点击寻路。
+- 固定点点击只产生一次到该固定世界坐标的路径，不得持续追踪人物或移动目标；任何方向输入
+  立即取消该路径并恢复直接控制。
 - `互动`：Space、点击人物或统一互动按钮。
+- Space 只触发当前近距离可互动对象，不启动远距离导航，也不把玩家拉向人物。
 - `观察`：靠近人物或物件时显示一行中性观察文字。
 - `回想`：在经文揭示前进行短选择，不做复杂谜题。
 - `跟随`：角色先在地图行动，再把控制权交还玩家。
@@ -153,6 +192,8 @@ interface StoryBeat {
   stageGoal: StageGoal;
   duringState?: StoryStateSnapshot;
   finalState: StoryStateSnapshot;
+  spatialTransition?: SpatialTransitionContract;
+  orderedChoreography?: OrderedChoreographyContract;
   handoff: "manual" | "automatic" | null;
   voiceCueIds?: readonly string[];
 }
@@ -165,6 +206,16 @@ interface StoryBeat {
 - `completed` 与 `skipped` 都调用同一份 `finalState`。
 - `finalState` 必须写明人物可见性、位置/姿态、标签、碰撞、镜头、物件和控制权。
 - 不依赖“动画刚好跑完后的现场状态”作为真相。
+- 每个空间过渡必须以 `player-seeks`、`npc-arrives`、`npc-leads-player` 或经审核的
+  `time-cut` 声明 transition mode，并逐 Beat 记录 player control、actor path、entry/exit
+  与 final convergence。
+- 多角色移动或入场必须声明 `participants`、`orderedSteps`、`entrySource`、`path`、
+  `endAnchor` 与 `finalConvergence`；每一步引用的 sequence/path 必须可反向定位该 Beat。
+- 玩家位置只能由该时刻的玩家输入推进；剧情 sequence 不得把玩家无来源地传送到下一目标。
+
+`orderedChoreography` 与 group 成员独立性是 late implementation contract：实现推进到该
+Beat 时在既有 Story Plan/manifest 中补齐，不是开始编码前的 Planning acceptance；但在该
+Beat 进入 runtime integration 时缺失必须 fail closed。
 
 ### 3.4 提示与计分
 
@@ -190,6 +241,81 @@ interface StoryBeat {
 - 自由顺序、零扣分、不要求全部收集。
 - 若承担路线提示，最后一句给出自然方向线索，不显示箭头或答案。
 - 正确人物揭示后，临时线索、道具和匿名标签一起清理。
+
+### 3.6 Scripture / Dialogue Presentation Contract
+
+默认呈现模式是 `map-visible-bottom-overlay`。经文（scripture）、叙述（narration）和对白
+（dialogue）必须先按用途分类，再选择文字、actor 与 portrait：
+
+- `scripture` 显示指定译本的逐字文本与出处；不得改写为角色对白。
+- `narration` 只描述经文明说的事件或已批准桥接；不得伪装成某角色说话。
+- `dialogue` 只用于角色实际说出的内容，并绑定可见或已明确建立的 `speaker` actor。
+- `scripture` / `narration` 使用人物图时必须绑定该段内容所指向的 `subject actor`；没有
+  可合法绑定的 actor 时，使用不含 portrait 的底部面板，不得借用无关人物或匿名头像。
+
+布局必须可测量：
+
+- 地图可见区域指 viewport 中未被不透明剧情 UI 遮挡、仍显示 runtime 地图与 actor 的区域。
+- 桌面 viewport 的地图可见区域不得低于 70%，底部 overlay 高度不得超过 30%。
+- 移动端 viewport 的地图可见区域不得低于 50%；文字、出处、控件和安全区不得遮住关键 actor。
+- 普通经文或对白禁止使用居中或全屏静态人物卡，禁止以普通剧情全屏静态插画代替地图演出。
+- Blocking dialogue 可以锁定玩家移动和互动，但 runtime 地图、当前人物动作与合理环境运动
+  仍须可见；不得把锁输入实现成冻结世界后切到静态卡。
+
+Portrait 是独立资产角色，不是地图素材的另一种缩放方式：
+
+- 必须是专用 `story portrait` runtime asset，采用胸口以上近景，并在 manifest 中声明
+  portrait 用途。
+- 必须引用与地图 actor 相同的 identity/version；脸、年龄、发型、肤色、服装、材质和
+  光向保持一致。
+- 禁止直接使用或放大 map sprite、atlas frame、低分辨率地图角色充当 portrait UI。
+- Spoken dialogue 的 portrait 绑定 `speaker`；scripture/narration 的 portrait 绑定
+  `subject actor`，不得仅因版面空缺而显示其他人物。
+
+所有角色共用一份可测试的 portrait framing contract，不允许各组件自由微调：
+
+```ts
+interface PortraitFramingContract {
+  baseline: { focusY: number; scale: number; offsetY: number };
+  mobileBaseline: { focusY: number; scale: number; offsetY: number };
+  profiles: Readonly<Record<PortraitProfileId, PortraitFramingProfile>>;
+}
+
+interface PortraitState {
+  id: string;
+  meaning: string;
+  assetSource: string;
+  identityVersion: string;
+}
+```
+
+- `baseline` 与 `mobileBaseline` 是全角色统一的默认构图；profile 只能以稳定 ID 按成人、儿童、
+  群体等角色类型处理可解释的身体比例差异，不得按单张图或单句对白临时命名。
+- profile 必须保留统一的 head/chest crop、eye-line 与 subject scale 构图语义；不能把 profile
+  机制变成每个角色各自随意缩放和偏移。
+- 同一角色可以有平静、哀伤、激动等多个 `portraitState`，但每个扩展状态必须声明状态语义、
+  asset source，并引用同一 identity/version；缺任一项时 fail closed，不显示未受管状态。
+- 强剧情变化优先切换有来源的 `portraitState`；禁止用随机 `offsetY`、`scale` 或 focus 偏移
+  制造差异，状态切换也不得造成构图语义漂移。
+- runtime 只按 `viewport-specific baseline -> profile` 的合同解析，不得依赖散落在组件、
+  Beat 或对白数据中的硬编码微调代替合同。
+- 资产生产顺序固定为：先定义关键剧情状态矩阵（每角色建议 1–3 个有语义状态），再生成
+  source/runtime 资产，再接线，最后完成 desktop/mobile browser QA 与 fail-closed 校验。
+
+这些量化要求是 implementation/browser-QA acceptance，不是开始实现前的审批门。完成最小
+Planning Gate 后立即构建 playable slice；Copilot 在受影响 Beat 进入 QA 与完成声明前自动
+测量并闭环。若实现中确需布局或比例例外，在 canonical Story Plan 的既有 contract 中记录：
+
+1. 受影响的 `Beat`。
+2. 例外理由。
+3. 审核人。
+4. 替代地图连续性方案。
+5. 可执行验证证据，包括目标 viewport、地图可见比例、overlay 比例、real-input browser QA
+   与对应截图。
+
+身份一致、专用 portrait asset role、禁止 map sprite/atlas frame/低分辨率地图角色冒充
+portrait，以及禁止普通剧情全屏静态插画，均不可豁免。例外复核由既有 designated reviewer
+完成；不得建立新的用户逐项审批队列，详细证据也不得阻塞开始实现。
 
 ## 4. 地图与空间规则
 
@@ -239,8 +365,10 @@ walkable bounds
 collision polygons
 navigation grid
 actor spawns
+actor directional manifests
 interaction anchors
 sequence paths
+ordered choreography steps
 camera zones
 foreground occluders
 movable prop anchors
@@ -250,37 +378,47 @@ mobile/desktop safe framing
 路线点与视觉锚点必须分开。例如“前往墓园的路线终点”不等于“洞口中心”。
 所有关键动作都以实际图片像素校准的 anchor 为准，并保留 debug overlay。
 
-### 4.4 内部校验后必须继续正式图
+### 4.4 最小契约后立即完成正式图
 
-正式生成地图前必须短暂完成以下内部校验：
+完整地图生产前只完成让该资产可用的最小校验：
 
-1. 画出区域、路线、清场、门口、互动点和镜头范围。
-2. 放入真实批准角色测试 2–3 个尺寸。
-3. 验证道路可同时容纳 2–3 人与姓名牌。
-4. 验证建筑、门、床、井、桌、树、墓穴与人物比例可信。
-5. 验证正常路线、跳过路线和重进场景都不会卡住。
-6. 锁定地图尺寸、光向、人物高度和地标坐标后，才写最终 MAI prompt。
+1. 标出关键区域、路线、入口、互动点和镜头范围。
+2. 用固定 identity/scale 的真实角色验证道路、门洞、姓名牌与群体站位。
+3. 验证建筑、门、床、井、桌、树、墓穴与人物比例可信。
+4. 定义 normal、skip、restart、re-entry 所需的 final state 和独立 fixture。
+5. 锁定该资产的尺寸、光向、人物高度和必要地标坐标。
 
-第 6 项完成即代表 MAI 生产的开始条件已经满足，不代表故事完成。除非用户明确要求
-`graybox-only`，不得停在此处、提交玩家版灰盒或使用“完整故事”描述。应立即继续
-第 7 节的 prompt registry、候选生成、视觉审查、runtime 处理与接入，不等待用户再次
-确认“可以生图”。
+不得先要求全故事灰盒完成，也不得停在 contract、灰盒或 placeholder。最小契约可用后
+立即继续第 7 节的稳定 prompt、单输出生成、自动视觉审查、runtime 处理与真实游戏接入。
 
-灰盒 layout、contract tests 和 debug overlay 必须保留为正式图回归基线。正式图造成
-路线、比例、镜头、碰撞或遮挡回归时，只把受影响部分切回灰盒定位并修正，重跑该区域
-QA，再重新生成或处理受影响资产；通过后自动继续，不推翻其他已批准素材。
+layout contract、tests 和 development-only overlay 应保留为正式图回归基线。正式图造成
+路线、比例、镜头、碰撞或遮挡回归时，只修正受影响契约或资产，升版并保留旧 hash，重跑
+该 Beat/Stage QA；通过后自动继续，不推翻其他已关闭素材。
 
 经文授权或人工审核待定时，继续所有不需要展示未授权逐字文本的地图、美术、人物、
-动作、引擎和 QA 工作，并把最终状态标记为 `release-blocked`，不能误判为生产停止。
+动作、引擎和 QA 工作，并在现有 handoff 中列明发布 blocker，不能误判为生产停止或新增
+状态字段。
 
 ### 4.5 地图演出连续性
 
-- 角色从门口、道路、洞口或画面边缘进入和离开，不能从天空落下或凭空瞬移。
+- 每个空间过渡声明 `player-seeks`、`npc-arrives`、`npc-leads-player` 或经审核的
+  `time-cut`；normal 地图叙事必须由玩家探索或可见 NPC choreography 连接阶段状态。
+- 当前视野内禁止无来源 visibility pop-in；人物必须从既有位置、合理入口、画面外或真实
+  actor path 进入，从门口、道路、洞口或画面边缘离开，不能从天空落下或凭空瞬移。
 - 后续会移动的石头、门或物件从场景开始就存在；改变时保持视觉连续。
 - 人物淡入必须发生在合理入口，并与碰撞、深度和镜头 anchor 一致。
 - 时间跨越先让人物走向地图外或进入休息状态，再淡黑、显示时间文字并返回。
 - 室内外转换从实际门口触发；未走到门口时不得自动换图。
-- normal 与 skip 使用同一组最终坐标、可见性、碰撞、镜头和标签状态。
+- path 与 sequence 必须双向引用；禁止 orphan narrative path，也禁止没有既有位置、入口、
+  画面外来源或路径依据的 visible toggle。
+- 多角色移动或入场按 `orderedSteps` 执行；behavior evidence 必须逐步证明 participants、
+  entry source、path、end anchor 的实际顺序，无 visibility pop-in，并连续收敛到
+  `finalConvergence`。
+- normal choreography 必须先完成声明路径或经审核的 time-cut，再到达权威 final state；
+  只有 skip、restore、re-entry 可以直接收敛。normal 与这些恢复路径使用同一组最终坐标、
+  可见性、碰撞、镜头和标签状态，但状态相同不能作为 normal 可见瞬移的许可。
+- DEV Beat jump/checkpoint 可以恢复独立测试起点，但不得进入 production normal play、
+  正式完成证据或 production bundle。
 
 ## 5. 共用地图与人物素材库
 
@@ -326,6 +464,14 @@ QA，再重新生成或处理受影响资产；通过后自动继续，不推翻
 地图角色、特殊姿态和肖像都必须引用同一 identity version。若故事相隔多年、
 地点或服装情境明显不同，应建立明确 variant，不能强行用同一张图。
 
+Story group 映射多个 map spawn 时：
+
+- 有独立剧情身份、独立移动或独立互动的成员必须拥有独立 actor/spawn ID、
+  identity/version 和 runtime art/animation；禁止以 group-wide texture substitution
+  覆盖全部成员。
+- 只有 Story Plan 明示为纯匿名 crowd、且不承担个体识别或连续性的成员可以复用 archetype。
+- 一旦成员被单独点名、移动、互动或跨 Beat 追踪，就必须从 crowd 提升为独立 actor。
+
 ### 5.4 资产目录与版本
 
 建议：
@@ -369,6 +515,20 @@ games/<story-id>/
 - 故事只能依赖共用包，不能依赖另一个故事目录。
 - 故事中证明可复用的资产经过审查后再“提升”到共用包。
 
+### 5.5 人物方向与 runtime mapping
+
+每个会移动或改变面向的 actor manifest 必须声明：
+
+- frame layout 与 up/down/left/right 的视觉语义。
+- 实际需要的 idle/walk coverage、foot baseline 与每个 runtime frame key。
+- mirror policy 只能是 `distinct-frame` 或 `horizontal-mirror`。
+- 唯一的 `direction -> frame -> flipX` 映射。
+
+水平镜像可以使用，但必须由 manifest 明示，并在实际 runtime 像素上验证左右朝向、服装、
+道具和不对称特征仍正确。缺帧、未知方向、未声明镜像或同一方向存在多重映射时 fail closed，
+不得静默退回默认帧。仅检查 key、source mapping 或最终坐标不算视觉 QA；逐 actor 的
+up/down/left/right 证据必须记录 actor/spawn ID、运动向量、frame key、flipX 与截图。
+
 ## 6. 统一美术风格
 
 最终权威风格：
@@ -385,8 +545,20 @@ games/<story-id>/
 
 ### 6.2 对话肖像
 
-- 胸口以上近景，可比地图更细致，但仍属于同一游戏世界。
+- 必须是专用 story portrait runtime asset 的胸口以上近景，可比地图更细致，但仍属于
+  同一游戏世界。
 - 脸、年龄、发型、肤色、服装层次、颜色、材质和光向必须匹配地图角色。
+- 必须引用地图角色同一 identity/version；不得直接使用或放大 map sprite、atlas frame
+  或低分辨率地图角色充当 portrait UI。
+- 全角色使用统一 portrait framing baseline；desktop 与 mobile 都必须定义 `focusY`、
+  `scale`、`offsetY`，角色类型差异只能通过稳定 profile ID 解析。
+- 同一角色的多个状态保持 identity continuity 与相同构图语义；状态必须有 meaning 和
+  asset source，不得用随机偏移或散落硬编码伪造状态变化。
+- 半身肖像只用于可合法绑定 actor 的对话/叙事语境；actorless scripture/narration 使用
+  portraitless 底部面板，不为填空补人物卡。
+- 先定义关键剧情状态矩阵（每角色建议 1–3 个 `portraitState`），再生成资产；状态变化用于
+  表达 questioning、agitated、seeking 等强剧情变化，不靠 framing 微调假装差异。
+- 生产顺序是状态矩阵 -> source/runtime 资产 -> runtime 接线 -> browser QA/fail-closed 校验。
 - 表情清楚但克制，不使用戏剧化哭喊或电影海报构图。
 - 背景简单，无边框、文字、图标和水印。
 
@@ -502,32 +674,32 @@ art/prompts/portraits.json
 每个条目必须有：
 
 - 稳定 asset ID、family 和 runtime 用途。
-- 锁定模型、模型版本、prompt version。
-- 输出尺寸和候选数 2–3。
+- 锁定 provider/model、模型版本、seed、dimensions 和 prompt/output version。
+- 第一轮输出数恰好为 `1`；多个候选必须记录明确例外原因。
 - 完整可发送 prompt，而不是依赖聊天上下文。
 - 身份、镜头、比例、色板、材质、光向。
 - 必须出现与明确禁止内容。
-- 机器验收与人工视觉验收。
-- 依赖的 style/identity/master 版本。
+- 可测量的机器与视觉 acceptance。
+- 依赖的 style/identity/master/text 版本与 hash。
+- 修订时的 `Revision target`、`Change only`、`Keep unchanged` 和可测量 `Acceptance`。
 
 ### 7.5 正确生成顺序
 
-1. `style bible` 与时代包。
-2. 室内、户外、关键地点三类完整美术母版。
-3. 空环境、地面、固定建筑、可复用道具。
-4. 核心人物 identity/base sheets。
-5. 配角与地图特殊姿态。
-6. 对话肖像。
-7. 故事专用地图与活动物件。
+1. 完整资产 inventory：地图/环境、人物方向与姿态、肖像、道具、UI、语音、音频、SFX。
+2. 只建立当前资产所需的最小 style/identity/scale/camera/text contract。
+3. 完成并接入第一版正式地图/环境与核心人物 baseline。
+4. 按 dependency 顺序关闭其余人物、姿态、肖像、道具和 UI。
+5. 关闭语音、音频与 SFX 及其字幕/runtime fallback。
+6. 逐 Beat/Stage 用独立 development-only fixture 验证实际资产。
 
-母版只用于锁定风格，不直接进入游戏，也不能变成剧情插画。
+纯 style reference 不能成为停止点；凡有 runtime 用途的输出必须继续处理并接入真实游戏。
 
-### 7.6 生成、续跑与选图
+### 7.6 生成、续跑与接线
 
 以下命令沿用当前管线；未来应移到共用 `packages/art-pipeline`：
 
 ```bash
-# 只检查计划、模型、版本、候选数与输出路径
+# 只检查稳定输入、模型、版本、单输出数与输出路径
 npm run art:generate -- \
   --family master \
   --asset master.house-interior \
@@ -539,7 +711,7 @@ npm run art:generate -- \
   --asset master.house-interior \
   --mode start
 
-# 只根据 manifest 续跑缺失候选
+# 只根据 manifest 续跑未关闭资产；已关闭资产必须跳过
 npm run art:generate -- \
   --family master \
   --asset master.house-interior \
@@ -550,14 +722,10 @@ npm run art:generate -- \
   --family master \
   --asset master.house-interior \
   --mode regenerate
-
-# 人工比较后批准候选
-npm run art:generate -- \
-  --family master \
-  --asset master.house-interior \
-  --select 2 \
-  --reason "Best approved scale, route readability, identity and material match."
 ```
+
+`start`、`resume` 和 `regenerate` 之后，执行者必须自动调用故事仓库现有的检查、处理、接线
+与 fixture 验证命令；不得假设一个不存在的通用命令，也不得增加人工 select 步骤。
 
 每次只运行一个 family。脚本通过 Azure CLI 取得
 `https://cognitiveservices.azure.com/` 的 Entra token，并调用：
@@ -567,34 +735,38 @@ POST <custom-endpoint>/mai/v1/images/generations
 model = mai-image-2-5-pro
 ```
 
-### 7.7 候选审查门槛
+### 7.7 单输出自动验收门槛
 
-- 每批最多 2–3 张。
-- 看完所有候选后才可生成下一批。
-- 使用最长边不超过 1600 px、目标小于 900 KB 的 contact sheet。
-- 地图候选必须叠加真实角色测试比例、道路、门洞、姓名牌和群体站位。
-- 第一张“没有报错”的图不等于通过。
-- 若全部失败，只允许新版本修正一个共同缺陷。
-- `v2+` 必须写明：
-  - `Revision target`
-  - `Change only`
-  - `Keep unchanged`
-  - 可测量 `Acceptance`
+- 每个资产第一轮恰好生成一个输出，并按 style、identity、比例、路线、文字禁区和 runtime
+  acceptance 自动检查。
+- 地图输出必须叠加真实角色验证比例、道路、门洞、姓名牌和群体站位；音频输出必须验证
+  文本 hash、时长、格式、响度与 fallback。
+- “没有报错”不等于通过；通过后必须立即处理 source、生成 runtime、接线并运行对应
+  Beat/Stage fixture。
+- 不得停在 contact sheet、候选选择、review 目录、selected source 或
+  generated-but-unwired 文件。
+- 多个候选只允许作为用户明确要求或单输出无法验证的例外，并记录原因；它们仍不得成为
+  人工逐批 gate。
+- 需要外部权利授权或指定审核者批准的输出可继续完成非公开集成与 QA，但不得因此自动
+  提升为 stable 或公开发布。
+- 输出失败时只为该资产建立新版本，保留旧 source/runtime/hash；`v2+` 必须写明
+  `Revision target`、`Change only`、`Keep unchanged` 和可测量 `Acceptance`。
 
 ### 7.8 版本化输出
 
 ```text
-production/art-pipeline/candidates/<family>/<asset>/<promptVersion>/run-NNN/
+production/art-pipeline/runs/<family>/<asset>/<promptVersion>/run-NNN/
 production/art-pipeline/manifests/<family>/<asset>/<promptVersion>/
-production/art-pipeline/review/<family>/<asset>/<promptVersion>/
 production/art-source/<family>/<asset>/<promptVersion>/
 public/assets/art/<family>/<asset>/<promptVersion>/run-NNN/
 ```
 
-- 原始候选和批准源图不直接打进发布包。
+- 原始生成 source 不直接打进发布包。
 - 运行时只使用经过裁切、去背景、缩放和压缩的输出。
 - 高清手绘默认使用 Lanczos；只有明确的像素资产才使用 nearest。
-- 每个 runtime 输出记录源图、prompt version、run、候选、处理参数和 hash。
+- 每个 runtime 输出记录源图、prompt/output version、run、处理参数、provenance 和 hash。
+- manifest 记录 closed/remaining/blocker 所需事实，但不得成为新的 planning、readiness、
+  approval 或 production-stage schema。
 
 ### 7.9 模型或资源不可用时
 
@@ -898,13 +1070,6 @@ npm run build
   "id": "john-11-bethany",
   "version": "1.0.0",
   "templateVersion": "1.0.0",
-  "productionStage": "released",
-  "deliveryPolicy": {
-    "mode": "end-to-end",
-    "graybox": "internal-only",
-    "stopAfterGraybox": false,
-    "allowPlaceholderFinal": false
-  },
   "title": "伯大尼见证者",
   "passage": {
     "book": "John",
@@ -934,7 +1099,8 @@ npm run build
 ```
 
 Hub、部署工具和目录页只能依赖这个 manifest，不能 import 游戏内部 Beat、Scene 或
-存档类型。Hub 只接收 `productionStage: "released"`；其他阶段不得进入公开 catalog。
+存档类型。Hub 只接收通过全部发布门禁的 immutable release；不得新增 `productionStage`、
+readiness、approval 或 delivery-policy 字段来代替发布验证。
 
 ## 12. 未来统一界面
 
@@ -981,84 +1147,37 @@ bible-games:progress:john-11-bethany:v1
 bible-games:save:john-11-bethany:v1
 ```
 
-## 13. 新故事标准生产流程
+## 13. 新故事标准执行顺序
 
-以下 Phase 是连续流水线，不是九个可任意停止的交付点。用户要求制作完整游戏时，
-执行者必须主动从 Phase 0 推进到 Phase 8；Phase 2 灰盒通过后自动进入 Phase 3–4。
-只有用户明确要求阶段性交付，或出现
-[端到端完成政策](../END_TO_END_DELIVERY.zh-CN.md)定义的硬阻塞，才可暂停。
+以下是同一连续交付任务的执行顺序，不是 planning Gate、approval state、production stage
+或新 schema。用户要求制作完整游戏时，Copilot 持续推进；用户睡觉、外出或离线时也使用
+checkpoint/resume 继续所有不需要真正受限决定的工作，不创建固定 nightly schedule。
+最小 Planning Gate 关闭后立即开始 playable slice；第 2 项起是实现中的自动闭环，不得变成
+开始编码前必须验收的完整 inventory 或 choreography 文档。
 
-### Phase 0：立项
+1. 读取唯一 Story Plan，锁定经文范围、译本、玩家 witness 边界、事件顺序和发布 blocker。
+   同时锁定 `map-visible-bottom-overlay` 与 actor/portrait 绑定。
+2. 派生完整资产 inventory：地图/环境、人物方向与姿态、肖像、道具、UI、语音、音频、
+   SFX，以及每项 prompt/source/runtime/provenance/version/SHA-256/manifest；方向 manifest
+   必须关闭 frame layout、direction semantics、coverage、foot baseline、frame key 与 mirror
+   policy；实现推进时补齐独立 group 成员和每个多角色 Beat 的 ordered choreography。
+3. 选择可复用资产并记录 story-local 缺口；只建立第一批资产所需的最小
+   map/identity/scale/camera/text contract。
+4. 对每个资产恰好生成一个第一轮输出，自动验收、处理并接入真实游戏；失败只升版重做
+   该资产，resume 跳过 closed 资产。
+5. 完成第一个正式资产 baseline 后，为每个 Beat/Stage 建立 independent development-only
+   entry/fixture，逐段验证 real input、四方向视觉证据、ordered choreography、
+   normal/skip/restart/re-entry 和 final-state parity。
+6. 扩展并接入全部 Beat、地图路径、人物动作、问答、语音/字幕、音乐、UI 和结尾；单项
+   blocker 不阻塞其他独立项。
+7. 玩法稳定后集中执行 code review/refactor；此前只立即修复安全、数据损坏和 runtime
+   blocker，避免在正式玩法尚未稳定时反复大规模整理。
+8. 最后润色非阻塞细节，再执行自动契约测试、normal/all-skip、desktop/mobile、音频、
+   网络、console、资源、production-cleanliness 和离线构建 QA。
+9. 所有发布门禁通过后独立 build/deploy 并更新 catalog；Hub 不改游戏内部代码。
 
-- 锁定经文范围、译本、语言、对象、时长和学习目标。
-- 决定玩家身份；先证明不会改变经文。
-- 建立故事 manifest。
-
-### Phase 1：经文契约
-
-- 输入正式经文。
-- 标记 S0/S1/S2。
-- 列出事件顺序、人物和地点。
-- 教会审核关键文本。
-
-### Phase 2：Beat 与世界灰盒
-
-- 建立全部 Beat、前置、触发、final state 和 stage goal。
-- 用不面向玩家交付的内部灰盒走完整流程。
-- 验证正常、skip、restart 和重进状态。
-- 保留灰盒 contract、测试与 development-only overlay 作为正式图回归基线。
-- 通过后立即进入 Phase 3–4；不得把灰盒标成完整或生产完成。
-
-### Phase 3：共用资产盘点
-
-- 从全局与时代包选择可复用资产。
-- 记录 story-local 缺口。
-- 不因“有一张差不多”而破坏人物身份或时代一致性。
-
-### Phase 4：美术母版与地图
-
-- 先锁定 style/identity/scale。
-- 核对 MAI Azure/Entra 环境并建立故事 prompt registry。
-- 生成并比较 2–3 个母版或地图候选。
-- 用真实角色叠加验证。
-- 批准后才拆环境、人物、姿态和肖像。
-- 处理为 runtime assets 后替换所有灰盒；用实际像素重新校准世界契约。
-- 若校准失败，只回滚受影响区域到 Phase 2 修正，再自动返回 Phase 4；不等待用户指示。
-
-### Phase 5：垂直切片
-
-- 只完成开场、一次探索、一次对话、一次自动演出和一次转场。
-- 在桌面与窄屏实际游玩。
-- 风格、操作和状态通过后再扩展全故事。
-
-### Phase 6：完整内容
-
-- 接入全部 Beat、地图路径、人物动作、问答和结尾。
-- 只使用数据契约，不在 Scene 内新增散落硬编码。
-
-### Phase 7：关键语音与音乐
-
-- 选 2–4 个 cue。
-- 从 scripture data 生成 SSML 与 hash。
-- 完成后期、manifest、字幕和 runtime fallback。
-- 接入 music state、ducking、mute 与 pause。
-
-### Phase 8：完整 QA
-
-- 自动契约测试。
-- 一次正常完整游玩。
-- 一次全部 skip。
-- 桌面和移动宽度。
-- 音频、网络、console、资源和离线构建。
-
-### Phase 9：发布
-
-- 独立 build/deploy。
-- 更新 `catalog/games.json`。
-- Hub 只增加一条 manifest，不改游戏内部代码。
-
-经文、音乐或公开分发审批尚未完成时，可停在 `release-blocked`，但此前仍应完成所有
-不受限制的 MAI、美术、runtime 集成和 QA。`release-blocked` 不能称为“已发布”。
+经文、音乐或公开分发审批尚未完成时，必须继续所有不受限制的美术、runtime 集成和 QA，
+并在现有 handoff 中如实列出发布 blocker，不新增状态字段，也不能称为“已发布”。
 
 ## 14. 每个游戏的完成定义
 
@@ -1073,20 +1192,32 @@ bible-games:save:john-11-bethany:v1
 
 - 从开始页不使用开发捷径可走到结尾。
 - 键盘、鼠标/触控、互动、暂停、重开可用。
+- 无当前输入时玩家不移动；固定点点击不会追踪人物，方向输入立即取消点击路径，Space 不会
+  启动远距离导航。
 - 不会卡在障碍、触发器或输入锁。
-- normal 与 all-skip 最终状态一致。
+- normal 与 all-skip 最终状态一致，且 normal 先以可见 choreography 到达该状态，不发生
+  可见 final-state delta。
 
 ### 地图
 
 - 所有主要路线可达。
 - 门、道路、人物、建筑和姓名牌比例可信。
 - 可移动物件、碰撞、前景和视觉 anchor 一致。
-- 不存在人物从天空落下、物件中途突然出现或标签脱离人物。
+- browser QA 证明 NPC 坐标连续；当前视野内不存在无来源 visibility pop-in、人物从天空
+  落下、物件中途突然出现或标签脱离人物。
+- 多角色 Beat 的 behavior evidence 证明 participants 按 ordered steps 从声明 entry source
+  沿 path 到达 end anchor，并连续收敛到 final state。
 
 ### 美术
 
 - 符合指定 style/identity/era 版本。
 - 地图与肖像是同一人物。
+- 每个会移动或转向的 actor 都有唯一 direction -> frame -> flipX 映射；缺帧、未知方向、
+  未声明镜像与多重映射均 fail closed。
+- 每个 actor 的 up/down/left/right 都有包含 actor/spawn ID、运动向量、frame key、flipX
+  和截图的视觉证据；仅 key、source mapping 或 final coordinate 不算通过。
+- 独立剧情成员有独立 actor/spawn、identity/version 与 runtime art/animation；不存在
+  group-wide texture substitution，匿名 crowd 复用有 Story Plan 明示。
 - 无文字、水印、现代物件、奇幻光效和恐怖内容。
 - 所有资产有 source、manifest、版本与 runtime mapping。
 - 玩家版使用批准的正式资产，不含灰盒色块、placeholder、debug overlay、region ID、
@@ -1102,6 +1233,8 @@ bible-games:save:john-11-bethany:v1
 ### UI 与响应式
 
 - 至少验证 `1280x720` 与 `390x844`。
+- 在 real-input browser QA 中测量桌面地图可见区域不低于 70%、overlay 不高于 30%，移动端
+  地图可见区域不低于 50%；Blocking dialogue 期间地图和人物动作仍可见。
 - 对话、肖像、目标、经文出处和按钮不互相遮挡。
 - 目标不泄露身份或答案。
 - Blocking UI 不允许背景点击误跳过多段。
@@ -1112,8 +1245,10 @@ bible-games:save:john-11-bethany:v1
 - 发布包不依赖 MAI、Speech 或其他运行时云端调用。
 - 无 token、key、个人帐号、未授权素材或生产候选进入发布包。
 - Console、page error、unhandled rejection 与关键资源 404 为 0。
-- manifest 阶段为 `released`；`internal-graybox`、`art-production`、`integration`、
-  `release-candidate` 与 `release-blocked` 都不得宣称完成。
+- DEV Beat jump/checkpoint 与 production normal play、正式完成证据和 production bundle
+  完全隔离；不得以 DEV jump 作为唯一端到端证据。
+- immutable release 与 artifact SHA-256 已生成，全部发布门禁通过；未通过时不得宣称完成，
+  也不得新增 manifest stage 或 readiness flag 冒充发布验证。
 
 ## 15. 建议实施顺序
 

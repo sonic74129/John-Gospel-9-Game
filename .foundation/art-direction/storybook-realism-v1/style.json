@@ -65,6 +65,28 @@
     "Expressions remain readable but emotionally restrained.",
     "Portraits are detailed close-ups of map identities, not unrelated actors."
   ],
+  "portraitRules": {
+    "assetRole": "Dedicated story portrait runtime asset for a map identity.",
+    "framing": "Chest-up close-up.",
+    "identity": "References the same identity/version as the map actor.",
+    "forbiddenSources": [
+      "Direct use of a map sprite as portrait UI.",
+      "Direct use of an atlas frame as portrait UI.",
+      "Upscaling a low-resolution map actor as portrait UI."
+    ]
+  },
+  "directionalRules": {
+    "directionSemantics": {
+      "up": "Actor visually faces away from the camera toward world up.",
+      "down": "Actor visually faces toward the camera toward world down.",
+      "left": "Actor visually faces world left.",
+      "right": "Actor visually faces world right."
+    },
+    "runtimeMapping": "Each moving or turning actor declares one direction -> frame -> flipX mapping with frame layout, required idle/walk coverage, foot baseline, and runtime frame keys.",
+    "mirrorPolicy": "Horizontal mirroring is allowed only when declared in the manifest and visually verified; missing frames, unknown directions, undeclared mirrors, and multiple mappings fail closed.",
+    "independentMembers": "A story-group member with independent identity, movement, or interaction owns an actor/spawn ID, identity/version, and runtime art/animation; only a declared anonymous crowd may reuse an archetype.",
+    "visualEvidence": "For each actor and up/down/left/right direction, record actor/spawn ID, movement vector, runtime frame key, flipX, and screenshot."
+  },
   "forbiddenContent": [
     "modern objects",
     "halo",

@@ -56,6 +56,34 @@
       ]
     },
     {
+      "id": "neighbors-to-pool",
+      "sourceLevel": "approved-bridge",
+      "subject": "neighbors",
+      "startAnchorId": "pool.observer-approach",
+      "endAnchorId": "pool.neighbors",
+      "expectedDurationSeconds": 4,
+      "movementSpeed": 60,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1224,
+          "y": 1170
+        },
+        {
+          "x": 1124,
+          "y": 1120
+        },
+        {
+          "x": 1044,
+          "y": 1100
+        },
+        {
+          "x": 984,
+          "y": 1090
+        }
+      ]
+    },
+    {
       "id": "pool-to-neighbors",
       "sourceLevel": "approved-bridge",
       "subject": "man-born-blind",
@@ -76,6 +104,58 @@
         {
           "x": 984,
           "y": 1090
+        }
+      ]
+    },
+    {
+      "id": "pharisees-to-inquiry",
+      "sourceLevel": "approved-bridge",
+      "subject": "pharisees",
+      "startAnchorId": "courtyard.gate",
+      "endAnchorId": "courtyard.pharisees-left",
+      "expectedDurationSeconds": 6,
+      "movementSpeed": 48,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1160,
+          "y": 904
+        },
+        {
+          "x": 1200,
+          "y": 844
+        },
+        {
+          "x": 1220,
+          "y": 744
+        },
+        {
+          "x": 1220,
+          "y": 664
+        }
+      ]
+    },
+    {
+      "id": "authorities-to-inquiry",
+      "sourceLevel": "approved-bridge",
+      "subject": "judean-authorities",
+      "startAnchorId": "courtyard.waiting",
+      "endAnchorId": "courtyard.pharisees-right",
+      "expectedDurationSeconds": 2,
+      "movementSpeed": 48,
+      "actorRadius": 18,
+      "points": [
+        {
+          "x": 1440,
+          "y": 724
+        },
+        {
+          "x": 1420,
+          "y": 684
+        },
+        {
+          "x": 1380,
+          "y": 664
         }
       ]
     },

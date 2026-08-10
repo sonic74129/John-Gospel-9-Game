@@ -187,7 +187,7 @@ tests/
 
 - 串行 MAI 工作队列。
 - Azure 资源核对与 Entra-only workflow。
-- 候选、contact sheet 和批准记录。
+- 单输出 run、自动验收、版本与回滚记录。
 - 大型源图与处理日志。
 - 将批准后的 runtime 资产发布到：
   - `bible-game-assets`，若可共用。
@@ -211,13 +211,14 @@ tests/
 建议输出：
 
 - run manifest。
-- 2–3 个 candidates。
-- review sheet。
-- 人工选择记录。
-- selected source。
-- runtime output。
-- SHA-256。
+- 每个资产第一轮恰好一个 generated source。
+- 自动验收记录。
+- 已处理并接线的 runtime output。
+- provenance、version 与 SHA-256。
 - 目标 repo PR。
+
+多个 candidates、contact sheet 或人工选择只允许作为明确例外；默认 run 必须自动检查并
+直接推进到 runtime 接线。resume 跳过已经关闭的 asset ID，失败只升版重做受影响资产。
 
 #### 大型文件保存
 
@@ -579,16 +580,14 @@ npx @bible-game/create-story@1 \
 
 按照制作规范执行：
 
-1. 经文契约。
-2. Beat。
-3. 灰盒世界。
-4. 共用资产盘点。
-5. MAI 母版与故事本地资产。
-6. 垂直切片。
-7. 完整剧情。
-8. 关键语音。
-9. normal/all-skip/mobile QA。
-10. release。
+1. 读取唯一 Story Plan 并派生完整资产 inventory。
+2. 只建立最小 map/identity/scale/camera/text contract。
+3. 完成、处理并接入第一版正式资产 baseline。
+4. 用 development-only entry/fixture 逐 Beat/Stage 验证。
+5. 关闭其余正式地图、人物、姿态、肖像、道具、UI、语音、音频与 SFX。
+6. 玩法稳定后集中 code review/refactor。
+7. 最后细节润色与 normal/all-skip/mobile QA。
+8. release。
 
 ## 8. Story manifest 与 Hub contract
 
@@ -608,13 +607,6 @@ Manifest 示例：
   "id": "john-11-bethany",
   "version": "1.0.0",
   "templateVersion": "1.0.0",
-  "productionStage": "released",
-  "deliveryPolicy": {
-    "mode": "end-to-end",
-    "graybox": "internal-only",
-    "stopAfterGraybox": false,
-    "allowPlaceholderFinal": false
-  },
   "title": "伯大尼见证者",
   "passage": {
     "book": "John",
@@ -643,7 +635,8 @@ Manifest 示例：
 }
 ```
 
-Hub 只依赖这份 contract，并拒绝 `productionStage` 不是 `released` 的 artifact。
+Hub 只依赖这份 contract，并只接收通过全部发布门禁的 immutable release。不得增加
+production stage、readiness flag、approval state 或 delivery-policy schema 来代替发布验证。
 
 ## 9. 统一部署但保持 repo 独立
 

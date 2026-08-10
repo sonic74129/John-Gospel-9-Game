@@ -18,7 +18,12 @@ export interface CanonicalDialogueLine {
   readonly beatId: string;
   readonly speakerId: string;
   readonly portraitSubjectId?: string;
-  readonly portraitState?: "blind" | "seeing" | "worship" | "speaking";
+  readonly portraitState?:
+    | "blind"
+    | "washing"
+    | "seeing"
+    | "worship"
+    | "speaking";
   readonly verseKey: string;
   readonly segmentId: string;
   readonly sourceLevel: "S0";
@@ -130,7 +135,7 @@ function isCanonicalDialogueLine(value: unknown): value is CanonicalDialogueLine
     (value.portraitSubjectId === undefined ||
       typeof value.portraitSubjectId === "string") &&
     (value.portraitState === undefined ||
-      ["blind", "seeing", "worship", "speaking"].includes(
+      ["blind", "washing", "seeing", "worship", "speaking"].includes(
         value.portraitState as string,
       )) &&
     hasString(value, "verseKey") &&
