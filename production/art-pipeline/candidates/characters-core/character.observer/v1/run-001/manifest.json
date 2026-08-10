@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "family": "characters-core",
+  "assetId": "character.observer",
+  "promptVersion": "v1",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1024,
+    "height": 1024
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: historical-scene. Asset type: map-character turnaround sheet for a three-quarter top-down RPG. On a perfectly flat uniform pale cream #F7F0DE background, show exactly four isolated full-body views of the same unnamed adult first-century Judean observer in one horizontal row, evenly spaced and not overlapping: front three-quarter, back three-quarter, facing right, facing left. The observer is modest and visually secondary, Middle Eastern appearance, medium-brown skin, dark brown hair mostly covered by a simple dusty-olive head cloth, natural-linen knee-length tunic, muted-blue sleeveless outer wrap, rope belt and plain leather sandals. Neutral attentive expression, hands relaxed, restrained stance, adult anatomy with head about one seventh of body height, no weapon and no speaking gesture. Match a three-quarter top-down game camera so feet and shoulders read clearly. Polished warm hand-painted storybook realism, clean silhouette, subtle gouache texture, upper-left natural light and a compact soft shadow directly under each figure.",
+  "must": [
+    "Exactly four views of one identical observer in one row",
+    "Uniform #F7F0DE removable background",
+    "Full body and feet visible with consistent identity",
+    "Adult non-chibi proportions and restrained neutral stance",
+    "First-century Judean clothing and upper-left light"
+  ],
+  "avoid": [
+    "Named or heroic protagonist cues",
+    "Speech, pointing, prayer or miracle gesture",
+    "Weapon, armor, royal clothing, modern object",
+    "Halo, glow, particles",
+    "Text, borders, UI, watermark",
+    "Clipped body or overlapping figures"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1024,
+    "exactHeight": 1024,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "All four views clearly depict one identity and costume",
+    "Silhouette reads at 96-112 runtime pixels tall",
+    "Observer remains visually secondary and theologically neutral",
+    "Perspective, palette and light match the world"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "master:master.john9-outdoor@v1"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "startedAt": "2026-08-02T22:21:13.738Z",
+  "status": "complete",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 1055296,
+      "sha256": "793f27efc6df8f6d769207c28ffd6278de48a5f851f217d1389a8834af721351",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:21:49.871Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 1120655,
+      "sha256": "78748e9db5180ac76fc69bf2f36161f25eae3287e71fb9f5763b532baa2b1355",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:23:15.987Z"
+    }
+  ],
+  "completedAt": "2026-08-02T22:23:16.120Z",
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/characters-core/character.observer/v1/run-001/contact-sheet.jpg",
+    "bytes": 139657,
+    "sha256": "2001b57ab30cf30b549cb6572844d9b38198f09028ad0bdec8f09bb6b977c2b6",
+    "maximumLongEdge": 1600
+  }
+}

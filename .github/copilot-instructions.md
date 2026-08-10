@@ -1,15 +1,28 @@
-# John Gospel 9 story repository instructions
+# Bible story repository instructions
 
-Preserve scripture fidelity and keep the player a witness: the player must not control Jesus, cause
-the healing, make a scriptural decision, or change John 9's outcome. Keep story code and state local
-to this independent repository.
+Before planning or changing gameplay, read:
 
-Treat `.foundation/` as generated, pinned input. Do not edit it manually or use Foundation `main`,
-`latest`, a branch URL, a local absolute path, or a submodule. Foundation changes must remain pinned
-to the full commit and hashes in `foundation.lock.json`.
+1. `.foundation/docs/FOUNDATION_CHARTER.zh-CN.md`
+2. `.foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md`
+3. `.foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md`
+4. `foundation.lock.json`
+5. `src/story/story.config.json`
 
-Do not create an alternate planning artifact, readiness flag, runtime manifest, or production stage.
-Do not weaken protected promotion, provenance, hash, normal/skip/restart, or trust boundaries.
+Treat `.foundation/` and `public/assets/vendor/` as generated, pinned inputs. Never edit them
+manually. To change the Foundation version or shared asset packs, update `foundation.lock.json`,
+run `npm run foundation:sync`, inspect the result, and run `npm test`.
+
+Do not weaken scripture fidelity, player-role limits, map-based storytelling, normal/skip final-state
+equivalence, art restrictions, provenance, hash, or independent-repository requirements.
+
+Story scripture, beats, goals, coordinates, voice, portraits, special poses, maps, and local assets
+belong in this repository. Never import source code or story state from another story repository.
+
+Do not use Foundation `main`, `latest`, raw branch URLs, local absolute paths, or Git submodules.
+Every Foundation input must remain pinned to the full commit in `foundation.lock.json`.
+
+Candidate assets require explicit opt-in and cannot be described as stable or publicly
+redistributable.
 
 ## Highest operational priority: preserve context continuity
 

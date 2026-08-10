@@ -1,0 +1,290 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "world-anchors",
+  "anchors": [
+    {
+      "id": "courtyard.player-start",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "player-spawn",
+      "position": {
+        "x": 1644,
+        "y": 530
+      },
+      "facing": "north-west",
+      "clearanceRadius": 32
+    },
+    {
+      "id": "courtyard.observer",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "actor-staging",
+      "position": {
+        "x": 1644,
+        "y": 530
+      },
+      "facing": "north-west",
+      "lookAtAnchorId": "courtyard.man-center",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.man-center",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": {
+        "x": 1514,
+        "y": 485
+      },
+      "facing": "north",
+      "clearanceRadius": 38
+    },
+    {
+      "id": "courtyard.jesus",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": {
+        "x": 1434,
+        "y": 430
+      },
+      "facing": "south-east",
+      "lookAtAnchorId": "courtyard.man-center",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.disciples",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": {
+        "x": 1529,
+        "y": 390
+      },
+      "facing": "south",
+      "lookAtAnchorId": "courtyard.man-center",
+      "clearanceRadius": 62
+    },
+    {
+      "id": "courtyard.clay-action",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "action",
+      "position": {
+        "x": 1474,
+        "y": 455
+      },
+      "facing": "south-east",
+      "clearanceRadius": 40
+    },
+    {
+      "id": "courtyard.camera",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "camera-focus",
+      "position": {
+        "x": 1534,
+        "y": 480
+      },
+      "facing": "north",
+      "clearanceRadius": 0
+    },
+    {
+      "id": "courtyard.pool-approach",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "route",
+      "position": {
+        "x": 1084,
+        "y": 1080
+      },
+      "facing": "south-west",
+      "clearanceRadius": 42
+    },
+    {
+      "id": "courtyard.inquiry-entry",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": {
+        "x": 1200,
+        "y": 844
+      },
+      "facing": "north-east",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.inquiry-man",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": {
+        "x": 1300,
+        "y": 744
+      },
+      "facing": "north",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.pharisees-left",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": {
+        "x": 1220,
+        "y": 664
+      },
+      "facing": "south-east",
+      "lookAtAnchorId": "courtyard.inquiry-man",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.pharisees-right",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": {
+        "x": 1380,
+        "y": 664
+      },
+      "facing": "south-west",
+      "lookAtAnchorId": "courtyard.inquiry-man",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.parents",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": {
+        "x": 1280,
+        "y": 824
+      },
+      "facing": "north",
+      "lookAtAnchorId": "courtyard.inquiry-man",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.waiting",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "group-staging",
+      "position": {
+        "x": 1440,
+        "y": 724
+      },
+      "facing": "west",
+      "lookAtAnchorId": "courtyard.inquiry-man",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.gate",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": {
+        "x": 1160,
+        "y": 904
+      },
+      "facing": "north-east",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.expelled",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "actor-staging",
+      "position": {
+        "x": 1200,
+        "y": 964
+      },
+      "facing": "south-east",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.jesus-entry",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "entrance",
+      "position": {
+        "x": 1084,
+        "y": 1040
+      },
+      "facing": "north-east",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.belief",
+      "regionId": "courtyard",
+      "sourceLevel": "scripture",
+      "kind": "action",
+      "position": {
+        "x": 1240,
+        "y": 924
+      },
+      "facing": "north-west",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "courtyard.ending-camera",
+      "regionId": "courtyard",
+      "sourceLevel": "approved-bridge",
+      "kind": "camera-focus",
+      "position": {
+        "x": 1220,
+        "y": 914
+      },
+      "facing": "north",
+      "clearanceRadius": 0
+    },
+    {
+      "id": "pool.wash-edge",
+      "regionId": "siloam-pool",
+      "sourceLevel": "scripture",
+      "kind": "action",
+      "position": {
+        "x": 1154,
+        "y": 1140
+      },
+      "facing": "south-west",
+      "clearanceRadius": 42
+    },
+    {
+      "id": "pool.neighbors",
+      "regionId": "siloam-pool",
+      "sourceLevel": "scripture",
+      "kind": "group-staging",
+      "position": {
+        "x": 984,
+        "y": 1090
+      },
+      "facing": "east",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "pool.observer-approach",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "route",
+      "position": {
+        "x": 1224,
+        "y": 1170
+      },
+      "facing": "west",
+      "clearanceRadius": 34
+    },
+    {
+      "id": "pool.camera",
+      "regionId": "siloam-pool",
+      "sourceLevel": "approved-bridge",
+      "kind": "camera-focus",
+      "position": {
+        "x": 1104,
+        "y": 1140
+      },
+      "facing": "south",
+      "clearanceRadius": 0
+    }
+  ]
+}

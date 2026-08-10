@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "assetId": "environment.john9-zigzag-world",
+  "family": "environment-outdoor",
+  "promptVersion": "v2",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/environment-outdoor/environment.john9-zigzag-world/v2/run-001/selected-source.png",
+    "bytes": 1708705,
+    "sha256": "8c554d789abf4dd446248404cbf3f6a9bcadedb88ebb4f31e343452b671bd9e0"
+  },
+  "selectedCandidate": 2,
+  "selectionReason": "Candidate 2 remains the pinned provenance source and is retained in full as the single continuous runtime map without crop compositing.",
+  "outputs": [
+    {
+      "path": "public/assets/art/environment-outdoor/environment.john9-zigzag-world/v2/run-001/world-base.webp",
+      "mediaType": "image/webp",
+      "bytes": 702620,
+      "sha256": "eaf18e61778ef8634b2d5635b6308589802e92928ab70658355428af21b2ae6c",
+      "dimensions": {
+        "width": 2688,
+        "height": 1792
+      },
+      "processing": {
+        "tool": "Pillow",
+        "resizeKernel": "lanczos",
+        "crop": [
+          0,
+          0,
+          1152,
+          768
+        ],
+        "outputSize": [
+          2688,
+          1792
+        ],
+        "format": "webp",
+        "quality": 90
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

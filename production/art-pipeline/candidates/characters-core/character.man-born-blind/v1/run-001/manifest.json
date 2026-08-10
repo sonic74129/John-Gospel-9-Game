@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "family": "characters-core",
+  "assetId": "character.man-born-blind",
+  "promptVersion": "v1",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "deployment": "mai-image-2-5-pro",
+  "dimensions": {
+    "width": 1024,
+    "height": 1024
+  },
+  "candidateCount": 2,
+  "endpoint": "https://ai-johnrpg-sonic-74129.cognitiveservices.azure.com/mai/v1/images/generations",
+  "prompt": "Use case: historical-scene. Asset type: four-state isolated map-character sprite atlas for a three-quarter top-down RPG. On a perfectly flat uniform pale cream #F7F0DE background, show exactly four isolated full-body depictions in one horizontal row of the same adult first-century Judean man born blind, evenly spaced, no overlap: (1) seated calmly at a low roadside edge before washing, eyes naturally unfocused and no injury; (2) seated with a small restrained trace of ordinary brown clay applied over closed eyes, no glow; (3) standing after washing and able to see, same face and clothes, quietly alert; (4) kneeling respectfully in the later belief scene, restrained and not theatrical. Identity lock across all four: Middle Eastern appearance, lean adult build, short dark curly hair, close dark beard, weathered natural-linen tunic, faded terracotta shoulder wrap, rope belt and simple leather sandals. Adult anatomy, head about one seventh body height. Fixed three-quarter top-down game camera, polished warm hand-painted storybook realism, clean silhouettes, subtle gouache texture, upper-left natural light, compact soft ground shadows. The image must contain only the four figures and flat empty background: absolutely no title, caption, state name, numbering, lettering, symbol, border or typography anywhere.",
+  "must": [
+    "Exactly four ordered states of the same man",
+    "Blind, clay-applied, seeing and restrained belief poses",
+    "Uniform #F7F0DE removable background",
+    "Identity, clothing and body proportions unchanged across states",
+    "No injury and no supernatural visual effect"
+  ],
+  "avoid": [
+    "White eyes, wounds, horror or disability caricature",
+    "Miracle glow, halo, beam, particles",
+    "Exaggerated joy, collapse or theatrical worship",
+    "Modern clothing or objects",
+    "Text, labels, borders, UI, watermark",
+    "Clipped or overlapping figures"
+  ],
+  "machineAcceptance": {
+    "mediaType": "image/png",
+    "exactWidth": 1024,
+    "exactHeight": 1024,
+    "maximumBytes": 12000000
+  },
+  "visualAcceptance": [
+    "One identity remains continuous through all four states",
+    "Blind and seeing states differ through gaze and pose, not injury",
+    "Clay is visible but ordinary and restrained",
+    "Belief pose reads clearly without spectacle",
+    "Silhouettes read at 96-112 runtime pixels tall"
+  ],
+  "dependencies": [
+    "style:storybook-realism-v1@0.1.0",
+    "master:master.john9-outdoor@v1",
+    "scripture:John 9:1-38"
+  ],
+  "run": "run-001",
+  "provider": "Azure AI Services",
+  "authentication": "Azure CLI / Entra ID",
+  "startedAt": "2026-08-02T22:27:14.527Z",
+  "status": "complete",
+  "candidates": [
+    {
+      "index": 1,
+      "path": "candidate-01.png",
+      "bytes": 856013,
+      "sha256": "da365a002151dfbc10eb44d20701fbd527d02a8f849fd590eecb1312565a4cbe",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:27:52.744Z"
+    },
+    {
+      "index": 2,
+      "path": "candidate-02.png",
+      "bytes": 890506,
+      "sha256": "27357a83812983ad91dfa52bed6b22c437f13068d7d6ca18b0826958bc39b765",
+      "observedDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "machineAccepted": true,
+      "generatedAt": "2026-08-02T22:28:39.291Z"
+    }
+  ],
+  "completedAt": "2026-08-02T22:28:39.436Z",
+  "reviewArtifact": {
+    "path": "production/art-pipeline/review/characters-core/character.man-born-blind/v1/run-001/contact-sheet.jpg",
+    "bytes": 114791,
+    "sha256": "ead33fd78164e408f618d7247f0022ac78843d1595dbe176747fa5472ca25557",
+    "maximumLongEdge": 1600
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "character.observer",
+  "family": "characters-core",
+  "promptVersion": "v3",
+  "run": "run-001",
+  "selectedCandidate": 1,
+  "reason": "Candidate 1 passes the v3 orientation gate: front, back, right-facing and left-facing profiles are distinct, text is absent, identity and clothing remain continuous, anatomy is non-chibi, the pose is restrained, and the uniform background supports clean runtime extraction.",
+  "visualAcceptance": [
+    "All four views clearly depict one identity and costume",
+    "Silhouette reads at 96-112 runtime pixels tall",
+    "Observer remains visually secondary and theologically neutral",
+    "Perspective, palette and light match the world"
+  ],
+  "source": {
+    "path": "production/art-source/characters-core/character.observer/v3/run-001/selected-source.png",
+    "bytes": 892764,
+    "sha256": "a5475a9cd42605f03bd0bf864fa224cb15541282da45b3e4f4e77c1e2932a0e3"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:27:03.678Z"
+}

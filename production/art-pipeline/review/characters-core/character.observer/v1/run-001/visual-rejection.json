@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "assetId": "character.observer",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "status": "visual-rejected",
+  "sharedDefect": "Both candidates contain embedded titles and directional captions.",
+  "acceptedDetailsToPreserve": [
+    "Four-view order and consistent observer identity",
+    "Muted blue, olive and natural-linen clothing",
+    "Restrained adult proportions and poses",
+    "Uniform removable background and coherent upper-left light"
+  ],
+  "revisionTarget": "Remove typography only.",
+  "nextPromptVersion": "v2"
+}

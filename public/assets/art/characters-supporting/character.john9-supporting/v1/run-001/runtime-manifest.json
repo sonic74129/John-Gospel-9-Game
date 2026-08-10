@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "ac54fcac41a7080dc032e0dc801c0d28bfa2edd6",
+  "assetId": "character.john9-supporting",
+  "family": "characters-supporting",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "source": {
+    "path": "production/art-source/characters-supporting/character.john9-supporting/v1/run-001/selected-source.png",
+    "bytes": 1180474,
+    "sha256": "b90e107d951c5165a8b8ee1da5ee650ce730eec71773a93e8a3b0cd5a03cf8ce"
+  },
+  "selectedCandidate": 1,
+  "selectionReason": "Candidate 1 preserves all eight cells in exact order with distinct disciples, male and female neighbors, two restrained inquiry figures, father and mother. It has stronger role separation, period materials, clean full-body silhouettes, adult scale, text-free background and no villain caricature; candidate 2 makes the first disciple too visually close to the pinned Jesus identity.",
+  "animationCoverage": {
+    "directionalIdle": "partial",
+    "directionalWalk": "not-required",
+    "missing": [
+      "disciple-a.idle.up",
+      "disciple-a.idle.down",
+      "disciple-b.idle.up",
+      "disciple-b.idle.down"
+    ]
+  },
+  "outputs": [
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-a.png",
+      "mediaType": "image/png",
+      "bytes": 13069,
+      "sha256": "5230b31b76a0064130dbe5358fba6736fc185202c13e2dffcf3f0ac7db321937",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:0:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-b.png",
+      "mediaType": "image/png",
+      "bytes": 13353,
+      "sha256": "55d5957d76d191715f2c926fd62d9450ce5a777cf78cfcb1f35db1009235baa6",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:256:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-a-look-right.png",
+      "mediaType": "image/png",
+      "bytes": 13113,
+      "sha256": "831af3d5c7d7afd6d907bf2aae82bab7c6547b525bc3497aa7b7b1b6b9a8dfdb",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "filter": "hflip"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/disciple-b-look-right.png",
+      "mediaType": "image/png",
+      "bytes": 13366,
+      "sha256": "eba1703324f177604dcf1981122a917a68db0efd0c54a5cda0d6b8b646380f98",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "filter": "hflip"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/neighbor-a.png",
+      "mediaType": "image/png",
+      "bytes": 13660,
+      "sha256": "823d62884434f150fcb37e7264a8a21c3d892276d4db007632ddc7d7b518bc08",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:512:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/neighbor-b.png",
+      "mediaType": "image/png",
+      "bytes": 12639,
+      "sha256": "1cd8aa4c1de1bafeed2e82fe379802615728dfeba196b53f90e8e20e3070f5cf",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:768:0,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/pharisee.png",
+      "mediaType": "image/png",
+      "bytes": 14024,
+      "sha256": "083ac76e3fb2bad982b17b4e38668c417acdb7010d9a81f3a20297ce2aa2a109",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:0:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/judean-authority.png",
+      "mediaType": "image/png",
+      "bytes": 13454,
+      "sha256": "1e9f56416bb324c24aed5102c5564e3a530b036e39119b5d65e6c7276173f0fb",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:256:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/father.png",
+      "mediaType": "image/png",
+      "bytes": 13806,
+      "sha256": "d8fe8f549233a17aefd2bc52c9a3f35699c9fe2c6b4ad2c2d74ec90c01463c1f",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:512:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    },
+    {
+      "path": "public/assets/art/characters-supporting/character.john9-supporting/v1/run-001/mother.png",
+      "mediaType": "image/png",
+      "bytes": 13198,
+      "sha256": "bdbe60e8eb9ed130c7fa1553e152ba4aebfe889f04b21165a6a0ff35af2d233b",
+      "dimensions": {
+        "width": 60,
+        "height": 120
+      },
+      "processing": {
+        "tool": "ffmpeg",
+        "resizeKernel": "lanczos",
+        "filter": "crop=256:512:768:512,colorkey=0xF7F0DE:0.24:0.08,scale=-2:120:flags=lanczos,format=rgba"
+      }
+    }
+  ],
+  "reviewStatus": "processed-for-polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false
+}

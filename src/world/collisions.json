@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "world-collisions",
+  "collisionPolygons": [
+    {
+      "id": "collision.courtyard-north-roof",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        {
+          "x": 1184,
+          "y": 280
+        },
+        {
+          "x": 1724,
+          "y": 280
+        },
+        {
+          "x": 1744,
+          "y": 320
+        },
+        {
+          "x": 1224,
+          "y": 350
+        }
+      ]
+    },
+    {
+      "id": "collision.courtyard-west-awning",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        {
+          "x": 1074,
+          "y": 320
+        },
+        {
+          "x": 1274,
+          "y": 320
+        },
+        {
+          "x": 1304,
+          "y": 470
+        },
+        {
+          "x": 1124,
+          "y": 480
+        }
+      ]
+    },
+    {
+      "id": "collision.courtyard-planter",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        {
+          "x": 1614,
+          "y": 390
+        },
+        {
+          "x": 1704,
+          "y": 380
+        },
+        {
+          "x": 1734,
+          "y": 470
+        },
+        {
+          "x": 1644,
+          "y": 500
+        }
+      ]
+    },
+    {
+      "id": "collision.courtyard-front-wall",
+      "regionId": "courtyard",
+      "material": "fixed-world-mass",
+      "polygon": [
+        {
+          "x": 1574,
+          "y": 560
+        },
+        {
+          "x": 1754,
+          "y": 560
+        },
+        {
+          "x": 1724,
+          "y": 640
+        },
+        {
+          "x": 1594,
+          "y": 640
+        }
+      ]
+    },
+    {
+      "id": "collision.pool-basin",
+      "regionId": "siloam-pool",
+      "material": "water-boundary",
+      "polygon": [
+        {
+          "x": 744,
+          "y": 1180
+        },
+        {
+          "x": 1044,
+          "y": 1140
+        },
+        {
+          "x": 1144,
+          "y": 1210
+        },
+        {
+          "x": 1084,
+          "y": 1340
+        },
+        {
+          "x": 804,
+          "y": 1360
+        },
+        {
+          "x": 704,
+          "y": 1280
+        }
+      ]
+    },
+    {
+      "id": "collision.pool-south-planting",
+      "regionId": "siloam-pool",
+      "material": "fixed-world-mass",
+      "polygon": [
+        {
+          "x": 884,
+          "y": 1370
+        },
+        {
+          "x": 1004,
+          "y": 1360
+        },
+        {
+          "x": 1044,
+          "y": 1440
+        },
+        {
+          "x": 924,
+          "y": 1460
+        }
+      ]
+    }
+  ]
+}

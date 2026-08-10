@@ -1,0 +1,285 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "scrollmapper-chiun-john9-e1b254c",
+  "passage": {
+    "book": "John",
+    "chapter": 9,
+    "verseStart": 1,
+    "verseEnd": 41
+  },
+  "translation": {
+    "id": "CUV-1919-Traditional-Shen",
+    "editionId": "scrollmapper-chiun-3.1",
+    "canonicalName": "1919 Traditional Chinese Union Version (和合本), 神版",
+    "language": "zh-Hant",
+    "divineNameVariant": "神"
+  },
+  "source": {
+    "provider": "Scrollmapper bible_databases",
+    "repository": "scrollmapper/bible_databases",
+    "commit": "e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c",
+    "url": "https://raw.githubusercontent.com/scrollmapper/bible_databases/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/sources/zh-hant/ChiUn/ChiUn.json",
+    "upstreamSha256": "995b8f77e27014eda3e1946c588b34dc418a2e63202698cf2aac07b7391e5743",
+    "metadataUrl": "https://github.com/scrollmapper/bible_databases/blob/e1b254cef86d0e65b1a5d1a94b8b112d0f296a2c/sources/zh-hant/ChiUn/README.md",
+    "metadataClaim": "ChiUn: 和合本 (繁體字); License: Public Domain",
+    "moduleVersion": "3.1",
+    "moduleDate": "2023-10-28"
+  },
+  "derivation": {
+    "selector": "books[name=John].chapters[chapter=9].verses[1..41]",
+    "normalization": "Unicode NFC; remove source U+0020 separators; punctuation and all other code points unchanged"
+  },
+  "review": {
+    "status": "pending-owner-review",
+    "owner": "repository-owner",
+    "instructions": "Compare all 41 displayed verses with the fixed source URL, then record approval in planning/evidence/owner-review.json."
+  },
+  "verses": [
+    {
+      "key": "john9:1",
+      "reference": "John 9:1",
+      "exactText": "耶穌過去的時候，看見一個人生來是瞎眼的。",
+      "sha256": "9d1dc22e41afb046f74fd84fc35cf51a335e135250266997e203aa3a432e1825"
+    },
+    {
+      "key": "john9:2",
+      "reference": "John 9:2",
+      "exactText": "門徒問耶穌說：「拉比，這人生來是瞎眼的，是誰犯了罪？是這人呢？是他父母呢？」",
+      "sha256": "4a14e4a8c77f34038c8ce19f04f40ee9142f131436f588d3fb9388d3b2c891b4"
+    },
+    {
+      "key": "john9:3",
+      "reference": "John 9:3",
+      "exactText": "耶穌回答說：「也不是這人犯了罪，也不是他父母犯了罪，是要在他身上顯出神的作為來。",
+      "sha256": "70aa0f47330163d608d27ead0dbcc49e22fc8f7a4b57b10311f41491357e5f1f"
+    },
+    {
+      "key": "john9:4",
+      "reference": "John 9:4",
+      "exactText": "趁著白日，我們必須做那差我來者的工；黑夜將到，就沒有人能做工了。",
+      "sha256": "23226a942beff48366cf06742644efa37e6e54f29b4c41b5d804c648cf4449b2"
+    },
+    {
+      "key": "john9:5",
+      "reference": "John 9:5",
+      "exactText": "我在世上的時候，是世上的光。」",
+      "sha256": "f66e3f13b19c7db728cdb4b88a694d1f6b0d2f83f6178688394b89d840462315"
+    },
+    {
+      "key": "john9:6",
+      "reference": "John 9:6",
+      "exactText": "耶穌說了這話，就吐唾沫在地上，用唾沫和泥抹在瞎子的眼睛上，",
+      "sha256": "2d57f56c14d4da61d8dd4854d55fc4696cad443dab21a0349ec2464c689595fc"
+    },
+    {
+      "key": "john9:7",
+      "reference": "John 9:7",
+      "exactText": "對他說：「你往西羅亞池子裡去洗。」（西羅亞翻出來就是「奉差遣」。）他去一洗，回頭就看見了。",
+      "sha256": "a9f07e7b576ee077e9660ff5588ab652501f8fb82155e89a4d2bde6ac65a7f53"
+    },
+    {
+      "key": "john9:8",
+      "reference": "John 9:8",
+      "exactText": "他的鄰舍和那素常見他是討飯的，就說：「這不是那從前坐著討飯的人嗎？」",
+      "sha256": "f919066f7f5e165280a82cd0d4bec65e5b16656977bb32701eacc5161853527f"
+    },
+    {
+      "key": "john9:9",
+      "reference": "John 9:9",
+      "exactText": "有人說：「是他」；又有人說：「不是，卻是像他。」他自己說：「是我。」",
+      "sha256": "d5ab61964d789d873713a020cd49a08e041a04ebee167b1880d6d1a710d003da"
+    },
+    {
+      "key": "john9:10",
+      "reference": "John 9:10",
+      "exactText": "他們對他說：「你的眼睛是怎麼開的呢？」",
+      "sha256": "187af91ef42de0d8e558bd1be7b172fc7b803dc436255bccc54fef575d4c91ee"
+    },
+    {
+      "key": "john9:11",
+      "reference": "John 9:11",
+      "exactText": "他回答說：「有一個人，名叫耶穌，他和泥抹我的眼睛，對我說：『你往西羅亞池子去洗。』我去一洗，就看見了。」",
+      "sha256": "9bc38d3290d87819d02e7db942b1b2b97def8e142687d26e13ecf59048c56989"
+    },
+    {
+      "key": "john9:12",
+      "reference": "John 9:12",
+      "exactText": "他們說：「那個人在哪裡？」他說：「我不知道。」",
+      "sha256": "28f10e90c9c90d462d5315f33b2efc6b394fd9dc493c897565bc51d8f695404e"
+    },
+    {
+      "key": "john9:13",
+      "reference": "John 9:13",
+      "exactText": "他們把從前瞎眼的人帶到法利賽人那裡。",
+      "sha256": "9f03994232ee0d8ff9d0c6df193b3e841f4bb967212f515a3ed620751c63ce6f"
+    },
+    {
+      "key": "john9:14",
+      "reference": "John 9:14",
+      "exactText": "耶穌和泥開他眼睛的日子是安息日。",
+      "sha256": "3b789fe5b6201234251ef33c3e200f2dd31e1a4e3e99ea2efb6a26d6f1be5157"
+    },
+    {
+      "key": "john9:15",
+      "reference": "John 9:15",
+      "exactText": "法利賽人也問他是怎麼得看見的。瞎子對他們說：「他把泥抹在我的眼睛上，我去一洗，就看見了。」",
+      "sha256": "8995f6818f41411f89c56c23b51bb2e8b99c528a6196c635a8a991f4f3e0d7fb"
+    },
+    {
+      "key": "john9:16",
+      "reference": "John 9:16",
+      "exactText": "法利賽人中有的說：「這個人不是從神來的，因為他不守安息日。」又有人說：「一個罪人怎能行這樣的神蹟呢？」他們就起了紛爭。",
+      "sha256": "df58d142ebfd2b3a9931b6e8436e0a5cb5cef68c1d7d0ee8f931e0b9febb24d1"
+    },
+    {
+      "key": "john9:17",
+      "reference": "John 9:17",
+      "exactText": "他們又對瞎子說：「他既然開了你的眼睛，你說他是怎樣的人呢？」他說：「是個先知。」",
+      "sha256": "aa022490e6006d062e28da44ae2963d133715a5353d4a9b7cd1c6af84e5d4a9f"
+    },
+    {
+      "key": "john9:18",
+      "reference": "John 9:18",
+      "exactText": "猶太人不信他從前是瞎眼，後來能看見的，等到叫了他的父母來，",
+      "sha256": "8f07931e34e8dc189ceed6545647c2d31fcea8a2f44f1080f4e7a596ef592371"
+    },
+    {
+      "key": "john9:19",
+      "reference": "John 9:19",
+      "exactText": "問他們說：「這是你們的兒子嗎？你們說他生來是瞎眼的，如今怎麼能看見了呢？」",
+      "sha256": "f91607f154240b922b576e3854b303144baf4086c909c4f682ff75379bd8c5ef"
+    },
+    {
+      "key": "john9:20",
+      "reference": "John 9:20",
+      "exactText": "他父母回答說：「他是我們的兒子，生來就瞎眼，這是我們知道的。",
+      "sha256": "ecacbffbde730b305c862c8182e8b808b380903cb89dd912cf024c7f201246b4"
+    },
+    {
+      "key": "john9:21",
+      "reference": "John 9:21",
+      "exactText": "至於他如今怎麼能看見，我們卻不知道；是誰開了他的眼睛，我們也不知道。他已經成了人，你們問他吧，他自己必能說。」",
+      "sha256": "53029a177637b67cf16dcb576bc03253397a4d571edd5fed06a07cbf01feef46"
+    },
+    {
+      "key": "john9:22",
+      "reference": "John 9:22",
+      "exactText": "他父母說這話，是怕猶太人；因為猶太人已經商議定了，若有認耶穌是基督的，要把他趕出會堂。",
+      "sha256": "8fa27e1bf3913a572a49798825c7c4354890342ce58f4c1e842e0aedb51d40ba"
+    },
+    {
+      "key": "john9:23",
+      "reference": "John 9:23",
+      "exactText": "因此他父母說：「他已經成了人，你們問他吧。」",
+      "sha256": "639670b3d889c9178beef6a8db4e3cbb0e7140c28054462480ba98a78a5083a6"
+    },
+    {
+      "key": "john9:24",
+      "reference": "John 9:24",
+      "exactText": "所以法利賽人第二次叫了那從前瞎眼的人來，對他說：「你該將榮耀歸給神，我們知道這人是個罪人。」",
+      "sha256": "ab2b76aee62a838c414aa580d53983855fdd4b84e6ff68fe0e9970ad192a8431"
+    },
+    {
+      "key": "john9:25",
+      "reference": "John 9:25",
+      "exactText": "他說：「他是個罪人不是，我不知道；有一件事我知道，從前我是眼瞎的，如今能看見了。」",
+      "sha256": "3e178a5863bc5a099eab68057b11a5419af3f63959434868af3ac9f3c8932ef4"
+    },
+    {
+      "key": "john9:26",
+      "reference": "John 9:26",
+      "exactText": "他們就問他說：「他向你做甚麼？是怎麼開了你的眼睛呢？」",
+      "sha256": "4051a09ae18b443cb7c4a6102ae27521c039abe1b76584f6784e4f05d6882a0d"
+    },
+    {
+      "key": "john9:27",
+      "reference": "John 9:27",
+      "exactText": "他回答說：「我方才告訴你們，你們不聽，為甚麼又要聽呢？莫非你們也要作他的門徒嗎？」",
+      "sha256": "dc84c1e79ee20b056c253cafcc5ba480f872030e6a0eba0746a5672875790c7b"
+    },
+    {
+      "key": "john9:28",
+      "reference": "John 9:28",
+      "exactText": "他們就罵他說：「你是他的門徒；我們是摩西的門徒。",
+      "sha256": "12909e7e83b23c65a0e9587dd1c3e7c574bba689071d93db5de1b5ffb19de6c0"
+    },
+    {
+      "key": "john9:29",
+      "reference": "John 9:29",
+      "exactText": "神對摩西說話是我們知道的；只是這個人，我們不知道他從哪裡來！」",
+      "sha256": "10aa44901a66cb3b1ab2c641a4318047cc122fe54f9eacca6f2504b7dbff17c7"
+    },
+    {
+      "key": "john9:30",
+      "reference": "John 9:30",
+      "exactText": "那人回答說：「他開了我的眼睛，你們竟不知道他從哪裡來，這真是奇怪！",
+      "sha256": "3fe166c0ebcdd912ba23e7c4eb8d949a8ddd6c1e8b5954b0b731a7e7f331ab41"
+    },
+    {
+      "key": "john9:31",
+      "reference": "John 9:31",
+      "exactText": "我們知道神不聽罪人，惟有敬奉神、遵行他旨意的，神才聽他。",
+      "sha256": "04f238cba94d243ce1a9241de829549f6177176921b9a1925d082d1d91afe3e0"
+    },
+    {
+      "key": "john9:32",
+      "reference": "John 9:32",
+      "exactText": "從創世以來，未曾聽見有人把生來是瞎子的眼睛開了。",
+      "sha256": "2801647ebd92168cd2985a682290e72c9f4559fad9726e4c3fefcf41a53879de"
+    },
+    {
+      "key": "john9:33",
+      "reference": "John 9:33",
+      "exactText": "這人若不是從神來的，甚麼也不能做。」",
+      "sha256": "968e12a296686062b844289be691d0ecbb84fc619cdfb923dc5e772ea5a80b7d"
+    },
+    {
+      "key": "john9:34",
+      "reference": "John 9:34",
+      "exactText": "他們回答說：「你全然生在罪孽中，還要教訓我們嗎？」於是把他趕出去了。",
+      "sha256": "c934f198def1e07c7e58bfc4e63e8f497063453adf8aff3d1455b2501a1748f9"
+    },
+    {
+      "key": "john9:35",
+      "reference": "John 9:35",
+      "exactText": "耶穌聽說他們把他趕出去，後來遇見他，就說：「你信神的兒子嗎？」",
+      "sha256": "b51faf511a91564b371fdc4ce89b8581c50b5f37a79b62d43bca1be7085bd9b1"
+    },
+    {
+      "key": "john9:36",
+      "reference": "John 9:36",
+      "exactText": "他回答說：「主啊，誰是神的兒子，叫我信他呢？」",
+      "sha256": "d42b81cd055581486ef5f4a34ba71a0477e42e6aee82d2467f6d62ebd11df735"
+    },
+    {
+      "key": "john9:37",
+      "reference": "John 9:37",
+      "exactText": "耶穌說：「你已經看見他，現在和你說話的就是他。」",
+      "sha256": "8c0f0c4ea5eed4edd099c68e6b01c7717724a9f0eb0f84e061310a9da20913be"
+    },
+    {
+      "key": "john9:38",
+      "reference": "John 9:38",
+      "exactText": "他說：「主啊，我信！」就拜耶穌。",
+      "sha256": "fb6d98f9af83f3e722697aed99daa9def8c0536d6ceea30d3aac34ba6809236a"
+    },
+    {
+      "key": "john9:39",
+      "reference": "John 9:39",
+      "exactText": "耶穌說：「我為審判到這世上來，叫不能看見的，可以看見；能看見的，反瞎了眼。」",
+      "sha256": "c193433cd7b4753f01faa25b89c8ee24b6623535932f3087dc440cea79fa57e8"
+    },
+    {
+      "key": "john9:40",
+      "reference": "John 9:40",
+      "exactText": "同他在那裡的法利賽人聽見這話，就說：「難道我們也瞎了眼嗎？」",
+      "sha256": "59af14e283e8aa4db099b5d9543d14ca44f93d7c6a183153a0186c2b60396bf0"
+    },
+    {
+      "key": "john9:41",
+      "reference": "John 9:41",
+      "exactText": "耶穌對他們說：「你們若瞎了眼，就沒有罪了；但如今你們說『我們能看見』，所以你們的罪還在。」",
+      "sha256": "a41be9806d3866931824e2843fd03f6ef1117d1bfcbbdf1322b6dcbac9e783bb"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "authority": "story-local-playable-candidate",
+  "id": "john-9-man-born-blind",
+  "version": "0.1.0",
+  "title": "生來瞎眼的人",
+  "entry": "/games/john-9-man-born-blind/",
+  "language": "zh-Hant",
+  "translation": "CUV-1919-Traditional-Shen",
+  "personalUse": true,
+  "promotionStatus": "not-promoted",
+  "productionStage": "release-blocked",
+  "deliveryPolicy": {
+    "mode": "end-to-end",
+    "graybox": "development-only",
+    "stopAfterGraybox": false,
+    "allowPlaceholderFinal": false
+  }
+}

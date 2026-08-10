@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "policy": "candidate-only-until-second-story-validation",
+  "artDirections": [
+    {
+      "id": "storybook-realism-v1",
+      "version": "0.1.0",
+      "status": "candidate",
+      "path": "../art-direction/storybook-realism-v1/style.json"
+    }
+  ],
+  "packs": [
+    {
+      "id": "nt-judea-first-century",
+      "version": "0.1.0",
+      "status": "candidate",
+      "metadata": "candidates/nt-judea-first-century/0.1.0/pack.json",
+      "manifest": "candidates/nt-judea-first-century/0.1.0/manifest.json"
+    },
+    {
+      "id": "identity-jesus-storybook",
+      "version": "0.1.0",
+      "status": "candidate",
+      "metadata": "candidates/identity-jesus-storybook/0.1.0/pack.json",
+      "manifest": "candidates/identity-jesus-storybook/0.1.0/manifest.json"
+    }
+  ]
+}

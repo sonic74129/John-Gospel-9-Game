@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "responsive-safe-framing",
+  "profiles": [
+    {
+      "id": "frame.desktop-1280x720",
+      "viewport": { "width": 1280, "height": 720 },
+      "safeInsets": { "left": 80, "right": 80, "top": 56, "bottom": 144 },
+      "gameplaySafeRect": { "x": 80, "y": 56, "width": 1120, "height": 520 },
+      "cameraZoomRange": { "minimum": 0.9, "maximum": 1.1 },
+      "minimumVisibleWorldSpan": { "width": 960, "height": 540 }
+    },
+    {
+      "id": "frame.mobile-390x844",
+      "viewport": { "width": 390, "height": 844 },
+      "safeInsets": { "left": 20, "right": 20, "top": 96, "bottom": 190 },
+      "gameplaySafeRect": { "x": 20, "y": 96, "width": 350, "height": 558 },
+      "cameraZoomRange": { "minimum": 0.72, "maximum": 0.86 },
+      "minimumVisibleWorldSpan": { "width": 440, "height": 600 }
+    }
+  ],
+  "sequenceFrames": [
+    {
+      "id": "frame.courtyard-opening",
+      "cameraZoneId": "camera.courtyard",
+      "focusAnchorIds": [
+        "courtyard.man-center",
+        "courtyard.jesus",
+        "courtyard.disciples",
+        "courtyard.observer"
+      ],
+      "horizontalPadding": 56,
+      "verticalPadding": 72
+    },
+    {
+      "id": "frame.pool-wash",
+      "cameraZoneId": "camera.siloam",
+      "focusAnchorIds": ["pool.wash-edge", "pool.observer-approach"],
+      "horizontalPadding": 64,
+      "verticalPadding": 72
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "foreground-occlusion",
+  "foregroundOccluders": []
+}

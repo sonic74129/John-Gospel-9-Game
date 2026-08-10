@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "assetId": "character.jesus-john9",
+  "family": "characters-core",
+  "promptVersion": "v1",
+  "run": "run-001",
+  "selectedCandidate": 1,
+  "reason": "Candidate 1 best preserves the pinned identity vocabulary: warm Middle Eastern face, wavy dark hair, short full beard, undyed long tunic and layered gray-green/dusty-olive mantle. Its idle, low ordinary-clay action and waist-height conversation poses are clearly separated, text-free and restrained; candidate 2 lacks a visible clay action.",
+  "visualAcceptance": [
+    "Face, hair, beard and layered olive/linen clothing match pinned identity",
+    "All poses are readable at 105 runtime pixels tall",
+    "Clay action remains ordinary and theologically restrained",
+    "No iconographic, magical or theatrical treatment"
+  ],
+  "source": {
+    "path": "production/art-source/characters-core/character.jesus-john9/v1/run-001/selected-source.png",
+    "bytes": 1065998,
+    "sha256": "3337747836af6ac2b7b90f52a11b2cb1a90f3fe8eeaa3751e42a130743fed31e"
+  },
+  "reviewStatus": "selected-for-private-preview-processing",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAt": "2026-08-02T22:31:29.419Z"
+}

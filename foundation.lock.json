@@ -2,11 +2,60 @@
   "schemaVersion": "1.0.0",
   "repository": "sonic74129/bible-game-foundation",
   "commit": "e870049d53bc8da09becd178fd30198b8480a0ca",
+  "allowCandidateAssets": true,
   "guidance": [
+    {
+      "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
+      "target": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md"
+    },
+    {
+      "source": "docs/standards/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
+      "target": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md"
+    },
+    {
+      "source": "docs/standards/MULTI_REPO_ARCHITECTURE.zh-CN.md",
+      "target": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md"
+    },
+    {
+      "source": "docs/ASSET_GOVERNANCE.zh-CN.md",
+      "target": ".foundation/docs/ASSET_GOVERNANCE.zh-CN.md"
+    },
+    {
+      "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
+      "target": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
+    },
+    {
+      "source": "docs/END_TO_END_DELIVERY.zh-CN.md",
+      "target": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md"
+    },
+    {
+      "source": "art-direction/storybook-realism-v1/style.json",
+      "target": ".foundation/art-direction/storybook-realism-v1/style.json"
+    },
+    {
+      "source": "assets/catalog.json",
+      "target": ".foundation/assets/catalog.json"
+    },
     {
       "source": "skills/bible-story-game-builder/SKILL.md",
       "target": ".foundation/skills/bible-story-game-builder/SKILL.md",
       "sha256": "5fafeb54b571666fd228cd3926b3253cfce4f900e256ae2cb000827efbad8ffa"
+    }
+  ],
+  "assetPacks": [
+    {
+      "id": "identity-jesus-storybook",
+      "version": "0.1.0",
+      "status": "candidate",
+      "metadata": "assets/candidates/identity-jesus-storybook/0.1.0/pack.json",
+      "manifest": "assets/candidates/identity-jesus-storybook/0.1.0/manifest.json"
+    },
+    {
+      "id": "nt-judea-first-century",
+      "version": "0.1.0",
+      "status": "candidate",
+      "metadata": "assets/candidates/nt-judea-first-century/0.1.0/pack.json",
+      "manifest": "assets/candidates/nt-judea-first-century/0.1.0/manifest.json"
     }
   ]
 }

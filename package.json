@@ -1,15 +1,40 @@
 {
-  "name": "@sonic74129/john-gospel-9-game",
+  "name": "@sonic74129/bible-story-john-9-man-born-blind",
   "version": "0.1.0",
   "private": true,
+  "description": "《生來瞎眼的人》：約翰福音 9:1–41 的地圖故事遊戲。",
   "type": "module",
   "scripts": {
-    "validate:continuity": "node scripts/validate-context-continuity.mjs",
-    "validate:structure": "node .github/scripts/validate-story-structure.mjs --story-root .",
-    "test:unit": "node --test tests/*.test.mjs",
-    "test": "npm run validate:continuity && npm run validate:structure && npm run test:unit"
+    "dev": "vite",
+    "build": "tsc --pretty false && vite build && node scripts/check-production-bundle.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc --pretty false",
+    "planning:sync": "node scripts/sync-story-plan.mjs",
+    "planning:check": "node scripts/sync-story-plan.mjs --check",
+    "foundation:check": "node scripts/check-foundation.mjs",
+    "art:generate": "node scripts/art-generate.mjs",
+    "art:process": "node scripts/art-process.mjs",
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "test:contracts": "node --test tests/assets.test.mjs tests/formal-art.test.mjs tests/story/*.test.mjs tests/world-contract.test.mjs",
+    "test:platform": "node --test tests/platform/*.test.mjs",
+    "test": "npm run planning:check && npm run foundation:check && npm run test:contracts && npm run test:platform"
+  },
+  "dependencies": {
+    "@sonic74129/audio-runtime": "file:packages/sdk/sonic74129-audio-runtime-0.3.0.tgz",
+    "@sonic74129/content-schema": "file:packages/sdk/sonic74129-content-schema-0.3.0.tgz",
+    "@sonic74129/engine": "file:packages/sdk/sonic74129-engine-0.3.0.tgz",
+    "@sonic74129/map-runtime": "file:packages/sdk/sonic74129-map-runtime-0.3.0.tgz",
+    "@sonic74129/sequence-runtime": "file:packages/sdk/sonic74129-sequence-runtime-0.3.0.tgz",
+    "@sonic74129/story-runtime": "file:packages/sdk/sonic74129-story-runtime-0.3.0.tgz",
+    "@sonic74129/ui": "file:packages/sdk/sonic74129-ui-0.3.0.tgz",
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@sonic74129/test-kit": "file:packages/sdk/sonic74129-test-kit-0.3.0.tgz",
+    "typescript": "6.0.3",
+    "vite": "7.2.4"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19.0"
   }
 }

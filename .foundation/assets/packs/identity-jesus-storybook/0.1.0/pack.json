@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "identity-jesus-storybook",
+  "version": "0.1.0",
+  "title": "Jesus Storybook Identity Candidate",
+  "status": "candidate",
+  "releaseEligible": false,
+  "compatibility": {
+    "period": "first-century",
+    "region": "Judea and Galilee",
+    "role": "Jesus",
+    "camera": "three-quarter top-down",
+    "artDirection": "storybook-realism-v1"
+  },
+  "source": {
+    "repository": "sonic74129/JohnRPGGame",
+    "commit": "660e3f94655e66be2486f97b7917d151f3add1e3",
+    "sourceAssetId": "character.jesus",
+    "promptVersion": "v3",
+    "provider": "Azure AI Foundry",
+    "deployment": "mai-image-2-5-pro",
+    "model": "MAI-Image-2.5-Pro@2026-06-19",
+    "selectionStatus": "approved"
+  },
+  "rights": {
+    "reviewStatus": "required-before-public-release",
+    "publicRedistributionApproved": false,
+    "details": "../../../../docs/RIGHTS_AND_PROVENANCE.zh-CN.md"
+  },
+  "validation": {
+    "sourceProjectApproved": true,
+    "storiesValidated": 1,
+    "requiredStoriesForStable": 2,
+    "requiresPerStoryTheologicalAndVisualReview": true
+  },
+  "assets": [
+    {
+      "id": "character-sheet",
+      "status": "candidate-runtime",
+      "source": "source/character-sheet.png",
+      "runtime": "runtime/character-sheet.png",
+      "runtimeMapping": {
+        "sheetWidth": 288,
+        "sheetHeight": 800,
+        "cellWidth": 96,
+        "cellHeight": 200,
+        "columns": [
+          "idle",
+          "step-left",
+          "step-right"
+        ],
+        "rows": [
+          "front",
+          "back",
+          "right",
+          "left"
+        ],
+        "mirroredRows": [
+          "left"
+        ],
+        "footBaseline": 193
+      }
+    }
+  ],
+  "identityRules": [
+    "Respectful first-century Jewish man with Middle Eastern appearance.",
+    "Undyed linen tunic and muted earth-tone mantle.",
+    "No halo, glow, royal costume, Europeanized features or iconographic pose.",
+    "A story must explicitly lock this version; it is never selected implicitly."
+  ],
+  "promotionRequirements": [
+    "Validate identity continuity in a second independent New Testament story.",
+    "Complete per-story theological and visual review.",
+    "Complete rights review and add pack-specific LICENSE/NOTICE.",
+    "Publish an immutable release with artifact SHA-256."
+  ]
+}

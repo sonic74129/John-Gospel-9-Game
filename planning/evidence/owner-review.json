@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "pending-owner-review",
+  "reviewer": {
+    "id": "repository-owner",
+    "name": "Repository owner",
+    "role": "personal-use source and story reviewer"
+  },
+  "scope": [
+    "41 exact John 9 verses against the fixed source URL and SHA-256",
+    "Traditional 1919 CUV Shen identity",
+    "twenty-beat plan and runtime ordering",
+    "unnamed observer player-role restrictions",
+    "normal, skip, restart and re-entry final-state equivalence",
+    "disability and Jewish-group contextual wording"
+  ],
+  "approval": {
+    "status": "pending",
+    "reviewedAt": null,
+    "note": "The repository owner changes this status to approved after reviewing the playable candidate and all 41 source-bound verses."
+  }
+}

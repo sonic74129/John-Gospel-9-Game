@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-09T05:22:52.904Z",
+  "chromium": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "baseUrl": "http://127.0.0.1:58864/games/john-9-man-born-blind/",
+  "scenarios": [
+    {
+      "name": "fresh-start-and-escort-desktop",
+      "viewport": "1280x720",
+      "screenshots": [
+        "qa/review-screenshots/01-opening-desktop.png",
+        "qa/review-screenshots/02-escort-dialogue-desktop.png",
+        "qa/review-screenshots/03-escort-start-desktop.png",
+        "qa/review-screenshots/04-escort-moving-desktop.png",
+        "qa/review-screenshots/05-pool-arrival-desktop.png"
+      ],
+      "inputModes": [
+        "space-local-only",
+        "fixed-point-pointer",
+        "keyboard-wasd"
+      ]
+    },
+    {
+      "name": "completed-save-resume-desktop",
+      "viewport": "1280x720",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b08",
+        "b09",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/06-ending-desktop.png"
+      ]
+    },
+    {
+      "name": "restart-mobile",
+      "viewport": "390x844",
+      "cancelledProgressPreserved": [
+        "b01"
+      ],
+      "confirmedReset": true,
+      "screenshots": [
+        "qa/review-screenshots/07-opening-mobile.png"
+      ]
+    },
+    {
+      "name": "full-normal-real-input-desktop",
+      "viewport": "1280x720",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b08",
+        "b09",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/08-full-normal-ending-desktop.png"
+      ]
+    },
+    {
+      "name": "all-skip-mobile",
+      "viewport": "390x844",
+      "completedBeatIds": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b08",
+        "b09",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20"
+      ],
+      "screenshots": [
+        "qa/review-screenshots/09-all-skip-ending-mobile.png"
+      ],
+      "inputModes": [
+        "fixed-point-touch",
+        "mobile-dpad-up-down-left-right",
+        "keyboard-wasd"
+      ]
+    }
+  ],
+  "finalStateParity": {
+    "validatedBy": "contract-and-platform-tests",
+    "beats": [
+      "b01",
+      "b02",
+      "b03",
+      "b04",
+      "b05",
+      "b06",
+      "b07",
+      "b08",
+      "b09",
+      "b10",
+      "b11",
+      "b12",
+      "b13",
+      "b14",
+      "b15",
+      "b16",
+      "b17",
+      "b18",
+      "b19",
+      "b20"
+    ],
+    "equivalent": true
+  },
+  "visualBlockers": {
+    "status": "none-for-current-contract"
+  },
+  "browserErrors": [],
+  "assetOrNetworkFailures": [],
+  "productionDomResidue": []
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "worldId": "john-9-jerusalem-story-world",
+  "contractType": "camera-zones",
+  "cameraZones": [
+    {
+      "id": "camera.courtyard",
+      "regionId": "courtyard",
+      "bounds": {
+        "x": 944,
+        "y": 240,
+        "width": 920,
+        "height": 900
+      },
+      "focusAnchorId": "courtyard.camera",
+      "desktopZoom": 0.9,
+      "mobileZoom": 0.78,
+      "deadZone": {
+        "width": 16,
+        "height": 16
+      },
+      "transitionSeconds": 0.7
+    },
+    {
+      "id": "camera.siloam",
+      "regionId": "siloam-pool",
+      "bounds": {
+        "x": 664,
+        "y": 1020,
+        "width": 620,
+        "height": 460
+      },
+      "focusAnchorId": "pool.camera",
+      "desktopZoom": 0.95,
+      "mobileZoom": 0.78,
+      "deadZone": {
+        "width": 16,
+        "height": 16
+      },
+      "transitionSeconds": 0.7
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "storyId": "john-9-man-born-blind",
+  "foundationCommit": "6c836d55bfd786b8a55b4e0c7356bf8791505653",
+  "provider": "Azure AI Services",
+  "deployment": "mai-image-2-5-pro",
+  "model": "MAI-Image-2.5-Pro@2026-06-19",
+  "reviewStatus": "polished-private-preview",
+  "releaseEligible": false,
+  "publicRedistributionApproved": false,
+  "selectedAssets": [
+    "master.john9-outdoor@v1/run-002/candidate-01",
+    "environment.john9-zigzag-world@v2/run-001/candidate-02",
+    "environment.john9-zigzag-props@v2/run-001/candidate-01",
+    "character.observer@v3/run-001/candidate-01",
+    "character.man-born-blind@v1/run-001/candidate-02",
+    "character.jesus-john9@v1/run-001/candidate-01",
+    "character.john9-supporting@v1/run-001/candidate-01"
+  ],
+  "runtimeInventory": {
+    "manifest": "public/assets/art/manifest.json",
+    "assetFamilies": 7,
+    "files": 30,
+    "worldDimensions": {
+      "width": 2688,
+      "height": 1792
+    }
+  },
+  "visualAcceptance": {
+    "cameraAndPerspective": "accepted",
+    "routeReadability": "accepted for the complete single-source map; the current courtyard-to-Siloam route remains continuous while the full painted context stays visible",
+    "actorAndDoorScale": "accepted for centralized 128-132 px target display heights, including the native 200 px Jesus directional frames",
+    "identityContinuity": "accepted for private preview; pinned Jesus clothing and face vocabulary retained",
+    "poseAndStateClarity": "accepted for blind, clay-applied, seeing, worship, clay-action, found-man, neighbor, inquiry, and parent states used by John 9:1-41",
+    "paletteMaterialAndLight": "accepted",
+    "theologicalRestraint": "accepted; no halo, glow, beam, fantasy particles or theatrical miracle effect",
+    "embeddedText": "none in selected assets"
+  },
+  "limitations": [
+    "The generated world is a stylized neutral gameplay composition, not a historical reconstruction.",
+    "The runtime world retains the selected source image in full through one proportional resize; no crop compositing or neutral-fill patching is used.",
+    "The world base is a single painted two-dimensional composition aligned to canonical anchors; collision and navigation remain canonical metadata rather than pixel-derived geometry.",
+    "The pinned Jesus vendor sheet provides four-direction idle and two-step walk frames through deterministic byte-copy extraction.",
+    "Observer walk frames, full man-born-blind directional animation, and supporting-actor up/down or walk frames remain blocked because the built-in image-generation tool is unavailable; restored formal static poses and current directional/look-right assets are used without CLI fallback or substitute art.",
+    "Dialogue portraits are deterministic crops from the already selected story-local character sources; no new imagery was generated, and the worship segment intentionally uses the portraitless layout because no dedicated worship portrait exists.",
+    "All generated and pinned packs remain non-release-eligible until rights and public redistribution review."
+  ]
+}
