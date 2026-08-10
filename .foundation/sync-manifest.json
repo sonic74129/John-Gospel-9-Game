@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "foundation": {
     "repository": "sonic74129/bible-game-foundation",
-    "commit": "6c836d55bfd786b8a55b4e0c7356bf8791505653"
+    "commit": "e870049d53bc8da09becd178fd30198b8480a0ca"
   },
   "assetPacks": [
     {
@@ -88,6 +88,12 @@
       "target": ".foundation/docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
       "bytes": 1654,
       "sha256": "56910ac1ca7a9e551079d27b9f980ca818598b7ec726881ed09a66ed33dfea54"
+    },
+    {
+      "source": "skills/bible-story-game-builder/SKILL.md",
+      "target": ".foundation/skills/bible-story-game-builder/SKILL.md",
+      "bytes": 7794,
+      "sha256": "5fafeb54b571666fd228cd3926b3253cfce4f900e256ae2cb000827efbad8ffa"
     },
     {
       "source": "assets/candidates/identity-jesus-storybook/0.1.0/runtime/character-sheet.png",
