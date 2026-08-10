@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "foundation": {
     "repository": "sonic74129/bible-game-foundation",
-    "commit": "e870049d53bc8da09becd178fd30198b8480a0ca"
+    "commit": "88ff2d7014c3ce5b04f3d6251ebace19207921ec"
   },
   "assetPacks": [
     {
@@ -20,8 +20,8 @@
     {
       "source": "art-direction/storybook-realism-v1/style.json",
       "target": ".foundation/art-direction/storybook-realism-v1/style.json",
-      "bytes": 2379,
-      "sha256": "9b8e6905e0a0dc0926d08818093a6acaa1e42c46ee0e92cacbee6bb8a4579e5a"
+      "bytes": 3884,
+      "sha256": "459994a0f5769fb234496b9b05c1d74fa244992a012fbd3bd0ef01e21b792c83"
     },
     {
       "source": "assets/catalog.json",
@@ -62,26 +62,26 @@
     {
       "source": "docs/standards/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
       "target": ".foundation/docs/BIBLE_STORY_GAME_PLAYBOOK.zh-CN.md",
-      "bytes": 40881,
-      "sha256": "f363b37ac1f6bab765af91deef2174803c6f3c102324e1c1c5b4d77026b34b03"
+      "bytes": 55009,
+      "sha256": "eb17e0d3bf437a714031be10feba4d0cf020480969c54c3ea9404e2786b6d334"
     },
     {
       "source": "docs/END_TO_END_DELIVERY.zh-CN.md",
       "target": ".foundation/docs/END_TO_END_DELIVERY.zh-CN.md",
-      "bytes": 5613,
-      "sha256": "8a67e66354ddba3d005fac842e163dc69cd051f31bef9ffc7441ca38d447222d"
+      "bytes": 16093,
+      "sha256": "9f780cb9422b067915bb8701e36a0ebc004dd3978b0a30eb5ef36a102708afee"
     },
     {
       "source": "docs/FOUNDATION_CHARTER.zh-CN.md",
       "target": ".foundation/docs/FOUNDATION_CHARTER.zh-CN.md",
-      "bytes": 5319,
-      "sha256": "9a8990230d4d662044d1a09bddb07cea0ff28b84ff67dce393d38a78f9ef1faa"
+      "bytes": 11799,
+      "sha256": "83260cc88d060e2b213731c42e26223ce1f5f3fb5a19fa87fdc14d03f7615a11"
     },
     {
       "source": "docs/standards/MULTI_REPO_ARCHITECTURE.zh-CN.md",
       "target": ".foundation/docs/MULTI_REPO_ARCHITECTURE.zh-CN.md",
-      "bytes": 22418,
-      "sha256": "86f400f99c5106465c4091ada543b24c93fbbaf61578b9411b5c8110ff7f56ca"
+      "bytes": 22872,
+      "sha256": "9a5b68e1a335c3dc8c29823dbc21318bdea2a084ef0cbb813ad5f25808044da2"
     },
     {
       "source": "docs/RIGHTS_AND_PROVENANCE.zh-CN.md",
@@ -92,8 +92,8 @@
     {
       "source": "skills/bible-story-game-builder/SKILL.md",
       "target": ".foundation/skills/bible-story-game-builder/SKILL.md",
-      "bytes": 7794,
-      "sha256": "5fafeb54b571666fd228cd3926b3253cfce4f900e256ae2cb000827efbad8ffa"
+      "bytes": 13798,
+      "sha256": "5d9d3522ab78752daa3240b3988bea986f8262031b749ac2263e7302ef3c9fab"
     },
     {
       "source": "assets/candidates/identity-jesus-storybook/0.1.0/runtime/character-sheet.png",

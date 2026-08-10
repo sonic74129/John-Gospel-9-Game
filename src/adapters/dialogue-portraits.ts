@@ -76,6 +76,16 @@ export function dialoguePortraitFor(
           mobileOffsetY: -18,
         });
       }
+      if (line.portraitState === "washing") {
+        return portrait(STORY_ART.portraits.manBlind, "那人（正在池邊洗）", {
+          focusY: 52,
+          scale: 0.92,
+          offsetY: -19,
+          mobileFocusY: 52,
+          mobileScale: 0.9,
+          mobileOffsetY: -16,
+        });
+      }
       if (line.portraitState === "seeing") {
         return portrait(STORY_ART.portraits.manSeeing, "那人（已能看見）", {
           focusY: 50,

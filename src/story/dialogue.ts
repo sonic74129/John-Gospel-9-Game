@@ -62,7 +62,7 @@ const PORTRAIT_BY_BEAT = Object.freeze({
   b03: { portraitSubjectId: "jesus", portraitState: "speaking" },
   b04: { portraitSubjectId: "man-born-blind", portraitState: "blind" },
   b05: { portraitSubjectId: "jesus", portraitState: "speaking" },
-  b06: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
+  b06: { portraitSubjectId: "man-born-blind", portraitState: "washing" },
   b07: { portraitSubjectId: "neighbors", portraitState: "speaking" },
   b08: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },
   b09: { portraitSubjectId: "man-born-blind", portraitState: "seeing" },

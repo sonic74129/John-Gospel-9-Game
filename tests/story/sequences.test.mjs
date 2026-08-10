@@ -22,7 +22,10 @@ test("every narrative world path is referenced by a beat transition or explicitl
 
   assert.deepEqual(NARRATIVE_PATHS, [
     "man-to-pool",
+    "neighbors-to-pool",
     "pool-to-neighbors",
+    "pharisees-to-inquiry",
+    "authorities-to-inquiry",
     "group-to-inquiry",
     "parents-entry",
     "parents-exit",

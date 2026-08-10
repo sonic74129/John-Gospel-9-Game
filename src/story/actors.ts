@@ -33,7 +33,7 @@ export const DIRECTIONAL_IDLE_REQUIREMENTS = Object.freeze({
 
 export const DIRECTIONAL_WALK_REQUIREMENTS = Object.freeze({
   observer: CARDINAL_DIRECTIONS,
-  "man-born-blind": CARDINAL_DIRECTIONS,
+  jesus: CARDINAL_DIRECTIONS,
 });
 
 export const MAN_BORN_BLIND_POSES = Object.freeze([

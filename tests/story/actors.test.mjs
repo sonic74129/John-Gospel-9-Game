@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   ACTOR_IDS,
+  DIRECTIONAL_WALK_REQUIREMENTS,
   manBornBlindPathTransition,
   PLAYER_ROLE,
 } from "../../src/story/actors.ts";
@@ -62,4 +63,8 @@ test("the man born blind always stands before path movement", () => {
       finalPose: "standing-seeing",
     });
   }
+});
+
+test("directional walk requirements stay scoped to actors with reliable walk mappings", () => {
+  assert.deepEqual(Object.keys(DIRECTIONAL_WALK_REQUIREMENTS), ["observer", "jesus"]);
 });
